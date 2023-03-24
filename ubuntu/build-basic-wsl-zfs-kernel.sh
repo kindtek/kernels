@@ -45,7 +45,7 @@ wget https://github.com/openzfs/zfs/releases/download/zfs-$zfs_version_name/zfs-
 tar -xvf zfs-$zfs_version_name.tar.gz
 mv zfs-$zfs_version_name $zfs_mask
 
-git clone https://github.com/microsoft/WSL2-Linux-Kernel.git
+git clone https://github.com/microsoft/WSL2-Linux-Kernel.git --progress --depth=1 --single-branch --branch linux-msft-wsl-5.15.90.1
 mv WSL2-Linux-Kernel wsl2
 cd wsl2
 

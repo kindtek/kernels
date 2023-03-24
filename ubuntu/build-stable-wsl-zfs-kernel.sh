@@ -65,3 +65,6 @@ cp -fv --backup=numbered arch/$cpu_arch/boot/bzImage $save_location1
 cp -fv --backup=numbered arch/$cpu_arch/boot/bzImage $save_location2
 cp -fv --backup=numbered .config /home/dvl/dvl-works/dvlp/kernels/ubuntu/$cpu_arch/$cpu_vendor/$linux_version_mask/.config$config_suffix
 if ! [ -z $save_location4 ]; then cp -fv --backup=numbered  arch/$cpu_arch/boot/bzImage /mnt/c/users/$wsl_username/$save_name; fi
+
+rm -rf wsl2
+rm -rf $zfs_mask

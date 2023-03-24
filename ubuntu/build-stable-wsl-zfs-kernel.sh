@@ -33,8 +33,8 @@ cd /home/$user_name/dls
 # try to pick the best .config file and default to the one provided by microsoft
 config_file_default=/home/dvl/dvl-works/dvlp/kernels/ubuntu/$cpu_arch/$cpu_vendor/$linux_version_mask/.config$config_suffix
 if ! [ -f $config_file_default ]; then config_file_default=/home/dvl/dvl-works/dvlp/kernels/ubuntu/$cpu_arch/generic/$linux_version_mask/.config$config_suffix; fi
-if ! [ -f $config_file_default ]; then config_file_default=linux/Microsoft/config-wsl; fi
-if ! [ -f ${config_file} ]; then cp -fv $config_file_default linux/.config; config_file=$config_file_default; else cp -fv ${config_file} linux/.config; fi
+if ! [ -f $config_file_default ]; then config_file_default=linux-$linux_version_mask/Microsoft/config-wsl; fi
+if ! [ -f ${config_file} ]; then cp -fv $config_file_default linux-$linux_version_mask/.config; config_file=$config_file_default; else cp -fv ${config_file} linux-$linux_version_mask/.config; fi
 
 
 printf '\n======= Kernel Build Info =========================================================================\n\n\tCPU Architecture:\t%s\n\n\tCPU Vendor:\t\t%s\n\n\tConfiguration File:\n\t\t%s\n\n\tSave Locations:\n\t\t%s\n\t\t%s\n\t\t%s\n\n===================================================================================================\n' $cpu_arch $cpu_vendor $config_file $save_location1 $save_location2 $save_location4
@@ -46,17 +46,17 @@ mv zfs-$zfs_version_name $zfs_mask
 
 wget https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-$linux_version_name.tar.xz
 tar -xvf linux-$linux_version_name.tar.xz
+mv linux linux-$linux_version_name
 
-mv linux-$linux_version_name linux
-cd linux
+cd linux-$linux_version_name
 
 yes "" | make prepare scripts
 cd ../$zfs_mask && sh autogen.sh
-sh configure --prefix=/ --libdir=/lib --includedir=/usr/include --datarootdir=/usr/share --enable-linux-builtin=yes --with-linux=/home/$user_name/dls/linux --with-linux-obj=/home/$user_name/dls/linux
-sh copy-builtin ../linux
+sh configure --prefix=/ --libdir=/lib --includedir=/usr/include --datarootdir=/usr/share --enable-linux-builtin=yes --with-linux=/home/$user_name/dls/linux-$linux_version_mask --with-linux-$linux_version_mask-obj=/home/$user_name/dls/linux-$linux_version_mask
+sh copy-builtin ../linux-$linux_version_mask
 yes "" | make install 
 
-cd ../linux/
+cd ../linux-$linux_version_mask/
 sed -i 's/\# CONFIG_ZFS is not set/CONFIG_ZFS=y/g' .config
 yes "" | make -j $(expr $(nproc) - 1)
 make modules_install
@@ -68,6 +68,6 @@ cp -fv --backup=numbered arch/$cpu_arch/boot/bzImage $save_location2
 cp -fv --backup=numbered .config /home/dvl/dvl-works/dvlp/kernels/ubuntu/$cpu_arch/$cpu_vendor/$linux_version_mask/.config$config_suffix
 if ! [ -z $save_location4 ]; then cp -fv --backup=numbered  arch/$cpu_arch/boot/bzImage /mnt/c/users/$wsl_username/$save_name; fi
 
-rm -rf linux
+rm -rf linux-$linux_version_mask
 rm -rf $zfs_version_name.tar.gz
 rm -rf $zfs_mask

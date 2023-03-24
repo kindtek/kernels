@@ -1,3 +1,4 @@
+#!/bin/bash
 cpu_vendor=$(grep -Pom 1 '^vendor_id\s*:\s*\K.*' /proc/cpuinfo)
 user_name=${2:-dvl}
 cpu_arch=$(uname -m)

@@ -1,4 +1,5 @@
 #!/bin/bash
+
 cpu_vendor=$(grep -Pom 1 '^vendor_id\s*:\s*\K.*' /proc/cpuinfo)
 user_name=${2:-dvl}
 cpu_arch=$(uname -m)
@@ -9,10 +10,10 @@ if [ $cpu_vendor = AuthenticAMD ]; then cpu_vendor=amd; fi
 if [ $cpu_vendor = GenuineIntel ]; then cpu_vendor=intel; fi
 
 
-linux_version_name=5.15.90.1
+linux_version_name="5.15.90.1"
 # replace first . with _ and then remove the rest of the .'s
-linux_version_mask=${linux_version_name/./_}
-linux_version_mask=${linux_version_mask//[.-]/}
+linux_version_mask=${linux_version_name/\./\_}
+linux_version_mask=${linux_version_mask//[\.-]/}
 linux_mask=linux-$linux_version_mask
 
 save_name=linux-$linux_version_mask\_w0
@@ -21,7 +22,7 @@ save_location2=/home/$user_name/$save_name
 
 
 # try to pick the best .config file and default to the one provided by microsoft
-config_file_default=/home/dvl/dvl-works/dvlp/kernels/ubuntu/$cpu_arch/$cpu_vendor/$linux_version_mask/.config_wsl0
+config_file_default=$cpu_arch/$cpu_vendor/$linux_version_mask/.config_wsl0
 if ! [ -f $config_file_default ]; then config_file_default=/home/dvl/dvl-works/dvlp/kernels/ubuntu/$cpu_arch/generic/$linux_version_mask/.config_wsl0; fi
 if ! [ -f $config_file_default ]; then config_file_default=wsl2/Microsoft/config-wsl; fi
 if ! [ -f ${config_file} ]; then cp -fv $config_file_default wsl2/.config; config_file=$config_file_default; else cp -fv ${config_file} wsl2/.config; fi
@@ -37,13 +38,14 @@ mv -uv WSL2-Linux-Kernel wsl2
 
 cd wsl2
 
+yes "" | make oldconfig && yes "" | make prepare
 yes "" | make -j $(expr $(nproc) - 1)
 make modules_install 
 mkdir -pv /home/$user_name/kernels
-mkdir -pv /home/dvl/dvl-works/dvlp/kernels/ubuntu/$cpu_arch/$cpu_vendor/$save_name
+mkdir -pv ../$cpu_arch/$cpu_vendor/$save_name
 cp -fv --backup=numbered arch/x86/boot/bzImage /home/$user_name/$save_name
 cp -fv --backup=numbered arch/x86/boot/bzImage /home/dvl/$save_name
-cp -fv --backup=numbered arch/x86/boot/bzImage /home/dvl/dvl-works/dvlp/kernels/ubuntu/$cpu_arch/$cpu_vendor/$linux_version_mask/$save_name 
-cp -fv --backup=numbered .config /home/dvl/dvl-works/dvlp/kernels/ubuntu/$cpu_arch/$cpu_vendor/$linux_version_mask/.config_wsl0
+cp -fv --backup=numbered arch/x86/boot/bzImage kernels/ubuntu/$cpu_arch/$cpu_vendor/$linux_version_mask/$save_name 
+cp -fv --backup=numbered .config kernels/ubuntu/$cpu_arch/$cpu_vendor/$linux_version_mask/.config_wsl0
 
 rm -rf wsl2

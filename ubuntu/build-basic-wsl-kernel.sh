@@ -9,18 +9,18 @@ if [ $cpu_vendor = GenuineIntel ]; then cpu_vendor=intel; fi
 
 linux_version_name="5.15.90.1"
 # replace first . with _ and then remove the rest of the .'s
-linux_version_mask=${linux_version_name/\./\_}
+linux_version_mask=${linux_version_name/\./_}
 linux_version_mask=${linux_version_mask//[\.-]/}
 linux_mask=linux-$linux_version_mask
 
 save_name=linux-$linux_version_mask\_w0
-save_location1=/home/dvl/dvl-works/dvlp/kernels/ubuntu/$cpu_arch/$cpu_vendor/$linux_version_mask/$save_name
+save_location1=/home/dvl/dvlw/dvlp/kernels/ubuntu/$cpu_arch/$cpu_vendor/$linux_version_mask/$save_name
 save_location2=/home/$user_name/$save_name
 
 
 # try to pick the best .config file and default to the one provided by microsoft
 config_file_default=$cpu_arch/$cpu_vendor/$linux_version_mask/.config_wsl0
-if ! [ -f $config_file_default ]; then config_file_default=/home/dvl/dvl-works/dvlp/kernels/ubuntu/$cpu_arch/generic/$linux_version_mask/.config_wsl0; fi
+if ! [ -f $config_file_default ]; then config_file_default=/home/dvl/dvlw/dvlp/kernels/ubuntu/$cpu_arch/generic/$linux_version_mask/.config_wsl0; fi
 if ! [ -f $config_file_default ]; then config_file_default=wsl2/Microsoft/config-wsl; fi
 if ! [ -f ${config_file} ]; then cp -fv $config_file_default wsl2/.config; config_file=$config_file_default; else cp -fv ${config_file} wsl2/.config; fi
 

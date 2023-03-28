@@ -22,7 +22,7 @@ if [ $cpu_vendor = AuthenticAMD ]; then cpu_vendor=amd; fi
 if [ $cpu_vendor = GenuineIntel ]; then cpu_vendor=intel; fi
 
 save_name=linux-$linux_version_mask\_wz0
-save_location1=/home/dvl/dvl-works/dvlp/kernels/ubuntu/$cpu_arch/$cpu_vendor/$linux_version_mask/$save_name
+save_location1=/home/dvl/dvlw/dvlp/kernels/ubuntu/$cpu_arch/$cpu_vendor/$linux_version_mask/$save_name
 save_location2=/home/$user_name/$save_name
 
 wsl_username=$(wslvar USERNAME) > /dev/null
@@ -32,8 +32,8 @@ if [ -d /mnt/c/users/$wsl_username ]; then save_location4=/mnt/c/users/$wsl_user
 cd /home/$user_name/dls 
 
 # try to pick the best .config file and default to the one provided by microsoft
-config_file_default=/home/dvl/dvl-works/dvlp/kernels/ubuntu/$cpu_arch/$cpu_vendor/$linux_version_mask/.config$config_suffix
-if ! [ -f $config_file_default ]; then config_file_default=/home/dvl/dvl-works/dvlp/kernels/ubuntu/$cpu_arch/generic/$linux_version_mask/.config$config_suffix; fi
+config_file_default=/home/dvl/dvlw/dvlp/kernels/ubuntu/$cpu_arch/$cpu_vendor/$linux_version_mask/.config$config_suffix
+if ! [ -f $config_file_default ]; then config_file_default=/home/dvl/dvlw/dvlp/kernels/ubuntu/$cpu_arch/generic/$linux_version_mask/.config$config_suffix; fi
 if ! [ -f $config_file_default ]; then config_file_default=wsl2/Microsoft/config-wsl; fi
 if ! [ -f ${config_file} ]; then cp -fv $config_file_default wsl2/.config; config_file=$config_file_default; else cp -fv ${config_file} wsl2/.config; fi
 
@@ -61,10 +61,10 @@ yes "" | make -j $(expr $(nproc) - 1)
 make modules_install
 
 mkdir -pv /home/$user_name/kernels
-mkdir -pv /home/dvl/dvl-works/dvlp/kernels/ubuntu/$cpu_arch/$cpu_vendor/$save_name
+mkdir -pv /home/dvl/dvlw/dvlp/kernels/ubuntu/$cpu_arch/$cpu_vendor/$save_name
 cp -fv --backup=numbered arch/$cpu_arch/boot/bzImage $save_location1 
 cp -fv --backup=numbered arch/$cpu_arch/boot/bzImage $save_location2
-cp -fv --backup=numbered .config /home/dvl/dvl-works/dvlp/kernels/ubuntu/$cpu_arch/$cpu_vendor/$version_mask/.config$config_suffix
+cp -fv --backup=numbered .config /home/dvl/dvlw/dvlp/kernels/ubuntu/$cpu_arch/$cpu_vendor/$version_mask/.config$config_suffix
 if ! [ -z $save_location4 ]; then cp -fv --backup=numbered  arch/$cpu_arch/boot/bzImage /mnt/c/users/$wsl_username/$save_name; fi
 
 rm -rf /home/$user_name/dls/zfs-$zfs_version_name

@@ -1,14 +1,11 @@
 #!/bin/bash
-
 cpu_vendor=$(grep -Pom 1 '^vendor_id\s*:\s*\K.*' /proc/cpuinfo)
 user_name=${2:-dvl}
 cpu_arch=$(uname -m)
 cpu_arch="${cpu_arch%%_*}"
-
 if ! [ -d /home/$user_name ]; then $user_name=/home/dvl; fi
 if [ $cpu_vendor = AuthenticAMD ]; then cpu_vendor=amd; fi
 if [ $cpu_vendor = GenuineIntel ]; then cpu_vendor=intel; fi
-
 
 linux_version_name="5.15.90.1"
 # replace first . with _ and then remove the rest of the .'s

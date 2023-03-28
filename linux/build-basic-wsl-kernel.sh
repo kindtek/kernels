@@ -43,4 +43,4 @@ mkdir -pv $cpu_arch/$cpu_vendor/$linux_version_mask
 cp -fv --backup=numbered arch/x86/boot/bzImage $cpu_arch/$cpu_vendor/$linux_version_mask/$save_name 
 cp -fv --backup=numbered .config $cpu_arch/$cpu_vendor/$linux_version_mask/.config_wsl0
 
-# rm -rf wsl2
+rm -rf wsl2

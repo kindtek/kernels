@@ -6,7 +6,7 @@ cpu_arch=$(uname -m)
 cpu_arch="${cpu_arch%%_*}"
 config_suffix=_wsl-zfs0
 
-linux_version_name=5.15.1.9
+linux_version_name=5.15.9.0.1
 # replace first . with _ and then remove the rest of the .'s
 linux_version_mask=${linux_version_name/./_}
 linux_version_mask=${linux_version_mask//[.-]/}
@@ -32,10 +32,11 @@ if [ -d /mnt/c/users/$wsl_username ]; then save_location4=/mnt/c/users/$wsl_user
 cd /home/$user_name/dls 
 
 # try to pick the best .config file and default to the one provided by microsoft
-config_file_default=$cpu_arch/$cpu_vendor/$linux_version_mask/.config$config_suffix
-if ! [ -f $config_file_default ]; then config_file_default=$cpu_arch/generic/$linux_version_mask/.config$config_suffix; fi
-if ! [ -f $config_file_default ]; then config_file_default=wsl2/Microsoft/config-wsl; fi
-if ! [ -f ${config_file} ]; then cp -fv $config_file_default wsl2/.config; config_file=$config_file_default; else cp -fv ${config_file} wsl2/.config; cp -fv $cpu_arch/generic/$linux_version_mask/.config$config_suffix; fi
+default_config_file=$cpu_arch/$cpu_vendor/$linux_version_mask/.config$config_suffix
+config_file=${1:-$default_config_file}
+if ! [ -f $config_file ]; then config_file=$cpu_arch/generic/$linux_version_mask/.config$config_suffix; fi
+if ! [ -f $config_file ]; then config_file=wsl2/Microsoft/config-wsl; fi
+if ! [ -f ${config_file} ]; then config_file=$default_config_file; else mkdir -pv $cpu_arch/$cpu_vendor/$linux_version_mask; cp -bv $config_file $cpu_arch/$cpu_vendor/$linux_version_mask/.config$config_suffix; fi
 
 
 printf '\n======= Kernel Build Info =========================================================================\n\n\tCPU Architecture:\t%s\n\n\tCPU Vendor:\t\t%s\n\n\tConfiguration File:\n\t\t%s\n\n\tSave Locations:\n\t\t%s\n\t\t%s\n\t\t%s\n\n===================================================================================================\n' $cpu_arch $cpu_vendor $config_file $save_location1 $save_location2 $save_location4
@@ -51,7 +52,7 @@ cd wsl2
 
 yes "" | make prepare scripts
 cd ../$zfs_mask && sh autogen.sh
-sh configure --prefix=/ --libdir=/lib --includedir=/usr/include --datarootdir=/usr/share --enable-linux-builtin=yes --with-linux=/home/$user_name/dls/wsl2 --with-linux-obj=/home/$user_name/dls/wsl2
+sh configure --prefix=/ --libdir=/lib --includedir=/usr/include --datarootdir=/usr/share --enable-linux-builtin=yes --with-linux=../wsl2 --with-linux-obj=../wsl2
 sh copy-builtin ../wsl2
 yes "" | make install 
 
@@ -67,5 +68,6 @@ cp -fv --backup=numbered arch/$cpu_arch/boot/bzImage $save_location2
 cp -fv --backup=numbered .config /home/dvl/dvlw/dvlp/kernels/ubuntu/$cpu_arch/$cpu_vendor/$version_mask/.config$config_suffix
 if ! [ -z $save_location4 ]; then cp -fv --backup=numbered  arch/$cpu_arch/boot/bzImage /mnt/c/users/$wsl_username/$save_name; fi
 
-rm -rf /home/$user_name/dls/zfs-$zfs_version_name
-rm /home/$user_name/dls/zfs-$zfs_version_name.tar.gz
+cd ../
+rm -rf zfs-$zfs_version_name
+rm zfs-$zfs_version_name.tar.gz

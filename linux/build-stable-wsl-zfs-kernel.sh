@@ -31,13 +31,11 @@ if [ -d /mnt/c/users/$wsl_username ]; then save_location4=/mnt/c/users/$wsl_user
 cd /home/$user_name/dls 
 
 # try to pick the best .config file and default to the one provided by microsoft
-config_file_default=$cpu_arch/$cpu_vendor/$linux_version_mask/.config$config_suffix
-if ! [ -f $config_file_default ]; then config_file_default=$cpu_arch/generic/$linux_version_mask/.config$config_suffix; fi
-if ! [ -f $config_file_default ]; then config_file_default=linux-$linux_version_mask/Microsoft/config-wsl; fi
-if ! [ -f ${config_file} ]; then cp -fv $config_file_default linux-$linux_version_mask/.config; config_file=$config_file_default; else cp -fv ${config_file} linux-$linux_version_mask/.config; fi
-
-
-printf '\n======= Kernel Build Info =========================================================================\n\n\tCPU Architecture:\t%s\n\n\tCPU Vendor:\t\t%s\n\n\tConfiguration File:\n\t\t%s\n\n\tSave Locations:\n\t\t%s\n\t\t%s\n\t\t%s\n\n===================================================================================================\n' $cpu_arch $cpu_vendor $config_file $save_location1 $save_location2 $save_location4
+default_config_file=$cpu_arch/$cpu_vendor/$linux_version_mask/.config$config_suffix
+config_file=${1:-$default_config_file}
+if ! [ -f $config_file ]; then config_file=$cpu_arch/generic/$linux_version_mask/.config$config_suffix; fi
+# if ! [ -f $config_file ]; then config_file=wsl2/Microsoft/config-wsl; fi
+if ! [ -f ${config_file} ]; then config_file=$default_config_file; else mkdir -pv $cpu_arch/$cpu_vendor/$linux_version_mask; cp -bv $config_file $cpu_arch/$cpu_vendor/$linux_version_mask/.config$config_suffix; fi
 
 
 wget https://github.com/openzfs/zfs/releases/download/zfs-$zfs_version_name/zfs-$zfs_version_name.tar.gz
@@ -46,13 +44,19 @@ mv zfs-$zfs_version_name $zfs_mask
 
 wget https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-$linux_version_name.tar.xz
 tar -xvf linux-$linux_version_name.tar.xz
-mv linux linux-$linux_version_name
+mv linux-$linux_version_name linux-$linux_version_mask
 
-cd linux-$linux_version_name
+cp -fv ${config_file} linux-$linux_version_mask/.config;
+
+cd linux-$linux_version_mask
+
+printf '\n======= Kernel Build Info =========================================================================\n\n\tCPU Architecture:\t%s\n\n\tCPU Vendor:\t\t%s\n\n\tConfiguration File:\n\t\t%s\n\n\tSave Locations:\n\t\t%s\n\t\t%s\n\t\t%s\n\n===================================================================================================\n' $cpu_arch $cpu_vendor $config_file $save_location1 $save_location2 $save_location4
+
+sleep 7
 
 yes "" | make prepare scripts
-cd ../$zfs_mask && sh autogen.sh
-sh configure --prefix=/ --libdir=/lib --includedir=/usr/include --datarootdir=/usr/share --enable-linux-builtin=yes --with-linux=/home/$user_name/dls/linux-$linux_version_mask --with-linux-$linux_version_mask-obj=/home/$user_name/dls/linux-$linux_version_mask
+cd ../zfs-$zfs_mask && sh autogen.sh
+sh configure --prefix=/ --libdir=/lib --includedir=/usr/include --datarootdir=/usr/share --enable-linux-builtin=yes --with-linux=../linux-$linux_version_mask --with-linux-obj=../linux-$linux_version_mask
 sh copy-builtin ../linux-$linux_version_mask
 yes "" | make install 
 
@@ -62,12 +66,14 @@ yes "" | make -j $(expr $(nproc) - 1)
 make modules_install
 
 mkdir -pv /home/$user_name/kernels
-mkdir -pv $cpu_arch/$cpu_vendor/$save_name
+mkdir -pv $cpu_arch/$cpu_vendor/$linux_version_mask
 cp -fv --backup=numbered arch/$cpu_arch/boot/bzImage $save_location1 
 cp -fv --backup=numbered arch/$cpu_arch/boot/bzImage $save_location2
 cp -fv --backup=numbered .config $cpu_arch/$cpu_vendor/$linux_version_mask/.config$config_suffix
 if ! [ -z $save_location4 ]; then cp -fv --backup=numbered  arch/$cpu_arch/boot/bzImage /mnt/c/users/$wsl_username/$save_name; fi
 
+cd ..
 rm -rf linux-$linux_version_mask
-rm -rf $zfs_version_name.tar.gz
-rm -rf $zfs_mask
+rm -rf linux-$linux_version_name.tar.xz
+rm -rf zfs-$zfs_version_name.tar.gz
+rm -rf zfs-$zfs_mask

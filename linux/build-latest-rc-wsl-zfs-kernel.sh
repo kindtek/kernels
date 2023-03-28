@@ -6,7 +6,7 @@ cpu_arch=$(uname -m)
 cpu_arch="${cpu_arch%%_*}"
 config_suffix=_wsl-zfs0
 
-linux_version_name=6.3-rc3
+linux_version_name=6.3-rc4
 # replace first . with _ and then remove the rest of the .'s
 linux_version_mask=${linux_version_name/./_}
 linux_version_mask=${linux_version_mask//[.-]/}
@@ -33,11 +33,11 @@ if [ -d /mnt/c/users/$wsl_username ]; then save_location4=/mnt/c/users/$wsl_user
 cd /home/$user_name/dls 
 
 # try to pick the best .config file and default to the one provided by microsoft
-config_file_default=$cpu_arch/$cpu_vendor/$linux_version_mask/.config$config_suffix
-if ! [ -f $config_file_default ]; then config_file_default=/$cpu_arch/generic/$linux_version_mask/.config$config_suffix; fi
-if ! [ -f $config_file_default ]; then config_file_default=linux/Microsoft/config-wsl; fi
-if ! [ -f ${config_file} ]; then cp -fv $config_file_default $linux_mask/.config; config_file=$config_file_default; else cp -fv ${config_file} linux/.config; fi
-
+default_config_file=$cpu_arch/$cpu_vendor/$linux_version_mask/.config$config_suffix
+config_file=${1:-$default_config_file}
+if ! [ -f $config_file ]; then config_file=$cpu_arch/generic/$linux_version_mask/.config$config_suffix; fi
+if ! [ -f $config_file ]; then config_file=wsl2/Microsoft/config-wsl; fi
+if ! [ -f ${config_file} ]; then config_file=$default_config_file; else mkdir -pv $cpu_arch/$cpu_vendor/$linux_version_mask; cp -bv $config_file $cpu_arch/$cpu_vendor/$linux_version_mask/.config$config_suffix; fi
 
 printf '\n======= Kernel Build Info =========================================================================\n\n\tCPU Architecture:\t%s\n\n\tCPU Vendor:\t\t%s\n\n\tConfiguration File:\n\t\t%s\n\n\tSave Locations:\n\t\t%s\n\t\t%s\n\t\t%s\n\n===================================================================================================\n' $cpu_arch $cpu_vendor $config_file $save_location1 $save_location2 $save_location4
 
@@ -46,13 +46,16 @@ wget https://github.com/openzfs/zfs/releases/download/zfs-$zfs_version_name/zfs-
 tar -xvf zfs-$zfs_version_name.tar.gz
 mv zfs-$zfs_version_name $zfs_mask
 
-wget https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-$linux_version_name.tar.xz
-tar -xvf linux-$linux_version_name.tar.xz
-mv linux-$linux_version_name $linux_mask
+wget https://git.kernel.org/torvalds/t/$linux_version_name.tar.gz
+tar -xvf $linux_version_name.tar.gz
+mv $linux_version_name $linux_mask
+
+cp -fv ${config_file} $linux_mask/.config;
+cd $linux_mask
 
 yes "" | make prepare scripts
 cd ../$zfs_mask && sh autogen.sh
-sh configure --prefix=/ --libdir=/lib --includedir=/usr/include --datarootdir=/usr/share --enable-linux-builtin=yes --with-linux=/home/$user_name/dls/$linux_mask --with-linux-obj=/home/$user_name/dls/$linux_mask
+sh configure --prefix=/ --libdir=/lib --includedir=/usr/include --datarootdir=/usr/share --enable-linux-builtin=yes --with-linux=../$linux_mask --with-linux-obj=../linux-$linux_mask
 sh copy-builtin ../$linux_mask
 yes "" | make install 
 
@@ -62,12 +65,15 @@ yes "" | make -j $(expr $(nproc) - 1)
 make modules_install
 
 mkdir -pv /home/$user_name/kernels
-mkdir -pv $cpu_arch/$cpu_vendor/$save_name
-cp -fv --backup=numbered arch/$cpu_arch/boot/bzImage $save_location1 
+mkdir -pv $cpu_arch/$cpu_vendor/$linux_mask
+cp -fv --backup=numbered arch/$cpu_arch/boot/bzImage ../$save_location1 
 cp -fv --backup=numbered arch/$cpu_arch/boot/bzImage $save_location2
-cp -fv --backup=numbered .config $cpu_arch/$cpu_vendor/$linux_version_mask/.config$config_suffix
-if ! [ -z $save_location4 ]; then cp -fv --backup=numbered  arch/$cpu_arch/boot/bzImage /mnt/c/users/$wsl_username/$save_name; fi
+cp -fv --backup=numbered .config ../$cpu_arch/$cpu_vendor/$linux_version_mask/.config$config_suffix
+if ! [ -z $save_location4 ]; then cp -fv --backup=numbered  arch/$cpu_arch/boot/bzImage $save_location4; fi
 
-rm -rf /home/$user_name/dls/zfs-$zfs_version_name
-rm /home/$user_name/dls/zfs-$zfs_version_name.tar.gz
-rm -rf /home/$user_name/dls/$linux_mask
+cd ..
+
+rm -rf $zfs_mask
+rm zfs-$zfs_version_name.tar.gz
+rm -rf $linux_mask
+rm $linux_version_name.tar.gz

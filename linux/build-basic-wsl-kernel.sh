@@ -41,5 +41,6 @@ cp -fv --backup=numbered arch/$cpu_arch/boot/bzImage ../$save_location1
 cp -fv --backup=numbered arch/$cpu_arch/boot/bzImage $save_location2
 cp -fv --backup=numbered .config $cpu_arch/$cpu_vendor/$linux_version_mask/.config_wsl0
 cp -fv --backup=numbered .config /home/$user_name/built-kernels/.config_wsl0
+cp -fv --backup=numbered ../../dvlp/mnt/home/sample.wslconfig /home/$user_name/built-kernels
 
 rm -rf wsl2

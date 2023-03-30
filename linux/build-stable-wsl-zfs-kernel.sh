@@ -24,7 +24,7 @@ if [ $cpu_vendor = GenuineIntel ]; then cpu_vendor=intel; fi
 
 if ! [ $user_name=agl ]; then save_name=$linux_mask\_wz${user_name:-$(wslvar USERNAME)}; else save_name=$linux_mask; fi
 save_location1=$cpu_arch/$cpu_vendor/$linux_version_mask/$save_name
-save_location2=/home/$user_name/$save_name
+save_location2=/home/$user_name/built-kernels/$save_name
 
 wsl_username=$(wslvar USERNAME) > /dev/null
 if [ -d /mnt/c/users/$wsl_username ]; then save_location4=/mnt/c/users/$wsl_username/$save_name; fi
@@ -63,12 +63,15 @@ sed -i 's/\# CONFIG_ZFS is not set/CONFIG_ZFS=y/g' .config
 yes "" | make -j $(expr $(nproc) - 1)
 make modules_install
 
-mkdir -pv /home/$user_name/kernels
-mkdir -pv $cpu_arch/$cpu_vendor/$linux_version_mask
-cp -fv --backup=numbered arch/$cpu_arch/boot/bzImage $save_location1 
+mkdir -pv ../$cpu_arch/$cpu_vendor/$linux_version_mask
+mkdir -pv /home/$user_name/built-kernels
+cp -fv --backup=numbered arch/$cpu_arch/boot/bzImage ../$save_location1 
 cp -fv --backup=numbered arch/$cpu_arch/boot/bzImage $save_location2
-cp -fv --backup=numbered .config $cpu_arch/$cpu_vendor/$linux_version_mask/.config$config_suffix
+cp -fv --backup=numbered .config ../$cpu_arch/$cpu_vendor/$linux_version_mask/.config$config_suffix
+cp -fv --backup=numbered .config /home/$user_name/built-kernels/.config$config_suffix
 if ! [ -z $save_location4 ]; then cp -fv --backup=numbered  arch/$cpu_arch/boot/bzImage /mnt/c/users/$wsl_username/$save_name; fi
+if ! [ -z /mnt/c/users/$wsl_username ]; then cp -fv --backup=numbered  arch/$cpu_arch/boot/bzImage /mnt/c/users/$wsl_username/$save_name; fi
+
 
 cd ..
 rm -rf $linux_mask

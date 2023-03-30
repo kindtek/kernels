@@ -15,7 +15,7 @@ linux_mask=linux-$linux_version_mask
 
 save_name=linux-$linux_version_mask\_w0
 save_location1=$cpu_arch/$cpu_vendor/$linux_version_mask/$save_name
-save_location2=/home/$user_name/$save_name
+save_location2=/home/$user_name/built-kernels/$save_name
 
 # try to pick the best .config file and default to the one provided by microsoft
 default_config_file=$cpu_arch/$cpu_vendor/$linux_version_mask/.config_wsl0
@@ -35,12 +35,11 @@ cd wsl2
 yes "" | make oldconfig && yes "" | make prepare
 yes "" | make -j $(expr $(nproc) - 1)
 make modules_install 
-mkdir -pv /home/$user_name/kernels
-mkdir -pv ../$cpu_arch/$cpu_vendor/$save_name
-cp -fv --backup=numbered arch/x86/boot/bzImage /home/$user_name/$save_name
-cp -fv --backup=numbered arch/x86/boot/bzImage /home/dvl/$save_name
-mkdir -pv $cpu_arch/$cpu_vendor/$linux_version_mask
-cp -fv --backup=numbered arch/x86/boot/bzImage $cpu_arch/$cpu_vendor/$linux_version_mask/$save_name 
+mkdir -pv ../$cpu_arch/$cpu_vendor/$linux_version_mask
+mkdir -pv /home/$user_name/built-kernels
+cp -fv --backup=numbered arch/$cpu_arch/boot/bzImage ../$save_location1
+cp -fv --backup=numbered arch/$cpu_arch/boot/bzImage $save_location2
 cp -fv --backup=numbered .config $cpu_arch/$cpu_vendor/$linux_version_mask/.config_wsl0
+cp -fv --backup=numbered .config /home/$user_name/built-kernels/.config_wsl0
 
 rm -rf wsl2

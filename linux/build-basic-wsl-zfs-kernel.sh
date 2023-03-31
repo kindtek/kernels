@@ -76,3 +76,6 @@ cd ../
 rm -rf wsl2
 rm -rf zfs-$zfs_version_name
 rm zfs-$zfs_version_name.tar.gz
+
+cd /
+zip -qr built-kernel /home/$user_name/built-kernels/*

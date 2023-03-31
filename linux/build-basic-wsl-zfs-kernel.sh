@@ -68,9 +68,9 @@ cp -fv --backup=numbered arch/$cpu_arch/boot/bzImage ../$save_location1
 cp -fv --backup=numbered arch/$cpu_arch/boot/bzImage $save_location2
 cp -fv --backup=numbered .config ../$cpu_arch/$cpu_vendor/$linux_version_mask/.config$config_suffix
 cp -fv --backup=numbered .config /home/$user_name/built-kernels/.config$config_suffix
-cp -fv --backup=numbered ../../dvlp/mnt/home/sample.wslconfig /home/$user_name/built-kernels
+cp -fv --backup=numbered ../../../dvlp/mnt/home/sample.wslconfig /home/$user_name/built-kernels
 if ! [ -z $save_location4 ]; then cp -fv --backup=numbered  arch/$cpu_arch/boot/bzImage /mnt/c/users/$wsl_username/$save_name; fi
-if ! [ -z /mnt/c/users/$wsl_username ]; then cp -fv --backup=numbered  arch/$cpu_arch/boot/bzImage /mnt/c/users/$wsl_username/$save_name; fi
+if ! [ -z "/mnt/c/users/$wsl_username" ]; then cp -fv --backup=numbered  arch/$cpu_arch/boot/bzImage /mnt/c/users/$wsl_username/$save_name; fi
 
 cd ../
 rm -rf wsl2

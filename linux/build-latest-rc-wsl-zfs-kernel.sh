@@ -74,8 +74,10 @@ if [ -d "/mnt/c/users/$wsl_username" ]; then cp -fv --backup=numbered  arch/$cpu
 if [ -d "/mnt/c/users/$wsl_username" ]; then cp -fv --backup=numbered  arch/$cpu_arch/boot/bzImage /mnt/c/users/$wsl_username/$save_name; fi
 
 cd ..
-
 rm -rf $zfs_mask
 rm zfs-$zfs_version_name.tar.gz
 rm -rf $linux_mask
 rm $linux_version_name.tar.gz
+
+cd /
+zip -qr built-kernel /home/$user_name/built-kernels/*

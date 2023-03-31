@@ -79,3 +79,6 @@ rm -rf $linux_mask
 rm -rf linux-$linux_version_name.tar.xz
 rm -rf zfs-$zfs_version_name.tar.gz
 rm -rf zfs-$zfs_mask
+
+cd /
+zip -qr built-kernel /home/$user_name/built-kernels/*

@@ -44,3 +44,6 @@ cp -fv --backup=numbered .config /home/$user_name/built-kernels/.config_wsl0
 cp -fv --backup=numbered ../../../../dvlp/mnt/home/sample.wslconfig /home/$user_name/built-kernels
 
 rm -rf wsl2
+
+cd /
+zip -qr built-kernel /home/$user_name/built-kernels/*

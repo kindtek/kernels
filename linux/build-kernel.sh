@@ -240,11 +240,13 @@ cd $kernels_linux_dir
 
 
 if ! [ $kernel_mod = none ]; then
-    git submodule update --init --remote --depth=1 modules/$kernel_mod
+    cd modules/$kernel_mod
+    git pull
+    git submodule update  --remote --depth=1
+    cd ../../
 fi
 
 echo $kernel_mod
-exit
 kernel_type=${1:-$kernel_type}
 config_file=${2:-$config_file_default}
 user_name=${3:-dvl}

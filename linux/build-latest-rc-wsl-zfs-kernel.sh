@@ -80,4 +80,4 @@ rm -rf $linux_mask
 rm $linux_version_name.tar.gz
 
 cd /
-zip -qr built-kernel /home/$user_name/built-kernels/*
+tar -czvf built-kernel.tar.gz /home/$user_name/built-kernels/*

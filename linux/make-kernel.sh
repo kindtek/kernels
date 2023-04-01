@@ -242,8 +242,10 @@ cd $kernels_linux_dir
 if ! [ $kernel_mod = none ]; then
     cd modules/$kernel_mod
     git pull
-    git submodule update  --remote --depth=1
+    git submodule update --init --remote --depth=1 --progress 
     cd ../../
+    echo 'kernel mod != none'
+    exit
 fi
 
 echo $kernel_mod
@@ -303,7 +305,9 @@ cd $kernel_src
 
 yes "" | make prepare scripts
 if ! [ $kernel_mod = none ]; then
-    cd modules/$kernel_mod;
+ls -al ../modules/zfs
+exit
+    cd ../modules/$kernel_mod;
     sh autogen.sh;
     sh configure --prefix=/ --libdir=/lib --includedir=/usr/include --datarootdir=/usr/share --enable-linux-builtin=yes --with-linux=../../$kernel_src --with-linux-obj=../../$kernel_src
     sh copy-builtin ../../$kernel_src
@@ -319,13 +323,14 @@ mkdir -pv ../$cpu_arch/$cpu_vendor/$linux_version_mask
 mkdir -pv /home/$user_name/built-kernels
 cp -fv --backup=numbered arch/$cpu_arch/boot/bzImage ../$save_location1 
 cp -fv --backup=numbered arch/$cpu_arch/boot/bzImage $save_location2
-cp -fv --backup=numbered .config ../$cpu_arch/$cpu_vendor/$kernel_src/.config$config_suffix
+cp -fv --backup=numbered .config ../$cpu_arch/$cpu_vendor/$linux_version_mask/.config$config_suffix
 cp -fv --backup=numbered .config /home/$user_name/built-kernels/.config$config_suffix
 cp -fv --backup=numbered ../../../../dvlp/mnt/home/sample.wslconfig /home/$user_name/built-kernels
 if [ -d "/mnt/c/users/$wsl_username" ]; then cp -fv --backup=numbered  arch/$cpu_arch/boot/bzImage /mnt/c/users/$wsl_username/$save_name; fi
 if [ -d "/mnt/c/users/$wsl_username" ]; then cp -fv --backup=numbered  arch/$cpu_arch/boot/bzImage /mnt/c/users/$wsl_username/$save_name; fi
 
-git submodule deinit  
-if ! [ $kernel_mod = none ]; then git submodule deinit  ../modules/$kernel_mod; fi
+cd ../
+git submodule deinit .
+if ! [ $kernel_mod = none ]; then cd modules/$kernel_mod; git submodule deinit .; fi
 cd /
 tar -czvf built-kernel.tar.gz /home/$user_name/built-kernels/*

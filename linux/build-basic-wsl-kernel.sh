@@ -46,4 +46,4 @@ cp -fv --backup=numbered ../../../../dvlp/mnt/home/sample.wslconfig /home/$user_
 rm -rf wsl2
 
 cd /
-zip -qr built-kernel /home/$user_name/built-kernels/*
+tar -czvf built-kernel.tar.gz /home/$user_name/built-kernels/*

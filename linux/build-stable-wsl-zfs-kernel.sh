@@ -81,4 +81,4 @@ rm -rf zfs-$zfs_version_name.tar.gz
 rm -rf zfs-$zfs_mask
 
 cd /
-zip -qr built-kernel /home/$user_name/built-kernels/*
+tar -czvf built-kernel.tar.gz /home/$user_name/built-kernels/*

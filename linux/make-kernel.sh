@@ -250,9 +250,8 @@ cd $kernels_linux_dir
 
 
 if ! [ $kernel_mod = none ]; then
-    cd modules/$kernel_mod
-    git submodule init
-    git submodule update --init --remote --depth=1 --progress --checkout --no-recommend-shallow
+    git submodule init modules/$kernel_mod
+    git submodule update --init --remote --depth=1 --progress --checkout --no-recommend-shallow modules/$kernel_mod
     git fetch
     # git pull --recurse-submodules
     # git submodule update --init --remote --depth=1 --progress --single-branch --force 
@@ -325,7 +324,8 @@ if ! [ $kernel_mod = none ]; then
     sh copy-builtin ../../$kernel_src
     yes "" | make install 
     cd ../../$kernel_src
-    sed -i "s/\# CONFIG_ZFS is not set/CONFIG_ZFS=y/g" .config
+    sed -i 's/\# CONFIG_ZFS is not set/CONFIG_ZFS=y/g' .config
+    # sed -i "s/\# CONFIG_ZFS is not set/CONFIG_ZFS=y/g" .config
     # sed -i "s/\# CONFIG_$(echo $kernel_mod | tr '[:lower:]' '[:upper:]') is not set/CONFIG_$(echo $kernel_mod | tr '[:lower:]' '[:upper:]')=y/g" .config
 fi
 

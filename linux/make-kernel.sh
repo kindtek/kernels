@@ -11,9 +11,10 @@ if [ "$1" = "stable-wsl-zfs" ]; then
     kernel_mod=zfs
     echo 'stable-wsl-zfs'
     cd $kernel_src
-    git submodule set-branch --branch linux-rolling-$kernel_src .
-    git submodule update --init --remote --depth=1 --progress
-
+    # git submodule set-branch --branch linux-rolling-$kernel_src
+    git submodule init
+    git submodule update --init --remote --depth=1 --progress --single-branch --force
+    git fetch
     # kernel_src_upstream=$(git ls-remote --quiet --tags --sort=committerdate $(git config --get remote.upstream.url) | tail -1)
     # # kernel_src_upstream=$( echo $kernel_src_upstream | sed 's/[\^\{\}]//g' )
     # kernel_src_upstream_sha=$kernel_src_upstream | tail -1 | cut -d $'\t' -f1
@@ -62,8 +63,10 @@ elif [ "$1" = "lts-wsl-zfs" ]; then
     kernel_src=lts
     kernel_mod=zfs
     cd $kernel_src
-    git submodule set-branch --branch linux-rolling-$kernel_src .
+    # git submodule set-branch --branch linux-rolling-$kernel_src
+    git submodule init
     git submodule update --init --remote --depth=1 --progress
+    git fetch
 
 #     kernel_src_origin=$(git ls-remote --quiet --tags --sort=committerdate | tail -1)   
 #     kernel_src_origin=$( echo $kernel_src_origin | sed 's/[\^\{\}]//g' ) 
@@ -111,7 +114,9 @@ elif [ "$1" = "latest-rc-wsl-zfs" ]; then
     kernel_src=rc
     kernel_mod=zfs
     cd $kernel_src
+    git submodule init
     git submodule update --init --remote --depth=1 --progress
+    git fetch
     kernel_src_origin=$(git ls-remote --quiet --tags --sort=committerdate $(git config --get remote.origin.url) | tail -1)
     kernel_src_upstream=$(git ls-remote --quiet --tags --sort=committerdate $(git config --get remote.upstream.url) | tail -1)
     kernel_src_origin_sha=kernel_src_origin | cut -d $'\t' -f1
@@ -151,7 +156,10 @@ elif [ "$1" = "basic-wsl-zfs" ]; then
     kernel_mod=zfs
     # cd'ing after the update so if something fails the error will be caught easier
     cd $kernel_src
+    git submodule init
     git submodule update --init --remote --depth=1 --progress
+    git fetch
+
     kernel_src_origin=$(git ls-remote --quiet --tags --sort=committerdate $(git config --get remote.origin.url) | tail -1)
     kernel_src_upstream=$(git ls-remote --quiet --tags --sort=committerdate $(git config --get remote.upstream.url) | tail -1)
     kernel_src_origin_sha=kernel_src_origin | cut -d $'\t' -f1
@@ -192,7 +200,9 @@ elif [ "$1" = "basic-wsl" ]; then
     kernel_src=msft
     kernel_mod=none
     cd $kernel_src
+    git submodule init
     git submodule update --init --remote --depth=1 --progress
+    git fetch
     # cd'ing after the update so if something fails the error will be caught easier
     kernel_src_origin=$(git ls-remote --quiet --tags --sort=committerdate | tail -1)
     # kernel_src_origin_name==$kernel_src_origin | cut -d $'/' -f3
@@ -241,11 +251,13 @@ cd $kernels_linux_dir
 
 if ! [ $kernel_mod = none ]; then
     cd modules/$kernel_mod
-    git pull
-    git submodule update --init --remote --depth=1 --progress 
+    git submodule init
+    git submodule update --init --remote --depth=1 --progress --checkout --no-recommend-shallow
+    git fetch
+    # git pull --recurse-submodules
+    # git submodule update --init --remote --depth=1 --progress --single-branch --force 
     cd ../../
     echo 'kernel mod != none'
-    exit
 fi
 
 echo $kernel_mod
@@ -302,11 +314,10 @@ printf '\n======= Kernel Build Info ============================================
 
 
 cd $kernel_src
+echo "cd $kernel_src"
 
 yes "" | make prepare scripts
 if ! [ $kernel_mod = none ]; then
-ls -al ../modules/zfs
-exit
     cd ../modules/$kernel_mod;
     sh autogen.sh;
     sh configure --prefix=/ --libdir=/lib --includedir=/usr/include --datarootdir=/usr/share --enable-linux-builtin=yes --with-linux=../../$kernel_src --with-linux-obj=../../$kernel_src
@@ -330,7 +341,7 @@ if [ -d "/mnt/c/users/$wsl_username" ]; then cp -fv --backup=numbered  arch/$cpu
 if [ -d "/mnt/c/users/$wsl_username" ]; then cp -fv --backup=numbered  arch/$cpu_arch/boot/bzImage /mnt/c/users/$wsl_username/$save_name; fi
 
 cd ../
-git submodule deinit .
-if ! [ $kernel_mod = none ]; then cd modules/$kernel_mod; git submodule deinit .; fi
+git submodule deinit --all --force
+if ! [ $kernel_mod = none ]; then cd modules/$kernel_mod; git submodule deinit --all --force ; fi
 cd /
 tar -czvf built-kernel.tar.gz /home/$user_name/built-kernels/*

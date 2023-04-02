@@ -1,9 +1,9 @@
 #!/bin/bash
-git config --global --add safe.directory /home/dvl/dvlw/dvlp/kernels/linux/rc
-git config --global --add safe.directory /home/dvl/dvlw/dvlp/kernels/linux/stable
-git config --global --add safe.directory /home/dvl/dvlw/dvlp/kernels/linux/msft
-git config --global --add safe.directory /home/dvl/dvlw/dvlp/kernels/linux/lts
-git config --global --add safe.directory /home/dvl/dvlw/dvlp/kernels/linux/modules/zfs
+git config --global --add safe.directory $(pwd)/rc
+git config --global --add safe.directory $(pwd)/stable
+git config --global --add safe.directory $(pwd)/msft
+git config --global --add safe.directory $(pwd)/lts
+git config --global --add safe.directory $(pwd)/modules/zfs
 
 
 

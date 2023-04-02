@@ -318,13 +318,15 @@ echo "cd $kernel_src"
 
 yes "" | make prepare scripts
 if ! [ $kernel_mod = none ]; then
+# ls -al ../modules/$kernel_mod
     cd ../modules/$kernel_mod;
     sh autogen.sh;
     sh configure --prefix=/ --libdir=/lib --includedir=/usr/include --datarootdir=/usr/share --enable-linux-builtin=yes --with-linux=../../$kernel_src --with-linux-obj=../../$kernel_src
     sh copy-builtin ../../$kernel_src
     yes "" | make install 
     cd ../../$kernel_src
-    sed -i "s/\# CONFIG_$(echo $kernel_mod | tr '[:lower:]' '[:upper:]') is not set/CONFIG_$(echo $kernel_mod | tr '[:lower:]' '[:upper:]')=y/g" .config
+    sed -i "s/\# CONFIG_ZFS is not set/CONFIG_ZFS=y/g" .config
+    # sed -i "s/\# CONFIG_$(echo $kernel_mod | tr '[:lower:]' '[:upper:]') is not set/CONFIG_$(echo $kernel_mod | tr '[:lower:]' '[:upper:]')=y/g" .config
 fi
 
 yes "" | make -j $(expr $(nproc) - 1)

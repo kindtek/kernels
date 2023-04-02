@@ -17,14 +17,15 @@ kernels_linux_dir=$(pwd)
 
 # "stable-wsl-zfs")
 if [ "$1" = "stable-wsl-zfs" ]; then
+    echo "$1 = stable-wsl-zfs"
     kernel_src=stable
     kernel_mod=zfs
     echo 'stable-wsl-zfs'
-    cd $kernel_src
     # git submodule set-branch --branch linux-rolling-$kernel_src
-    git submodule init
-    git submodule update --init --remote --depth=1 --progress --single-branch --force
-    git fetch
+    git submodule update --init --remote --depth=2 --progress -- $kernel_src
+    git submodule update --init --remote --depth=2 --progress -- modules/$kernel_mod
+    cd $kernel_src
+
     # kernel_src_upstream=$(git ls-remote --quiet --tags --sort=committerdate $(git config --get remote.upstream.url) | tail -1)
     # # kernel_src_upstream=$( echo $kernel_src_upstream | sed 's/[\^\{\}]//g' )
     # kernel_src_upstream_sha=$kernel_src_upstream | tail -1 | cut -d $'\t' -f1
@@ -69,15 +70,15 @@ if [ "$1" = "stable-wsl-zfs" ]; then
     # ;;
 
 elif [ "$1" = "lts-wsl-zfs" ]; then
+    echo "$1 = lts-wsl-zfs"
+
     # "lts-wsl-zfs")
     kernel_src=lts
     kernel_mod=zfs
-    cd $kernel_src
     # git submodule set-branch --branch linux-rolling-$kernel_src
-    git submodule init .
-    git submodule update --init --remote --depth=2 --progress .
-    git fetch
-
+    git submodule update --init --remote --depth=2 --progress -- $kernel_src
+    git submodule update --init --remote --depth=2 --progress -- modules/$kernel_mod
+    cd $kernel_src
     #     kernel_src_origin=$(git ls-remote --quiet --tags --sort=committerdate | tail -1)
     #     kernel_src_origin=$( echo $kernel_src_origin | sed 's/[\^\{\}]//g' )
     #     kernel_src_origin_sha=$(cut -d $' ' -f1 <<< "$kernel_src_origin")
@@ -91,6 +92,7 @@ elif [ "$1" = "lts-wsl-zfs" ]; then
     linux_version_name="$(git rev-list --branches --date-order --header | tr -d '\0' | tr -d '\0' | grep -o 'Merge v[0-9\.]*' | sed 's/[^0-9\.]//g')"
     linux_version_mask=$(echo $linux_version_name | sed 's/\./\_/')
     linux_version_mask=$(echo $linux_version_mask | sed 's/\.//g')
+
     # # sync_fork_with_upstream() {
     #     # update/push origin with upstream if theres an update that has not been pushed from upstream
     #     if ! [ $kernel_src_upstream_sha = $kernel_src_origin_sha ]; then
@@ -120,13 +122,12 @@ elif [ "$1" = "lts-wsl-zfs" ]; then
     # ;;
 elif [ "$1" = "latest-rc-wsl-zfs" ]; then
     # "latest-rc-wsl-zfs")
-    echo 'latest-rc-wsl-zfs'
+    echo "$1 = latest-rc-wsl-zfs"
     kernel_src=rc
     kernel_mod=zfs
+    git submodule update --init --remote --depth=2 --progress -- $kernel_src
+    git submodule update --init --remote --depth=2 --progress -- modules/$kernel_mod
     cd $kernel_src
-    git submodule init
-    git submodule update --init --remote --depth=2 --progress
-    git fetch
     kernel_src_origin=$(git ls-remote --quiet --tags --sort=committerdate $(git config --get remote.origin.url) | tail -1)
     kernel_src_upstream=$(git ls-remote --quiet --tags --sort=committerdate $(git config --get remote.upstream.url) | tail -1)
     kernel_src_origin_sha=kernel_src_origin | cut -d $'\t' -f1
@@ -135,6 +136,7 @@ elif [ "$1" = "latest-rc-wsl-zfs" ]; then
     # replace first . with _ and then remove the rest of the .'s
     linux_version_mask=$(echo $linux_version_name | sed 's/-/-rc/')
 
+    cd ..
     # # sync_fork_with_upstream() {
     #     # update/push origin with upstream if theres an update that has not been pushed from upstream
     #     if ! [ $kernel_src_upstream_sha = $kernel_src_origin_sha ]; then
@@ -161,14 +163,13 @@ elif [ "$1" = "latest-rc-wsl-zfs" ]; then
 
 # "basic-wsl-zfs")
 elif [ "$1" = "basic-wsl-zfs" ]; then
-    echo 'basic-wsl-zfs'
-    kernel_src=msft
+    echo "$1 = basic-wsl-zfs"
+    kernel_src=rc
     kernel_mod=zfs
+    git submodule update --init --remote --depth=2 --progress -- $kernel_src
+    git submodule update --init --remote --depth=2 --progress -- modules/$kernel_mod
     # cd'ing after the update so if something fails the error will be caught easier
     cd $kernel_src
-    git submodule init
-    git submodule update --init --remote --depth=1 --progress
-    git fetch
 
     kernel_src_origin=$(git ls-remote --quiet --tags --sort=committerdate $(git config --get remote.origin.url) | tail -1)
     kernel_src_upstream=$(git ls-remote --quiet --tags --sort=committerdate $(git config --get remote.upstream.url) | tail -1)
@@ -206,13 +207,11 @@ elif [ "$1" = "basic-wsl-zfs" ]; then
 # *)
 elif [ "$1" = "basic-wsl" ]; then
     # basic-wsl
-    echo 'basic-wsl'
+    echo "$1 = basic-wsl"
     kernel_src=msft
     kernel_mod=none
+    git submodule update --init --remote --depth=2 --progress -- $kernel_src
     cd $kernel_src
-    git submodule init
-    git submodule update --init --remote --depth=1 --progress
-    git fetch
     # cd'ing after the update so if something fails the error will be caught easier
     kernel_src_origin=$(git ls-remote --quiet --tags --sort=committerdate | tail -1)
     # kernel_src_origin_name==$kernel_src_origin | cut -d $'/' -f3
@@ -260,7 +259,7 @@ echo $(pwd)
 
 if ! [ "$kernel_mod" = none ]; then
     git submodule init modules/$kernel_mod
-    git submodule update --init --remote --depth=1 --progress --checkout --no-recommend-shallow modules/$kernel_mod
+    git submodule update --init --remote --depth=2 --progress --checkout --no-recommend-shallow modules/$kernel_mod
     git fetch
     # git pull --recurse-submodules
     # git submodule update --init --remote --depth=1 --progress --single-branch --force

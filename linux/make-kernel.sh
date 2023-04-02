@@ -5,8 +5,9 @@ git config --global --add safe.directory $(pwd)/msft
 git config --global --add safe.directory $(pwd)/lts
 git config --global --add safe.directory $(pwd)/modules/zfs
 
-
-
+cd ../../
+git pull --recurse-submodules
+cd kernels/linux
 
 repo_path1=dvlw
 repo_path2=dvlp

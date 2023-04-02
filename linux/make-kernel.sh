@@ -1,5 +1,13 @@
 #!/bin/bash
 git config --global --add safe.directory /home/dvl/dvlw/dvlp/kernels/linux/rc
+git config --global --add safe.directory /home/dvl/dvlw/dvlp/kernels/linux/stable
+git config --global --add safe.directory /home/dvl/dvlw/dvlp/kernels/linux/msft
+git config --global --add safe.directory /home/dvl/dvlw/dvlp/kernels/linux/lts
+git config --global --add safe.directory /home/dvl/dvlw/dvlp/kernels/linux/modules/zfs
+
+
+
+
 repo_path1=dvlw
 repo_path2=dvlp
 kernels_linux_dir=$(pwd)

@@ -42,7 +42,7 @@ if ! [ -f ${config_file} ]; then config_file=$default_config_file; else mkdir -p
 
 wget https://github.com/openzfs/zfs/releases/download/zfs-$zfs_version_name/zfs-$zfs_version_name.tar.gz
 
-git clone https://github.com/microsoft/WSL2-Linux-Kernel.git --progress --depth=1 --single-branch --branch linux-msft-wsl-5.15.90.1
+git clone https://github.com/microsoft/WSL2-Linux-Kernel.git --progress --depth=1 --single-branch --branch linux-msft-wsl-6.1.y
 
 printf '\n======= Kernel Build Info =========================================================================\n\n\tCPU Architecture:\t%s\n\n\tCPU Vendor:\t\t%s\n\n\tConfiguration File:\n\t\t%s\n\n\tSave Locations:\n\t\t%s\n\t\t%s\n\t\t%s\n\n===================================================================================================\n' $cpu_arch $cpu_vendor $config_file $save_location1 $save_location2 $save_location4
 
@@ -51,6 +51,7 @@ mv zfs-$zfs_version_name $zfs_mask
 mv WSL2-Linux-Kernel wsl2
 cd wsl2
 
+yes "" | make oldconfig
 yes "" | make prepare scripts
 cd ../$zfs_mask && sh autogen.sh
 sh configure --prefix=/ --libdir=/lib --includedir=/usr/include --datarootdir=/usr/share --enable-linux-builtin=yes --with-linux=../wsl2 --with-linux-obj=../wsl2
@@ -73,9 +74,9 @@ if [ -d "/mnt/c/users/$wsl_username" ]; then cp -fv --backup=numbered  arch/$cpu
 if [ -d "/mnt/c/users/$wsl_username" ]; then cp -fv --backup=numbered  arch/$cpu_arch/boot/bzImage /mnt/c/users/$wsl_username/$save_name; fi
 
 cd ../
-rm -rf wsl2
-rm -rf zfs-$zfs_version_name
-rm zfs-$zfs_version_name.tar.gz
+# rm -rf wsl2
+# rm -rf zfs-$zfs_version_name
+# rm zfs-$zfs_version_name.tar.gz
 
 cd /
 tar -czvf built-kernel.tar.gz /home/$user_name/built-kernels/*

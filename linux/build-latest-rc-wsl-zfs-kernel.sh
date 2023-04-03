@@ -27,7 +27,7 @@ save_name=$linux_mask\_wz0
 save_location1=$cpu_arch/$cpu_vendor/$linux_version_mask/$save_name
 save_location2=/home/$user_name/built-kernels/$save_name
 
-# wsl_username=$(wslvar USERNAME) > /dev/null 2> /dev/null
+wsl_username=$(wslvar USERNAME) > /dev/null 2> /dev/null
 if [ -d /mnt/c/users/$wsl_username ]; then save_location4=/mnt/c/users/$wsl_username/$save_name; fi
 
 cd /home/$user_name/dls 
@@ -54,14 +54,14 @@ cd $linux_mask
 
 yes "" | make prepare scripts
 cd ../$zfs_mask && sh autogen.sh
-sh configure --prefix=/ --libdir=/lib --includedir=/usr/include --datarootdir=/usr/share --enable-linux-builtin=yes --with-linux=../$linux_mask --with-linux-obj=../linux-$linux_mask
+sh configure --prefix=/ --libdir=/lib --includedir=/usr/include --datarootdir=/usr/share --enable-linux-builtin=yes --with-linux=../$linux_mask --with-linux-obj=../$linux_mask
 sh copy-builtin ../$linux_mask
 yes "" | make install 
 
 cd ../$linux_mask
 sed -i 's/\# CONFIG_ZFS is not set/CONFIG_ZFS=y/g' .config
 yes "" | make -j $(expr $(nproc) - 1)
-make modules_install
+yes "" | make modules_install
 
 mkdir -pv ../$cpu_arch/$cpu_vendor/$linux_version_mask
 mkdir -pv /home/$user_name/built-kernels

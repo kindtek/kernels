@@ -67,97 +67,92 @@ if [ "$1" = "stable-wsl-zfs" ]; then
     # ;;
 
 elif [ "$1" = "lts-wsl-zfs" ]; then
-    echo "$1 = lts-wsl-zfs"
-
-    # "lts-wsl-zfs")
+# "lts-wsl-zfs")
     kernel_src=lts
     kernel_mod=zfs
     # git submodule set-branch --branch linux-rolling-$kernel_src
-    git submodule init -- $kernel_src
-    git fetch -- $kernel_src
-    git submodule update --init --remote --progress -- $kernel_src
-    git submodule init -- $kernel_mod
-    git fetch -- $kernel_mod
-    git submodule update --init --remote --progress -- modules/$kernel_mod
-    cd $kernel_src
-    #     kernel_src_origin=$(git ls-remote --quiet --tags --sort=committerdate | tail -1)
-    #     kernel_src_origin=$( echo $kernel_src_origin | sed 's/[\^\{\}]//g' )
-    #     kernel_src_origin_sha=$(cut -d $' ' -f1 <<< "$kernel_src_origin")
-    #     # kernel_src_origin_name=$kernel_src_origin | cut -d '/' -f3
-    #     kernel_src_origin_name=$(cut -d '/' -f3 <<< "$kernel_src_origin")
-    #     linux_version_name=$(echo $kernel_src_origin_name | sed 's@^[^0-9]*\([0-9\.]\+\).*@\1@')
-    #     # replace first . with _ and then remove the rest of the .'s
-    #     linux_version_mask=$( echo $linux_version_name | sed 's/\./\_/' )
-    #     linux_version_mask=$( echo $linux_version_mask | sed 's/\.//g' )
-    #     echo $linux_version_mask
-    linux_version_name="$(git rev-list --all | tr -d '\0' | tr -d '\0' | grep -o 'Merge v[0-9\.]*' | sed 's/[^0-9\.]//g')"
-    linux_version_mask=$(echo $linux_version_name | sed 's/\./\_/')
-    linux_version_mask=$(echo $linux_version_mask | sed 's/\.//g')
-    
+    git submodule init
+    git submodule update --init --remote --depth=1 --progress
+    git fetch
 
-    # # sync_fork_with_upstream() {
-    #     # update/push origin with upstream if theres an update that has not been pushed from upstream
-    #     if ! [ $kernel_src_upstream_sha = $kernel_src_origin_sha ]; then
-    #     git fetch upstream
-    #     git checkout $kernel_src_upstream_sha
-    #     # git merge upstream/$kernel_src_upstream_sha
-    #     git switch -c $kernel_src_upstream_name
-    #     # git add -A -- /home/dvl/dvlw/dvlp/kernels/linux/msft
-    #     cd ../../../
-    #     git reset
-    #     git add -A -- $repo_path1
-    #     git commit -m "merge new branch from upstream"
-    #     git push
-    #     cd ../
-    #     git reset
-    #     git add -A -- $repo_path2
-    #     git commit -m "merge new branch $kernel_src_upstream_name"
-    #     git push
-    #     cd $repo_path1/$repo_path2/kernels/linux
-    #     echo $repo_path1/$repo_path2/kernels/linux
-    #     echo 'vs
-    #     '$(pwd)$repo_path1/$repo_path2/kernels/linux
-    # else
+#     kernel_src_origin=$(git ls-remote --quiet --tags --sort=committerdate | tail -1)   
+#     kernel_src_origin=$( echo $kernel_src_origin | sed 's/[\^\{\}]//g' ) 
+#     kernel_src_origin_sha=$(cut -d $' ' -f1 <<< "$kernel_src_origin")
+#     # kernel_src_origin_name=$kernel_src_origin | cut -d '/' -f3
+#     kernel_src_origin_name=$(cut -d '/' -f3 <<< "$kernel_src_origin")
+#     linux_version_name=$(echo $kernel_src_origin_name | sed 's@^[^0-9]*\([0-9\.]\+\).*@\1@')
+#     # replace first . with _ and then remove the rest of the .'s
+#     linux_version_mask=$( echo $linux_version_name | sed 's/\./\_/' )
+#     linux_version_mask=$( echo $linux_version_mask | sed 's/\.//g' )
+#     echo $linux_version_mask
+    linux_version_name="$(git rev-list --branches --date-order --header | tr -d '\0' | tr -d '\0' | grep -o 'Merge v[0-9\.]*' | sed 's/[^0-9\.]//g')"  
+    linux_version_mask=$( echo $linux_version_name | sed 's/\./\_/' )
+    linux_version_mask=$( echo $linux_version_mask | sed 's/\.//g' )
+# # sync_fork_with_upstream() {
+#     # update/push origin with upstream if theres an update that has not been pushed from upstream
+#     if ! [ $kernel_src_upstream_sha = $kernel_src_origin_sha ]; then
+#     git fetch upstream
+#     git checkout $kernel_src_upstream_sha
+#     # git merge upstream/$kernel_src_upstream_sha
+#     git switch -c $kernel_src_upstream_name
+#     # git add -A -- /home/dvl/dvlw/dvlp/kernels/linux/msft
+#     cd ../../../
+#     git reset
+#     git add -A -- $repo_path1
+#     git commit -m "merge new branch from upstream"
+#     git push
+#     cd ../
+#     git reset
+#     git add -A -- $repo_path2
+#     git commit -m "merge new branch $kernel_src_upstream_name"
+#     git push
+#     cd $repo_path1/$repo_path2/kernels/linux
+#     echo $repo_path1/$repo_path2/kernels/linux
+#     echo 'vs
+#     '$(pwd)$repo_path1/$repo_path2/kernels/linux
+    # else 
     # fi
     # return true
     # } || { return false; }
     # ;;
 elif [ "$1" = "latest-rc-wsl-zfs" ]; then
-    # "latest-rc-wsl-zfs")
-    echo "$1 = latest-rc-wsl-zfs"
+# "latest-rc-wsl-zfs")
+    echo 'latest-rc-wsl-zfs'
     kernel_src=rc
     kernel_mod=zfs
     git submodule update --init --remote --depth=2 --progress -- $kernel_src
     git submodule update --init --remote --depth=2 --progress -- modules/$kernel_mod
     cd $kernel_src
-    kernel_src_origin=$(git ls-remote --quiet  $(git config --get remote.origin.url) | tail -1)
-    kernel_src_upstream=$(git ls-remote --quiet $(git config --get remote.upstream.url) | tail -1)
+    git submodule init
+    git submodule update --init --remote --depth=1 --progress
+    git fetch
+    kernel_src_origin=$(git ls-remote --quiet --tags --sort=committerdate $(git config --get remote.origin.url) | tail -1)
+    kernel_src_upstream=$(git ls-remote --quiet --tags --sort=committerdate $(git config --get remote.upstream.url) | tail -1)
     kernel_src_origin_sha=kernel_src_origin | cut -d $'\t' -f1
     # remove any letters - left with #.#-#
     linux_version_name=$(echo $kernel_src_upstream_name | sed 's@^[^0-9]*\([0-9\.-]\+\).*@\1@')
     # replace first . with _ and then remove the rest of the .'s
     linux_version_mask=$(echo $linux_version_name | sed 's/-/-rc/')
 
-    cd ..
-    # # sync_fork_with_upstream() {
-    #     # update/push origin with upstream if theres an update that has not been pushed from upstream
-    #     if ! [ $kernel_src_upstream_sha = $kernel_src_origin_sha ]; then
-    #     git fetch upstream
-    #     git checkout $kernel_src_upstream_sha
-    #     # git merge upstream/$kernel_src_upstream_sha
-    #     git switch -c $kernel_src_upstream_name
-    #     # git add -A -- /home/dvl/dvlw/dvlp/kernels/linux/msft
-    #     cd ../../../
-    #     git reset
-    #     git add -A -- $repo_path1
-    #     git commit -m "merge new branch from upstream"
-    #     git push
-    #     cd ../
-    #     git reset
-    #     git add -A -- $repo_path2
-    #     git commit -m "merge new branch $kernel_src_upstream_name"
-    #     git push
-    #     fi
+# # sync_fork_with_upstream() {
+#     # update/push origin with upstream if theres an update that has not been pushed from upstream
+#     if ! [ $kernel_src_upstream_sha = $kernel_src_origin_sha ]; then
+#     git fetch upstream
+#     git checkout $kernel_src_upstream_sha
+#     # git merge upstream/$kernel_src_upstream_sha
+#     git switch -c $kernel_src_upstream_name
+#     # git add -A -- /home/dvl/dvlw/dvlp/kernels/linux/msft
+#     cd ../../../
+#     git reset
+#     git add -A -- $repo_path1
+#     git commit -m "merge new branch from upstream"
+#     git push
+#     cd ../
+#     git reset
+#     git add -A -- $repo_path2
+#     git commit -m "merge new branch $kernel_src_upstream_name"
+#     git push
+#     fi
 
     # return true
     # } || { return false; }
@@ -259,14 +254,16 @@ cd $kernels_linux_dir
 
 echo $(pwd)
 
-# if ! [ "$kernel_mod" = none ]; then
-#     git submodule init modules/$kernel_mod
-#     git submodule update --init --remote --depth=2 --progress modules/$kernel_mod
-#     # git pull --recurse-submodules
-#     # git submodule update --init --remote --depth=1 --progress --single-branch --force
-#     cd ../../
-#     echo 'kernel mod != none'
-# fi
+
+if ! [ $kernel_mod = none ]; then
+    git submodule init modules/$kernel_mod
+    git submodule update --init --remote --depth=1 --progress --checkout --no-recommend-shallow modules/$kernel_mod
+    git fetch
+    # git pull --recurse-submodules
+    # git submodule update --init --remote --depth=1 --progress --single-branch --force 
+    cd ../../
+    echo 'kernel mod != none'
+fi
 
 echo $kernel_mod
 kernel_type=${1:-$kernel_type}

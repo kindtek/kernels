@@ -6,7 +6,7 @@ cpu_arch=$(uname -m)
 cpu_arch="${cpu_arch%%_*}"
 config_suffix=_wsl-zfs0
 
-linux_version_name=6.3-rc4
+linux_version_name=6.3-rc7
 # replace first . with _ and then remove the rest of the .'s
 linux_version_mask=${linux_version_name/./_}
 linux_version_mask=${linux_version_mask//[.-]/}

@@ -43,7 +43,7 @@ config_target_win=$win_save_path/$config_alias
 tarball_target_nix=$nix_save_path/$package_full_name.tar.gz
 tarball_target_win=$win_save_path/$package_full_name.tar.gz
 tarball_source_nix=$nix_save_path/$package_full_name.tar.gz
-tarball_source_wiin=$win_save_path/$package_full_name.tar.gz
+tarball_source_win=$win_save_path/$package_full_name.tar.gz
 
 # check that the user supplied source exists if not try to pick the best .config file available
 # user choice is best if it exists
@@ -132,6 +132,7 @@ yes "" | make -j $(expr $(nproc) - 1)
 make modules_install
 # kernel is baked - time to distribute fresh copies
 
+cd ..
 # move back to base dir  folder with github (relative) path
 mkdir -pv $git_save_path
 # queue files to be saved to repo

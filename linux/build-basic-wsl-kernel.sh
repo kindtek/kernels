@@ -66,31 +66,30 @@ printf "
 
 
   CPU Architecture: 
-     $cpu_arch
+    $cpu_arch
 
   CPU Vendor:  
-     $cpu_vendor
+    $cpu_vendor
 
   Configuration File:
-     $config_source
+    $config_source
 
 
 ===========================================================
 =================   Linux Kernel   ========================
 ======-----------     $kernel_version    ------------------======
 ===========================================================
-====------------  Destination Files -------------------====
+====------------     Output Info     -------------------====
 
 
   Kernel:
-     $kernel_target_git
+    $kernel_target_git
 
-  Kernel/Config .tar:
-     $tarfile_target_nix
-     $tarfile_target_win      
+  Compressed Kernel/Config:
+    $tarfile_target_nix
+    $tarfile_target_win      
 
 
-===========================================================
 ===========================================================
 ===========================================================
 ===========================================================

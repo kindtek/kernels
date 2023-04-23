@@ -9,7 +9,7 @@ kernel_version=${2:-$kernel_version}
 zfs_version=${3:-$zfs_version}
 
 win_user=${4:-'user'}
-linux_kernel_type="basic-wsl-kernel"
+linux_kernel_type="basic-wsl-zfs-kernel"
 timestamp_id=$(date -d "today" +"%Y%m%d%H%M%S")
 # deduce architecture of this machine
 cpu_vendor=$(grep -Pom 1 '^vendor_id\s*:\s*\K.*' /proc/cpuinfo)
@@ -135,7 +135,7 @@ make modules_install
 # move back to base dir  folder with github (relative) path
 mkdir -pv $git_save_path
 # queue files to be saved to repo
-if [ $user_config_flag ]; then
+if [ "$user_config_flag" ]; then
     cp -fv --backup=numbered $wsl_build_dir/.config $config_target_git
 fi
 cp -fv --backup=numbered $wsl_build_dir/$kernel_source $kernel_target_git

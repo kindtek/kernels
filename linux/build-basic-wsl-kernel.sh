@@ -15,11 +15,12 @@ cpu_arch="${cpu_arch%%_*}"
 if [ $cpu_vendor = AuthenticAMD ]; then cpu_vendor=amd; fi
 if [ $cpu_vendor = GenuineIntel ]; then cpu_vendor=intel; fi
 # replace first . with _ and then remove the rest of the .'s
-kernel_version_mask=${kernel_version/\./L}
-kernel_version_mask=${kernel_version_mask//[\.-]/}W
+kernel_version_mask=${kernel_version/\./_}
+kernel_alias=${kernel_version/\./L}
+kernel_version_mask=${kernel_version_mask//[\.-]/}
+kernel_alias=${kernel_alias//[\.-]/}W0
 package_alias=linux-$kernel_version_mask
 package_full_name=Linux-$kernel_version-WSL
-kernel_alias=L$kernel_version_mask\_W0
 config_alias=.config_$kernel_alias
 git_save_path=$cpu_arch/$cpu_vendor/$kernel_version_mask
 nix_save_path=$HOME/k-cache
@@ -31,6 +32,8 @@ kernel_target_nix=$nix_save_path/$kernel_alias
 config_target_nix=$nix_save_path/$config_alias
 kernel_target_win=$win_save_path/$kernel_alias
 config_target_win=$win_save_path/$config_alias
+tarfile_target_nix=$nix_save_path/$package_full_name.tar.gz
+tarfile_target_win=$win_save_path/$package_full_name.tar.gz
 
 # check that the user supplied source exists if not try to pick the best .config file available
 # user choice is best if it exists
@@ -55,23 +58,47 @@ fi
 
 # display info while waiting on repo to clone
 printf "
-======= Kernel Build Info =========================================================================
+===========================================================
+=================   Linux Kernel   ========================
+======-----------     $kernel_version    ------------------======
+===========================================================
+====------------     Source Info    -------------------====
 
-    CPU Architecture:   %s
-    CPU Vendor:         %s
-    
-    Configuration File:
-        %s
-    Save Locations:
-        %s
-        %s
-        
-===================================================================================================
-" "$cpu_arch" "$cpu_vendor" "$config_source" "$kernel_target_git" "$kernel_target_nix"
+
+  CPU Architecture: 
+     $cpu_arch
+
+  CPU Vendor:  
+     $cpu_vendor
+
+  Configuration File:
+     $config_source
+
+
+===========================================================
+=================   Linux Kernel   ========================
+======-----------     $kernel_version    ------------------======
+===========================================================
+====------------  Destination Files -------------------====
+
+
+  Kernel:
+     $kernel_target_git
+
+  Kernel/Config .tar:
+     $tarfile_target_nix
+     $tarfile_target_win      
+
+
+===========================================================
+===========================================================
+===========================================================
+===========================================================
+"
 
 msft_wsl_repo=https://github.com/microsoft/WSL2-Linux-Kernel.git
 msft_wsl_repo_branch=linux-msft-wsl-$kernel_version 
-( ( git clone $msft_wsl_repo $wsl_build_dir --progress --depth=1 --single-branch --branch $msft_wsl_repo_branch ) || ( git pull $msft_wsl_repo --squash --progress ) ) 
+( ( git clone $msft_wsl_repo $wsl_build_dir --progress --depth=1 --single-branch --branch $msft_wsl_repo_branch  ) || ( git pull $msft_wsl_repo --squash --progress ) ) 
 # replace kernel source .config with user's
 cp -fv $config_source $wsl_build_dir/.config
 cd $wsl_build_dir

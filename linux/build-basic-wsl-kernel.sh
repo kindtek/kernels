@@ -56,8 +56,9 @@ fi
 # display info while waiting on repo to clone
 printf '\n======= Kernel Build Info =========================================================================\n\n\tCPU Architecture:\t%s\n\n\tCPU Vendor:\t\t%s\n\n\tConfiguration File:\n\t\t%s\n\n\tSave Locations:\n\t\t%s\n\t\t%s\n\n===================================================================================================\n' $cpu_arch $cpu_vendor $config_source $kernel_target_git $kernel_target_nix
 
-
-git clone https://github.com/microsoft/WSL2-Linux-Kernel.git $wsl_build_dir --progress --depth=1 --single-branch --branch linux-msft-wsl-$kernel_version
+msft_wsl_repo=https://github.com/microsoft/WSL2-Linux-Kernel.git
+msft_wsl_repo_branch=linux-msft-wsl-$kernel_version 
+( git clone $msft_wsl_repo $wsl_build_dir --progress --depth=1 --single-branch --branch $msft_wsl_repo_branch ) || ( git pull $msft_wsl_repo --progress --depth=1 --single-branch --branch $msft_wsl_repo_branch )
 # replace kernel source .config with user's
 cp -fv $config_source $wsl_build_dir/.config
 cd $wsl_build_dir

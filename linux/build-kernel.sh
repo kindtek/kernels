@@ -261,7 +261,7 @@ config_suffix=_wsl-zfs0
 # linux_version_mask=$(echo $( echo $linux_version_mask | sed 's/\.//g' )) 
 linux_mask=linux-$linux_version_mask
 
-zfs_version_name=2.1.9
+zfs_version_name=2.1.11
 # replace first . with _ and then remove the rest of the .'s
 zfs_version_mask=${zfs_version_name/./_}
 zfs_version_mask=${zfs_version_mask//[.-]/}
@@ -274,7 +274,7 @@ if [ $cpu_vendor = GenuineIntel ]; then cpu_vendor=intel; fi
 
 save_name=$linux_mask\_wz0
 save_location1=$cpu_arch/$cpu_vendor/$linux_version_mask/$save_name
-save_location2=/home/$user_name/built-kernels/$save_name
+save_location2=/home/$user_name/k-cache/$save_name
 
 wsl_username=$(wslvar USERNAME) > /dev/null 2> /dev/null
 if [ -d /mnt/c/users/$wsl_username ]; then save_location4=/mnt/c/users/$wsl_username/$save_name; fi
@@ -316,16 +316,16 @@ yes "" | make -j $(expr $(nproc) - 1)
 if ! [ $kernel_mod = none ]; then make modules_install; fi
 
 mkdir -pv ../$cpu_arch/$cpu_vendor/$linux_version_mask
-mkdir -pv /home/$user_name/built-kernels
+mkdir -pv /home/$user_name/k-cache
 cp -fv --backup=numbered arch/$cpu_arch/boot/bzImage ../$save_location1 
 cp -fv --backup=numbered arch/$cpu_arch/boot/bzImage $save_location2
 cp -fv --backup=numbered .config ../$cpu_arch/$cpu_vendor/$kernel_src/.config$config_suffix
-cp -fv --backup=numbered .config /home/$user_name/built-kernels/.config$config_suffix
-cp -fv --backup=numbered ../../../../dvlp/mnt/home/sample.wslconfig /home/$user_name/built-kernels
+cp -fv --backup=numbered .config /home/$user_name/k-cache/.config$config_suffix
+cp -fv --backup=numbered ../../../../dvlp/mnt/home/sample.wslconfig /home/$user_name/k-cache
 if [ -d "/mnt/c/users/$wsl_username" ]; then cp -fv --backup=numbered  arch/$cpu_arch/boot/bzImage /mnt/c/users/$wsl_username/$save_name; fi
 if [ -d "/mnt/c/users/$wsl_username" ]; then cp -fv --backup=numbered  arch/$cpu_arch/boot/bzImage /mnt/c/users/$wsl_username/$save_name; fi
 
 git submodule deinit  
 if ! [ $kernel_mod = none ]; then git submodule deinit  ../modules/$kernel_mod; fi
 cd /
-tar -czvf built-kernel.tar.gz /home/$user_name/built-kernels/*
+tar -czvf built-kernel.tar.gz /home/$user_name/k-cache/*

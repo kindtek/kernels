@@ -81,7 +81,7 @@ printf "
 =================   Linux Kernel   ========================
 ======-----------     $kernel_version    ------------------======
 ===========================================================
-====------------     Output Info     -------------------====
+====------------     Output Info    -------------------====
 
 
   Kernel:
@@ -99,7 +99,7 @@ printf "
 
 msft_wsl_repo=https://github.com/microsoft/WSL2-Linux-Kernel.git
 msft_wsl_repo_branch=linux-msft-wsl-$kernel_version 
-if [ -d "$wsl_build_dir/.git" ]l then
+if [ -d "$wsl_build_dir/.git" ]; then
     git pull $msft_wsl_repo --squash --progress 
 else
     git clone $msft_wsl_repo $wsl_build_dir --progress --depth=1 --single-branch --branch $msft_wsl_repo_branch 

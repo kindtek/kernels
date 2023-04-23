@@ -34,7 +34,7 @@ config_target_win=$win_save_path/$config_alias
 
 # check that the user supplied source exists if not try to pick the best .config file available
 # user choice is best if it exists
-if [ -r $config_source ]; then
+if [ -r "$config_source" -a -s "$config_source" ]; then
     user_config_flag=true
 else
 # try alternates if user config doesn't work 
@@ -67,11 +67,11 @@ printf "
         %s
         
 ===================================================================================================
-" "$cpu_arch $cpu_vendor" "$config_source" "$kernel_target_git" "$kernel_target_nix"
+" "$cpu_arch" "$cpu_vendor" "$config_source" "$kernel_target_git" "$kernel_target_nix"
 
 msft_wsl_repo=https://github.com/microsoft/WSL2-Linux-Kernel.git
 msft_wsl_repo_branch=linux-msft-wsl-$kernel_version 
-( git clone $msft_wsl_repo $wsl_build_dir --progress --depth=1 --single-branch --branch $msft_wsl_repo_branch ) || ( git pull $msft_wsl_repo --squash --progress )
+( ( git clone $msft_wsl_repo $wsl_build_dir --progress --depth=1 --single-branch --branch $msft_wsl_repo_branch ) || ( git pull $msft_wsl_repo --squash --progress ) ) 
 # replace kernel source .config with user's
 cp -fv $config_source $wsl_build_dir/.config
 cd $wsl_build_dir

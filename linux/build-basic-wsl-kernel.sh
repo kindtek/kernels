@@ -47,7 +47,7 @@ else
         config_source=$cpu_arch/generic/$kernel_version_mask/$config_alias
     fi
     # specific arch - best alternate 
-    if [ -f $git_save_path/$config_alias ]; then
+    if [ -f "$git_save_path/$config_alias" ]; then
         config_source=$git_save_path/$config_alias
     fi
 fi

@@ -36,7 +36,7 @@ config_target_win=$win_save_path/$config_alias
 if [ -f $user_config_source ] then;
     config_source=$user_config_source
     user_config_flag=true
-elif
+else
 # try alternates if user config doesn't work 
     # reliable but the least desirable .. keep looking
     if [ -f "$wsl_build_dir/Microsoft/config-wsl" ]; then 

@@ -127,7 +127,7 @@ touch k-cache/$kernel_version_mask
 mkdir -pv $nix_save_path
 if [ -w "$nix_save_path" ]; then
     tar -czvf $package_full_name.tar.gz k-cache/*
-    cp -fv --backup=numbered $nix_save_path/$package_full_name.tar.gz 
+    cp -fv --backup=numbered $package_full_name.tar.gz $nix_save_path/$package_full_name.tar.gz 
 else
     echo "unable to save kernel package to home directory"
 fi
@@ -138,7 +138,7 @@ mkdir -p $win_save_path
 cp -fv --backup=numbered ../../../dvlp/mnt/home/sample.wslconfig $win_save_path/sample.wslconfig
 if [ -w "$win_save_path" ]; then
     tar -czvf $package_full_name.tar.gz k-cache/*
-    cp -fv --backup=numbered $win_save_path/$package_full_name.tar.gz;
+    cp -fv --backup=numbered $package_full_name.tar.gz $win_save_path/$package_full_name.tar.gz;
 else
     echo "unable to save kernel package to home directory"
 fi

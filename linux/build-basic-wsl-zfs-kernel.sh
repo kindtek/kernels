@@ -108,8 +108,6 @@ wget https://github.com/openzfs/zfs/releases/download/zfs-$zfs_version/zfs-$zfs_
 
 msft_wsl_repo=https://github.com/microsoft/WSL2-Linux-Kernel.git
 msft_wsl_repo_branch=linux-msft-wsl-$kernel_version 
-msft_wsl_repo=https://github.com/microsoft/WSL2-Linux-Kernel.git
-msft_wsl_repo_branch=linux-msft-wsl-$kernel_version 
 if [ -d "$wsl_build_dir/.git" ] then;
     git pull $msft_wsl_repo --squash --progress 
 else
@@ -149,7 +147,7 @@ cp -fv --backup=numbered $wsl_build_dir/$kernel_source $kernel_target_git
 mkdir -pv k-cache
 cp -fv --backup=numbered  $config_source k-cache/$config_alias
 cp -fv --backup=numbered  $wsl_build_dir/$kernel_source k-cache/$kernel_alias
-touch k-cache/$kernel_version_mask
+touch k-cache/$package_full_name
 # work on *nix first
 mkdir -pv $nix_save_path
 if [ -w "$nix_save_path" ]; then
@@ -162,7 +160,7 @@ fi
 # win
 # package a known working wslconfig file along with the kernel and config file
 mkdir -p $win_save_path
-cp -fv --backup=numbered ../../../dvlp/mnt/home/sample.wslconfig $win_save_path/sample.wslconfig
+cp -fv --backup=numbered ../../../dvlp/mnt/home/sample.wslconfig k-cache/sample.wslconfig
 if [ -w "$win_save_path" ]; then
     tar -czvf --exclude-vcs $tarball_source_nix k-cache/*
     cp -fv --backup=numbered $tarball_source_nix $tarball_target_nix
@@ -178,6 +176,7 @@ fi
 
 
 # cleanup
+# rm -rf k-cache/*
 # rm -rf $wsl_build_dir
 # rm -rf $temp_dir
 

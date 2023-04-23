@@ -33,7 +33,7 @@ config_target_win=$win_save_path/$config_alias
 
 # check that the user supplied source exists if not try to pick the best .config file available
 # user choice is best if it exists
-if [ -f $user_config_source ] then;
+if [ -f $user_config_source ]; then
     config_source=$user_config_source
     user_config_flag=true
 else

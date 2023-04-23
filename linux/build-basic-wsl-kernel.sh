@@ -58,7 +58,7 @@ printf '\n======= Kernel Build Info ============================================
 
 msft_wsl_repo=https://github.com/microsoft/WSL2-Linux-Kernel.git
 msft_wsl_repo_branch=linux-msft-wsl-$kernel_version 
-( git clone $msft_wsl_repo $wsl_build_dir --progress --depth=1 --single-branch --branch $msft_wsl_repo_branch ) || ( git pull $msft_wsl_repo --progress --depth=1 --single-branch --branch $msft_wsl_repo_branch )
+( git clone $msft_wsl_repo $wsl_build_dir --progress --depth=1 --single-branch --branch $msft_wsl_repo_branch ) || ( git pull $msft_wsl_repo --progress --depth=1 )
 # replace kernel source .config with user's
 cp -fv $config_source $wsl_build_dir/.config
 cd $wsl_build_dir

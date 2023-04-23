@@ -15,8 +15,8 @@ cpu_arch="${cpu_arch%%_*}"
 if [ $cpu_vendor = AuthenticAMD ]; then cpu_vendor=amd; fi
 if [ $cpu_vendor = GenuineIntel ]; then cpu_vendor=intel; fi
 # replace first . with _ and then remove the rest of the .'s
-kernel_version_mask=${kernel_version/\./_}
-kernel_version_mask=${kernel_version_mask//[\.-]/}
+kernel_version_mask=${kernel_version/\./L}
+kernel_version_mask=${kernel_version_mask//[\.-]/}W
 package_alias=linux-$kernel_version_mask
 package_full_name=Linux-$kernel_version-WSL
 kernel_alias=L$kernel_version_mask\_w0

@@ -67,7 +67,7 @@ printf "
         %s
         
 ===================================================================================================
-" $cpu_arch $cpu_vendor $config_source $kernel_target_git $kernel_target_nix
+" "$cpu_arch $cpu_vendor" "$config_source" "$kernel_target_git" "$kernel_target_nix"
 
 msft_wsl_repo=https://github.com/microsoft/WSL2-Linux-Kernel.git
 msft_wsl_repo_branch=linux-msft-wsl-$kernel_version 

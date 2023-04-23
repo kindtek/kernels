@@ -1,8 +1,10 @@
 #!/bin/bash
 config_source=$1
-wsl_build_dir=wsl2
+wsl_build_dir=k-cache/wsl2
 user_config_flag=false
 kernel_version="5.15.90.1"
+zfs_version_name="2.1.11"
+
 kernel_version=${2:-$kernel_version}
 win_user=${3:-'user'}
 linux_kernel_type="basic-wsl-kernel"
@@ -14,6 +16,10 @@ cpu_arch="${cpu_arch%%_*}"
 # shorten common vendor names
 if [ $cpu_vendor = AuthenticAMD ]; then cpu_vendor=amd; fi
 if [ $cpu_vendor = GenuineIntel ]; then cpu_vendor=intel; fi
+# replace first . with _ and then remove the rest of the .'s
+zfs_version_mask=${zfs_version_name/./_}
+zfs_version_mask=${zfs_version_mask//[.-]/}
+zfs_mask=zfs-$zfs_version_mask
 # replace first . with _ and then remove the rest of the .'s
 kernel_version_mask=${kernel_version/\./_}
 kernel_alias=${kernel_version/\./L}
@@ -96,18 +102,33 @@ printf "
 ===========================================================
 ===========================================================
 "
+wget https://github.com/openzfs/zfs/releases/download/zfs-$zfs_version_name/zfs-$zfs_version_name.tar.gz
 
 msft_wsl_repo=https://github.com/microsoft/WSL2-Linux-Kernel.git
 msft_wsl_repo_branch=linux-msft-wsl-$kernel_version 
-( ( git clone $msft_wsl_repo $wsl_build_dir --progress --depth=1 --single-branch --branch $msft_wsl_repo_branch  ) || ( git pull $msft_wsl_repo --squash --progress ) ) 
+if [ -d "$wsl_build_dir/.git" ] then;
+    git pull $msft_wsl_repo --squash --progress 
+else
+    git clone $msft_wsl_repo $wsl_build_dir --progress --depth=1 --single-branch --branch $msft_wsl_repo_branch 
+fi
+
 # replace kernel source .config with user's
-cp -fv $config_source $wsl_build_dir/.config
-cd $wsl_build_dir
-# make/build
-yes "" | make oldconfig && yes "" | make prepare
+tar -xf zfs-$zfs_version_name.tar.gz
+mv zfs-$zfs_version_name $zfs_mask
+mv WSL2-Linux-Kernel wsl2
+cd wsl2
+
+yes "" | make oldconfig
+yes "" | make prepare scripts
+cd ../$zfs_mask && sh autogen.sh
+sh configure --prefix=/ --libdir=/lib --includedir=/usr/include --datarootdir=/usr/share --enable-linux-builtin=yes --with-linux=../$wsl_build_dir --with-linux-obj=../$wsl_build_dir
+sh copy-builtin ../wsl2
+yes "" | make install 
+
+cd ../wsl2/
+sed -i 's/\# CONFIG_ZFS is not set/CONFIG_ZFS=y/g' .config
 yes "" | make -j $(expr $(nproc) - 1)
-make modules_install 
-cd ..
+make modules_install
 # kernel is baked - time to distribute fresh copies
 
 # move back to base dir  folder with github (relative) path

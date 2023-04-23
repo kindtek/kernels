@@ -122,8 +122,8 @@ cp -fv --backup=numbered $wsl_build_dir/$kernel_source $kernel_target_git
 # build/move tar with version control if [tar]get directory is writeable
 # save copies in timestamped dir to keep organized
 mkdir -pv k-cache
-cp -fv --backup=numbered  $wsl_build_dir/$config_source k-cache/$config_alias
-cp -fv --backup=numbered  linux/$kernel_source k-cache/$kernel_alias
+cp -fv --backup=numbered  $config_source k-cache/$config_alias
+cp -fv --backup=numbered  $wsl_build_dir/$kernel_source k-cache/$kernel_alias
 touch k-cache/$kernel_version_mask
 # work on *nix first
 mkdir -pv $nix_save_path

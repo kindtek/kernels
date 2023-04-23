@@ -26,9 +26,9 @@ zfs_mask=zfs-$zfs_version_mask
 kernel_version_mask=${kernel_version/\./_}
 kernel_alias=${kernel_version/\./L}
 kernel_version_mask=${kernel_version_mask//[\.-]/}
-kernel_alias=${kernel_alias//[\.-]/}W0
+kernel_alias=${kernel_alias//[\.-]/}WZ0
 package_alias=linux-$kernel_version_mask
-package_full_name=Linux-$kernel_version-WSL
+package_full_name=Linux-$kernel_version-WSL-ZFS
 config_alias=.config_$kernel_alias
 git_save_path=$cpu_arch/$cpu_vendor/$kernel_version_mask
 nix_save_path=$HOME/k-cache
@@ -150,7 +150,7 @@ touch k-cache/$package_full_name
 # work on *nix first
 mkdir -pv $nix_save_path
 if [ -w "$nix_save_path" ]; then
-    tar -czvf --exclude-vcs $tarball_source_nix k-cache/*
+    tar -czvf --exclude-vcs $tarball_source_nix -C k-cache .
     cp -fv --backup=numbered $tarball_source_nix  $tarball_target_nix 
 else
     echo "unable to save kernel package to home directory"
@@ -161,8 +161,8 @@ fi
 mkdir -p $win_save_path
 cp -fv --backup=numbered ../../../dvlp/mnt/home/sample.wslconfig k-cache/sample.wslconfig
 if [ -w "$win_save_path" ]; then
-    tar -czvf --exclude-vcs $tarball_source_nix k-cache/*
-    cp -fv --backup=numbered $tarball_source_nix $tarball_target_nix
+    tar -czvf --exclude-vcs $tarball_source_win -C k-cache .
+    cp -fv --backup=numbered $tarball_source_win $tarball_target_win
 else
     echo "unable to save kernel package to home directory"
 fi

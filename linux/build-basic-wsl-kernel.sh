@@ -1,5 +1,6 @@
 #!/bin/bash
-user_config_source=$1
+config_source=$1
+wsl_build_dir=wsl2
 user_config_flag=false
 kernel_version="5.15.90.1"
 kernel_version=${2:-$kernel_version}
@@ -33,8 +34,7 @@ config_target_win=$win_save_path/$config_alias
 
 # check that the user supplied source exists if not try to pick the best .config file available
 # user choice is best if it exists
-if [ -f $user_config_source ]; then
-    config_source=$user_config_source
+if [ -f $config_source ]; then
     user_config_flag=true
 else
 # try alternates if user config doesn't work 
@@ -58,23 +58,24 @@ printf '\n======= Kernel Build Info ============================================
 
 
 git clone https://github.com/microsoft/WSL2-Linux-Kernel.git $wsl_build_dir --progress --depth=1 --single-branch --branch linux-msft-wsl-$kernel_version
-
 # replace kernel source .config with user's
-cp -fv $config_source $wsl_build_dir/.config;
+cp -fv $config_source $wsl_build_dir/.config
 cd $wsl_build_dir
-
 # make/build
 yes "" | make oldconfig && yes "" | make prepare
 yes "" | make -j $(expr $(nproc) - 1)
 make modules_install 
+cd ..
 # kernel is baked - time to distribute fresh copies
 
-# easier to operate in base folder with github (relative) path
-cd ..
+# move back to base dir  folder with github (relative) path
 mkdir -pv $git_save_path
 # queue files to be saved to repo
-cp -fv --backup=numbered .config $config_target_git
+if [ $user_config_flag ];
+    cp -fv --backup=numbered .config $config_target_git
+fi
 cp -fv --backup=numbered $kernel_source $kernel_target_git
+
 
 # build/move tar with version control if [tar]get directory is writeable
 # save copies in timestamped dir to keep organized
@@ -110,7 +111,6 @@ if [ -d "$win_save_path" ]; then cp -fv --backup=numbered  $kernel_source $win_s
 
 
 # cleanup
-cd ..
 rm -rf $wsl_build_dir
 rm -rf $temp_dir
 

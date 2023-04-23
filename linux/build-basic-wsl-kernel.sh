@@ -32,10 +32,10 @@ kernel_target_nix=$nix_save_path/$kernel_alias
 config_target_nix=$nix_save_path/$config_alias
 kernel_target_win=$win_save_path/$kernel_alias
 config_target_win=$win_save_path/$config_alias
-tarfile_target_nix=$nix_save_path/$package_full_name.tar.gz
-tarfile_target_win=$win_save_path/$package_full_name.tar.gz
-tarfile_source_nix=$nix_save_path/$package_full_name.tar.gz
-tarfile_source_wiin=$win_save_path/$package_full_name.tar.gz
+tarball_target_nix=$nix_save_path/$package_full_name.tar.gz
+tarball_target_win=$win_save_path/$package_full_name.tar.gz
+tarball_source_nix=$nix_save_path/$package_full_name.tar.gz
+tarball_source_wiin=$win_save_path/$package_full_name.tar.gz
 
 # check that the user supplied source exists if not try to pick the best .config file available
 # user choice is best if it exists
@@ -88,8 +88,8 @@ printf "
     $kernel_target_git
 
   Compressed Kernel/Config:
-    $tarfile_target_nix
-    $tarfile_target_win      
+    $tarball_target_nix
+    $tarball_target_win      
 
 
 ===========================================================
@@ -128,8 +128,8 @@ touch k-cache/$kernel_version_mask
 # work on *nix first
 mkdir -pv $nix_save_path
 if [ -w "$nix_save_path" ]; then
-    tar -czvf --exclude-vcs $package_full_name.tar.gz k-cache/*
-    cp -fv --backup=numbered $package_full_name.tar.gz $tarfile_target_nix 
+    tar -czvf --exclude-vcs $tarball_source_nix k-cache/*
+    cp -fv --backup=numbered $tarball_source_nix  $tarball_target_nix 
 else
     echo "unable to save kernel package to home directory"
 fi
@@ -139,8 +139,8 @@ fi
 mkdir -p $win_save_path
 cp -fv --backup=numbered ../../../dvlp/mnt/home/sample.wslconfig $win_save_path/sample.wslconfig
 if [ -w "$win_save_path" ]; then
-    tar -czvf --exclude-vcs $package_full_name.tar.gz k-cache/*
-    cp -fv --backup=numbered $package_full_name.tar.gz $tarfile_target_nix
+    tar -czvf --exclude-vcs $tarball_source_nix k-cache/*
+    cp -fv --backup=numbered $tarball_source_nix $tarball_target_nix
 else
     echo "unable to save kernel package to home directory"
 fi
@@ -155,7 +155,6 @@ fi
 # cleanup
 # rm -rf $wsl_build_dir
 # rm -rf $temp_dir
-cd ..
-ls -al
-git submodule update deinit -- kernels
+
+
 

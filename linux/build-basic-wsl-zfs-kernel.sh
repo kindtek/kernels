@@ -1,6 +1,6 @@
 #!/bin/bash
 config_source=$1
-wsl_build_dir=k-cache/wsl2
+wsl_build_dir=wsl2
 user_config_flag=false
 kernel_version="5.15.90.1"
 zfs_version="2.1.11"
@@ -117,7 +117,6 @@ fi
 # replace kernel source .config with user's
 tar -xf zfs-$zfs_version.tar.gz
 mv zfs-$zfs_version $zfs_mask
-mv WSL2-Linux-Kernel $wsl_build_dir
 cd $wsl_build_dir
 
 yes "" | make oldconfig

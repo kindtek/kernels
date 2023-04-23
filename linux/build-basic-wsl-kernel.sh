@@ -112,7 +112,7 @@ cd ..
 mkdir -pv $git_save_path
 # queue files to be saved to repo
 if [ $user_config_flag ]; then
-    cp -fv --backup=numbered .config $config_target_git
+    cp -fv --backup=numbered $wsl_build_dir/.config $config_target_git
 fi
 cp -fv --backup=numbered $kernel_source $kernel_target_git
 
@@ -122,10 +122,10 @@ cp -fv --backup=numbered $kernel_source $kernel_target_git
 mkdir -pv k-cache
 cp -fv --backup=numbered  $config_source k-cache/$config_alias
 cp -fv --backup=numbered  $kernel_source k-cache/$kernel_alias
-touch $kernel_version_mask/$linux_kernel_type
+touch k-cache/$kernel_version_mask
 # work on *nix first
 mkdir -pv $nix_save_path
-if [ -w "$nix_save_path" ]; 
+if [ -w "$nix_save_path" ]; then
     tar -czvf $package_full_name.tar.gz k-cache/*
     cp -fv --backup=numbered $nix_save_path/$package_full_name.tar.gz 
 else
@@ -136,7 +136,7 @@ fi
 # package a known working wslconfig file along with the kernel and config file
 mkdir -p $win_save_path
 cp -fv --backup=numbered ../../../dvlp/mnt/home/sample.wslconfig $win_save_path/sample.wslconfig
-if [ -w "$win_save_path" ];
+if [ -w "$win_save_path" ]; then
     tar -czvf $package_full_name.tar.gz k-cache/*
     cp -fv --backup=numbered $win_save_path/$package_full_name.tar.gz;
 else
@@ -151,6 +151,8 @@ if [ -d "$win_save_path" ]; then cp -fv --backup=numbered  $kernel_source $win_s
 
 
 # cleanup
-rm -rf $wsl_build_dir
-rm -rf $temp_dir
+# rm -rf $wsl_build_dir
+# rm -rf $temp_dir
+cd ..
+git submodule update deinit -- kernels
 

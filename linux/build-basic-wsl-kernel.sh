@@ -34,27 +34,40 @@ config_target_win=$win_save_path/$config_alias
 
 # check that the user supplied source exists if not try to pick the best .config file available
 # user choice is best if it exists
-if [ -f $config_source ]; then
+if [ -r $config_source ]; then
     user_config_flag=true
 else
 # try alternates if user config doesn't work 
     # reliable but the least desirable .. keep looking
-    if [ -f "$wsl_build_dir/Microsoft/config-wsl" ]; then 
+    if [ -r "$wsl_build_dir/Microsoft/config-wsl" ]; then 
         config_source=$wsl_build_dir/Microsoft/config-wsl
     fi
     # generic - slightly better
-    if [ -f "$cpu_arch/generic/$kernel_version_mask/$config_alias" ]; then 
+    if [ -r "$cpu_arch/generic/$kernel_version_mask/$config_alias" ]; then 
         config_source=$cpu_arch/generic/$kernel_version_mask/$config_alias
     fi
     # specific arch - best alternate 
-    if [ -f "$git_save_path/$config_alias" ]; then
+    if [ -r "$git_save_path/$config_alias" ]; then
         config_source=$git_save_path/$config_alias
     fi
 fi
 
 
 # display info while waiting on repo to clone
-printf '\n======= Kernel Build Info =========================================================================\n\n\tCPU Architecture:\t%s\n\n\tCPU Vendor:\t\t%s\n\n\tConfiguration File:\n\t\t%s\n\n\tSave Locations:\n\t\t%s\n\t\t%s\n\n===================================================================================================\n' $cpu_arch $cpu_vendor $config_source $kernel_target_git $kernel_target_nix
+printf "
+======= Kernel Build Info =========================================================================
+
+    CPU Architecture:   %s
+    CPU Vendor:         %s
+    
+    Configuration File:
+        %s
+    Save Locations:
+        %s
+        %s
+        
+===================================================================================================
+" $cpu_arch $cpu_vendor $config_source $kernel_target_git $kernel_target_nix
 
 msft_wsl_repo=https://github.com/microsoft/WSL2-Linux-Kernel.git
 msft_wsl_repo_branch=linux-msft-wsl-$kernel_version 

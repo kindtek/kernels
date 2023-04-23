@@ -117,7 +117,7 @@ cd ..
 # move back to base dir  folder with github (relative) path
 mkdir -pv $git_save_path
 # queue files to be saved to repo
-if [ $user_config_flag ]; then
+if [ "$user_config_flag" ]; then
     cp -fv --backup=numbered $wsl_build_dir/.config $config_target_git
 fi
 cp -fv --backup=numbered $wsl_build_dir/$kernel_source $kernel_target_git

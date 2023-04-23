@@ -1,6 +1,6 @@
 #!/bin/bash
 config_file=${1:-$config_file_default}
-user_name=${2:-dvl}
+user_name=${2:-$LOGNAME}
 cpu_vendor=$(grep -Pom 1 '^vendor_id\s*:\s*\K.*' /proc/cpuinfo)
 cpu_arch=$(uname -m)
 cpu_arch="${cpu_arch%%_*}"
@@ -12,7 +12,7 @@ linux_version_mask=${linux_version_name/./_}
 linux_version_mask=${linux_version_mask//[.-]/}
 linux_mask=linux-$linux_version_mask
 
-zfs_version_name=2.1.9
+zfs_version_name=2.1.11
 # replace first . with _ and then remove the rest of the .'s
 zfs_version_mask=${zfs_version_name/./_}
 zfs_version_mask=${zfs_version_mask//[.-]/}
@@ -24,7 +24,7 @@ if [ $cpu_vendor = GenuineIntel ]; then cpu_vendor=intel; fi
 
 if ! [ $user_name=agl ]; then save_name=$linux_mask\_wz${user_name:-$(wslvar USERNAME)}; else save_name=$linux_mask; fi
 save_location1=$cpu_arch/$cpu_vendor/$linux_version_mask/$save_name
-save_location2=/home/$user_name/built-kernels/$save_name
+save_location2=/home/$user_name/k-cache/$save_name
 
 wsl_username=$(wslvar USERNAME) > /dev/null
 if [ -d /mnt/c/users/$wsl_username ]; then save_location4=/mnt/c/users/$wsl_username/$save_name; fi
@@ -64,12 +64,12 @@ yes "" | make -j $(expr $(nproc) - 1)
 make modules_install
 
 mkdir -pv ../$cpu_arch/$cpu_vendor/$linux_version_mask
-mkdir -pv /home/$user_name/built-kernels
+mkdir -pv /home/$user_name/k-cache
 cp -fv --backup=numbered arch/$cpu_arch/boot/bzImage ../$save_location1 
 cp -fv --backup=numbered arch/$cpu_arch/boot/bzImage $save_location2
 cp -fv --backup=numbered .config ../$cpu_arch/$cpu_vendor/$linux_version_mask/.config$config_suffix
-cp -fv --backup=numbered .config /home/$user_name/built-kernels/.config$config_suffix
-cp -fv --backup=numbered ../../../../dvlp/mnt/home/sample.wslconfig /home/$user_name/built-kernels
+cp -fv --backup=numbered .config /home/$user_name/k-cache/.config$config_suffix
+cp -fv --backup=numbered ../../../../dvlp/mnt/home/sample.wslconfig /home/$user_name/k-cache
 if [ -d "/mnt/c/users/$wsl_username" ]; then cp -fv --backup=numbered  arch/$cpu_arch/boot/bzImage /mnt/c/users/$wsl_username/$save_name; fi
 if [ -d "/mnt/c/users/$wsl_username" ]; then cp -fv --backup=numbered  arch/$cpu_arch/boot/bzImage /mnt/c/users/$wsl_username/$save_name; fi
 
@@ -81,4 +81,4 @@ rm -rf zfs-$zfs_version_name.tar.gz
 rm -rf zfs-$zfs_mask
 
 cd /
-tar -czvf built-kernel.tar.gz /home/$user_name/built-kernels/*
+tar -czvf built-kernel.tar.gz /home/$user_name/k-cache/*

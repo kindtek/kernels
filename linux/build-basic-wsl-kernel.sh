@@ -146,8 +146,8 @@ fi
 # cp -fv --backup=numbered $kernel_source $kernel_target_nix
 # cp -fv --backup=numbered .config $nix_save_path/$config_alias
 
-if [ -d "$win_save_path" ]; then cp -fv --backup=numbered  $kernel_source $win_save_path/$config_alias; fi
-if [ -d "$win_save_path" ]; then cp -fv --backup=numbered  $kernel_source $win_save_path/$kernel_alias; fi
+# if [ -d "$win_save_path" ]; then cp -fv --backup=numbered  $kernel_source $win_save_path/$config_alias; fi
+# if [ -d "$win_save_path" ]; then cp -fv --backup=numbered  $kernel_source $win_save_path/$kernel_alias; fi
 
 
 # cleanup

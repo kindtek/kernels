@@ -121,7 +121,9 @@ zfs_repo=https://github.com/openzfs/zfs.git
 if [ ! -d "$zfs_build_dir/.git" ]; then
     git clone $zfs_repo --progress --depth=1 -- $zfs_build_dir 
 fi
-git checkout tags/$(git describe --tags `git rev-list --tags --max-count=1`) -- $zfs_build_dir
+cd $zfs_build_dir
+git checkout tags/$(git describe --tags `git rev-list --tags --max-count=1`) 
+cs ..
 
 # replace kernel source .config with user's
 cp -fv $config_source $wsl_build_dir/.config

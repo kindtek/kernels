@@ -1,6 +1,7 @@
 #!/bin/bash
 config_source=$1
-wsl_build_dir=wsl2
+wsl_build_dir=wsl2-build
+zfs_build_dir=zfs-build
 user_config_flag=false
 kernel_version="5.15.90.1"
 zfs_version="2.1.11"
@@ -104,29 +105,35 @@ printf "
 ===========================================================
 ===========================================================
 "
-wget https://github.com/openzfs/zfs/releases/download/zfs-$zfs_version/zfs-$zfs_version.tar.gz
+# wget https://github.com/openzfs/zfs/releases/download/zfs-$zfs_version/zfs-$zfs_version.tar.gz
 
 msft_wsl_repo=https://github.com/microsoft/WSL2-Linux-Kernel.git
 msft_wsl_repo_branch=linux-msft-wsl-$kernel_version 
 if [ -d "$wsl_build_dir/.git" ]; then
     git pull $msft_wsl_repo --squash --progress 
 else
-    git clone $msft_wsl_repo $wsl_build_dir --progress --depth=1 --single-branch --branch $msft_wsl_repo_branch 
+    git clone $msft_wsl_repo --progress --depth=1 --single-branch --branch $msft_wsl_repo_branch -- $wsl_build_dir
 fi
 
-# replace kernel source .config with user's
-tar -xf zfs-$zfs_version.tar.gz
-mv zfs-$zfs_version $zfs_mask
-cd $wsl_build_dir
+zfs_repo=https://github.com/microsoft/WSL2-Linux-Kernel.git
+if [ ! -d "$zfs_build_dir/.git" ]; then
+    git clone $zfs_repo --progress --depth=1 -- $zfs_build_dir 
+fi
 
+git checkout tags/$(git describe --tags `git rev-list --tags --max-count=1`) -- $zfs_build_dir
+
+# replace kernel source .config with user's
+cp -fv $config_source $wsl_build_dir/.config
+
+cd $wsl_build_dir
 yes "" | make oldconfig
 yes "" | make prepare scripts
-cd ../$zfs_mask && sh autogen.sh
+cd ../$zfs_build_dir && sh autogen.sh
 sh configure --prefix=/ --libdir=/lib --includedir=/usr/include --datarootdir=/usr/share --enable-linux-builtin=yes --with-linux=../$wsl_build_dir --with-linux-obj=../$wsl_build_dir
 sh copy-builtin ../$wsl_build_dir
 yes "" | make install 
 
-cd ../$wsl_build_dir/
+cd ../$wsl_build_dir
 sed -i 's/\# CONFIG_ZFS is not set/CONFIG_ZFS=y/g' .config
 yes "" | make -j $(expr $(nproc) - 1)
 make modules_install

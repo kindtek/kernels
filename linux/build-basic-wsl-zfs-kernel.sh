@@ -115,7 +115,7 @@ else
     git clone $msft_wsl_repo --progress --depth=1 --single-branch --branch $msft_wsl_repo_branch -- $wsl_build_dir
 fi
 
-zfs_repo=https://github.com/microsoft/WSL2-Linux-Kernel.git
+zfs_repo=https://github.com/zfs/openzfs.git
 if [ ! -d "$zfs_build_dir/.git" ]; then
     git clone $zfs_repo --progress --depth=1 -- $zfs_build_dir 
 fi

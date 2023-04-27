@@ -298,23 +298,29 @@ if [ $5 != "" ] && ( [ $4 != "" ] || [ $win_user != "user" ] ); then
             echo "
             
             .wslconfig found in $win_user_home
+            replacing this with the pre-configured .wslconfig is recommended
 
-            replace it? y/(n)"
+            replace it? (y)/n"
             read replace_wslconfig
-            if [ $install_kernel = "y" ] || [ $install_kernel = "Y" ]; then
-                cp -vf k-cache/sample.wslconfig $wslconfig
-            else
-                if grep -q '^\s?kernel=.*' "$wslconfig"; then
-                    sed -i "s/\# kernel=C.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\$kernel_alias_/g" $wslconfig
+            if [ $replace_wslconfig = "n" ] || [ $replace_wslconfig = "N" ]; then
+                if grep -q '^\s?\#?\skernel=.*' "$wslconfig"; then
+                    sed -i "s/\s?\#\s?kernel=C.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\$kernel_alias_/g" $wslconfig
                 else
-                    echo "
+                    wslconfig_old=$(cat $wslconfig)
+                    wslconfig_new="
                     [wsl2]
 
-                    kernel=C\:\\\\users\\\\$win_user\\\\$kernel_alias_"
+                    kernel=C\:\\\\users\\\\$win_user\\\\${kernel_alias}_
+                    $(cat $wslconfig)"
+                    echo $wslconfig_new > $wslconfig
                 fi
+            else
+                cp -vf k-cache/sample.wslconfig $wslconfig  
+                sed -i "s/\#\s?kernel=C.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\$kernel_alias_/g" $wslconfig            
             fi
         else
-            cp -vf k-cache/sample.wslconfig $wslconfig
+            cp -vf k-cache/sample.wslconfig $wslconfig  
+            sed -i "s/\#\s?kernel=C.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\$kernel_alias_/g" $wslconfig            
         fi
         echo "
         
@@ -323,7 +329,6 @@ if [ $5 != "" ] && ( [ $4 != "" ] || [ $win_user != "user" ] ); then
             wsl.exe --shutdown
             wsl.exe -d $WSL_DISTRO_NAME
             "
-
     fi
 fi
 

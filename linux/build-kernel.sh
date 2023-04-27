@@ -9,7 +9,7 @@ win_user=${4:-'user'}
 # linux_kernel_version="5.15.90.1"
 # zfs_version="2.1.11"
 if [ "$kernel_type"="" ]; then
-    kernel_type="latest"
+    kernel_type="basic"
 elif [ "$kernel_type"="latest" ]; then
     linux_repo=https://github.com/torvalds/linux.git
     linux_version_query='git ls-remote --refs --sort='version:refname' --tags $linux_repo | tail --lines=1 | cut --delimiter='/' --fields=3'

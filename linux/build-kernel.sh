@@ -136,7 +136,7 @@ else
     fi
 fi
 
-padding="                                   "
+padding="                         "
 # display info while waiting on repo to clone
 printf "
 ==================================================================

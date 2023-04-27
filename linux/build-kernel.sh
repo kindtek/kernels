@@ -300,7 +300,7 @@ fi
 if [ "$5" != "" ] && ( [ "$4" != "" ] || [ "$win_user" != "user" ] ); then
     echo "
     
-install kernel to WSL? y/(n)"
+install $package_full_name kernel ($kernel_alias) to WSL? y/(n)"
     read install_kernel
     if [ "$install_kernel" = "y" ] || [ "$install_kernel" = "Y" ]; then
         win_user_home=/mnt/c/users/$win_user

@@ -12,7 +12,7 @@ if [ "$kernel_type"="" ]; then
     kernel_type="stable"
 elif [ "$kernel_type"="latest" ]; then
     linux_repo=https://github.com/torvalds/linux.git
-    linux_version_query='git ls-remote --refs --sort='version:refname' --tags $linux_repo | tail --lines=1 | cut --delimiter='/' --fields=3'
+    linux_version_query="git ls-remote --refs --sort='version:refname' --tags $linux_repo | tail --lines=1 | cut --delimiter='/' --fields=3"
     echo "version query: $linux_version_query"
     linux_kernel_version_tag=$($linux_version_query)
     linux_kernel_type_tag="LATEST-WSL"

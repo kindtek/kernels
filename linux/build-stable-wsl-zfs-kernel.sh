@@ -48,7 +48,7 @@ tarball_source_win=$package_full_name.tar.gz
 
 # check that the user supplied source exists if not try to pick the best .config file available
 # user choice is best if it exists
-if [ ! -z "$config_source" ] && [ -r "$config_source" ] && [ -s "$config_source" ]; then
+if [ ! "$config_source" -eq "" ] && [ -r "$config_source" ] && [ -s "$config_source" ]; then
     echo "config: $config_source"
     user_config_flag=true
 else
@@ -117,7 +117,7 @@ else
     git clone $linux_repo --progress -- $linux_build_dir
 fi
 cd $linux_build_dir
-linux_latest_tag=$(git describe --tags $(git rev-list --tags --max-count=1))
+linux_latest_tag=$(git describe --tags $(git rev-list --tags=v[0-9\.]* --max-count=1))
 echo "linux latest: $zfs_latest_tag"
 git checkout tags/$zfs_latest_tag
 cd ..
@@ -171,7 +171,7 @@ touch k-cache/$package_full_name
 mkdir -pv $nix_save_path
 if [ -w "$nix_save_path" ]; then
     tar -czvf --exclude-vcs $tarball_source_nix -C k-cache .
-    cp -fv --backup=numbered $tarball_source_nix  $tarball_target_nix 
+    cp -fv --backup=numbered $tarball_source_nix $tarball_target_nix 
 else
     echo "unable to save kernel package to home directory"
 fi

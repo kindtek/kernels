@@ -48,7 +48,7 @@ else
     linux_kernel_version=${linux_kernel_version_tag%".y"}
     echo "linux version tag:$linux_kernel_version_tag"
     echo "linux version:$linux_kernel_version"
-    echo "linux version tag:$linux_kernel_type_tag"
+    echo "linux version type:$linux_kernel_type_tag"
 fi
 
 
@@ -57,11 +57,10 @@ if [ "$zfs" != "" ]; then
     zfs_repo=https://github.com/openzfs/zfs.git
     zfs_version_query="git -c versionsort.suffix=- ls-remote --refs --sort=version:refname --tags $zfs_repo"
     zfs_version_tag=$($zfs_version_query | tail --lines=1 | cut --delimiter='/' --fields=3)
-    zfs_version=${zfs_kernel_version_tag#"zfs-"}
+    zfs_version=${zfs_version_tag#"zfs-"}
     linux_kernel_type_tag=$linux_kernel_type_tag-ZFS
-    echo "zfs version tag:$zfs_kernel_version_tag"
-    echo "zfs version:$zfs_kernel_version"
-    echo "zfs version tag:$zfs_kernel_type_tag"
+    echo "zfs version tag:$zfs_version_tag"
+    echo "zfs version:$zfs_version"
 fi
 
 linux_build_dir=linux-build

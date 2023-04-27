@@ -10,13 +10,12 @@ win_user=${4:-'user'}
 
 # linux_kernel_version="5.15.90.1"
 # zfs_version="2.1.11"
-$kernel_file_suffix="${kernel_file_suffix}W"
-$config_file_suffix="${config_file_suffix}_wsl"
+$kernel_file_suffix="W"
+$config_file_suffix="_wsl"
 if [ "$kernel_type" = "" ]; then
     kernel_type="stable"
 fi
 if [ "$kernel_type" = "latest" ]; then
-
     linux_repo=https://github.com/torvalds/linux.git
     linux_version_query="git -c versionsort.suffix=- ls-remote --refs --sort=version:refname --tags $linux_repo "
     linux_kernel_version_tag=$($linux_version_query | tail --lines=1 | cut --delimiter='/' --fields=3) 

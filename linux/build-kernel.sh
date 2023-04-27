@@ -47,10 +47,10 @@ fi
 
 linux_kernel_version=${linux_kernel_version_tag#"v"}
 linux_build_dir=linux-build
-# echo "linux version:$linux_kernel_version"
+echo "linux version:$linux_kernel_version"
 zfs_version=${zfs_kernel_version_tag#"zfs-"}
 zfs_build_dir=zfs-build
-# echo "zfs version:$zfs_version"
+echo "zfs version:$zfs_version"
 
 linux_kernel_type="basic-wsl-zfs-kernel"
 timestamp_id=$(date -d "today" +"%Y%m%d%H%M%S")
@@ -100,7 +100,9 @@ if [ ! "$config_source"="" ] && [ -r "$config_source" ] && [ -s "$config_source"
     user_config_flag=true
 else
 # try alternates if user config doesn't work 
-    wget https://raw.githubusercontent.com/microsoft/WSL2-Linux-Kernel/linux-msft-wsl-5.15.y/Microsoft/config-wsl
+    if [ ! -r "config-wsl" ]; then
+        wget https://raw.githubusercontent.com/microsoft/WSL2-Linux-Kernel/linux-msft-wsl-5.15.y/Microsoft/config-wsl
+    fi
     # reliable but the least desirable .. keep looking
     if [ -r "config-wsl" ]; then 
         config_source=config-wsl

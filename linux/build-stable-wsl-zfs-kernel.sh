@@ -49,7 +49,7 @@ tarball_source_win=$package_full_name.tar.gz
 
 # check that the user supplied source exists if not try to pick the best .config file available
 # user choice is best if it exists
-if [ ! "$config_source" -eq "" ] && [ -r "$config_source" ] && [ -s "$config_source" ]; then
+if [ ! "$config_source"="" ] && [ -r "$config_source" ] && [ -s "$config_source" ]; then
     echo "config: $config_source"
     user_config_flag=true
 else

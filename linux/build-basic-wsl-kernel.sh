@@ -6,6 +6,7 @@ kernel_version="5.15.90.1"
 kernel_version=${2:-$kernel_version}
 win_user=${3:-'user'}
 linux_kernel_type="basic-wsl-kernel"
+linux_kernel_type_label="BASIC-WSL"
 timestamp_id=$(date -d "today" +"%Y%m%d%H%M%S")
 # deduce architecture of this machine
 cpu_vendor=$(grep -Pom 1 '^vendor_id\s*:\s*\K.*' /proc/cpuinfo)
@@ -20,7 +21,7 @@ kernel_alias=${kernel_version/\./L}
 kernel_version_mask=${kernel_version_mask//[\.-]/}
 kernel_alias=${kernel_alias//[\.-]/}W0
 package_alias=linux-$kernel_version_mask
-package_full_name=Linux-$kernel_version-WSL
+package_full_name=Linux-$kernel_version-$linux_kernel_type_label
 config_alias=.config_$kernel_alias
 git_save_path=$cpu_arch/$cpu_vendor/$kernel_version_mask
 nix_save_path=$HOME/k-cache

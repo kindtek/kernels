@@ -11,6 +11,7 @@ zfs_version=${3:-$zfs_version}
 
 win_user=${4:-'user'}
 linux_kernel_type="basic-wsl-zfs-kernel"
+linux_kernel_type_tag="LATEST_RC-WSL-ZFS"
 timestamp_id=$(date -d "today" +"%Y%m%d%H%M%S")
 # deduce architecture of this machine
 cpu_vendor=$(grep -Pom 1 '^vendor_id\s*:\s*\K.*' /proc/cpuinfo)
@@ -29,7 +30,7 @@ kernel_alias=${kernel_version/\./L}
 kernel_version_mask=${kernel_version_mask//[\.-]/}
 kernel_alias=${kernel_alias//[\.-]/}WZ0
 package_alias=linux-$kernel_version_mask
-package_full_name=Linux-$kernel_version-WSL-ZFS
+package_full_name=Linux-$kernel_version-$linux_kernel_type_tag
 config_alias=.config_$kernel_alias
 git_save_path=$cpu_arch/$cpu_vendor/$kernel_version_mask
 nix_save_path=$HOME/k-cache

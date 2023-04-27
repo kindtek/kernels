@@ -326,8 +326,8 @@ replace .wslconfig?
 [wsl2]
 
 kernel=C\:\\\\users\\\\$win_user\\\\${kernel_alias}_
-$(cat $wslconfig)"
-                    echo $wslconfig_new > $wslconfig
+$(cat $wslconfig_old)"
+                    echo "$wslconfig_new" > $wslconfig
                 fi
             else
                 mv --backup=numbered $wslconfig $wslconfig.old

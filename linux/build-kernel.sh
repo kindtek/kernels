@@ -33,7 +33,7 @@ else
     | tail --lines=1 | cut --delimiter='/' --fields=3)
 fi
 
-if [ "$zfs"!="" ] then;
+if [ "$zfs"!="" ]; then
     zfs_repo=https://github.com/openzfs/zfs.git
     zfs_version_tag=$(git -c 'versionsort.suffix=-' ls-remote --refs --sort='version:refname' --tags $zfs_repo \
         | tail --lines=1 | cut --delimiter='/' --fields=3)

@@ -12,6 +12,8 @@ if [ "$kernel_type" = "" ]; then
     kernel_type="stable"
 fi
 if [ "$kernel_type" = "latest" ]; then
+    $kernel_file_suffix=${kernel_file_suffix}L
+    $config_file_suffix=${config_file_suffix}_latest
     linux_repo=https://github.com/torvalds/linux.git
     linux_version_query="git -c versionsort.suffix=- ls-remote --refs --sort=version:refname --tags $linux_repo "
     linux_kernel_version_tag=$($linux_version_query | tail --lines=1 | cut --delimiter='/' --fields=3) 
@@ -21,6 +23,8 @@ if [ "$kernel_type" = "latest" ]; then
     echo "linux version:$linux_kernel_version"
     echo "linux version tag:$linux_kernel_type_tag"
 elif [ "$kernel_type" = "latest-rc" ]; then
+    $kernel_file_suffix=${kernel_file_suffix}R
+    $config_file_suffix=${config_file_suffix}_rc
     linux_repo=https://github.com/torvalds/linux.git
     linux_version_query="git ls-remote --refs --sort=version:refname --tags $linux_repo "
     linux_kernel_version_tag=$($linux_version_query | tail --lines=1 | cut --delimiter='/' --fields=3) 
@@ -30,6 +34,8 @@ elif [ "$kernel_type" = "latest-rc" ]; then
     echo "linux version:$linux_kernel_version"
     echo "linux version tag:$linux_kernel_type_tag"
 elif [ "$kernel_type" = "stable" ]; then
+    $kernel_file_suffix=${kernel_file_suffix}S
+    $config_file_suffix=${config_file_suffix}_stable
     linux_repo=https://github.com/gregkh/linux.git
     # linux_version_query="git ls-remote --refs --sort=version:refname --tags $linux_repo "
     linux_version_query="git -c versionsort.suffix=- ls-remote --refs --sort=version:refname --tags $linux_repo "
@@ -41,7 +47,9 @@ elif [ "$kernel_type" = "stable" ]; then
     echo "linux version:$linux_kernel_version"
     echo "linux kernel type:$linux_kernel_type_tag"
 # elif [ "$kernel_type"="basic" ]; then
-else    
+else 
+    $kernel_file_suffix=${kernel_file_suffix}B
+    $config_file_suffix=${config_file_suffix}_basic
     linux_repo=https://github.com/microsoft/WSL2-Linux-Kernel.git
     linux_version_query="git ls-remote --refs --sort=version:refname --tags $linux_repo "
     linux_kernel_version_tag=$($linux_version_query | tail --lines=1 | cut --delimiter='/' --fields=3) 
@@ -55,7 +63,7 @@ fi
 
 
 $kernel_file_suffix=${kernel_file_suffix}W
-$config_file_suffix=${config_file_suffix}_wsl
+$config_file_suffix=${config_file_suffix}-wsl
 
 if [ "$zfs" != "" ]; then
     zfs_repo=https://github.com/openzfs/zfs.git

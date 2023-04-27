@@ -8,25 +8,26 @@ win_user=${4:-'user'}
 
 # linux_kernel_version="5.15.90.1"
 # zfs_version="2.1.11"
-if [ "$kernel_type"=""] then;
+if [ "$kernel_type"=""]; then
     kernel_type="latest"
-elif [ "$kernel_type"="latest"] then;
+elif [ "$kernel_type"="latest"]; then
     linux_repo=https://github.com/torvalds/linux.git
     linux_kernel_version_tag=$(git ls-remote --refs --sort='version:refname' --tags $linux_repo \
     | tail --lines=1 | cut --delimiter='/' --fields=3)
-elif [ "$kernel_type"="latest-rc"] then;
+elif [ "$kernel_type"="latest-rc"]; then
     linux_repo=https://github.com/torvalds/linux.git
     linux_kernel_version=$(git -c 'versionsort.suffix=-' ls-remote --refs --sort='version:refname' --tags $linux_repo \
     | tail --lines=1 | cut --delimiter='/' --fields=3)
-elif [ "$kernel_type"="stable"] then;
+elif [ "$kernel_type"="stable"]; then
     linux_repo=https://github.com/gregkh/linux.git
     linux_kernel_version_tag=$(git ls-remote --refs --sort='version:refname' --tags $linux_repo \
     | tail --lines=1 | cut --delimiter='/' --fields=3)
-elif [ "$kernel_type"="stable"] then;
+elif [ "$kernel_type"="stable"]; then
     linux_repo=https://github.com/gregkh/linux.git
     linux_kernel_version_tag=$(git ls-remote --refs --sort='version:refname' --tags $linux_repo \
     | tail --lines=1 | cut --delimiter='/' --fields=3)
-elif [ "$kernel_type"="basic"] then;
+# elif [ "$kernel_type"="basic"]; then
+else
     linux_repo=https://github.com/microsoft/WSL2-Linux-Kernel.git
     linux_kernel_version_tag=$(git ls-remote --refs --sort='version:refname' --tags $linux_repo \
     | tail --lines=1 | cut --delimiter='/' --fields=3)

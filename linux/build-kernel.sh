@@ -192,9 +192,12 @@ else
 fi
 
 
-if [ ! -d "$zfs_build_dir/.git" ] &&  ["$zfs"!="" ]; then
-
+if [ ! -d "$zfs_build_dir/.git" ] &&  ["$zfs" != "" ]; then
     git clone $zfs_repo --single-branch --branch $zfs_kernel_version_tag --progress -- $zfs_build_dir 
+elif [ -d "$zfs_build_dir/.git" ] &&  ["$zfs" != "" ]; then
+    cd $zfs_build_dir
+    git pull $zfs_repo --squash --progress
+    cd ..
 fi
 
 

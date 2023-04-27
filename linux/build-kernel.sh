@@ -1,5 +1,6 @@
 #!/bin/bash
 user_config_flag=false
+user_entry_flag=false
 kernel_type=$1
 config_source=$2
 zfs=$3
@@ -175,9 +176,14 @@ if [ $5 != "" ] && [ $4 = "" ]; then
     echo "  install kernel when finished?
         y/(n)"
     read install
-    if [ $install != "" ] && ( [ $install = "y" ] || [ $install = "Y" ]  ); then
-        echo "enter the name your windows home directory"
+    if [ $install != "" ] && ( [ $install = "y" ] || [ $install = "Y" ]  ) && ( [ $win_user != "user" ]); then
+        echo "enter the name your windows home directory or ..
+            press ENTER to confirm as '$win_user'"
+        win_user_orig=$win_user
         read win_user
+        if [ $win_user = "" ]; then
+            win_user = $win_user_orig
+        fi
     fi
 fi
 echo "  press ENTER to confirm details and continue"
@@ -260,7 +266,7 @@ else
     echo "unable to save kernel package to home directory"
 fi
 
-if [ $5 != "" ] && [ $4 != "" ]; then
+if [ $5 != "" ] && ( [ $4 != "" ] || [ $win_user != "user" ] ); then
     echo "install kernel to /mnt/c/users/$win_user?
     y/(n)"
     read install_kernel

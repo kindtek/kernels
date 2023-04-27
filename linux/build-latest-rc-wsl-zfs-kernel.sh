@@ -133,20 +133,12 @@ if [ -d "$linux_build_dir/.git" ]; then
 else
     git clone $linux_repo --single-branch --branch $linux_kernel_version_tag --progress -- $linux_build_dir
 fi
-cd $linux_build_dir && \
-linux_latest_tag=$(git describe --tags $(git rev-list --tags=v[0-9\.]*-rc[0-9\.]* --max-count=1)) && \
-echo "linux latest: $linux_latest_tag" && \
-git checkout tags/$linux_latest_tag && \
-cd ..
+
 
 if [ ! -d "$zfs_build_dir/.git" ]; then
-    git clone $zfs_repo --progress -- $zfs_build_dir 
+    git clone $zfs_repo --single-branch --branch $zfs_kernel_version_tag --progress -- $zfs_build_dir 
 fi
-cd $zfs_build_dir && \
-zfs_latest_tag=$(git describe --tags $(git rev-list --tags --max-count=1)) && \
-echo "zfs latest: $zfs_latest_tag" && \
-git checkout tags/$zfs_latest_tag && \
-cd .. 
+
 
 # replace kernel source .config with user's
 cp -fv $config_source $linux_build_dir/.config

@@ -1,6 +1,6 @@
 #!/bin/bash
 config_source=$1
-linux_build_dir=wsl2-build
+linux_build_dir=linux-build
 zfs_build_dir=zfs-build
 user_config_flag=false
 kernel_version="5.15.90.1"
@@ -119,8 +119,8 @@ else
 fi
 cd $linux_build_dir
 linux_latest_tag=$(git describe --tags $(git rev-list --tags=v[0-9\.]*-rc[0-9\.]* --max-count=1))
-echo "linux latest: $zfs_latest_tag"
-git checkout tags/$zfs_latest_tag
+echo "linux latest: $linux_latest_tag"
+git checkout tags/$linux_latest_tag
 cd ..
 
 zfs_repo=https://github.com/openzfs/zfs.git

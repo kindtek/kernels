@@ -10,23 +10,26 @@ win_user=${4:-'user'}
 
 # linux_kernel_version="5.15.90.1"
 # zfs_version="2.1.11"
+$kernel_file_suffix="${kernel_file_suffix}W"
+$config_file_suffix="${config_file_suffix}_wsl"
 if [ "$kernel_type" = "" ]; then
     kernel_type="stable"
 fi
 if [ "$kernel_type" = "latest" ]; then
-    $kernel_file_suffix="${kernel_file_suffix}L"
-    $config_file_suffix="${config_file_suffix}_latest"
+
     linux_repo=https://github.com/torvalds/linux.git
     linux_version_query="git -c versionsort.suffix=- ls-remote --refs --sort=version:refname --tags $linux_repo "
     linux_kernel_version_tag=$($linux_version_query | tail --lines=1 | cut --delimiter='/' --fields=3) 
     linux_kernel_type_tag="LATEST-WSL"
     linux_kernel_version=${linux_kernel_version_tag#"v"}
+    $kernel_file_suffix+=( "L" )
+    $config_file_suffix+=( "_latest" )
     echo "linux version tag:$linux_kernel_version_tag"
     echo "linux version:$linux_kernel_version"
     echo "linux version tag:$linux_kernel_type_tag"
 elif [ "$kernel_type" = "latest-rc" ]; then
-    $kernel_file_suffix="${kernel_file_suffix}R"
-    $config_file_suffix="${config_file_suffix}_rc"
+    $kernel_file_suffix+=( "R" )
+    $config_file_suffix+=( "_rc" )
     linux_repo=https://github.com/torvalds/linux.git
     linux_version_query="git ls-remote --refs --sort=version:refname --tags $linux_repo "
     linux_kernel_version_tag=$($linux_version_query | tail --lines=1 | cut --delimiter='/' --fields=3) 
@@ -36,8 +39,8 @@ elif [ "$kernel_type" = "latest-rc" ]; then
     echo "linux version:$linux_kernel_version"
     echo "linux version tag:$linux_kernel_type_tag"
 elif [ "$kernel_type" = "stable" ]; then
-    $kernel_file_suffix="${kernel_file_suffix}S"
-    $config_file_suffix="${config_file_suffix}_stable"
+    $kernel_file_suffix+=( "S" )
+    $config_file_suffix+=( "_stable" )
     linux_repo=https://github.com/gregkh/linux.git
     # linux_version_query="git ls-remote --refs --sort=version:refname --tags $linux_repo "
     linux_version_query="git -c versionsort.suffix=- ls-remote --refs --sort=version:refname --tags $linux_repo "
@@ -50,8 +53,8 @@ elif [ "$kernel_type" = "stable" ]; then
     echo "linux kernel type:$linux_kernel_type_tag"
 # elif [ "$kernel_type"="basic" ]; then
 else 
-    $kernel_file_suffix="${kernel_file_suffix}B"
-    $config_file_suffix="${config_file_suffix}_basic"
+    $kernel_file_suffix+=( "B" )
+    $config_file_suffix+=( "_basic" )
     linux_repo=https://github.com/microsoft/WSL2-Linux-Kernel.git
     linux_version_query="git ls-remote --refs --sort=version:refname --tags $linux_repo "
     linux_kernel_version_tag=$($linux_version_query | tail --lines=1 | cut --delimiter='/' --fields=3) 
@@ -64,8 +67,7 @@ else
 fi
 
 
-$kernel_file_suffix="${kernel_file_suffix}W"
-$config_file_suffix="$config_file_suffix}-wsl"
+
 
 if [ "$zfs" != "" ]; then
     zfs_repo=https://github.com/openzfs/zfs.git
@@ -75,12 +77,12 @@ if [ "$zfs" != "" ]; then
     linux_kernel_type_tag=$linux_kernel_type_tag-ZFS
     echo "zfs version tag:$zfs_version_tag"
     echo "zfs version:$zfs_version"
-    $kernel_file_suffix="${kernel_file_suffix}Z"
-    $config_file_suffix="${config_file_suffix}-zfs"
+    $kernel_file_suffix+=( "Z" )
+    $config_file_suffix+=( "-zfs" )
 fi
 
-$config_file_suffix="${config_file_suffix}0"
-$kernel_file_suffix="${kernel_file_suffix}0"
+$config_file_suffix+="0"
+$kernel_file_suffix+="0"
 
 linux_build_dir=linux-build
 # echo $linux_version_query

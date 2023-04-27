@@ -6,15 +6,13 @@ user_config_flag=false
 # zfs_version="2.1.11"
 
 linux_repo=https://github.com/torvalds/linux.git
-linux_kernel_version_tag=$(git ls-remote --refs --sort='version:refname' --tags $linux_repo \
+linux_kernel_version=$(git -c 'versionsort.suffix=-' ls-remote --refs --sort='version:refname' --tags $linux_repo \
     | tail --lines=1 | cut --delimiter='/' --fields=3)
-linux_kernel_version=${linux_kernel_version_tag#"v"}
 linux_build_dir=linux-build
 
 zfs_repo=https://github.com/openzfs/zfs.git
-zfs_version_tag=$(git -c 'versionsort.suffix=-' ls-remote --refs --sort='version:refname' --tags $linux_repo \
+zfs_version=$(git -c 'versionsort.suffix=-' ls-remote --refs --sort='version:refname' --tags $linux_repo \
     | tail --lines=1 | cut --delimiter='/' --fields=3)
-zfs_kernel_version=${zfs_kernel_version_tag#"zfs-"}
 zfs_build_dir=zfs-build
 
 win_user=${2:-'user'}

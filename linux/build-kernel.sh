@@ -308,9 +308,13 @@ install kernel to WSL? y/(n)"
             echo "
             
 .wslconfig found in $win_user_home
-replacing this with the pre-configured .wslconfig is HIGHLY recommended
 
-replace it? 
+replacing this with a pre-configured .wslconfig is *HIGHLY* recommended
+a backup of the original file will be saved as:
+
+$wslconfig.old
+
+replace .wslconfig?
 (y)/n"
             read replace_wslconfig
             if [ $replace_wslconfig = "n" ] || [ $replace_wslconfig = "N" ]; then

@@ -6,10 +6,10 @@ user_config_flag=false
 # zfs_version="2.1.11"
 
 linux_repo=https://github.com/torvalds/linux.git
-# latest rc
+# latest 
 # linux_kernel_version_tag=$(git ls-remote --refs --sort='version:refname' --tags $linux_repo \
 #     | tail --lines=1 | cut --delimiter='/' --fields=3)
-# latest
+# latest rc
 linux_kernel_version=$(git -c 'versionsort.suffix=-' ls-remote --refs --sort='version:refname' --tags $linux_repo \
     | tail --lines=1 | cut --delimiter='/' --fields=3)
 linux_kernel_version=${linux_kernel_version_tag#"v"}

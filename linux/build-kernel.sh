@@ -154,6 +154,15 @@ else
     fi
 fi
 
+if [ $linux_kernel_version = "" ]; then
+    echo "
+
+    Sorry. Cannot continue. Exiting ...
+
+    Error: LINUX_KERNEL_VERSION_NOT_FOUND
+
+    "
+fi
 padding="----------"
 # display info while waiting on repo to clone
 printf "

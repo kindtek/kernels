@@ -10,8 +10,8 @@ win_user=${4:-'user'}
 
 # linux_kernel_version="5.15.90.1"
 # zfs_version="2.1.11"
-$kernel_file_suffix=( "W" )
-$config_file_suffix=( "_wsl" )
+$kernel_file_suffix=$( echo "W" )
+$config_file_suffix=$( echo "_wsl" )
 if [ "$kernel_type" = "" ]; then
     kernel_type="stable"
 fi

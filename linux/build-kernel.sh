@@ -15,27 +15,27 @@ elif [ "$kernel_type"="latest" ]; then
     linux_kernel_version_tag=$(git ls-remote --refs --sort='version:refname' --tags $linux_repo \
     | tail --lines=1 | cut --delimiter='/' --fields=3)
     linux_kernel_type_tag="LATEST-WSL"
+    linux_kernel_version=${linux_kernel_version_tag#"v"}
 elif [ "$kernel_type"="latest-rc" ]; then
     linux_repo=https://github.com/torvalds/linux.git
     linux_kernel_version_tag=$(git -c 'versionsort.suffix=-' ls-remote --refs --sort='version:refname' --tags $linux_repo \
     | tail --lines=1 | cut --delimiter='/' --fields=3)
     linux_kernel_type_tag="LATEST_RC-WSL"
+    linux_kernel_version=${linux_kernel_version_tag#"v"}
 elif [ "$kernel_type"="stable" ]; then
     linux_repo=https://github.com/gregkh/linux.git
     linux_kernel_version_tag=$(git ls-remote --refs --sort='version:refname' --tags $linux_repo \
     | tail --lines=1 | cut --delimiter='/' --fields=3)
     linux_kernel_type_tag="STABLE-WSL"
-elif [ "$kernel_type"="stable" ]; then
-    linux_repo=https://github.com/gregkh/linux.git
-    linux_kernel_version_tag=$(git ls-remote --refs --sort='version:refname' --tags $linux_repo \
-    | tail --lines=1 | cut --delimiter='/' --fields=3)
-    linux_kernel_type_tag="STABLE-WSL"
+    linux_kernel_version=${linux_kernel_version_tag#"v"}
 # elif [ "$kernel_type"="basic"]; then
 else    
     linux_repo=https://github.com/microsoft/WSL2-Linux-Kernel.git
     linux_kernel_version_tag=$(git ls-remote --refs --sort='version:refname' --tags $linux_repo \
     | tail --lines=1 | cut --delimiter='/' --fields=3)
     linux_kernel_type_tag="BASIC-WSL"
+    linux_kernel_version=${linux_kernel_version_tag#"linux-msft-wsl"}
+    linux_kernel_version=${linux_kernel_version_tag%".y"}
 fi
 
 if [ "$zfs"!="" ]; then
@@ -45,7 +45,6 @@ if [ "$zfs"!="" ]; then
     linux_kernel_type_tag=$linux_kernel_type_tag-ZFS
 fi
 
-linux_kernel_version=${linux_kernel_version_tag#"v"}
 linux_build_dir=linux-build
 echo "linux version tag:$linux_kernel_version_tag"
 echo "linux version:$linux_kernel_version"

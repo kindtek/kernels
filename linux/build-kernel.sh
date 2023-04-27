@@ -205,7 +205,7 @@ cp -fv $config_source $linux_build_dir/.config
 cd $linux_build_dir
 yes "" | make oldconfig
 yes "" | make prepare scripts
-elif [ "$zfs" != "" ]; then
+if [ "$zfs" != "" ]; then
     cd ../$zfs_build_dir && sh autogen.sh
     sh configure --prefix=/ --libdir=/lib --includedir=/usr/include --datarootdir=/usr/share --enable-linux-builtin=yes --with-linux=../$linux_build_dir --with-linux-obj=../$linux_build_dir
     sh copy-builtin ../$linux_build_dir

@@ -4,7 +4,8 @@ kernel_type=$1
 config_source=$2
 zfs=$3
 win_user=${4:-'user'}
-
+linux_version_query="git ls-remote --refs --sort='version:refname' --tags $linux_repo | tail --lines=1 | cut --delimiter='/' --fields=3"
+echo "linux version query: $linux_version_query"
 
 # linux_kernel_version="5.15.90.1"
 # zfs_version="2.1.11"

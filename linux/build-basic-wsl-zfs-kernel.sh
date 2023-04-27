@@ -166,7 +166,7 @@ touch k-cache/$package_full_name
 # work on *nix first
 mkdir -pv $nix_save_path
 if [ -w "$nix_save_path" ]; then
-    tar -czvf --exclude-vcs $tarball_source_nix -C k-cache .
+    tar -czvf $tarball_source_nix -C k-cache .
     cp -fv --backup=numbered $tarball_source_nix  $tarball_target_nix 
 else
     echo "unable to save kernel package to home directory"
@@ -177,7 +177,7 @@ fi
 mkdir -p $win_save_path
 cp -fv --backup=numbered ../../../dvlp/mnt/home/sample.wslconfig k-cache/sample.wslconfig
 if [ -w "$win_save_path" ]; then
-    tar -czvf --exclude-vcs $tarball_source_win -C k-cache .
+    tar -czvf $tarball_source_win -C k-cache .
     cp -fv --backup=numbered $tarball_source_win $tarball_target_win
 else
     echo "unable to save kernel package to home directory"

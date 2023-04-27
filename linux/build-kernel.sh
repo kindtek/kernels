@@ -317,7 +317,7 @@ replace it?
                 if grep -q '^\s?\#?\skernel=.*' "$wslconfig"; then
                     sed -i "s/\s?\#\s?kernel=C.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\$kernel_alias_/g" $wslconfig
                 else
-                    wslconfig_old=$(cat $wslconfig)
+                    wslconfig_old="$(cat $wslconfig)"
                     wslconfig_new="
 [wsl2]
 

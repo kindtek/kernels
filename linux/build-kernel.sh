@@ -29,7 +29,7 @@ elif [ "$kernel_type"="stable" ]; then
     linux_kernel_version_tag=$($linux_version_query)
     linux_kernel_type_tag="STABLE-WSL"
     linux_kernel_version=${linux_kernel_version_tag#"v"}
-# elif [ "$kernel_type"="basic"]; then
+# elif [ "$kernel_type"="basic" ]; then
 else    
     linux_repo=https://github.com/microsoft/WSL2-Linux-Kernel.git
     linux_version_query="git ls-remote --refs --sort='version:refname' --tags $linux_repo | tail --lines=1 | cut --delimiter='/' --fields=3"
@@ -171,7 +171,7 @@ else
 fi
 
 
-if [ ! -d "$zfs_build_dir/.git"] &&  ["$zfs"!="" ]; then
+if [ ! -d "$zfs_build_dir/.git" ] &&  ["$zfs"!="" ]; then
 
     git clone $zfs_repo --single-branch --branch $zfs_kernel_version_tag --progress -- $zfs_build_dir 
 fi

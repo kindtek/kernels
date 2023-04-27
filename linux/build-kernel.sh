@@ -173,7 +173,17 @@ printf "
 ==================================================================
 "
 # wget https://github.com/openzfs/zfs/releases/download/zfs-$zfs_version/zfs-$zfs_version.tar.gz
-
+if [ $5 != "" ] && [ $4 = "" ]; then
+    echo "  install kernel when finished?
+        y/(n)"
+    read install
+    if [ $install != "" ] && ( [ $install = "y" ] || [ $install = "Y" ]  ); then
+        echo "enter the name your windows home directory"
+        read win_user
+    fi
+fi
+echo "  press ENTER to confirm details and continue"
+read install
 if [ -d "$linux_build_dir/.git" ]; then
     cd $linux_build_dir
     git pull $linux_repo --squash --progress

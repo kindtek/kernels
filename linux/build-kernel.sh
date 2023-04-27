@@ -324,10 +324,12 @@ if [ $5 != "" ] && ( [ $4 != "" ] || [ $win_user != "user" ] ); then
                     echo $wslconfig_new > $wslconfig
                 fi
             else
+                mv --backup=numbered $wslconfig $wslconfig.old
                 cp -vf k-cache/sample.wslconfig $wslconfig  
                 sed -i "s/\#\s?kernel=C.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\$kernel_alias_/g" $wslconfig            
             fi
         else
+            mv --backup=numbered $wslconfig $wslconfig.old
             cp -vf k-cache/sample.wslconfig $wslconfig  
             sed -i "s/\#\s?kernel=C.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\$kernel_alias_/g" $wslconfig            
         fi

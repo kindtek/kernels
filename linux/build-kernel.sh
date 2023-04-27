@@ -57,15 +57,18 @@ if [ "$zfs" != "" ]; then
     zfs_repo=https://github.com/openzfs/zfs.git
     zfs_version_query="git -c versionsort.suffix=- ls-remote --refs --sort=version:refname --tags $zfs_repo"
     zfs_version_tag=$($zfs_version_query | tail --lines=1 | cut --delimiter='/' --fields=3)
+    zfs_version=${zfs_kernel_version_tag#"zfs-"}
     linux_kernel_type_tag=$linux_kernel_type_tag-ZFS
+    echo "zfs version tag:$zfs_kernel_version_tag"
+    echo "zfs version:$zfs_kernel_version"
+    echo "zfs version tag:$zfs_kernel_type_tag"
 fi
 
 linux_build_dir=linux-build
-echo $linux_version_query
+# echo $linux_version_query
 # echo "linux version tag:$linux_kernel_version_tag"
 # echo "linux version:$linux_kernel_version"
 # echo "linux version tag:$linux_kernel_type_tag"
-zfs_version=${zfs_kernel_version_tag#"zfs-"}
 zfs_build_dir=zfs-build
 # echo $zfs_version_query
 # echo "zfs version tag:$zfs_version_tag"
@@ -89,10 +92,6 @@ linux_kernel_version_mask=${linux_kernel_version/\./_}
 kernel_alias=${linux_kernel_version/\./L}
 linux_kernel_version_mask=${linux_kernel_version_mask//[\.-]/}
 kernel_alias=${kernel_alias//[\.-]/}
-if [ "$zfs"!="" ]; then
-    kernel_alias=${kernel_alias}
-fi
-kernel_alias=${kernel_alias}
 package_alias=linux-$linux_kernel_version_mask
 package_full_name=Linux-$linux_kernel_version-$linux_kernel_type_tag
 config_alias=.config_$kernel_alias

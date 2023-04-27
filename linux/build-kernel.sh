@@ -305,7 +305,8 @@ install $package_full_name kernel ($kernel_alias) to WSL? y/(n)"
     if [ "$install_kernel" = "y" ] || [ "$install_kernel" = "Y" ]; then
         win_user_home=/mnt/c/users/$win_user
         wslconfig=$win_user_home/.wslconfig
-        cp -vf k-cache/$kernel_alias "${win_user_home}/${kernel_alias}_"
+        
+        cp -vf k-cache/$kernel_alias "${win_user_home}/${kernel_alias}_$timestamp_id"
         if [ -f "$wslconfig" ]; then
             echo "
             
@@ -332,12 +333,12 @@ $(cat $wslconfig_old)"
                     echo "$wslconfig_new" > $wslconfig
                 fi
             else
-                mv --backup=numbered $wslconfig $wslconfig.old
+                mv -vf --backup=numbered $wslconfig $wslconfig.old
                 cp -vf k-cache/sample.wslconfig $wslconfig  
                 sed -i "s/\#\s?kernel=C.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}_/g" $wslconfig            
             fi
         else
-            mv --backup=numbered $wslconfig $wslconfig.old
+            mv -vf --backup=numbered $wslconfig $wslconfig.old
             cp -vf k-cache/sample.wslconfig $wslconfig  
             sed -i "s/\#\s?kernel=C.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}_/g" $wslconfig            
         fi

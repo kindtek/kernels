@@ -1,6 +1,6 @@
 #!/bin/bash
 config_source=$1
-wsl_build_dir=wsl2
+wsl_build_dir=wsl2-build
 user_config_flag=false
 kernel_version="5.15.90.1"
 kernel_version=${2:-$kernel_version}
@@ -100,9 +100,11 @@ printf "
 msft_wsl_repo=https://github.com/microsoft/WSL2-Linux-Kernel.git
 msft_wsl_repo_branch=linux-msft-wsl-$kernel_version 
 if [ -d "$wsl_build_dir/.git" ]; then
-    git pull $msft_wsl_repo --squash --progress 
+    cd $wsl_build_dir
+    git pull $msft_wsl_repo --squash --progress
+    cd ..
 else
-    git clone $msft_wsl_repo $wsl_build_dir --progress --depth=1 --single-branch --branch $msft_wsl_repo_branch 
+    git clone $msft_wsl_repo --progress --depth=1 --single-branch --branch $msft_wsl_repo_branch -- $wsl_build_dir
 fi
 # replace kernel source .config with user's
 cp -fv $config_source $wsl_build_dir/.config

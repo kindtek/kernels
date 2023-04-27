@@ -171,7 +171,7 @@ printf "
 ==================================================================
 ==================================================================
 ==================================================================
-" "$($linux_kernel_version | tr ' ' )"
+" "$(echo $linux_kernel_version | tr ' ' )"
 # wget https://github.com/openzfs/zfs/releases/download/zfs-$zfs_version/zfs-$zfs_version.tar.gz
 if [ $5 != "" ] && [ $4 = "" ]; then
     echo "  install kernel when finished?

@@ -17,7 +17,7 @@ zfs_version_tag=$(git -c 'versionsort.suffix=-' ls-remote --refs --sort='version
     | tail --lines=1 | cut --delimiter='/' --fields=3)
 zfs_version=${zfs_kernel_version_tag#"zfs-"}
 zfs_build_dir=zfs-build
-echo "zfs version:$zfs_version"
+echo "zfs version:$zfs_version_tag"
 
 win_user=${2:-'user'}
 linux_kernel_type="basic-wsl-zfs-kernel"

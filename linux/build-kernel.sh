@@ -77,11 +77,11 @@ zfs_mask=zfs-$zfs_version_mask
 linux_kernel_version_mask=${linux_kernel_version/\./_}
 kernel_alias=${linux_kernel_version/\./L}
 linux_kernel_version_mask=${linux_kernel_version_mask//[\.-]/}
-kernel_alias=${kernel_alias//[\.-]/}WZ0
+kernel_alias=${kernel_alias//[\.-]/}
 if [ "$zfs"!="" ]; then
-    kernel_alias=${kernel_alias}Z
+    kernel_alias=${kernel_alias}
 fi
-kernel_alias=${kernel_alias}0
+kernel_alias=${kernel_alias}
 package_alias=linux-$linux_kernel_version_mask
 package_full_name=Linux-$linux_kernel_version-$linux_kernel_type_tag
 config_alias=.config_$kernel_alias

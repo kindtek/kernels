@@ -286,12 +286,33 @@ else
 fi
 
 if [ $5 != "" ] && ( [ $4 != "" ] || [ $win_user != "user" ] ); then
-    echo "install kernel to /mnt/c/users/$win_user?
-    y/(n)"
+    echo "install kernel to WSL? y/(n)"
     read install_kernel
     if [ $install_kernel = "y" ] || [ $install_kernel = "Y" ]; then
-        cp -vf k-cache/$kernel_alias /mnt/c/users/$win_user/$kernel_alias
-        cp -vf k-cache/sample.wslconfig /mnt/c/users/$win_user/.wslconfig
+        win_user_home=/mnt/c/users/$win_user
+        wslconfig=$win_user_home/.wslconfig
+        cp -vf k-cache/$kernel_alias $win_user_home/$kernel_alias
+        if [ -f "$wslconfig" ]; then
+            echo ".wslconfig found in $win_user_home
+
+            replace it? y/(n)"
+            read replace_wslconfig
+            if [ $install_kernel = "y" ] || [ $install_kernel = "Y" ]; then
+                cp -vf k-cache/sample.wslconfig $wslconfig
+            else
+                if grep -q '^\s?kernel=.*' "$wslconfig"; then
+                    sed -i "s/\# kernel=C.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\$kernel_alias/g" $wslconfig
+                else
+                    echo "
+                    [wsl2]
+
+                    kernel=C\:\\\\users\\\\$win_user\\\\$kernel_alias"
+                fi
+            fi
+        else
+            cp -vf k-cache/sample.wslconfig $wslconfig
+        fi
+        cp -vf k-cache/sample.wslconfig $wslconfig
         echo "
         
         required. copy/pasta this:

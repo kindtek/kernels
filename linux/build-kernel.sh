@@ -204,7 +204,7 @@ if [ $5 != "" ] && [ $4 = "" ]; then
     echo "  install kernel when finished?
         y/(n)"
     read install
-    if [ $install != "" ] && ( [ $install = "y" ] || [ $install = "Y" ]  ) && ( [ $win_user != "user" ]); then
+    if [ "$install" != "" ] && ( [ "$install" = "y" ] || [ "$install" = "Y" ]  ) && ( [ $win_user != "user" ]); then
         echo "enter the name your windows home directory or ..
             press ENTER to confirm as '$win_user'"
         win_user_orig=$win_user
@@ -295,12 +295,12 @@ else
 unable to save kernel package to home directory"
 fi
 
-if [ $5 != "" ] && ( [ $4 != "" ] || [ $win_user != "user" ] ); then
+if [ "$5" != "" ] && ( [ "$4" != "" ] || [ "$win_user" != "user" ] ); then
     echo "
     
 install kernel to WSL? y/(n)"
     read install_kernel
-    if [ $install_kernel = "y" ] || [ $install_kernel = "Y" ]; then
+    if [ "$install_kernel" = "y" ] || [ "$install_kernel" = "Y" ]; then
         win_user_home=/mnt/c/users/$win_user
         wslconfig=$win_user_home/.wslconfig
         cp -vf k-cache/$kernel_alias "${win_user_home}/${kernel_alias}_"
@@ -317,7 +317,7 @@ $wslconfig.old
 replace .wslconfig?
 (y)/n"
             read replace_wslconfig
-            if [ $replace_wslconfig = "n" ] || [ $replace_wslconfig = "N" ]; then
+            if [ "$replace_wslconfig" = "n" ] || [ "$replace_wslconfig" = "N" ]; then
                 if grep -q '^\s?\#?\skernel=.*' "$wslconfig"; then
                     sed -i "s/\s?\#\s?kernel=C.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\$kernel_alias_/g" $wslconfig
                 else

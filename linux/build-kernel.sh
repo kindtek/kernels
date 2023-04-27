@@ -1,331 +1,231 @@
 #!/bin/bash
-repo_path1=dvlw
-repo_path2=dvlp
-kernels_linux_dir=$(pwd)
-
-# case "$kernel_type" in
-
-# "stable-wsl-zfs")
-if [ "$1" = "stable-wsl-zfs" ]; then
-    kernel_src=stable
-    kernel_mod=zfs
-    echo 'stable-wsl-zfs'
-    cd $kernel_src
-    git submodule set-branch --branch linux-rolling-$kernel_src .
-    git submodule update --init --remote --depth=1 --progress
-
-    # kernel_src_upstream=$(git ls-remote --quiet --tags --sort=committerdate $(git config --get remote.upstream.url) | tail -1)
-    # # kernel_src_upstream=$( echo $kernel_src_upstream | sed 's/[\^\{\}]//g' )
-    # kernel_src_upstream_sha=$kernel_src_upstream | tail -1 | cut -d $'\t' -f1
-    # kernel_src_upstream_name=$kernel_src_upstream | cut -d $'/' -f3
-    # kernel_src_upstream_sha=$kernel_src_upstream | git submodule update --init --remote --depth=1 --progress --cached $kernel_src
-    # kernel_src_origin=$(git ls-remote --quiet --tags --sort=committerdate | tail -1)   
-    # kernel_src_origin=$( echo $kernel_src_origin | sed 's/[\^\{\}]//g' ) 
-    # kernel_src_origin_sha=$(cut -d $' ' -f1 <<< "$kernel_src_origin")
-    # kernel_src_origin_name=$(cut -d '/' -f3 <<< "$kernel_src_origin")
-    # linux_version_name=$(echo $kernel_src_origin_name | sed 's@^[^0-9]*\([0-9\.]\+\).*@\1@')
-    linux_version_name="$(git rev-list --branches --date-order --header | tr -d '\0' | tr -d '\0' | grep -o 'Merge v[0-9\.]*' | sed 's/[^0-9\.]//g')"  
-    linux_version_mask=$( echo $linux_version_name | sed 's/\./\_/' )
-    linux_version_mask=$( echo $linux_version_mask | sed 's/\.//g' )
-    echo $linux_version_mask
-    # sync_fork_with_upstream() {
-    # update/push origin with upstream if theres an update that has not been pushed from upstream
-    # if ! [ $kernel_src_upstream_sha = $kernel_src_origin_sha ]; then
-    # git fetch upstream
-    # git checkout $kernel_src_upstream_sha
-    # # git merge upstream/$kernel_src_upstream_sha
-    # git switch -c $kernel_src_upstream_name
-    # # git add -A -- /home/dvl/dvlw/dvlp/kernels/linux/msft
-    # cd ../../../
-    # git reset
-    # git add -A -- $repo_path1
-    # git commit -m "merge new branch from upstream"
-    # git push
-    # cd ../
-    # git reset
-    # git add -A -- $repo_path2
-    # git commit -m "merge new branch $kernel_src_upstream_name"
-    # git push
-    # cd $repo_path1/$repo_path2/kernels/linux
-    # echo $repo_path1/$repo_path2/kernels/linux
-    # echo 'vs
-    # '$(pwd)$repo_path1/$repo_path2/kernels/linux
-    # else 
-    #     cd ..
-    # fi
-    # return true
-# } || { return false; }
-    # ;;
-
-elif [ "$1" = "lts-wsl-zfs" ]; then
-# "lts-wsl-zfs")
-    kernel_src=lts
-    kernel_mod=zfs
-    cd $kernel_src
-    git submodule set-branch --branch linux-rolling-$kernel_src .
-    git submodule update --init --remote --depth=1 --progress
-
-#     kernel_src_origin=$(git ls-remote --quiet --tags --sort=committerdate | tail -1)   
-#     kernel_src_origin=$( echo $kernel_src_origin | sed 's/[\^\{\}]//g' ) 
-#     kernel_src_origin_sha=$(cut -d $' ' -f1 <<< "$kernel_src_origin")
-#     # kernel_src_origin_name=$kernel_src_origin | cut -d '/' -f3
-#     kernel_src_origin_name=$(cut -d '/' -f3 <<< "$kernel_src_origin")
-#     linux_version_name=$(echo $kernel_src_origin_name | sed 's@^[^0-9]*\([0-9\.]\+\).*@\1@')
-#     # replace first . with _ and then remove the rest of the .'s
-#     linux_version_mask=$( echo $linux_version_name | sed 's/\./\_/' )
-#     linux_version_mask=$( echo $linux_version_mask | sed 's/\.//g' )
-#     echo $linux_version_mask
-    linux_version_name="$(git rev-list --branches --date-order --header | tr -d '\0' | tr -d '\0' | grep -o 'Merge v[0-9\.]*' | sed 's/[^0-9\.]//g')"  
-    linux_version_mask=$( echo $linux_version_name | sed 's/\./\_/' )
-    linux_version_mask=$( echo $linux_version_mask | sed 's/\.//g' )
-# # sync_fork_with_upstream() {
-#     # update/push origin with upstream if theres an update that has not been pushed from upstream
-#     if ! [ $kernel_src_upstream_sha = $kernel_src_origin_sha ]; then
-#     git fetch upstream
-#     git checkout $kernel_src_upstream_sha
-#     # git merge upstream/$kernel_src_upstream_sha
-#     git switch -c $kernel_src_upstream_name
-#     # git add -A -- /home/dvl/dvlw/dvlp/kernels/linux/msft
-#     cd ../../../
-#     git reset
-#     git add -A -- $repo_path1
-#     git commit -m "merge new branch from upstream"
-#     git push
-#     cd ../
-#     git reset
-#     git add -A -- $repo_path2
-#     git commit -m "merge new branch $kernel_src_upstream_name"
-#     git push
-#     cd $repo_path1/$repo_path2/kernels/linux
-#     echo $repo_path1/$repo_path2/kernels/linux
-#     echo 'vs
-#     '$(pwd)$repo_path1/$repo_path2/kernels/linux
-    # else 
-    # fi
-    # return true
-# } || { return false; }
-    # ;;
-elif [ "$1" = "latest-rc-wsl-zfs" ]; then
-# "latest-rc-wsl-zfs")
-    echo 'latest-rc-wsl-zfs'
-    kernel_src=rc
-    kernel_mod=zfs
-    cd $kernel_src
-    git submodule update --init --remote --depth=1 --progress
-    kernel_src_origin=$(git ls-remote --quiet --tags --sort=committerdate $(git config --get remote.origin.url) | tail -1)
-    kernel_src_upstream=$(git ls-remote --quiet --tags --sort=committerdate $(git config --get remote.upstream.url) | tail -1)
-    kernel_src_origin_sha=kernel_src_origin | cut -d $'\t' -f1
-    # remove any letters - left with #.#-#
-    linux_version_name=$(echo $kernel_src_upstream_name | sed 's@^[^0-9]*\([0-9\.-]\+\).*@\1@')
-    # replace first . with _ and then remove the rest of the .'s
-    linux_version_mask=$( echo $linux_version_name | sed 's/-/-rc/' )
-
-# # sync_fork_with_upstream() {
-#     # update/push origin with upstream if theres an update that has not been pushed from upstream
-#     if ! [ $kernel_src_upstream_sha = $kernel_src_origin_sha ]; then
-#     git fetch upstream
-#     git checkout $kernel_src_upstream_sha
-#     # git merge upstream/$kernel_src_upstream_sha
-#     git switch -c $kernel_src_upstream_name
-#     # git add -A -- /home/dvl/dvlw/dvlp/kernels/linux/msft
-#     cd ../../../
-#     git reset
-#     git add -A -- $repo_path1
-#     git commit -m "merge new branch from upstream"
-#     git push
-#     cd ../
-#     git reset
-#     git add -A -- $repo_path2
-#     git commit -m "merge new branch $kernel_src_upstream_name"
-#     git push
-#     fi
-
-    # return true
-# } || { return false; }
-    # ;;
-
-# "basic-wsl-zfs")
-elif [ "$1" = "basic-wsl-zfs" ]; then
-    echo 'basic-wsl-zfs'
-    kernel_src=msft
-    kernel_mod=zfs
-    # cd'ing after the update so if something fails the error will be caught easier
-    cd $kernel_src
-    git submodule update --init --remote --depth=1 --progress
-    kernel_src_origin=$(git ls-remote --quiet --tags --sort=committerdate $(git config --get remote.origin.url) | tail -1)
-    kernel_src_upstream=$(git ls-remote --quiet --tags --sort=committerdate $(git config --get remote.upstream.url) | tail -1)
-    kernel_src_origin_sha=kernel_src_origin | cut -d $'\t' -f1
-    kernel_src_upstream_sha=$kernel_src_upstream | tail -1 | cut -d $'\t' -f1
-    kernel_src_upstream_name=$kernel_src_upstream | cut -d $'/' -f3
-    linux_version_name=$(echo $kernel_src_upstream_name | sed 's@^[^0-9]*\([0-9\.]\+\).*@\1@')
-    # replace first . with _ and then remove the rest of the .'s
-    linux_version_mask=$( echo $linux_version_name | sed 's/\./\_/' )
-    linux_version_mask=$( echo $linux_version_mask | sed 's/\.//g' )
-    # sync_fork_with_upstream() {
-    # update/push origin with upstream if theres an update that has not been pushed from upstream
-    if ! [ $kernel_src_upstream_sha = $kernel_src_origin_sha ]; then
-    git fetch upstream
-    git checkout $kernel_src_upstream_sha
-    # git merge upstream/$kernel_src_upstream_sha
-    git switch -c $kernel_src_upstream_name
-    # git add -A -- /home/dvl/dvlw/dvlp/kernels/linux/msft
-    cd ../../../
-    git reset
-    git add -A -- $repo_path1
-    git commit -m "merge new branch from upstream"
-    git push
-    cd ../
-    git reset
-    git add -A -- $repo_path2
-    git commit -m "merge new branch $kernel_src_upstream_name"
-    git push
-    fi
-
-    # return true
-# } || { return false; }
-    # ;;
-
-# *)
-elif [ "$1" = "basic-wsl" ]; then
-    # basic-wsl
-    echo 'basic-wsl'
-    kernel_src=msft
-    kernel_mod=none
-    cd $kernel_src
-    git submodule update --init --remote --depth=1 --progress
-    # cd'ing after the update so if something fails the error will be caught easier
-    kernel_src_origin=$(git ls-remote --quiet --tags --sort=committerdate | tail -1)
-    # kernel_src_origin_name==$kernel_src_origin | cut -d $'/' -f3
-    # kernel_src_origin_sha=$kernel_src_origin | cut -d $'\t' -f1
-    kernel_src_origin_sha=$(cut -d $'\t' -f1 <<< "$kernel_src_origin")
-    kernel_src_origin_name=$(cut -d '/' -f3 <<< "$kernel_src_origin")
-    kernel_src_upstream=$(git ls-remote --quiet --tags --sort=committerdate $(git config --get remote.upstream.url) | tail -1)
-    kernel_src_upstream_sha=$(cut -d $'\t' -f1 <<< "$kernel_src_upstream")
-    kernel_src_upstream_name=$(cut -d '/' -f3 <<< "$kernel_src_upstream")
-    linux_version_name=$(echo $kernel_src_origin_name | sed 's@^[^0-9]*\([0-9\.]\+\).*@\1@')
-    # replace first . with _ and then remove the rest of the .'s
-    linux_version_mask=$( echo $linux_version_name | sed 's/\./\_/' )
-    linux_version_mask=$( echo $linux_version_mask | sed 's/\.//g' )
-    echo $kernel_src_origin
-
-# sync_fork_with_upstream() {
-    # update/push origin with upstream if theres an update that has not been pushed from upstream
-    if ! [ $kernel_src_upstream_sha = $kernel_src_origin_sha ]; then
-    git fetch upstream
-    git checkout $kernel_src_upstream_sha
-    # git merge upstream/$kernel_src_upstream_sha
-    git switch -c $kernel_src_upstream_name
-    # git add -A -- /home/dvl/dvlw/dvlp/kernels/linux/msft
-    cd ../../../
-    git reset
-    git add -A -- $repo_path1
-    git commit -m "merge new branch from upstream"
-    git push
-    cd ../
-    git reset
-    git add -A -- $repo_path2
-    git commit -m "merge new branch $kernel_src_upstream_name"
-    git push
-    fi
-
-    # return true
-# } || { return false; }
-#     ;;
-# esac
-fi
-echo $kernels_linux_dir
-cd $kernels_linux_dir
-
-    echo $(pwd)
+user_config_flag=false
+kernel_type=$1
+config_source=$2
+zfs=$3
+win_user=${4:-'user'}
 
 
-if ! [ $kernel_mod = none ]; then
-    cd modules/$kernel_mod
-    git pull
-    git submodule update  --remote --depth=1
-    cd ../../
+# linux_kernel_version="5.15.90.1"
+# zfs_version="2.1.11"
+if [ "$kernel_type"=""] then;
+    kernel_type="latest"
+elif [ "$kernel_type"="latest"] then;
+    linux_repo=https://github.com/torvalds/linux.git
+    linux_kernel_version_tag=$(git ls-remote --refs --sort='version:refname' --tags $linux_repo \
+    | tail --lines=1 | cut --delimiter='/' --fields=3)
+elif [ "$kernel_type"="latest-rc"] then;
+    linux_repo=https://github.com/torvalds/linux.git
+    linux_kernel_version=$(git -c 'versionsort.suffix=-' ls-remote --refs --sort='version:refname' --tags $linux_repo \
+    | tail --lines=1 | cut --delimiter='/' --fields=3)
+elif [ "$kernel_type"="stable"] then;
+    linux_repo=https://github.com/gregkh/linux.git
+    linux_kernel_version_tag=$(git ls-remote --refs --sort='version:refname' --tags $linux_repo \
+    | tail --lines=1 | cut --delimiter='/' --fields=3)
+elif [ "$kernel_type"="stable"] then;
+    linux_repo=https://github.com/gregkh/linux.git
+    linux_kernel_version_tag=$(git ls-remote --refs --sort='version:refname' --tags $linux_repo \
+    | tail --lines=1 | cut --delimiter='/' --fields=3)
+elif [ "$kernel_type"="basic"] then;
+    linux_repo=https://github.com/microsoft/WSL2-Linux-Kernel.git
+    linux_kernel_version_tag=$(git ls-remote --refs --sort='version:refname' --tags $linux_repo \
+    | tail --lines=1 | cut --delimiter='/' --fields=3)
 fi
 
-echo $kernel_mod
-kernel_type=${1:-$kernel_type}
-config_file=${2:-$config_file_default}
-user_name=${3:-dvl}
+if [ "$zfs"!="" ] then;
+    zfs_repo=https://github.com/openzfs/zfs.git
+    zfs_version_tag=$(git -c 'versionsort.suffix=-' ls-remote --refs --sort='version:refname' --tags $zfs_repo \
+        | tail --lines=1 | cut --delimiter='/' --fields=3)
+fi
+
+linux_kernel_version=${linux_kernel_version_tag#"v"}
+linux_build_dir=linux-build
+# echo "linux version:$linux_kernel_version"
+
+zfs_version=${zfs_kernel_version_tag#"zfs-"}
+zfs_build_dir=zfs-build
+# echo "zfs version:$zfs_version"
+
+linux_kernel_type="basic-wsl-zfs-kernel"
+linux_kernel_type_tag="LATEST_RC-WSL-ZFS"
+timestamp_id=$(date -d "today" +"%Y%m%d%H%M%S")
+# deduce architecture of this machine
 cpu_vendor=$(grep -Pom 1 '^vendor_id\s*:\s*\K.*' /proc/cpuinfo)
 cpu_arch=$(uname -m)
 cpu_arch="${cpu_arch%%_*}"
-config_suffix=_wsl-zfs0
-
-# linux_version_name=$(echo $kernel_src_upstream_name | sed 's@^[^0-9]*\([0-9\.]\+\).*@\1@')
-# # replace first . with _ and then remove the rest of the .'s
-# linux_version_mask=$(echo $( echo $linux_version_name | sed 's/\./\_/' ))
-# linux_version_mask=$(echo $( echo $linux_version_mask | sed 's/\.//g' )) 
-linux_mask=linux-$linux_version_mask
-
-zfs_version_name=2.1.11
-# replace first . with _ and then remove the rest of the .'s
-zfs_version_mask=${zfs_version_name/./_}
-zfs_version_mask=${zfs_version_mask//[.-]/}
-zfs_mask=zfs-$zfs_version_mask
-
-
-if ! [ -d /home/$user_name ]; then $user_name=/home/dvl; fi
+# shorten common vendor names
 if [ $cpu_vendor = AuthenticAMD ]; then cpu_vendor=amd; fi
 if [ $cpu_vendor = GenuineIntel ]; then cpu_vendor=intel; fi
+# replace first . with _ and then remove the rest of the .'s
+zfs_version_mask=${zfs_version/./_}
+zfs_version_mask=${zfs_version_mask//[.-]/}
+zfs_mask=zfs-$zfs_version_mask
+# replace first . with _ and then remove the rest of the .'s
+linux_kernel_version_mask=${linux_kernel_version/\./_}
+kernel_alias=${linux_kernel_version/\./L}
+linux_kernel_version_mask=${linux_kernel_version_mask//[\.-]/}
+kernel_alias=${kernel_alias//[\.-]/}WZ0
+package_alias=linux-$linux_kernel_version_mask
+package_full_name=Linux-$linux_kernel_version-$linux_kernel_type_tag
+config_alias=.config_$kernel_alias
+git_save_path=$cpu_arch/$cpu_vendor/$linux_kernel_version_mask
+nix_save_path=$HOME/k-cache
+win_save_path=/mnt/c/users/$win_user/k-cache
+kernel_source=arch/$cpu_arch/boot/bzImage
+kernel_target_git=$git_save_path/$kernel_alias
+config_target_git=$git_save_path/$config_alias
+kernel_target_nix=$nix_save_path/$kernel_alias
+config_target_nix=$nix_save_path/$config_alias
+kernel_target_win=$win_save_path/$kernel_alias
+config_target_win=$win_save_path/$config_alias
+tarball_target_nix=$nix_save_path/$package_full_name.tar.gz
+tarball_target_win=$win_save_path/$package_full_name.tar.gz
+tarball_source_nix=$package_full_name.tar.gz
+tarball_source_win=$package_full_name.tar.gz
 
-save_name=$linux_mask\_wz0
-save_location1=$cpu_arch/$cpu_vendor/$linux_version_mask/$save_name
-save_location2=/home/$user_name/k-cache/$save_name
-
-wsl_username=$(wslvar USERNAME) > /dev/null 2> /dev/null
-if [ -d /mnt/c/users/$wsl_username ]; then save_location4=/mnt/c/users/$wsl_username/$save_name; fi
-
-
-# try to pick the best .config file and default to the one provided by microsoft
-default_config_file=$cpu_arch/$cpu_vendor/$linux_version_mask/.config$config_suffix
-config_file=${2:-$default_config_file}
-if [ $cpu_vendor = arm64 ]; then arm_suffix="-arm64"; fi
-if ! [ -f $config_file ]; then config_file=$cpu_arch/generic/$linux_version_mask/.config$config_suffix; fi
-if ! [ -f ${config_file} ]; then config_file=$default_config_file; else mkdir -pv $cpu_arch/$cpu_vendor/$linux_version_mask; cp -bv $config_file $cpu_arch/$cpu_vendor/$linux_version_mask/.config$config_suffix; fi
-if [ -f $config_file ]; then cp -fv $config_file $kernel_src/.config; else curl https://raw.githubusercontent.com/kindtek/WSL2-Linux-Kernel/4aeb7776ebf6d022dfe49fc8abf4ece02d523e84/Microsoft/config-wsl$arm_suffix -o $kernel_src/.config; fi
-
-# wget https://github.com/openzfs/zfs/releases/download/zfs-$zfs_version_name/zfs-$zfs_version_name.tar.gz
-# wget https://git.kernel.org/torvalds/t/$linux_version_name.tar.gz
-
-printf '\n======= Kernel Build Info =========================================================================\n\n\tCPU Architecture:\t%s\n\n\tCPU Vendor:\t\t%s\n\n\tConfiguration File:\n\t\t%s\n\n\tSave Locations:\n\t\t%s\n\t\t%s\n\t\t%s\n\n===================================================================================================\n' $cpu_arch $cpu_vendor $config_file $save_location1 $save_location2 $save_location4
-
-
-
-# if ! [ git ls-remote --quiet --tags --sort=committerdate | tail -1 | cut -d'/' -f3 = git ls-remote --quiet --tags --sort=committerdate | tail -1 | cut -d'/' -f3 ]
-# submodule set-branch --branch $(git ls-remote --quiet --tags --sort=committerdate | tail -1 | cut -d'/' -f3) .
-
-
-cd $kernel_src
-
-yes "" | make prepare scripts
-if ! [ $kernel_mod = none ]; then
-    cd modules/$kernel_mod;
-    sh autogen.sh;
-    sh configure --prefix=/ --libdir=/lib --includedir=/usr/include --datarootdir=/usr/share --enable-linux-builtin=yes --with-linux=../../$kernel_src --with-linux-obj=../../$kernel_src
-    sh copy-builtin ../../$kernel_src
-    yes "" | make install 
-    cd ../../$kernel_src
-    sed -i "s/\# CONFIG_$(echo $kernel_mod | tr '[:lower:]' '[:upper:]') is not set/CONFIG_$(echo $kernel_mod | tr '[:lower:]' '[:upper:]')=y/g" .config
+# check that the user supplied source exists if not try to pick the best .config file available
+# user choice is best if it exists
+if [ ! "$config_source"="" ] && [ -r "$config_source" ] && [ -s "$config_source" ]; then
+    echo "config: $config_source"
+    user_config_flag=true
+else
+# try alternates if user config doesn't work 
+    # reliable but the least desirable .. keep looking
+    if [ -r "$linux_build_dir/Microsoft/config-wsl" ]; then 
+        config_source=$linux_build_dir/Microsoft/config-wsl
+    fi
+    # generic - slightly better
+    if [ -r "$cpu_arch/generic/$linux_kernel_version_mask/$config_alias" ]; then 
+        config_source=$cpu_arch/generic/$linux_kernel_version_mask/$config_alias
+    fi
+    # specific arch - best alternate 
+    if [ -r "$git_save_path/$config_alias" ]; then
+        config_source=$git_save_path/$config_alias
+    fi
 fi
 
+
+# display info while waiting on repo to clone
+printf "
+===========================================================
+=================   Linux Kernel   ========================
+======-----------     $linux_kernel_version    ------------------======
+===========================================================
+====------------     Source Info    -------------------====
+
+
+  CPU Architecture: 
+    $cpu_arch
+
+  CPU Vendor:  
+    $cpu_vendor
+
+  Configuration File:
+    $config_source
+
+
+===========================================================
+=================   Linux Kernel   ========================
+======-----------     $linux_kernel_version    ------------------======
+===========================================================
+====------------     Output Info     -------------------====
+
+
+  Kernel:
+    $kernel_target_git
+
+  Compressed Kernel/Config:
+    $tarball_target_nix
+    $tarball_target_win      
+
+
+===========================================================
+===========================================================
+===========================================================
+"
+# wget https://github.com/openzfs/zfs/releases/download/zfs-$zfs_version/zfs-$zfs_version.tar.gz
+
+if [ -d "$linux_build_dir/.git" ]; then
+    cd $linux_build_dir
+    git pull $linux_repo --squash --progress
+    cd ..
+else
+    git clone $linux_repo --single-branch --branch $linux_kernel_version_tag --progress -- $linux_build_dir
+fi
+
+
+if [ ! -d "$zfs_build_dir/.git"] &&  ["$zfs"!="" ]; then
+
+    git clone $zfs_repo --single-branch --branch $zfs_kernel_version_tag --progress -- $zfs_build_dir 
+fi
+
+
+# replace kernel source .config with user's
+cp -fv $config_source $linux_build_dir/.config
+
+cd $linux_build_dir
+yes "" | make oldconfig
+yes "" | make prepare scripts
+cd ../$zfs_build_dir && sh autogen.sh
+sh configure --prefix=/ --libdir=/lib --includedir=/usr/include --datarootdir=/usr/share --enable-linux-builtin=yes --with-linux=../$linux_build_dir --with-linux-obj=../$linux_build_dir
+sh copy-builtin ../$linux_build_dir
+yes "" | make install 
+
+cd ../$linux_build_dir
+sed -i 's/\# CONFIG_ZFS is not set/CONFIG_ZFS=y/g' .config
 yes "" | make -j $(expr $(nproc) - 1)
-if ! [ $kernel_mod = none ]; then make modules_install; fi
+make modules_install
+# kernel is baked - time to distribute fresh copies
 
-mkdir -pv ../$cpu_arch/$cpu_vendor/$linux_version_mask
-mkdir -pv /home/$user_name/k-cache
-cp -fv --backup=numbered arch/$cpu_arch/boot/bzImage ../$save_location1 
-cp -fv --backup=numbered arch/$cpu_arch/boot/bzImage $save_location2
-cp -fv --backup=numbered .config ../$cpu_arch/$cpu_vendor/$kernel_src/.config$config_suffix
-cp -fv --backup=numbered .config /home/$user_name/k-cache/.config$config_suffix
-cp -fv --backup=numbered ../../../../dvlp/mnt/home/sample.wslconfig /home/$user_name/k-cache
-if [ -d "/mnt/c/users/$wsl_username" ]; then cp -fv --backup=numbered  arch/$cpu_arch/boot/bzImage /mnt/c/users/$wsl_username/$save_name; fi
-if [ -d "/mnt/c/users/$wsl_username" ]; then cp -fv --backup=numbered  arch/$cpu_arch/boot/bzImage /mnt/c/users/$wsl_username/$save_name; fi
+cd ..
+# move back to base dir  folder with github (relative) path
+mkdir -pv $git_save_path
+# queue files to be saved to repo
+if [ "$user_config_flag" ]; then
+    cp -fv --backup=numbered $linux_build_dir/.config $config_target_git
+fi
+cp -fv --backup=numbered $linux_build_dir/$kernel_source $kernel_target_git
 
-git submodule deinit  
-if ! [ $kernel_mod = none ]; then git submodule deinit  ../modules/$kernel_mod; fi
-cd /
-tar -czvf built-kernel.tar.gz /home/$user_name/k-cache/*
+
+# build/move tar with version control if [tar]get directory is writeable
+# save copies in timestamped dir to keep organized
+mkdir -pv k-cache
+rm -rfv k-cache/*
+rm -rfv k-cache/.*
+cp -fv --backup=numbered  $config_source k-cache/$config_alias
+cp -fv --backup=numbered  $linux_build_dir/$kernel_source k-cache/$kernel_alias
+touch k-cache/$package_full_name
+# work on *nix first
+mkdir -pv $nix_save_path
+if [ -w "$nix_save_path" ]; then
+    tar -czvf $tarball_source_nix -C k-cache .
+    cp -fv --backup=numbered $tarball_source_nix $tarball_target_nix 
+else
+    echo "unable to save kernel package to home directory"
+fi
+
+# win
+# package a known working wslconfig file along with the kernel and config file
+mkdir -p $win_save_path
+cp -fv --backup=numbered ../../../dvlp/mnt/home/sample.wslconfig k-cache/sample.wslconfig
+if [ -w "$win_save_path" ]; then
+    tar -czvf $tarball_source_win -C k-cache .
+    cp -fv --backup=numbered $tarball_source_win $tarball_target_win
+else
+    echo "unable to save kernel package to home directory"
+fi
+
+# cp -fv --backup=numbered $kernel_source $kernel_target_nix
+# cp -fv --backup=numbered .config $nix_save_path/$config_alias
+
+# if [ -d "$win_save_path" ]; then cp -fv --backup=numbered  $kernel_source $win_save_path/$config_alias; fi
+# if [ -d "$win_save_path" ]; then cp -fv --backup=numbered  $kernel_source $win_save_path/$kernel_alias; fi
+
+
+# cleanup
+# rm -rf k-cache/*
+# rm -rf $linux_build_dir
+# rm -rf $temp_dir
+
+
+

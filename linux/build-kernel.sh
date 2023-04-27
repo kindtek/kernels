@@ -5,6 +5,8 @@ kernel_type=$1
 config_source=$2
 zfs=$3
 win_user=${4:-'user'}
+kernel_file_suffix=''
+config_file_suffix=''
 
 # linux_kernel_version="5.15.90.1"
 # zfs_version="2.1.11"

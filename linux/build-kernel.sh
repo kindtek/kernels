@@ -14,41 +14,45 @@ elif [ "$kernel_type"="latest" ]; then
     linux_repo=https://github.com/torvalds/linux.git
     linux_kernel_version_tag=$(git ls-remote --refs --sort='version:refname' --tags $linux_repo \
     | tail --lines=1 | cut --delimiter='/' --fields=3)
+    linux_kernel_type_tag="LATEST-WSL"
 elif [ "$kernel_type"="latest-rc" ]; then
     linux_repo=https://github.com/torvalds/linux.git
-    linux_kernel_version=$(git -c 'versionsort.suffix=-' ls-remote --refs --sort='version:refname' --tags $linux_repo \
+    linux_kernel_version_tag=$(git -c 'versionsort.suffix=-' ls-remote --refs --sort='version:refname' --tags $linux_repo \
     | tail --lines=1 | cut --delimiter='/' --fields=3)
+    linux_kernel_type_tag="LATEST_RC-WSL"
 elif [ "$kernel_type"="stable" ]; then
     linux_repo=https://github.com/gregkh/linux.git
     linux_kernel_version_tag=$(git ls-remote --refs --sort='version:refname' --tags $linux_repo \
     | tail --lines=1 | cut --delimiter='/' --fields=3)
+    linux_kernel_type_tag="STABLE-WSL"
 elif [ "$kernel_type"="stable" ]; then
     linux_repo=https://github.com/gregkh/linux.git
     linux_kernel_version_tag=$(git ls-remote --refs --sort='version:refname' --tags $linux_repo \
     | tail --lines=1 | cut --delimiter='/' --fields=3)
+    linux_kernel_type_tag="STABLE-WSL"
 # elif [ "$kernel_type"="basic"]; then
-else
+else    
     linux_repo=https://github.com/microsoft/WSL2-Linux-Kernel.git
     linux_kernel_version_tag=$(git ls-remote --refs --sort='version:refname' --tags $linux_repo \
     | tail --lines=1 | cut --delimiter='/' --fields=3)
+    linux_kernel_type_tag="BASIC-WSL"
 fi
 
 if [ "$zfs"!="" ]; then
     zfs_repo=https://github.com/openzfs/zfs.git
     zfs_version_tag=$(git -c 'versionsort.suffix=-' ls-remote --refs --sort='version:refname' --tags $zfs_repo \
         | tail --lines=1 | cut --delimiter='/' --fields=3)
+    linux_kernel_type_tag=$linux_kernel_type_tag-ZFS
 fi
 
 linux_kernel_version=${linux_kernel_version_tag#"v"}
 linux_build_dir=linux-build
 # echo "linux version:$linux_kernel_version"
-
 zfs_version=${zfs_kernel_version_tag#"zfs-"}
 zfs_build_dir=zfs-build
 # echo "zfs version:$zfs_version"
 
 linux_kernel_type="basic-wsl-zfs-kernel"
-linux_kernel_type_tag="LATEST_RC-WSL-ZFS"
 timestamp_id=$(date -d "today" +"%Y%m%d%H%M%S")
 # deduce architecture of this machine
 cpu_vendor=$(grep -Pom 1 '^vendor_id\s*:\s*\K.*' /proc/cpuinfo)
@@ -66,6 +70,10 @@ linux_kernel_version_mask=${linux_kernel_version/\./_}
 kernel_alias=${linux_kernel_version/\./L}
 linux_kernel_version_mask=${linux_kernel_version_mask//[\.-]/}
 kernel_alias=${kernel_alias//[\.-]/}WZ0
+if [ "$zfs"!="" ]; then
+    kernel_alias=${kernel_alias}Z
+fi
+kernel_alias=${kernel_alias}0
 package_alias=linux-$linux_kernel_version_mask
 package_full_name=Linux-$linux_kernel_version-$linux_kernel_type_tag
 config_alias=.config_$kernel_alias
@@ -84,6 +92,7 @@ tarball_target_win=$win_save_path/$package_full_name.tar.gz
 tarball_source_nix=$package_full_name.tar.gz
 tarball_source_win=$package_full_name.tar.gz
 
+
 # check that the user supplied source exists if not try to pick the best .config file available
 # user choice is best if it exists
 if [ ! "$config_source"="" ] && [ -r "$config_source" ] && [ -s "$config_source" ]; then
@@ -91,9 +100,10 @@ if [ ! "$config_source"="" ] && [ -r "$config_source" ] && [ -s "$config_source"
     user_config_flag=true
 else
 # try alternates if user config doesn't work 
+    wget https://raw.githubusercontent.com/microsoft/WSL2-Linux-Kernel/linux-msft-wsl-5.15.y/Microsoft/config-wsl
     # reliable but the least desirable .. keep looking
-    if [ -r "$linux_build_dir/Microsoft/config-wsl" ]; then 
-        config_source=$linux_build_dir/Microsoft/config-wsl
+    if [ -r "config-wsl" ]; then 
+        config_source=config-wsl
     fi
     # generic - slightly better
     if [ -r "$cpu_arch/generic/$linux_kernel_version_mask/$config_alias" ]; then 

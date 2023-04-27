@@ -5,6 +5,7 @@ kernel_type=$1
 config_source=$2
 zfs=$3
 win_user=${4:-'user'}
+
 # linux_kernel_version="5.15.90.1"
 # zfs_version="2.1.11"
 if [ "$kernel_type" = "" ]; then
@@ -53,6 +54,8 @@ else
 fi
 
 
+$kernel_file_suffix=${kernel_file_suffix}W
+$config_file_suffix=${config_file_suffix}_wsl
 
 if [ "$zfs" != "" ]; then
     zfs_repo=https://github.com/openzfs/zfs.git
@@ -62,7 +65,12 @@ if [ "$zfs" != "" ]; then
     linux_kernel_type_tag=$linux_kernel_type_tag-ZFS
     echo "zfs version tag:$zfs_version_tag"
     echo "zfs version:$zfs_version"
+    $kernel_file_suffix=${kernel_file_suffix}Z
+    $config_file_suffix=${config_file_suffix}-zfs
 fi
+
+$config_file_suffix=${config_file_suffix}0
+$kernel_file_suffix=${kernel_file_suffix}0
 
 linux_build_dir=linux-build
 # echo $linux_version_query

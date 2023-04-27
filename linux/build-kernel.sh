@@ -293,7 +293,7 @@ if [ $5 != "" ] && ( [ $4 != "" ] || [ $win_user != "user" ] ); then
     if [ $install_kernel = "y" ] || [ $install_kernel = "Y" ]; then
         win_user_home=/mnt/c/users/$win_user
         wslconfig=$win_user_home/.wslconfig
-        cp -vf k-cache/$kernel_alias $wslconfig
+        cp -vf k-cache/$kernel_alias "${win_user_home}/${kernel_alias}_"
         if [ -f "$wslconfig" ]; then
             echo "
             
@@ -305,18 +305,17 @@ if [ $5 != "" ] && ( [ $4 != "" ] || [ $win_user != "user" ] ); then
                 cp -vf k-cache/sample.wslconfig $wslconfig
             else
                 if grep -q '^\s?kernel=.*' "$wslconfig"; then
-                    sed -i "s/\# kernel=C.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\$kernel_alias/g" $wslconfig
+                    sed -i "s/\# kernel=C.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\$kernel_alias_/g" $wslconfig
                 else
                     echo "
                     [wsl2]
 
-                    kernel=C\:\\\\users\\\\$win_user\\\\$kernel_alias"
+                    kernel=C\:\\\\users\\\\$win_user\\\\$kernel_alias_"
                 fi
             fi
         else
             cp -vf k-cache/sample.wslconfig $wslconfig
         fi
-        cp -vf k-cache/sample.wslconfig $wslconfig
         echo "
         
         required. copy/pasta this:

@@ -218,21 +218,23 @@ echo "  press ENTER to confirm details and continue"
 read install
 if [ -d "$linux_build_dir/.git" ]; then
     cd $linux_build_dir
-    git pull $linux_repo --squash --progress
+    git reset --hard
+    git clean -fxd
+    # git pull $linux_repo --squash --progress
     cd ..
 else
     git clone $linux_repo --single-branch --branch $linux_kernel_version_tag --progress -- $linux_build_dir
 fi
 
-
-if [ ! -d "$zfs_build_dir/.git" ] &&  [ "$zfs" != "" ]; then
-    git clone $zfs_repo --single-branch --branch $zfs_version_tag --progress -- $zfs_build_dir 
-elif [ -d "$zfs_build_dir/.git" ] &&  [ "$zfs" != "" ]; then
+if [ -d "$zfs_build_dir/.git" ] &&  [ "$zfs" != "" ]; then
     cd $zfs_build_dir
-    git pull $zfs_repo --squash --progress
+    git reset --hard
+    git clean -fxd
+    # git pull $zfs_repo --squash --progress
     cd ..
+elif [ ! -d "$zfs_build_dir/.git" ] &&  [ "$zfs" != "" ]; then
+    git clone $zfs_repo --single-branch --branch $zfs_version_tag --progress -- $zfs_build_dir 
 fi
-
 
 # replace kernel source .config with user's
 cp -fv $config_source $linux_build_dir/.config

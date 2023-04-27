@@ -291,13 +291,14 @@ if [ -w "$win_save_path" ]; then
     cp -fv --backup=numbered $tarball_source_win $tarball_target_win.bak
     cp -fv $tarball_source_win $tarball_target_win
 else
-    echo "unable to save kernel package to home directory"
+    echo "
+unable to save kernel package to home directory"
 fi
 
 if [ $5 != "" ] && ( [ $4 != "" ] || [ $win_user != "user" ] ); then
     echo "
     
-    install kernel to WSL? y/(n)"
+install kernel to WSL? y/(n)"
     read install_kernel
     if [ $install_kernel = "y" ] || [ $install_kernel = "Y" ]; then
         win_user_home=/mnt/c/users/$win_user
@@ -306,10 +307,11 @@ if [ $5 != "" ] && ( [ $4 != "" ] || [ $win_user != "user" ] ); then
         if [ -f "$wslconfig" ]; then
             echo "
             
-            .wslconfig found in $win_user_home
-            replacing this with the pre-configured .wslconfig is recommended
+.wslconfig found in $win_user_home
+replacing this with the pre-configured .wslconfig is HIGHLY recommended
 
-            replace it? (y)/n"
+replace it? 
+(y)/n"
             read replace_wslconfig
             if [ $replace_wslconfig = "n" ] || [ $replace_wslconfig = "N" ]; then
                 if grep -q '^\s?\#?\skernel=.*' "$wslconfig"; then
@@ -317,10 +319,10 @@ if [ $5 != "" ] && ( [ $4 != "" ] || [ $win_user != "user" ] ); then
                 else
                     wslconfig_old=$(cat $wslconfig)
                     wslconfig_new="
-                    [wsl2]
+[wsl2]
 
-                    kernel=C\:\\\\users\\\\$win_user\\\\${kernel_alias}_
-                    $(cat $wslconfig)"
+kernel=C\:\\\\users\\\\$win_user\\\\${kernel_alias}_
+$(cat $wslconfig)"
                     echo $wslconfig_new > $wslconfig
                 fi
             else
@@ -335,11 +337,13 @@ if [ $5 != "" ] && ( [ $4 != "" ] || [ $win_user != "user" ] ); then
         fi
         echo "
         
-        required. copy/pasta this:
-        
-            wsl.exe --shutdown
-            wsl.exe -d $WSL_DISTRO_NAME
-            "
+restarting wsl is required. 
+
+copy/pasta this:
+
+    wsl.exe --shutdown
+    wsl.exe -d $WSL_DISTRO_NAME
+    "
     fi
 fi
 

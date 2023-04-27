@@ -167,6 +167,7 @@ printf "
 ==================================================================
 ==================================================================
 ==================================================================
+
 " "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}"
 
 # wget https://github.com/openzfs/zfs/releases/download/zfs-$zfs_version/zfs-$zfs_version.tar.gz
@@ -266,11 +267,13 @@ if [ $5 != "" ] && [ $4 != "" ]; then
     if [ $install_kernel = "y" ] || [ $install_kernel = "Y" ]; then
         cp -vf k-cache/$kernel_alias /mnt/c/users/$win_user/$kernel_alias
         cp -vf k-cache/sample.wslconfig /mnt/c/users/$win_user/.wslconfig
-        echo "restart required. copy/pasta this:
+        echo "
+        
+        required. copy/pasta this:
         
             wsl.exe --shutdown
-            wsl.exe -d $WSL_DISTRO_NAME"
-            echo 
+            wsl.exe -d $WSL_DISTRO_NAME
+            "
 
     fi
 fi

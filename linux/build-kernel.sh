@@ -4,61 +4,72 @@ kernel_type=$1
 config_source=$2
 zfs=$3
 win_user=${4:-'user'}
-linux_repo=https://github.com/torvalds/linux.git
-linux_version_query="git ls-remote --refs --sort='version:refname' --tags $linux_repo | tail --lines=1 | cut --delimiter='/' --fields=3"
-echo "linux version query: $linux_version_query"
-echo "linux version: $(echo linux_version_query)"
-
 # linux_kernel_version="5.15.90.1"
 # zfs_version="2.1.11"
-if [ "$kernel_type"="" ]; then
+if [ "$kernel_type" = "" ]; then
     kernel_type="stable"
-elif [ "$kernel_type"="latest" ]; then
+fi
+if [ "$kernel_type" = "latest" ]; then
     linux_repo=https://github.com/torvalds/linux.git
-    linux_version_query="git ls-remote --refs --sort='version:refname' --tags $linux_repo | tail --lines=1 | cut --delimiter='/' --fields=3"
-    echo "version query: $linux_version_query"
-    linux_kernel_version_tag=$(echo $linux_version_query)
-    echo "version tag: $linux_kernel_version"
+    linux_version_query="git -c versionsort.suffix=- ls-remote --refs --sort=version:refname --tags $linux_repo "
+    linux_kernel_version_tag=$($linux_version_query | tail --lines=1 | cut --delimiter='/' --fields=3) 
     linux_kernel_type_tag="LATEST-WSL"
     linux_kernel_version=${linux_kernel_version_tag#"v"}
-elif [ "$kernel_type"="latest-rc" ]; then
+    echo "linux version tag:$linux_kernel_version_tag"
+    echo "linux version:$linux_kernel_version"
+    echo "linux version tag:$linux_kernel_type_tag"
+elif [ "$kernel_type" = "latest-rc" ]; then
     linux_repo=https://github.com/torvalds/linux.git
-    linux_version_query="git -c 'versionsort.suffix=-' ls-remote --refs --sort='version:refname' --tags $linux_repo | tail --lines=1 | cut --delimiter='/' --fields=3"
-    linux_kernel_version_tag=$(echo $linux_version_query)
+    linux_version_query="git ls-remote --refs --sort=version:refname --tags $linux_repo "
+    linux_kernel_version_tag=$($linux_version_query | tail --lines=1 | cut --delimiter='/' --fields=3) 
     linux_kernel_type_tag="LATEST_RC-WSL"
     linux_kernel_version=${linux_kernel_version_tag#"v"}
-elif [ "$kernel_type"="stable" ]; then
+    echo "linux version tag:$linux_kernel_version_tag"
+    echo "linux version:$linux_kernel_version"
+    echo "linux version tag:$linux_kernel_type_tag"
+elif [ "$kernel_type" = "stable" ]; then
     linux_repo=https://github.com/gregkh/linux.git
-    linux_version_query="git ls-remote --refs --sort='version:refname' --tags $linux_repo | tail --lines=1 | cut --delimiter='/' --fields=3"
-    linux_kernel_version_tag=$(echo $linux_version_query)
+    # linux_version_query="git ls-remote --refs --sort=version:refname --tags $linux_repo "
+    linux_version_query="git -c versionsort.suffix=- ls-remote --refs --sort=version:refname --tags $linux_repo "
+    linux_kernel_version_tag=$($linux_version_query | grep -v -e "-rc[0-9]\+$" | tail --lines=1 | cut --delimiter='/' --fields=3) 
     linux_kernel_type_tag="STABLE-WSL"
     linux_kernel_version=${linux_kernel_version_tag#"v"}
+    echo "linux version query: $linux_version_query"
+    echo "linux version tag:$linux_kernel_version_tag"
+    echo "linux version:$linux_kernel_version"
+    echo "linux kernel type:$linux_kernel_type_tag"
 # elif [ "$kernel_type"="basic" ]; then
 else    
     linux_repo=https://github.com/microsoft/WSL2-Linux-Kernel.git
-    linux_version_query="git ls-remote --refs --sort='version:refname' --tags $linux_repo | tail --lines=1 | cut --delimiter='/' --fields=3"
-    linux_kernel_version_tag=$(echo $linux_version_query)
+    linux_version_query="git ls-remote --refs --sort=version:refname --tags $linux_repo "
+    linux_kernel_version_tag=$($linux_version_query | tail --lines=1 | cut --delimiter='/' --fields=3) 
     linux_kernel_type_tag="BASIC-WSL"
     linux_kernel_version=${linux_kernel_version_tag#"linux-msft-wsl"}
     linux_kernel_version=${linux_kernel_version_tag%".y"}
+    echo "linux version tag:$linux_kernel_version_tag"
+    echo "linux version:$linux_kernel_version"
+    echo "linux version tag:$linux_kernel_type_tag"
 fi
 
-if [ "$zfs"!="" ]; then
+
+
+if [ "$zfs" != "" ]; then
     zfs_repo=https://github.com/openzfs/zfs.git
-    zfs_version_query="git -c 'versionsort.suffix=-' ls-remote --refs --sort='version:refname' --tags $zfs_repo | tail --lines=1 | cut --delimiter='/' --fields=3"
-    zfs_version_tag=$(echo $zfs_version_query)
+    zfs_version_query="git -c versionsort.suffix=- ls-remote --refs --sort=version:refname --tags $zfs_repo"
+    zfs_version_tag=$($zfs_version_query | tail --lines=1 | cut --delimiter='/' --fields=3)
     linux_kernel_type_tag=$linux_kernel_type_tag-ZFS
 fi
 
 linux_build_dir=linux-build
 echo $linux_version_query
-echo "linux version tag:$linux_kernel_version_tag"
-echo "linux version:$linux_kernel_version"
+# echo "linux version tag:$linux_kernel_version_tag"
+# echo "linux version:$linux_kernel_version"
+# echo "linux version tag:$linux_kernel_type_tag"
 zfs_version=${zfs_kernel_version_tag#"zfs-"}
 zfs_build_dir=zfs-build
-echo $zfs_version_query
-echo "zfs version tag:$zfs_version_tag"
-echo "zfs version:$zfs_version"
+# echo $zfs_version_query
+# echo "zfs version tag:$zfs_version_tag"
+# echo "zfs version:$zfs_version"
 
 linux_kernel_type="basic-wsl-zfs-kernel"
 timestamp_id=$(date -d "today" +"%Y%m%d%H%M%S")
@@ -77,11 +88,11 @@ zfs_mask=zfs-$zfs_version_mask
 linux_kernel_version_mask=${linux_kernel_version/\./_}
 kernel_alias=${linux_kernel_version/\./L}
 linux_kernel_version_mask=${linux_kernel_version_mask//[\.-]/}
-kernel_alias=${kernel_alias//[\.-]/}
+kernel_alias=${kernel_alias//[\.-]/}WZ0
 if [ "$zfs"!="" ]; then
-    kernel_alias=${kernel_alias}
+    kernel_alias=${kernel_alias}Z
 fi
-kernel_alias=${kernel_alias}
+kernel_alias=${kernel_alias}0
 package_alias=linux-$linux_kernel_version_mask
 package_full_name=Linux-$linux_kernel_version-$linux_kernel_type_tag
 config_alias=.config_$kernel_alias
@@ -103,7 +114,7 @@ tarball_source_win=$package_full_name.tar.gz
 
 # check that the user supplied source exists if not try to pick the best .config file available
 # user choice is best if it exists
-if [ ! "$config_source"="" ] && [ -r "$config_source" ] && [ -s "$config_source" ]; then
+if [ ! "$config_source" = "" ] && [ -r "$config_source" ] && [ -s "$config_source" ]; then
     echo "config: $config_source"
     user_config_flag=true
 else
@@ -220,7 +231,8 @@ touch k-cache/$package_full_name
 mkdir -pv $nix_save_path
 if [ -w "$nix_save_path" ]; then
     tar -czvf $tarball_source_nix -C k-cache .
-    cp -fv --backup=numbered $tarball_source_nix $tarball_target_nix 
+    cp -fv --backup=numbered $tarball_source_nix $tarball_target_nix.bak
+    cp -fv $tarball_source_nix $tarball_target_nix 
 else
     echo "unable to save kernel package to home directory"
 fi
@@ -228,15 +240,42 @@ fi
 # win
 # package a known working wslconfig file along with the kernel and config file
 mkdir -p $win_save_path
+sed -i "s/\# kernel=C.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\$kernel_alias/g" ../../../dvlp/mnt/home/sample.wslconfig
 cp -fv --backup=numbered ../../../dvlp/mnt/home/sample.wslconfig k-cache/sample.wslconfig
 if [ -w "$win_save_path" ]; then
     tar -czvf $tarball_source_win -C k-cache .
-    cp -fv --backup=numbered $tarball_source_win $tarball_target_win
+    cp -fv --backup=numbered $tarball_source_win $tarball_target_win.bak
+    cp -fv $tarball_source_win $tarball_target_win
 else
     echo "unable to save kernel package to home directory"
 fi
+
+if [ $5 != "" ] && [ $4 != "" ]; then
+    echo "install kernel to /mnt/c/users/$win_user?
+    y/(n)"
+    read install_kernel
+    if [ $install_kernel = "y" ] || [ $install_kernel = "Y" ]; then
+        cp -vf k-cache/$kernel_alias /mnt/c/users/$win_user/$kernel_alias
+        cp -vf k-cache/sample.wslconfig /mnt/c/users/$win_user/.wslconfig
+        echo "restart required. copy/pasta this:
+        
+            wsl.exe --shutdown
+            wsl.exe -d $WSL_DISTRO_NAME"
+            echo 
+
+    fi
+fi
+
+# cp -fv --backup=numbered $kernel_source $kernel_target_nix
+# cp -fv --backup=numbered .config $nix_save_path/$config_alias
+
+# if [ -d "$win_save_path" ]; then cp -fv --backup=numbered  $kernel_source $win_save_path/$config_alias; fi
+# if [ -d "$win_save_path" ]; then cp -fv --backup=numbered  $kernel_source $win_save_path/$kernel_alias; fi
+
 
 # cleanup
 # rm -rf k-cache/*
 # rm -rf $linux_build_dir
 # rm -rf $temp_dir
+
+

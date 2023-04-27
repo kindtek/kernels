@@ -21,8 +21,8 @@ if [ "$kernel_type" = "latest" ]; then
     linux_kernel_version_tag=$($linux_version_query | tail --lines=1 | cut --delimiter='/' --fields=3) 
     linux_kernel_type_tag="LATEST-WSL"
     linux_kernel_version=${linux_kernel_version_tag#"v"}
-    $kernel_file_suffix+=( "L" )
-    $config_file_suffix+=( "_latest" )
+    kernel_file_suffix+="L"
+    config_file_suffix+="_latest"
     echo "linux version tag:$linux_kernel_version_tag"
     echo "linux version:$linux_kernel_version"
     echo "linux version tag:$linux_kernel_type_tag"

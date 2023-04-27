@@ -136,7 +136,7 @@ else
     fi
 fi
 
-padding="                   "
+padding="----------------"
 # display info while waiting on repo to clone
 printf "
 ==================================================================
@@ -169,7 +169,7 @@ printf "
 ==================================================================
 ==================================================================
 ==================================================================
-" "$linux_kernel_version" "${padding:${#linux_kernel_version}}"
+" " $linux_kernel_version " "${padding:${#linux_kernel_version}}"
 
 # wget https://github.com/openzfs/zfs/releases/download/zfs-$zfs_version/zfs-$zfs_version.tar.gz
 if [ $5 != "" ] && [ $4 = "" ]; then

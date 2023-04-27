@@ -43,8 +43,8 @@ kernel_target_win=$win_save_path/$kernel_alias
 config_target_win=$win_save_path/$config_alias
 tarball_target_nix=$nix_save_path/$package_full_name.tar.gz
 tarball_target_win=$win_save_path/$package_full_name.tar.gz
-tarball_source_nix=$nix_save_path/$package_full_name.tar.gz
-tarball_source_win=$win_save_path/$package_full_name.tar.gz
+tarball_source_nix=$package_full_name.tar.gz
+tarball_source_win=$package_full_name.tar.gz
 
 # check that the user supplied source exists if not try to pick the best .config file available
 # user choice is best if it exists
@@ -124,7 +124,7 @@ if [ ! -d "$zfs_build_dir/.git" ]; then
 fi
 cd $zfs_build_dir
 zfs_latest_tag=$(git describe --tags $(git rev-list --tags --max-count=1))
-echo "latest: $zfs_latest_tag"
+echo "zfs latest: $zfs_latest_tag"
 git checkout tags/$zfs_latest_tag
 cd ..
 
@@ -158,6 +158,8 @@ cp -fv --backup=numbered $wsl_build_dir/$kernel_source $kernel_target_git
 # build/move tar with version control if [tar]get directory is writeable
 # save copies in timestamped dir to keep organized
 mkdir -pv k-cache
+rm -rfv k-cache/*
+rm -rfv k-cache/.*
 cp -fv --backup=numbered  $config_source k-cache/$config_alias
 cp -fv --backup=numbered  $wsl_build_dir/$kernel_source k-cache/$kernel_alias
 touch k-cache/$package_full_name

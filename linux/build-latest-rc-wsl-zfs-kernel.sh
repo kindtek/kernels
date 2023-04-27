@@ -124,7 +124,7 @@ if [ -d "$linux_build_dir/.git" ]; then
     git pull $linux_repo --squash --progress
     cd ..
 else
-    git clone $linux_repo --progress -- $linux_build_dir
+    git clone $linux_repo --single-branch --branch $linux_kernel_version_tag --progress -- $linux_build_dir
 fi
 cd $linux_build_dir && \
 linux_latest_tag=$(git describe --tags $(git rev-list --tags=v[0-9\.]*-rc[0-9\.]* --max-count=1)) && \

@@ -47,9 +47,11 @@ fi
 
 linux_kernel_version=${linux_kernel_version_tag#"v"}
 linux_build_dir=linux-build
+echo "linux version tag:$linux_kernel_version_tag"
 echo "linux version:$linux_kernel_version"
 zfs_version=${zfs_kernel_version_tag#"zfs-"}
 zfs_build_dir=zfs-build
+echo "zfs version tag:$zfs_version_tag"
 echo "zfs version:$zfs_version"
 
 linux_kernel_type="basic-wsl-zfs-kernel"

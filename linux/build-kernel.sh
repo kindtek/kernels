@@ -190,9 +190,9 @@ else
 fi
 
 
-if [ ! -d "$zfs_build_dir/.git" ] &&  ["$zfs" != "" ]; then
+if [ ! -d "$zfs_build_dir/.git" ] &&  [ "$zfs" != "" ]; then
     git clone $zfs_repo --single-branch --branch $zfs_kernel_version_tag --progress -- $zfs_build_dir 
-elif [ -d "$zfs_build_dir/.git" ] &&  ["$zfs" != "" ]; then
+elif [ -d "$zfs_build_dir/.git" ] &&  [ "$zfs" != "" ]; then
     cd $zfs_build_dir
     git pull $zfs_repo --squash --progress
     cd ..
@@ -205,10 +205,12 @@ cp -fv $config_source $linux_build_dir/.config
 cd $linux_build_dir
 yes "" | make oldconfig
 yes "" | make prepare scripts
-cd ../$zfs_build_dir && sh autogen.sh
-sh configure --prefix=/ --libdir=/lib --includedir=/usr/include --datarootdir=/usr/share --enable-linux-builtin=yes --with-linux=../$linux_build_dir --with-linux-obj=../$linux_build_dir
-sh copy-builtin ../$linux_build_dir
-yes "" | make install 
+elif [ "$zfs" != "" ]; then
+    cd ../$zfs_build_dir && sh autogen.sh
+    sh configure --prefix=/ --libdir=/lib --includedir=/usr/include --datarootdir=/usr/share --enable-linux-builtin=yes --with-linux=../$linux_build_dir --with-linux-obj=../$linux_build_dir
+    sh copy-builtin ../$linux_build_dir
+    yes "" | make install 
+fi
 
 cd ../$linux_build_dir
 sed -i 's/\# CONFIG_ZFS is not set/CONFIG_ZFS=y/g' .config

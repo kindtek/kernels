@@ -64,15 +64,15 @@ else
 fi
 
 
-$kernel_file_suffix=${kernel_file_suffix}W
-$config_file_suffix="$config_file_suffix-wsl"
+$kernel_file_suffix="${kernel_file_suffix}W"
+$config_file_suffix="${config_file_suffix}-wsl"    
 
 if [ "$zfs" != "" ]; then
     zfs_repo=https://github.com/openzfs/zfs.git
     zfs_version_query="git -c versionsort.suffix=- ls-remote --refs --sort=version:refname --tags $zfs_repo"
     zfs_version_tag=$($zfs_version_query | tail --lines=1 | cut --delimiter='/' --fields=3)
     zfs_version=${zfs_version_tag#"zfs-"}
-    linux_kernel_type_tag=$linux_kernel_type_tag-ZFS
+    linux_kernel_type_tag="$linux_kernel_type_tag-ZFS"
     echo "zfs version tag:$zfs_version_tag"
     echo "zfs version:$zfs_version"
     $kernel_file_suffix="${kernel_file_suffix}Z"

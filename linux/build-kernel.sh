@@ -335,7 +335,7 @@ fi
 # win
 # package a known working wslconfig file along with the kernel and config file
 mkdir -p $win_save_path 2>/dev/null
-sed -i "s/\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\$kernel_alias/g" ../../../dvlp/mnt/home/sample.wslconfig
+sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}_$timestamp_id/g" ../../../dvlp/mnt/home/sample.wslconfig
 cp -fv --backup=numbered ../../../dvlp/mnt/home/sample.wslconfig k-cache/sample.wslconfig
 if [ -w "$win_save_path" ]; then
     tar -czvf $tarball_source_win -C k-cache .
@@ -351,7 +351,7 @@ if [ $quick_install ]; then
     # copy kernel and wsl config right away
     cp -vf k-cache/$kernel_alias "${win_user_home}/${kernel_alias}_$timestamp_id" 
     mv -vf --backup=numbered $wslconfig $wslconfig.old
-    sed -i "s/\#\s?kernel=C.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}_/g" k-cache/sample.wslconfig           
+    sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}_$timestamp_id/g" k-cache/sample.wslconfig           
     cp -vf k-cache/sample.wslconfig $wslconfig  
 else
     echo "
@@ -377,24 +377,24 @@ continue with .wslconfig replacement?
             read replace_wslconfig
             if [ "$replace_wslconfig" = "n" ] || [ "$replace_wslconfig" = "N" ]; then
                 if grep -q '^\s?\#?\skernel=.*' "$wslconfig"; then
-                    sed -i "s/\s?\#\s?kernel=C.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\$kernel_alias_/g" $wslconfig
+                    sed -i "s/\s*\#*\s*kernel=C.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\$kernel_alias_/g" $wslconfig
                 else
                     wslconfig_old="$(cat $wslconfig)"
                     wslconfig_new="
 [wsl2]
 
-kernel=C\:\\\\users\\\\$win_user\\\\${kernel_alias}_
+kernel=C\:\\\\users\\\\$win_user\\\\${kernel_alias}_$timestamp_id
 $(cat $wslconfig_old)"
                     echo "$wslconfig_new" > $wslconfig
                 fi
             else
                 mv -vf --backup=numbered $wslconfig $wslconfig.old
-                sed -i "s/\#\s?kernel=C.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}_/g" k-cache/sample.wslconfig           
+                sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}_$timestamp_id/g" k-cache/sample.wslconfig           
                 cp -vf k-cache/sample.wslconfig $wslconfig  
             fi
         else
             mv -vf --backup=numbered $wslconfig $wslconfig.old
-            sed -i "s/\#\s?kernel=C.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}_/g" k-cache/sample.wslconfig           
+            sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}_$timestamp_id/g" k-cache/sample.wslconfig           
             cp -vf k-cache/sample.wslconfig $wslconfig          
         fi
     fi

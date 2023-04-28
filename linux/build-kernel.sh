@@ -56,8 +56,8 @@ else
     kernel_file_suffix+="B"
     config_file_suffix+="_basic"
     linux_repo=https://github.com/microsoft/WSL2-Linux-Kernel.git
-    linux_version_query="git ls-remote --refs --sort=version:refname --tags $linux_repo "
-    linux_kernel_version_tag=$($linux_version_query | tail --lines=1 | cut --delimiter='/' --fields=3) 
+    linux_version_query="git -c versionsort.suffix=+ ls-remote --refs --sort=version:refname --tags $linux_repo "
+    linux_kernel_version_tag=$($linux_version_query | grep -v -e "-rc[0-9]\+$" | tail --lines=1 | cut --delimiter='/' --fields=3) 
     linux_kernel_type_tag="BASIC-WSL"
     linux_kernel_version=${linux_kernel_version_tag#"linux-msft-wsl"}
     linux_kernel_version=${linux_kernel_version_tag%".y"}

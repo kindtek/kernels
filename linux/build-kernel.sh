@@ -226,13 +226,13 @@ else
     git clone $linux_repo --single-branch --branch $linux_kernel_version_tag --progress -- $linux_build_dir
 fi
 
-if [ -d "$zfs_build_dir/.git" ] &&  [ "$zfs" != "" ]; then
+if [ -d "$zfs_build_dir/.git" ] && [ "$zfs" != "" ]; then
     cd $zfs_build_dir
     git reset --hard
     git clean -fxd
     # git pull $zfs_repo --squash --progress
     cd ..
-elif [ ! -d "$zfs_build_dir/.git" ] &&  [ "$zfs" != "" ]; then
+elif [ ! -d "$zfs_build_dir/.git" ] && [ "$zfs" != "" ]; then
     git clone $zfs_repo --single-branch --branch $zfs_version_tag --progress -- $zfs_build_dir 
 fi
 

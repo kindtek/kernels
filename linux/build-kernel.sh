@@ -340,8 +340,10 @@ fi
 win_user_home=/mnt/c/users/$win_user
 wslconfig=$win_user_home/.wslconfig
 if [ $quick_install ]; then
+    # copy kernel and wsl config right away
+    cp -vf k-cache/$kernel_alias "${win_user_home}/${kernel_alias}_$timestamp_id" 
     mv -vf --backup=numbered $wslconfig $wslconfig.old
-    cp -vf k-cache/sample.wslconfig $wslconfig  
+    cp -vf k-cache/sample.wslconfig $wslconfig 
     sed -i "s/\#\s?kernel=C.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}_/g" $wslconfig  
 else
     echo "
@@ -349,6 +351,7 @@ else
 install $package_full_name kernel ($kernel_alias) to WSL? y/(n)"
     read install_kernel
     if [ "$install_kernel" = "y" ] || [ "$install_kernel" = "Y" ]; then
+        quick_install=true
         win_user_home=/mnt/c/users/$win_user
         cp -vf k-cache/$kernel_alias "${win_user_home}/${kernel_alias}_$timestamp_id"
         if [ -f "$wslconfig" ]; then
@@ -386,18 +389,20 @@ $(cat $wslconfig_old)"
             cp -vf k-cache/sample.wslconfig $wslconfig  
             sed -i "s/\#\s?kernel=C.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}_/g" $wslconfig            
         fi
-        echo "
+    fi
+fi
+
+if [ $quick_install ]; then
+            echo "
         
-restarting wsl is required. 
+restarting wsl is required to boot into the kernel 
 
 copy/pasta this:
 
     wsl.exe --shutdown
     wsl.exe -d $WSL_DISTRO_NAME
     "
-    fi
 fi
-
 # cp -fv --backup=numbered $kernel_source $kernel_target_nix
 # cp -fv --backup=numbered .config $nix_save_path/$config_alias
 

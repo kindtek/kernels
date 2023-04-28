@@ -305,14 +305,14 @@ cp -fv --backup=numbered $linux_build_dir/$kernel_source $kernel_target_git
 
 # build/move tar with version control if [tar]get directory is writeable
 # save copies in timestamped dir to keep organized
-mkdir -pv k-cache
+mkdir -pv k-cache 2>/dev/null
 rm -rfv k-cache/*
 rm -rfv k-cache/.*
 cp -fv --backup=numbered  $config_source k-cache/$config_alias
 cp -fv --backup=numbered  $linux_build_dir/$kernel_source k-cache/$kernel_alias
 touch k-cache/$package_full_name
 # work on *nix first
-mkdir -pv $nix_save_path
+mkdir -pv $nix_save_path 2>/dev/null
 if [ -w "$nix_save_path" ]; then
     tar -czvf $tarball_source_nix -C k-cache .
     cp -fv --backup=numbered $tarball_source_nix $tarball_target_nix.bak
@@ -323,7 +323,7 @@ fi
 
 # win
 # package a known working wslconfig file along with the kernel and config file
-mkdir -p $win_save_path
+mkdir -p $win_save_path 2>/dev/null
 sed -i "s/\# kernel=C.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\$kernel_alias/g" ../../../dvlp/mnt/home/sample.wslconfig
 cp -fv --backup=numbered ../../../dvlp/mnt/home/sample.wslconfig k-cache/sample.wslconfig
 if [ -w "$win_save_path" ]; then

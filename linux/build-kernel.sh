@@ -406,13 +406,30 @@ if [ $quick_install ]; then
         
 restarting wsl is required to boot into the kernel 
 
-copy/pasta this:
+try to automatically restart?
+
+Press ENTER to reboot now
+type any other key and then press ENTER to manually reboot at a later time"
+
+read restart
+
+if [ "$restart" != "" ]; then
+    echo "
+
+enter 'reboot' into a linux terminal 
+
+            - OR - 
+
+copy/pasta this into a windows terminal:
 
     wsl.exe --shutdown
     wsl.exe -d $WSL_DISTRO_NAME
 
 
     "
+else
+    su r00t
+    reboot
 fi
 # cp -fv --backup=numbered $kernel_source $kernel_target_nix
 # cp -fv --backup=numbered .config $nix_save_path/$config_alias

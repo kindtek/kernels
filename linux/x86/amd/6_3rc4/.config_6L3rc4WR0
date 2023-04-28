@@ -2333,7 +2333,7 @@ CONFIG_I2C_ALGOBIT=y
 #
 # ACPI drivers
 #
-# CONFIG_I2C_SCMI is not set
+CONFIG_I2C_SCMI=y
 
 #
 # I2C system bus drivers (mostly embedded / system-on-chip)

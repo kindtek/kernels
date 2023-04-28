@@ -175,10 +175,10 @@ printf "
 " "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}"
 
 if [ $quick_install ]; then
-    echo "  install kernel when finished?
-        y/(n)"
+    echo " press ENTER to install kernel when finished
+"
     read install
-    if [ "$install" != "" ] && ( [ "$install" = "y" ] || [ "$install" = "Y" ]  ) && ( [ "$win_user" != "user" ]); then
+    if [ "$install" = "" ]; then
         quick_install=true
     else
         quick_install=false
@@ -187,7 +187,7 @@ else
     echo "  install kernel when finished?
         y/(n)"
     read install
-    if [ "$install" != "" ] && ( [ "$install" = "y" ] || [ "$install" = "Y" ]  ) && ( [ "$win_user" != "user" ]); then
+    if [ "$install" != "" ] && ( [ "$install" = "y" ] || [ "$install" = "Y" ]  ) ; then
         quick_install=true && \
         echo "
     enter the name of your windows home directory 

@@ -262,20 +262,21 @@ elif [ $install = "y" ] && [ -d "$linux_build_dir/.git" ]; then
 elif [ ! -d "$linux_build_dir/.git" ]; then
     git clone $linux_repo --single-branch --branch $linux_kernel_version_tag --progress -- $linux_build_dir
 fi
-if [ $quick_install ] && [ -d "$zfs_build_dir/.git" ]; then
-    cd $zfs_build_dir
-    git checkout $zfs_version_tag  --progress
-    cd ..
-elif [ -d "$zfs_build_dir/.git" ] && [ $zfs ]; then
-    cd $zfs_build_dir
-    git reset --hard
-    git clean -fxd
-    git checkout $zfs_version_tag --progress
-    cd ..
-elif [ ! -d "$zfs_build_dir/.git" ] && [ $zfs ]; then
-    git clone $zfs_repo --single-branch --branch $zfs_version_tag --progress -- $zfs_build_dir 
+if [ $zfs ]; then
+    if [ $quick_install ] && [ -d "$zfs_build_dir/.git" ]; then
+        cd $zfs_build_dir
+        git checkout $zfs_version_tag  --progress
+        cd ..
+    elif [ -d "$zfs_build_dir/.git" ]; then
+        cd $zfs_build_dir
+        git reset --hard
+        git clean -fxd
+        git checkout $zfs_version_tag --progress
+        cd ..
+    elif [ ! -d "$zfs_build_dir/.git" ]; then
+        git clone $zfs_repo --single-branch --branch $zfs_version_tag --progress -- $zfs_build_dir 
+    fi
 fi
-
 # replace kernel source .config with user's
 cp -fv $config_source $linux_build_dir/.config
 

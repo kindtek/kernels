@@ -5,6 +5,7 @@ kernel_type=$1
 config_source=$2
 zfs=${3+true}
 win_user=${4:-'user'}
+quick_install=${4:+true}
 # interact=false
 # interact=${5:+true}
 # kernel_file_suffix=''
@@ -168,26 +169,36 @@ printf "
 
 " "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}"
 
-# if [ "$win_user" = "user" ]; then
-echo "  install kernel when finished?
-    y/(n)"
-read install
-if [ "$install" != "" ] && ( [ "$install" = "y" ] || [ "$install" = "Y" ]  ) && ( [ "$win_user" != "user" ]); then
-    echo "
-enter the name of your windows home directory 
-                 - OR -
-press ENTER to confirm save location as C:\\\\users\\$win_user"
-    win_user_orig=$win_user
-    read win_user
-    if [ "$win_user" = "" ]; then
-        win_user=$win_user_orig
-    # else 
-    #     # if the user tries inputting a path name take everything to the right of the last \
-    #     # win_user=$(echo $win_user | sed -E 's/^\s*([A-Za-z0-9]:?\\*)([A-Za-z0-9]*\\)*([A-Za-z0-9]+)+$/\3/g')        
-    #     # win_user=$(echo $win_user | sed -E 's/^\s*([A-Za-z0-9]:?\\*)([A-Za-z0-9]*\\?\\?)*([A-Za-z0-9]+)+$/\3/g')
+if [ $quick_install ]; then
+    echo "  install kernel when finished?
+        y/(n)"
+    read install
+    if [ "$install" != "" ] && ( [ "$install" = "y" ] || [ "$install" = "Y" ]  ) && ( [ "$win_user" != "user" ]); then
+        quick_install=true
+    else
+        quick_install=false
+    fi    
+else
+    echo "  install kernel when finished?
+        y/(n)"
+    read install
+    if [ "$install" != "" ] && ( [ "$install" = "y" ] || [ "$install" = "Y" ]  ) && ( [ "$win_user" != "user" ]); then
+        quick_install=true && \
+        echo "
+    enter the name of your windows home directory 
+                    - OR -
+    press ENTER to confirm save location as C:\\\\users\\$win_user" && \
+        win_user_orig=$win_user && \
+        read win_user
+        if [ "$win_user" = "" ]; then
+            win_user=$win_user_orig
+        # else 
+        #     # if the user tries inputting a path name take everything to the right of the last \
+        #     # win_user=$(echo $win_user | sed -E 's/^\s*([A-Za-z0-9]:?\\*)([A-Za-z0-9]*\\)*([A-Za-z0-9]+)+$/\3/g')        
+        #     # win_user=$(echo $win_user | sed -E 's/^\s*([A-Za-z0-9]:?\\*)([A-Za-z0-9]*\\?\\?)*([A-Za-z0-9]+)+$/\3/g')
+        fi
     fi
 fi
-# fi
 
 win_save_path=/mnt/c/users/$win_user/k-cache
 kernel_source=arch/$cpu_arch/boot/bzImage
@@ -236,17 +247,17 @@ printf "
 
 echo "  press ENTER to confirm details and continue"
 read install
-if [ -d "$linux_build_dir/.git" ]; then
+if [ -d "$linux_build_dir/.git" ] && [ ! $quick_install ]; then
     cd $linux_build_dir
     git reset --hard
     git clean -fxd
     # git pull $linux_repo --squash --progress
     cd ..
-else
+elif [ -d "$linux_build_dir/.git" ]; then
     git clone $linux_repo --single-branch --branch $linux_kernel_version_tag --progress -- $linux_build_dir
 fi
 
-if [ -d "$zfs_build_dir/.git" ] && [ $zfs ]; then
+if [ -d "$zfs_build_dir/.git" ] && [ $zfs ]  && [ ! $quick_install ]; then
     cd $zfs_build_dir
     git reset --hard
     git clean -fxd
@@ -316,16 +327,19 @@ else
     echo "
 unable to save kernel package to home directory"
 fi
-
-if [ "$5" != "" ] && ( [ "$4" != "" ] || [ "$win_user" != "user" ] ); then
+win_user_home=/mnt/c/users/$win_user
+wslconfig=$win_user_home/.wslconfig
+if [ $quick_install ]; then
+    mv -vf --backup=numbered $wslconfig $wslconfig.old
+    cp -vf k-cache/sample.wslconfig $wslconfig  
+    sed -i "s/\#\s?kernel=C.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}_/g" $wslconfig  
+else
     echo "
     
 install $package_full_name kernel ($kernel_alias) to WSL? y/(n)"
     read install_kernel
     if [ "$install_kernel" = "y" ] || [ "$install_kernel" = "Y" ]; then
         win_user_home=/mnt/c/users/$win_user
-        wslconfig=$win_user_home/.wslconfig
-        
         cp -vf k-cache/$kernel_alias "${win_user_home}/${kernel_alias}_$timestamp_id"
         if [ -f "$wslconfig" ]; then
             echo "

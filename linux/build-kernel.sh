@@ -288,7 +288,7 @@ make modules_install
 
 cd ..
 # move back to base dir  folder with github (relative) path
-mkdir -pv $git_save_path
+mkdir -pv $git_save_path 2>/dev/null
 # queue files to be saved to repo
 if [ "$user_config_flag" ]; then
     cp -fv --backup=numbered $linux_build_dir/.config $config_target_git

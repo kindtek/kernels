@@ -13,6 +13,17 @@ win_user=${4:-'user'}
 # zfs_version="2.1.11"
 kernel_file_suffix="W"
 config_file_suffix="_wsl"
+if [ $zfs ]; then
+    zfs_repo=https://github.com/openzfs/zfs.git
+    zfs_version_query="git -c versionsort.suffix=- ls-remote --refs --sort=version:refname --tags $zfs_repo"
+    zfs_version_tag=$($zfs_version_query | tail --lines=1 | cut --delimiter='/' --fields=3)
+    zfs_version=${zfs_version_tag#"zfs-"}
+    linux_kernel_type_tag=$linux_kernel_type_tag-ZFS
+    echo "zfs version tag:$zfs_version_tag"
+    echo "zfs version:$zfs_version"
+    kernel_file_suffix+="Z"
+    config_file_suffix+="-zfs"
+fi
 if [ "$kernel_type" = "" ]; then
     kernel_type="stable"
 fi
@@ -65,19 +76,7 @@ else
     echo "linux version:$linux_kernel_version"
     echo "linux version type:$linux_kernel_type_tag"
 fi
-if [ "$zfs" != "" ]; then
-    zfs_repo=https://github.com/openzfs/zfs.git
-    zfs_version_query="git -c versionsort.suffix=- ls-remote --refs --sort=version:refname --tags $zfs_repo"
-    # zfs_version_tag=$($zfs_version_query | tail --lines=1 | cut --delimiter='/' --fields=3)
-    # zfs_version=${zfs_version_tag#"zfs-"}
-    zfs_version=2.1.11
-    zfs_version_tag=zfs-$zfs_version
-    linux_kernel_type_tag=$linux_kernel_type_tag-ZFS
-    echo "zfs version tag:$zfs_version_tag"
-    echo "zfs version:$zfs_version"
-    kernel_file_suffix+="Z"
-    config_file_suffix+="-zfs"
-fi
+
 config_file_suffix+="0"
 kernel_file_suffix+="0"
 linux_build_dir=linux-build

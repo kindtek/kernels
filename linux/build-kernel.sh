@@ -335,7 +335,7 @@ fi
 # win
 # package a known working wslconfig file along with the kernel and config file
 mkdir -p $win_save_path 2>/dev/null
-sed -i "s/\# kernel=C.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\$kernel_alias/g" ../../../dvlp/mnt/home/sample.wslconfig
+sed -i "s/\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\$kernel_alias/g" ../../../dvlp/mnt/home/sample.wslconfig
 cp -fv --backup=numbered ../../../dvlp/mnt/home/sample.wslconfig k-cache/sample.wslconfig
 if [ -w "$win_save_path" ]; then
     tar -czvf $tarball_source_win -C k-cache .
@@ -370,9 +370,9 @@ install $package_full_name kernel ($kernel_alias) to WSL? y/(n)"
 replacing this with a pre-configured .wslconfig is *HIGHLY* recommended
 a backup of the original file will be saved as:
 
-$wslconfig.old
+    $wslconfig.old
 
-replace .wslconfig?
+continue with .wslconfig replacement?
 (y)/n"
             read replace_wslconfig
             if [ "$replace_wslconfig" = "n" ] || [ "$replace_wslconfig" = "N" ]; then

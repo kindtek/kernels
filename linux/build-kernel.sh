@@ -351,8 +351,8 @@ if [ $quick_install ]; then
     # copy kernel and wsl config right away
     cp -vf k-cache/$kernel_alias "${win_user_home}/${kernel_alias}_$timestamp_id" 
     mv -vf --backup=numbered $wslconfig $wslconfig.old
-    cp -vf k-cache/sample.wslconfig $wslconfig 
-    sed -i "s/\#\s?kernel=C.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}_/g" $wslconfig  
+    sed -i "s/\#\s?kernel=C.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}_/g" k-cache/sample.wslconfig           
+    cp -vf k-cache/sample.wslconfig $wslconfig  
 else
     echo "
     
@@ -389,13 +389,13 @@ $(cat $wslconfig_old)"
                 fi
             else
                 mv -vf --backup=numbered $wslconfig $wslconfig.old
+                sed -i "s/\#\s?kernel=C.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}_/g" k-cache/sample.wslconfig           
                 cp -vf k-cache/sample.wslconfig $wslconfig  
-                sed -i "s/\#\s?kernel=C.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}_/g" $wslconfig            
             fi
         else
             mv -vf --backup=numbered $wslconfig $wslconfig.old
-            cp -vf k-cache/sample.wslconfig $wslconfig  
-            sed -i "s/\#\s?kernel=C.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}_/g" $wslconfig            
+            sed -i "s/\#\s?kernel=C.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}_/g" k-cache/sample.wslconfig           
+            cp -vf k-cache/sample.wslconfig $wslconfig          
         fi
     fi
 fi

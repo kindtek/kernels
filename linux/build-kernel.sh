@@ -162,12 +162,14 @@ echo "  install kernel when finished?
     y/(n)"
 read install
 if [ "$install" != "" ] && ( [ "$install" = "y" ] || [ "$install" = "Y" ]  ) && ( [ "$win_user" != "user" ]); then
-    echo "enter the name of your windows home directory or ..
-        press ENTER to confirm as C:\\\\users\\'$win_user'"
+    echo "
+enter the name of your windows home directory 
+                 - OR -
+press ENTER to confirm save location as C:\\\\users\\$win_user"
     win_user_orig=$win_user
     read win_user
     if [ "$win_user" = "" ]; then
-        win_user = $win_user_orig
+        win_user=$win_user_orig
     fi
 fi
 # fi

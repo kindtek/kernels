@@ -3,7 +3,7 @@ user_config_flag=false
 user_entry_flag=false
 kernel_type=$1
 config_source=$2
-zfs=$3
+zfs=${3+true}
 win_user=${4:-'user'}
 # interact=false
 # interact=${5:+true}
@@ -28,6 +28,7 @@ if [ "$kernel_type" = "" ]; then
     kernel_type="stable"
 fi
 if [ "$kernel_type" = "latest" ]; then
+    zfs=false
     linux_repo=https://github.com/torvalds/linux.git
     linux_version_query="git -c versionsort.suffix=- ls-remote --refs --sort=version:refname --tags $linux_repo "
     linux_kernel_version_tag=$($linux_version_query | tail --lines=1 | cut --delimiter='/' --fields=3) 
@@ -39,6 +40,7 @@ if [ "$kernel_type" = "latest" ]; then
     echo "linux version:$linux_kernel_version"
     echo "linux version tag:$linux_kernel_type_tag"
 elif [ "$kernel_type" = "latest-rc" ]; then
+    zfs=false
     kernel_file_suffix+="R"
     config_file_suffix+="_rc"
     linux_repo=https://github.com/torvalds/linux.git
@@ -236,13 +238,13 @@ else
     git clone $linux_repo --single-branch --branch $linux_kernel_version_tag --progress -- $linux_build_dir
 fi
 
-if [ -d "$zfs_build_dir/.git" ] && [ "$zfs" != "" ]; then
+if [ -d "$zfs_build_dir/.git" ] && [ $zfs ]; then
     cd $zfs_build_dir
     git reset --hard
     git clean -fxd
     # git pull $zfs_repo --squash --progress
     cd ..
-elif [ ! -d "$zfs_build_dir/.git" ] && [ "$zfs" != "" ]; then
+elif [ ! -d "$zfs_build_dir/.git" ] && [ $zfs ]; then
     git clone $zfs_repo --single-branch --branch $zfs_version_tag --progress -- $zfs_build_dir 
 fi
 
@@ -252,7 +254,7 @@ cp -fv $config_source $linux_build_dir/.config
 cd $linux_build_dir
 yes "" | make oldconfig
 yes "" | make prepare scripts
-if [ "$zfs" != "" ]; then
+if [ $zfs ]; then
     cd ../$zfs_build_dir && sh autogen.sh
     sh configure --prefix=/ --libdir=/lib --includedir=/usr/include --datarootdir=/usr/share --enable-linux-builtin=yes --with-linux=../$linux_build_dir --with-linux-obj=../$linux_build_dir
     sh copy-builtin ../$linux_build_dir

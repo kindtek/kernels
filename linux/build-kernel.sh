@@ -100,8 +100,8 @@ cpu_vendor=$(grep -Pom 1 '^vendor_id\s*:\s*\K.*' /proc/cpuinfo)
 cpu_arch=$(uname -m)
 cpu_arch="${cpu_arch%%_*}"
 # shorten common vendor names
-if [ $cpu_vendor = AuthenticAMD ]; then cpu_vendor=amd; fi
-if [ $cpu_vendor = GenuineIntel ]; then cpu_vendor=intel; fi
+if [ "$cpu_vendor" = AuthenticAMD ]; then cpu_vendor=amd; fi
+if [ "$cpu_vendor" = GenuineIntel ]; then cpu_vendor=intel; fi
 # replace first . with _ and then remove the rest of the .'s
 zfs_version_mask=${zfs_version/./_}
 zfs_version_mask=${zfs_version_mask//[.-]/}
@@ -154,7 +154,7 @@ else
     fi
 fi
 
-if [ $linux_kernel_version = "" ]; then
+if [ "$linux_kernel_version" = "" ]; then
     echo "
 
     Sorry. Cannot continue. Exiting ...
@@ -200,16 +200,16 @@ printf "
 " "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}"
 
 # wget https://github.com/openzfs/zfs/releases/download/zfs-$zfs_version/zfs-$zfs_version.tar.gz
-if [ $5 != "" ] && [ $4 = "" ]; then
+if [ "$5" != "" ] && [ "$4" = "" ]; then
     echo "  install kernel when finished?
         y/(n)"
     read install
-    if [ "$install" != "" ] && ( [ "$install" = "y" ] || [ "$install" = "Y" ]  ) && ( [ $win_user != "user" ]); then
+    if [ "$install" != "" ] && ( [ "$install" = "y" ] || [ "$install" = "Y" ]  ) && ( [ "$win_user" != "user" ]); then
         echo "enter the name your windows home directory or ..
             press ENTER to confirm as '$win_user'"
         win_user_orig=$win_user
         read win_user
-        if [ $win_user = "" ]; then
+        if [ "$win_user" = "" ]; then
             win_user = $win_user_orig
         fi
     fi

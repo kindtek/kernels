@@ -184,15 +184,18 @@ if [ $quick_install ]; then
         quick_install=false
     fi    
 else
-    echo "  install kernel when finished?
-        y/(n)"
+    echo "
+install kernel when finished?
+y/(n)"
     read install
     if [ "$install" != "" ] && ( [ "$install" = "y" ] || [ "$install" = "Y" ]  ) ; then
         quick_install=true && \
         echo "
-    enter the name of your windows home directory 
+enter the name of your windows home directory 
+                    
                     - OR -
-    press ENTER to confirm save location as C:\\\\users\\$win_user" && \
+
+press ENTER to confirm save location as C:\\\\users\\$win_user" && \
         win_user_orig=$win_user && \
         read win_user
         if [ "$win_user" = "" ]; then

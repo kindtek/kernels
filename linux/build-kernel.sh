@@ -12,6 +12,8 @@ quick_install=${4:+true}
 # config_file_suffix=''
 # linux_kernel_version="5.15.90.1"
 # zfs_version="2.1.11"
+linux_build_dir=linux-build
+zfs_build_dir=zfs-build
 kernel_file_suffix="W"
 config_file_suffix="_wsl"
 if [ $zfs ]; then
@@ -29,6 +31,7 @@ fi
 if [ "$kernel_type" = "latest" ]; then
     # zfs not supported atm
     zfs=false
+    linux_build_dir=linux-build-torvalds
     linux_repo=https://github.com/torvalds/linux.git
     linux_version_query="git -c versionsort.suffix=- ls-remote --refs --sort=version:refname --tags $linux_repo "
     linux_kernel_version_tag=$($linux_version_query | tail --lines=1 | cut --delimiter='/' --fields=3) 
@@ -42,6 +45,7 @@ if [ "$kernel_type" = "latest" ]; then
 elif [ "$kernel_type" = "latest-rc" ]; then
     # zfs not supported atm
     zfs=false
+    linux_build_dir=linux-build-torvalds
     kernel_file_suffix+="R"
     config_file_suffix+="_rc"
     linux_repo=https://github.com/torvalds/linux.git
@@ -58,6 +62,7 @@ elif [ "$kernel_type" = "stable" ]; then
     # zfs_version=2.1.11
     # zfs_version_tag=zfs-$zfs_version
     zfs=false
+    linux_build_dir=linux-build-gregkh
     kernel_file_suffix+="S"
     config_file_suffix+="_stable"
     linux_repo=https://github.com/gregkh/linux.git
@@ -77,6 +82,7 @@ else
     zfs_version_tag=zfs-$zfs_version
     kernel_file_suffix+="B"
     config_file_suffix+="_basic"
+    linux_build_dir=linux-build-msft
     linux_repo=https://github.com/microsoft/WSL2-Linux-Kernel.git
     linux_version_query="git -c versionsort.suffix=+ ls-remote --refs --sort=version:refname --tags $linux_repo "
     linux_kernel_version_tag=$($linux_version_query | grep -v -e "-rc[0-9]\+$" | tail --lines=1 | cut --delimiter='/' --fields=3) 
@@ -95,15 +101,6 @@ if [ $zfs ]; then
 fi
 config_file_suffix+="0"
 kernel_file_suffix+="0"
-linux_build_dir=linux-build
-# echo $linux_version_query
-# echo "linux version tag:$linux_kernel_version_tag"
-# echo "linux version:$linux_kernel_version"
-# echo "linux version tag:$linux_kernel_type_tag"
-zfs_build_dir=zfs-build
-# echo $zfs_version_query
-# echo "zfs version tag:$zfs_version_tag"
-# echo "zfs version:$zfs_version"
 timestamp_id=$(date -d "today" +"%Y%m%d%H%M%S")
 # deduce architecture of this machine
 cpu_vendor=$(grep -Pom 1 '^vendor_id\s*:\s*\K.*' /proc/cpuinfo)
@@ -112,11 +109,6 @@ cpu_arch="${cpu_arch%%_*}"
 # shorten common vendor names
 if [ "$cpu_vendor" = AuthenticAMD ]; then cpu_vendor=amd; fi
 if [ "$cpu_vendor" = GenuineIntel ]; then cpu_vendor=intel; fi
-# replace first . with _ and then remove the rest of the .'s
-# zfs_version_mask=${zfs_version/./_}
-# zfs_version_mask=${zfs_version_mask//[.-]/}
-# zfs_mask=zfs-$zfs_version_mask
-# replace first . with _ and then remove the rest of the .'s
 linux_kernel_version_mask=${linux_kernel_version/\./_}
 kernel_alias=${linux_kernel_version/\./L}
 linux_kernel_version_mask=${linux_kernel_version_mask//[\.-]/}

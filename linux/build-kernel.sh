@@ -22,8 +22,6 @@ if [ $zfs ]; then
     linux_kernel_type_tag=$linux_kernel_type_tag-ZFS
     echo "zfs version tag:$zfs_version_tag"
     echo "zfs version:$zfs_version"
-    kernel_file_suffix+="Z"
-    config_file_suffix+="-zfs"
 fi
 if [ "$kernel_type" = "" ]; then
     kernel_type="stable"
@@ -89,7 +87,12 @@ else
     echo "linux version:$linux_kernel_version"
     echo "linux version type:$linux_kernel_type_tag"
 fi
-
+if [ $zfs ]; then
+    echo "zfs version tag:$zfs_version_tag"
+    echo "zfs version:$zfs_version"
+    kernel_file_suffix+="Z"
+    config_file_suffix+="-zfs"
+fi
 config_file_suffix+="0"
 kernel_file_suffix+="0"
 linux_build_dir=linux-build
@@ -110,9 +113,9 @@ cpu_arch="${cpu_arch%%_*}"
 if [ "$cpu_vendor" = AuthenticAMD ]; then cpu_vendor=amd; fi
 if [ "$cpu_vendor" = GenuineIntel ]; then cpu_vendor=intel; fi
 # replace first . with _ and then remove the rest of the .'s
-zfs_version_mask=${zfs_version/./_}
-zfs_version_mask=${zfs_version_mask//[.-]/}
-zfs_mask=zfs-$zfs_version_mask
+# zfs_version_mask=${zfs_version/./_}
+# zfs_version_mask=${zfs_version_mask//[.-]/}
+# zfs_mask=zfs-$zfs_version_mask
 # replace first . with _ and then remove the rest of the .'s
 linux_kernel_version_mask=${linux_kernel_version/\./_}
 kernel_alias=${linux_kernel_version/\./L}

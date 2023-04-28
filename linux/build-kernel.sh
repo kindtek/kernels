@@ -248,8 +248,8 @@ printf "
 
 echo "
 press ENTER to confirm details and continue"
-read install
-if [ $quick_install ]; then
+read confirm
+if [ $quick_install ] && [ -d "$linux_build_dir/.git" ]; then
     cd $linux_build_dir
     git checkout $linux_kernel_version_tag --progress
     cd ..
@@ -262,11 +262,11 @@ elif [ $install = "y" ] && [ -d "$linux_build_dir/.git" ]; then
 elif [ ! -d "$linux_build_dir/.git" ]; then
     git clone $linux_repo --single-branch --branch $linux_kernel_version_tag --progress -- $linux_build_dir
 fi
-if [ $quick_install ]; then
+if [ $quick_install ] && [ -d "$zfs_build_dir/.git" ]; then
     cd $zfs_build_dir
     git checkout $zfs_version_tag  --progress
     cd ..
-elif [ -d "$zfs_build_dir/.git" ] && [ $zfs ]  && [ ! $quick_install ]; then
+elif [ -d "$zfs_build_dir/.git" ] && [ $zfs ]; then
     cd $zfs_build_dir
     git reset --hard
     git clean -fxd

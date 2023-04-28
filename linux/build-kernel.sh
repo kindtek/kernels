@@ -170,10 +170,11 @@ press ENTER to confirm save location as C:\\\\users\\$win_user"
     read win_user
     if [ "$win_user" = "" ]; then
         win_user=$win_user_orig
-    else 
-        # if the user tries inputting a path name take everything to the right of the last \
-        win_user=$(echo $win_user | sed 's/^.*\\?(/w)$/\1/g')
-    fi
+    # else 
+    #     # if the user tries inputting a path name take everything to the right of the last \
+    #     # win_user=$(echo $win_user | sed -E 's/^\s*([A-Za-z0-9]:?\\*)([A-Za-z0-9]*\\)*([A-Za-z0-9]+)+$/\3/g')        
+    #     # win_user=$(echo $win_user | sed -E 's/^\s*([A-Za-z0-9]:?\\*)([A-Za-z0-9]*\\?\\?)*([A-Za-z0-9]+)+$/\3/g')
+    # fi
 fi
 # fi
 

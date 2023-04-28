@@ -5,9 +5,10 @@ kernel_type=$1
 config_source=$2
 zfs=$3
 win_user=${4:-'user'}
+# interact=false
+# interact=${5:+true}
 # kernel_file_suffix=''
 # config_file_suffix=''
-
 # linux_kernel_version="5.15.90.1"
 # zfs_version="2.1.11"
 kernel_file_suffix="W"
@@ -64,10 +65,6 @@ else
     echo "linux version:$linux_kernel_version"
     echo "linux version type:$linux_kernel_type_tag"
 fi
-
-
-
-
 if [ "$zfs" != "" ]; then
     zfs_repo=https://github.com/openzfs/zfs.git
     zfs_version_query="git -c versionsort.suffix=- ls-remote --refs --sort=version:refname --tags $zfs_repo"
@@ -79,10 +76,8 @@ if [ "$zfs" != "" ]; then
     kernel_file_suffix+="Z"
     config_file_suffix+="-zfs"
 fi
-
 config_file_suffix+="0"
 kernel_file_suffix+="0"
-
 linux_build_dir=linux-build
 # echo $linux_version_query
 # echo "linux version tag:$linux_kernel_version_tag"
@@ -92,8 +87,6 @@ zfs_build_dir=zfs-build
 # echo $zfs_version_query
 # echo "zfs version tag:$zfs_version_tag"
 # echo "zfs version:$zfs_version"
-
-linux_kernel_type="basic-wsl-zfs-kernel"
 timestamp_id=$(date -d "today" +"%Y%m%d%H%M%S")
 # deduce architecture of this machine
 cpu_vendor=$(grep -Pom 1 '^vendor_id\s*:\s*\K.*' /proc/cpuinfo)
@@ -116,19 +109,6 @@ package_full_name=Linux-$linux_kernel_version-$linux_kernel_type_tag
 config_alias=.config_${kernel_alias}${config_file_suffix}
 git_save_path=$cpu_arch/$cpu_vendor/$linux_kernel_version_mask
 nix_save_path=$HOME/k-cache
-win_save_path=/mnt/c/users/$win_user/k-cache
-kernel_source=arch/$cpu_arch/boot/bzImage
-kernel_target_git=$git_save_path/$kernel_alias
-config_target_git=$git_save_path/$config_alias
-kernel_target_nix=$nix_save_path/$kernel_alias
-config_target_nix=$nix_save_path/$config_alias
-kernel_target_win=$win_save_path/$kernel_alias
-config_target_win=$win_save_path/$config_alias
-tarball_target_nix=$nix_save_path/$package_full_name.tar.gz
-tarball_target_win=$win_save_path/$package_full_name.tar.gz
-tarball_source_nix=$package_full_name.tar.gz
-tarball_source_win=$package_full_name.tar.gz
-
 
 # check that the user supplied source exists if not try to pick the best .config file available
 # user choice is best if it exists
@@ -154,15 +134,6 @@ else
     fi
 fi
 
-if [ "$linux_kernel_version" = "" ]; then
-    echo "
-
-    Sorry. Cannot continue. Exiting ...
-
-    Error: LINUX_KERNEL_VERSION_NOT_FOUND
-
-    "
-fi
 padding="----------"
 # display info while waiting on repo to clone
 printf "
@@ -182,6 +153,53 @@ printf "
   Configuration File:
     $config_source
 
+======================================
+
+" "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}"
+
+# if [ "$win_user" = "user" ]; then
+echo "  install kernel when finished?
+    y/(n)"
+read install
+if [ "$install" != "" ] && ( [ "$install" = "y" ] || [ "$install" = "Y" ]  ) && ( [ "$win_user" != "user" ]); then
+    echo "enter the name of your windows home directory or ..
+        press ENTER to confirm as C:\\\\users\\'$win_user'"
+    win_user_orig=$win_user
+    read win_user
+    if [ "$win_user" = "" ]; then
+        win_user = $win_user_orig
+    fi
+fi
+# fi
+
+win_save_path=/mnt/c/users/$win_user/k-cache
+kernel_source=arch/$cpu_arch/boot/bzImage
+kernel_target_git=$git_save_path/$kernel_alias
+config_target_git=$git_save_path/$config_alias
+kernel_target_nix=$nix_save_path/$kernel_alias
+config_target_nix=$nix_save_path/$config_alias
+kernel_target_win=$win_save_path/$kernel_alias
+config_target_win=$win_save_path/$config_alias
+tarball_target_nix=$nix_save_path/$package_full_name.tar.gz
+tarball_target_win=$win_save_path/$package_full_name.tar.gz
+tarball_source_nix=$package_full_name.tar.gz
+tarball_source_win=$package_full_name.tar.gz
+
+if [ "$linux_kernel_version" = "" ]; then
+    echo "
+
+    Sorry. Cannot continue. Exiting ...
+
+    Error: LINUX_KERNEL_VERSION_NOT_FOUND
+
+    "
+fi
+padding="----------"
+# display info while waiting on repo to clone
+printf "
+==================================================================
+========================   Linux Kernel   ========================
+======------------------%s%s------------------======
 ------------------------------------------------------------------
 ====-------------------     Output Info    -------------------====
 ------------------------------------------------------------------
@@ -199,21 +217,6 @@ printf "
 
 " "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}"
 
-# wget https://github.com/openzfs/zfs/releases/download/zfs-$zfs_version/zfs-$zfs_version.tar.gz
-if [ "$5" != "" ] && [ "$4" = "" ]; then
-    echo "  install kernel when finished?
-        y/(n)"
-    read install
-    if [ "$install" != "" ] && ( [ "$install" = "y" ] || [ "$install" = "Y" ]  ) && ( [ "$win_user" != "user" ]); then
-        echo "enter the name your windows home directory or ..
-            press ENTER to confirm as '$win_user'"
-        win_user_orig=$win_user
-        read win_user
-        if [ "$win_user" = "" ]; then
-            win_user = $win_user_orig
-        fi
-    fi
-fi
 echo "  press ENTER to confirm details and continue"
 read install
 if [ -d "$linux_build_dir/.git" ]; then

@@ -401,6 +401,8 @@ copy/pasta this:
 
     wsl.exe --shutdown
     wsl.exe -d $WSL_DISTRO_NAME
+
+    
     "
 fi
 # cp -fv --backup=numbered $kernel_source $kernel_target_nix

@@ -258,7 +258,7 @@ press ENTER to confirm details and continue"
 read install
 if [ $quick_install ]; then
     cd $linux_build_dir
-    git checkout $linux_repo --progress
+    git checkout $linux_kernel_version_tag --progress
     cd ..
 elif [ $install != "" ] && [ -d "$linux_build_dir/.git" ]; then
     cd $linux_build_dir

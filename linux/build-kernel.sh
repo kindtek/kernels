@@ -56,8 +56,10 @@ elif [ "$kernel_type" = "latest-rc" ]; then
     echo "linux version tag:$linux_kernel_type_tag"
 elif [ "$kernel_type" = "stable" ]; then
     # latest tag doesn't work properly with zfs so manually update for zfs version possibly compatible with 6.2.9+
-    zfs_version=2.1.11
-    zfs_version_tag=zfs-$zfs_version
+    # update: it did not work
+    # zfs_version=2.1.11
+    # zfs_version_tag=zfs-$zfs_version
+    zfs=false
     kernel_file_suffix+="S"
     config_file_suffix+="_stable"
     linux_repo=https://github.com/gregkh/linux.git

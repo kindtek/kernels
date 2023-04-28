@@ -189,7 +189,7 @@ install kernel when finished?
 y/(n)"
     read install
     if [ "$install" != "" ] && ( [ "$install" = "y" ] || [ "$install" = "Y" ]  ) ; then
-        quick_install=true && \
+        # quick_install=true && \
         echo "
 enter the name of your windows home directory 
                     
@@ -256,8 +256,8 @@ printf "
 echo "  press ENTER to confirm details and continue"
 read install
 if [ $quick_install ]; then
-    git checkout $linux_repo --squash --progress
-elif [ -d "$linux_build_dir/.git" ]; then
+    git checkout $linux_repo --progress
+elif [ $install != "" ] && [ -d "$linux_build_dir/.git" ]; then
     cd $linux_build_dir
     git reset --hard
     git clean -fxd
@@ -267,7 +267,7 @@ elif [ -d "$linux_build_dir/.git" ]; then
     git clone $linux_repo --single-branch --branch $linux_kernel_version_tag --progress -- $linux_build_dir
 fi
 if [ $quick_install ]; then
-    git checkout $zfs_version_tag --squash --progress
+    git checkout $zfs_version_tag  --progress
 elif [ -d "$zfs_build_dir/.git" ] && [ $zfs ]  && [ ! $quick_install ]; then
     cd $zfs_build_dir
     git reset --hard
@@ -354,8 +354,8 @@ else
 install $package_full_name kernel ($kernel_alias) to WSL? y/(n)"
     read install_kernel
     if [ "$install_kernel" = "y" ] || [ "$install_kernel" = "Y" ]; then
-        quick_install=true
-        win_user_home=/mnt/c/users/$win_user
+        quick_install=true && \
+        win_user_home=/mnt/c/users/$win_user && \
         cp -vf k-cache/$kernel_alias "${win_user_home}/${kernel_alias}_$timestamp_id"
         if [ -f "$wslconfig" ]; then
             echo "

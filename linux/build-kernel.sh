@@ -296,6 +296,12 @@ fi
 yes "" | make -j $(expr $(nproc) - 1)
 make modules_install
 # kernel is baked - time to distribute fresh copies
+if [ ! -f "$linux_build_dir/$kernel_source" ]; then
+    echo "
+    
+Ooops. The kernel did not build. Exiting ..."
+exit
+fi
 
 cd ..
 # move back to base dir  folder with github (relative) path

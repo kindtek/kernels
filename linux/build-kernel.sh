@@ -259,7 +259,7 @@ elif [ $install = "y" ] && [ -d "$linux_build_dir/.git" ]; then
     git clean -fxd
     git checkout $linux_kernel_version_tag --progress
     cd ..
-elif [ -d "$linux_build_dir/.git" ]; then
+elif [ ! -d "$linux_build_dir/.git" ]; then
     git clone $linux_repo --single-branch --branch $linux_kernel_version_tag --progress -- $linux_build_dir
 fi
 if [ $quick_install ]; then

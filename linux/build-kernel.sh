@@ -281,11 +281,12 @@ cp -fv $config_source $linux_build_dir/.config
 
 cd $linux_build_dir
 yes "" | make oldconfig
-yes "" | make prepare scripts
+yes "" | make prepare scripts 
 if [ $zfs ]; then
-    cd ../$zfs_build_dir && bash autogen.sh
-    sh configure --prefix=/ --libdir=/lib --includedir=/usr/include --datarootdir=/usr/share --enable-linux-builtin=yes --with-linux=../$linux_build_dir --with-linux-obj=../$linux_build_dir
-    sh copy-builtin ../$linux_build_dir
+    cd ../$zfs_build_dir && \
+    bash autogen.sh && \
+    bash configure --prefix=/ --libdir=/lib --includedir=/usr/include --datarootdir=/usr/share --enable-linux-builtin=yes --with-linux=../$linux_build_dir --with-linux-obj=../$linux_build_dir && \
+    bash copy-builtin ../$linux_build_dir && \
     yes "" | make install 
 fi
 
@@ -296,7 +297,7 @@ fi
 yes "" | make -j $(expr $(nproc) - 1)
 make modules_install
 # kernel is baked - time to distribute fresh copies
-if [ ! -f "$linux_build_dir/$kernel_source" ]; then
+if [ ! -f "$kernel_source" ]; then
     echo "
     
 Ooops. The kernel did not build. Exiting ..."

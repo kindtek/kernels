@@ -174,7 +174,7 @@ press ENTER to confirm save location as C:\\\\users\\$win_user"
     #     # if the user tries inputting a path name take everything to the right of the last \
     #     # win_user=$(echo $win_user | sed -E 's/^\s*([A-Za-z0-9]:?\\*)([A-Za-z0-9]*\\)*([A-Za-z0-9]+)+$/\3/g')        
     #     # win_user=$(echo $win_user | sed -E 's/^\s*([A-Za-z0-9]:?\\*)([A-Za-z0-9]*\\?\\?)*([A-Za-z0-9]+)+$/\3/g')
-    # fi
+    fi
 fi
 # fi
 

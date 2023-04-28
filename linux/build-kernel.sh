@@ -28,6 +28,7 @@ if [ "$kernel_type" = "" ]; then
     kernel_type="stable"
 fi
 if [ "$kernel_type" = "latest" ]; then
+    # zfs not supported atm
     zfs=false
     linux_repo=https://github.com/torvalds/linux.git
     linux_version_query="git -c versionsort.suffix=- ls-remote --refs --sort=version:refname --tags $linux_repo "
@@ -40,6 +41,7 @@ if [ "$kernel_type" = "latest" ]; then
     echo "linux version:$linux_kernel_version"
     echo "linux version tag:$linux_kernel_type_tag"
 elif [ "$kernel_type" = "latest-rc" ]; then
+    # zfs not supported atm
     zfs=false
     kernel_file_suffix+="R"
     config_file_suffix+="_rc"
@@ -52,6 +54,9 @@ elif [ "$kernel_type" = "latest-rc" ]; then
     echo "linux version:$linux_kernel_version"
     echo "linux version tag:$linux_kernel_type_tag"
 elif [ "$kernel_type" = "stable" ]; then
+    # latest tag doesn't work properly with zfs so manually update for zfs version possibly compatible with 6.2.9+
+    zfs_version=2.1.11
+    zfs_version_tag=zfs-$zfs_version
     kernel_file_suffix+="S"
     config_file_suffix+="_stable"
     linux_repo=https://github.com/gregkh/linux.git
@@ -66,6 +71,9 @@ elif [ "$kernel_type" = "stable" ]; then
     echo "linux kernel type:$linux_kernel_type_tag"
 # elif [ "$kernel_type"="basic" ]; then
 else 
+    # latest tag doesn't work properly with zfs so manually update for zfs version compatible with 5.5.3+
+    zfs_version=2.1.11
+    zfs_version_tag=zfs-$zfs_version
     kernel_file_suffix+="B"
     config_file_suffix+="_basic"
     linux_repo=https://github.com/microsoft/WSL2-Linux-Kernel.git

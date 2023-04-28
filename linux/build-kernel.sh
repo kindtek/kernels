@@ -253,7 +253,8 @@ printf "
 
 " "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}"
 
-echo "  press ENTER to confirm details and continue"
+echo "
+press ENTER to confirm details and continue"
 read install
 if [ $quick_install ]; then
     git checkout $linux_repo --progress

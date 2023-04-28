@@ -286,7 +286,9 @@ if [ $zfs ]; then
 fi
 
 cd ../$linux_build_dir
-sed -i 's/\# CONFIG_ZFS is not set/CONFIG_ZFS=y/g' .config
+if [ $zfs ]; then
+    sed -i 's/\# CONFIG_ZFS is not set/CONFIG_ZFS=y/g' .config
+fi
 yes "" | make -j $(expr $(nproc) - 1)
 make modules_install
 # kernel is baked - time to distribute fresh copies

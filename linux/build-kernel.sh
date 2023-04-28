@@ -255,21 +255,24 @@ printf "
 
 echo "  press ENTER to confirm details and continue"
 read install
-if [ -d "$linux_build_dir/.git" ] && [ ! $quick_install ]; then
+if [ $quick_install ]; then
+    git checkout $linux_repo --squash --progress
+elif [ -d "$linux_build_dir/.git" ]; then
     cd $linux_build_dir
     git reset --hard
     git clean -fxd
-    # git pull $linux_repo --squash --progress
+    git checkout $linux_kernel_version_tag --progress
     cd ..
 elif [ -d "$linux_build_dir/.git" ]; then
     git clone $linux_repo --single-branch --branch $linux_kernel_version_tag --progress -- $linux_build_dir
 fi
-
-if [ -d "$zfs_build_dir/.git" ] && [ $zfs ]  && [ ! $quick_install ]; then
+if [ $quick_install ]; then
+    git checkout $zfs_version_tag --squash --progress
+elif [ -d "$zfs_build_dir/.git" ] && [ $zfs ]  && [ ! $quick_install ]; then
     cd $zfs_build_dir
     git reset --hard
     git clean -fxd
-    # git pull $zfs_repo --squash --progress
+    git checkout $zfs_version_tag --progress
     cd ..
 elif [ ! -d "$zfs_build_dir/.git" ] && [ $zfs ]; then
     git clone $zfs_repo --single-branch --branch $zfs_version_tag --progress -- $zfs_build_dir 
@@ -402,7 +405,7 @@ copy/pasta this:
     wsl.exe --shutdown
     wsl.exe -d $WSL_DISTRO_NAME
 
-    
+
     "
 fi
 # cp -fv --backup=numbered $kernel_source $kernel_target_nix

@@ -179,6 +179,7 @@ if [ $quick_install ]; then
 "
     read install
     if [ "$install" = "" ]; then
+        install="y"
         quick_install=true
     else
         quick_install=false
@@ -189,7 +190,7 @@ install kernel when finished?
 y/(n)"
     read install
     if [ "$install" != "" ] && ( [ "$install" = "y" ] || [ "$install" = "Y" ]  ) ; then
-        # quick_install=true && \
+        install="y" && \
         echo "
 enter the name of your windows home directory 
                     
@@ -260,7 +261,7 @@ if [ $quick_install ]; then
     cd $linux_build_dir
     git checkout $linux_kernel_version_tag --progress
     cd ..
-elif [ $install != "" ] && [ -d "$linux_build_dir/.git" ]; then
+elif [ $install = "y" ] && [ -d "$linux_build_dir/.git" ]; then
     cd $linux_build_dir
     git reset --hard
     git clean -fxd

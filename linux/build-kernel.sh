@@ -68,9 +68,10 @@ fi
 if [ "$zfs" != "" ]; then
     zfs_repo=https://github.com/openzfs/zfs.git
     zfs_version_query="git -c versionsort.suffix=- ls-remote --refs --sort=version:refname --tags $zfs_repo"
-    zfs_version_tag=$($zfs_version_query | tail --lines=1 | cut --delimiter='/' --fields=3)
+    # zfs_version_tag=$($zfs_version_query | tail --lines=1 | cut --delimiter='/' --fields=3)
     # zfs_version=${zfs_version_tag#"zfs-"}
     zfs_version=2.1.11
+    zfs_version_tag=zfs-$zfs_version
     linux_kernel_type_tag=$linux_kernel_type_tag-ZFS
     echo "zfs version tag:$zfs_version_tag"
     echo "zfs version:$zfs_version"

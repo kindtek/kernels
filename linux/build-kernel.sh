@@ -128,6 +128,7 @@ linux_kernel_version_mask=${linux_kernel_version_mask//[\.-]/}
 kernel_alias=${kernel_alias_no_timestamp//[\.-]/}${kernel_file_suffix}_${timestamp_id}
 package_full_name=Linux-$linux_kernel_version-$linux_kernel_type_tag
 config_alias=.config_${kernel_alias}
+config_alias_no_timestamp=.config_${kernel_alias_no_timestamp}
 git_save_path=$cpu_arch/$cpu_vendor/$linux_kernel_version_mask
 nix_save_path=$HOME/k-cache
 
@@ -171,7 +172,7 @@ if [ ! "$config_source" = "" ] && [ -r "$config_source" ] && [ -s "$config_sourc
 else
 # try alternates if user config doesn't work 
     # download reliable .config
-    if [ -r "$git_save_path/$config_alias" ]; then
+    if [ ! -r "$git_save_path/$config_alias_no_timestamp" ]; then
         $generic_config_source=https://raw.githubusercontent.com/microsoft/WSL2-Linux-Kernel/linux-msft-wsl-5.15.y/Microsoft/config-wsl
         echo "
 
@@ -237,8 +238,8 @@ Enter the url of a config file to use
         config_source=$cpu_arch/generic/$linux_kernel_version_mask/$config_alias
     fi
     # specific arch - best alternate 
-    if [ -r "$git_save_path/$config_alias" ]; then
-        config_source=$git_save_path/$config_alias
+    if [ -r "$git_save_path/$config_alias_no_timestamp" ]; then
+        config_source=$git_save_path/$config_alias_no_timestamp
     fi
 fi
 

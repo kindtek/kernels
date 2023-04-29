@@ -301,9 +301,6 @@ install     - type y; press ENTER
 save location: C:\\users\\$win_user
 
 confirm     - press ENTER to confirm 
-        
-    - OR -
-
 custom      - enter name of target windows home directory; press ENTER
 
     Hint 
@@ -498,7 +495,7 @@ cd Split-Path \$mypath -Parent
 #############################################################################
 #####   OPTION A  #####                                                     #
 #############################################################################
-##### copy/pasta this into any Windows terminal (WIN + x, i): ###########
+##### copy/pasta this into any Windows terminal (WIN + x, i): ###############
 ##### uncomment to replace/move old .wslconfig 
 #
 #
@@ -508,8 +505,7 @@ cd Split-Path \$mypath -Parent
 #   to move     - uncomment the following line:
 #               powershell.exe -Command move .wslconfig %HOME%\\.wslconfig;
     powershell.exe -Command copy ${kernel_alias} %HOME%\\${kernel_alias};
-    powershell.exe -Command wsl.exe --shutdown;
-    powershell.exe -Command wsl.exe -d $WSL_DISTRO_NAME
+    powershell.exe -Command wsl.exe --shutdown; powershell.exe -Command wsl.exe;
 #
 #############################################################################
 # --------------------------------------------------------------------------#
@@ -518,13 +514,15 @@ cd Split-Path \$mypath -Parent
 #############################################################################
 #####   OPTION B  #####                                                     #
 #############################################################################
-##### copy/pasta this into any windows terminal (WIN + x, i): ###########
-##### uncomment to replace/move old .wslconfig 
+#### copy/pasta this into any windows terminal (WIN + x, i):      ###########
+#### uncomment to replace/move old .wslconfig 
 #
-##### copy/pasta this into any windows terminal while in this directory (WIN + x, i): ######
-##### ( copy without '#' )
+#### copy/pasta this into any windows terminal while in this directory  ##### 
 #
-#    ./$ps_fname
+#    
+#   copy without '#' 
+#   edit the path if you extracted the tar file to a different location
+#    ./$win_save_path/$package_full_name/$ps_fname
 
 " | tee k-cache/$ps_fname
 if [ -w "$win_save_path" ]; then
@@ -674,16 +672,27 @@ use command 'reboot' in a linux terminal with root privileges
 
             - OR - 
 
-copy/pasta this into any windows terminal (WIN + x, i):
+copy/pasta the following line into any windows terminal (WIN + x, i):
 
-    wsl.exe --shutdown
-    wsl.exe -d $WSL_DISTRO_NAME
+    powershell.exe -Command wsl.exe --shutdown; powershell.exe -Command wsl.exe -d $WSL_DISTRO_NAME
 
 
         "
     else
-        su r00t
-        reboot
+        ( su r00t && reboot ) || ( pwsh -Command wsl.exe --shutdown && pwsh -Command wsl.exe -d $WSL_DISTRO_NAME ) || \
+        echo "
+        
+MANUAL WSL REBOOT INSTRUCTIONS
+-----------------------
+
+use command 'reboot' in a linux terminal with root privileges ( aka \`sudo reboot\` )
+
+            - OR - 
+
+copy/pasta the following line into any windows terminal (WIN + x, i):
+
+    powershell.exe -Command wsl.exe --shutdown; powershell.exe -Command wsl.exe -d $WSL_DISTRO_NAME
+"
     fi
     
     echo "
@@ -707,12 +716,11 @@ REVERT INSTRUCTIONS
 
 copy/pasta this into any windows terminal (WIN + x, i):
 
-    powershell.exe -Command wsl.exe --shutdown;
     powershell.exe -Command del c:\\users\\$win_user\\.wslconfig;
     powershell.exe -Command move c:\\users\\$win_user\\.wslconfig.old c:\\users\\$win_user\\.wslconfig;
-    powershell.exe -Command wsl.exe -d $WSL_DISTRO_NAME
+    powershell.exe -Command wsl.exe --shutdown; powershell.exe -Command wsl.exe -d $WSL_DISTRO_NAME;    
     
-    
+
 ";
 fi
 

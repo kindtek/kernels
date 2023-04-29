@@ -88,6 +88,7 @@ elif [ "$kernel_type" = "stable" ]; then
     echo "linux kernel type:$linux_kernel_type_tag"
 # elif [ "$kernel_type"="basic" ]; then
 else 
+    # (BASIC)
     # latest tag doesn't work properly with zfs so manually update for zfs version compatible with 5.5.3+
     zfs_version=2.1.11
     zfs_version_tag=zfs-$zfs_version
@@ -100,6 +101,9 @@ else
     linux_kernel_type_tag="BASIC-WSL"
     linux_kernel_version=${linux_kernel_version_tag#"linux-msft-wsl"}
     linux_kernel_version=${linux_kernel_version_tag%".y"}
+    # manually set version due to known bug that breaks 5.15 build with werror: pointer may be used after 'realloc' [-Werror=use-after-free] https://gcc.gnu.org/bugzilla/show_bug.cgi?id=104069
+    linux_kernel_version_tag=linux-msft-wsl-6.1.y
+    linux_kernel_version=6.1
     echo "linux version tag:$linux_kernel_version_tag"
     echo "linux version:$linux_kernel_version"
     echo "linux version type:$linux_kernel_type_tag"

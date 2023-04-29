@@ -409,10 +409,11 @@ save    - type name of windows home directory; press ENTER"
 "   
     else
         echo "
-            C:\\users\\$win_user is not writeable
-            package will not be saved to Windows home directory ...
+Oooops - C:\\users\\$win_user is an invalid save location
+package will not be saved to Windows home directory ...
 
         "
+        sleep 5
     fi
 fi
 

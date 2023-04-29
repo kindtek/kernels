@@ -3,7 +3,6 @@ user_config_flag=False
 user_entry_flag=False
 kernel_type=$1
 config_source=$2
-zfs=False
 zfs=${3:+True}
 win_user=${4:-'user'}
 quick_install=${4:+True}
@@ -16,10 +15,10 @@ quick_install=${4:+True}
 kernel_file_suffix="W"
 config_file_suffix="_wsl"
 linux_build_dir=linux-build
-if [ $zfs = True ]; then
+if (( $zfs )); then
     echo "zfs == True
 LINENO: ${LINENO}"
-elif [ $zfs = False ]; then
+elif (( $zfs = False )); then
     echo "zfs == False
 LINENO: ${LINENO}"
 else 

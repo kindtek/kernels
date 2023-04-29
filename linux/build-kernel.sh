@@ -113,7 +113,7 @@ if (( $zfs )); then
     # config_file_suffix+="-zfs"
 fi
 # config_file_suffix+="0"
-kernel_file_suffix+="0"
+# kernel_file_suffix+="0"
 timestamp_id=$(date -d "today" +"%Y%m%d%H%M%S")
 # deduce architecture of this machine
 cpu_vendor=$(grep -Pom 1 '^vendor_id\s*:\s*\K.*' /proc/cpuinfo)
@@ -123,9 +123,9 @@ cpu_arch="${cpu_arch%%_*}"
 if [ "$cpu_vendor" = AuthenticAMD ]; then cpu_vendor=amd; fi
 if [ "$cpu_vendor" = GenuineIntel ]; then cpu_vendor=intel; fi
 linux_kernel_version_mask=${linux_kernel_version/\./_}
-kernel_alias=${linux_kernel_version/\./L}
+kernel_alias_no_timestamp=${linux_kernel_version/\./L}
 linux_kernel_version_mask=${linux_kernel_version_mask//[\.-]/}
-kernel_alias=${kernel_alias//[\.-]/}${kernel_file_suffix}_${timestamp_id}
+kernel_alias=${kernel_alias_no_timestamp//[\.-]/}${kernel_file_suffix}_${timestamp_id}
 package_full_name=Linux-$linux_kernel_version-$linux_kernel_type_tag
 config_alias=.config_${kernel_alias}
 git_save_path=$cpu_arch/$cpu_vendor/$linux_kernel_version_mask
@@ -337,7 +337,7 @@ fi
 
 win_save_path=/mnt/c/users/$win_user/k-cache
 kernel_source=arch/$cpu_arch/boot/bzImage
-kernel_target_git=$git_save_path/$kernel_alias
+kernel_target_git=$git_save_path/$kernel_alias_no_timestamp
 config_target_git=$git_save_path/$config_alias
 kernel_target_nix=$nix_save_path/$kernel_alias
 config_target_nix=$nix_save_path/$config_alias

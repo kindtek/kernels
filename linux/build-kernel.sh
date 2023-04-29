@@ -18,7 +18,7 @@ linux_build_dir=linux-build
 if (( $zfs )); then
     echo "zfs == True
 LINENO: ${LINENO}"
-elif (( ! $zfs )); then
+elif ! (( $zfs )); then
     echo "zfs == False
 LINENO: ${LINENO}"
 else 

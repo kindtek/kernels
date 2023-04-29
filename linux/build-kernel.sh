@@ -295,7 +295,7 @@ echo "
 press ENTER to confirm details and continue
 press any key + ENTER to exit"
 read confirm
-if [ "confirm" != "" ]; then
+if [ "$confirm" != "" ]; then
     exit
 fi
 if [ -d "$linux_build_dir/.git" ]; then

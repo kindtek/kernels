@@ -246,7 +246,7 @@ Enter the url of a config file to use
         fi
     fi
     if [ -r "$config_source" ]; then 
-        config_source=$generic_config_source
+        # config_source=$generic_config_source
         echo "config $config_source appears to be valid"
     else    
         echo "could not read $config_source

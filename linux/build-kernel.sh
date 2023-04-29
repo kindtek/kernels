@@ -346,7 +346,7 @@ install to Windows home directory C:\\users\\__________
         #     # win_user=$(echo $win_user | sed -E 's/^\s*([A-Za-z0-9]:?\\*)([A-Za-z0-9]*\\)*([A-Za-z0-9]+)+$/\3/g')        
         #     # win_user=$(echo $win_user | sed -E 's/^\s*([A-Za-z0-9]:?\\*)([A-Za-z0-9]*\\?\\?)*([A-Za-z0-9]+)+$/\3/g')
         else
-            $win_user=$(echo $win_user | cut --delimiter='/' --fields=1)
+            win_user=$(echo $win_user | cut --delimiter='/' --fields=1)
         fi
     if [ -w "/mnt/c/users/$win_user" ]; then
 

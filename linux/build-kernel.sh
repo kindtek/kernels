@@ -392,9 +392,9 @@ elif [ $install = "y" ]; then
 install $package_full_name kernel ($kernel_alias) to WSL? y/(n)"
     read install_kernel
     if [ "$install_kernel" = "y" ]; then
-        quick_install=True && \
         win_user_home=/mnt/c/users/$win_user && \
-        cp -vf k-cache/$kernel_alias "${win_user_home}/${kernel_alias}_$timestamp_id"
+        cp -vf k-cache/$kernel_alias "${win_user_home}/${kernel_alias}_$timestamp_id" && \
+        quick_install=True
         if [ -f "$wslconfig" ]; then
             echo "
             

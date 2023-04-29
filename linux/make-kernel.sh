@@ -300,7 +300,7 @@ if [ -d "/mnt/c/users/$wsl_username" ]; then save_location4=/mnt/c/users/$wsl_us
 # try to pick the best .config file and default to the one provided by microsoft
 default_config_file=$cpu_arch/$cpu_vendor/$linux_version_mask/.config$config_suffix
 config_file=${2:-$default_config_file}
-if [ $cpu_vendor = arm64 ]; then arm_suffix="-arm64"; fi
+[ "$cpu_vendor" = "arm64" ]; then arm_suffix="-arm64"; fi
 if ! [ -f $config_file ]; then config_file=$cpu_arch/generic/$linux_version_mask/.config$config_suffix; fi
 if ! [ -f ${config_file} ]; then config_file=$default_config_file; else
     mkdir -pv $cpu_arch/$cpu_vendor/$linux_version_mask

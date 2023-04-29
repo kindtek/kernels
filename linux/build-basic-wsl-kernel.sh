@@ -13,8 +13,8 @@ cpu_vendor=$(grep -Pom 1 '^vendor_id\s*:\s*\K.*' /proc/cpuinfo)
 cpu_arch=$(uname -m)
 cpu_arch="${cpu_arch%%_*}"
 # shorten common vendor names
-if [ $cpu_vendor = AuthenticAMD ]; then cpu_vendor=amd; fi
-if [ $cpu_vendor = GenuineIntel ]; then cpu_vendor=intel; fi
+[ "$cpu_vendor" = "AuthenticAMD" ]; then cpu_vendor=amd; fi
+[ "$cpu_vendor" = "GenuineIntel" ]; then cpu_vendor=intel; fi
 # replace first . with _ and then remove the rest of the .'s
 kernel_version_mask=${kernel_version/\./_}
 kernel_alias=${kernel_version/\./L}

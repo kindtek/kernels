@@ -185,6 +185,12 @@ if (( $quick_install )); then
     read install
     if [ "$install" = "" ]; then
         install="y"
+    fi
+    if [ "$install" = "Y" ]; then
+        install="y"
+    fi
+    if [ "$install" = "y" ]; then
+        install="y"
         quick_install=True
     else
         quick_install=False
@@ -194,7 +200,7 @@ else
 install kernel when finished?
 y/(n)"
     read install
-    if [ "$install" != "" ] && ( [ "$install" = "y" ] || [ "$install" = "Y" ]  ) ; then
+    if [ "$install" = "y" ] || [ "$install" = "Y" ]; then
         install="y" && \
         echo "
 enter the name of your windows home directory 
@@ -460,7 +466,8 @@ copy/pasta this into a windows terminal:
     del c:\users\$win_user\.wslconfig
     move c:\users\$win_user\.wslconfig.old c:\users\n8kin\.wslconfig
     wsl.exe -d $WSL_DISTRO_NAME"
-
+else
+    echo "quick_install == $quick_install"
 fi
 # cp -fv --backup=numbered $kernel_source $kernel_target_nix
 # cp -fv --backup=numbered .config $nix_save_path/$config_alias

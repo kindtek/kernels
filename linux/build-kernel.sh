@@ -127,7 +127,7 @@ kernel_alias=${linux_kernel_version/\./L}
 linux_kernel_version_mask=${linux_kernel_version_mask//[\.-]/}
 kernel_alias=${kernel_alias//[\.-]/}${kernel_file_suffix}_${timestamp_id}
 package_full_name=Linux-$linux_kernel_version-$linux_kernel_type_tag
-config_alias=.config_${kernel_alias}_${timestamp_id}
+config_alias=.config_${kernel_alias}
 git_save_path=$cpu_arch/$cpu_vendor/$linux_kernel_version_mask
 nix_save_path=$HOME/k-cache
 

@@ -432,7 +432,7 @@ if [ "$linux_kernel_version" = "" ]; then
 fi
 padding="----------"
 
-if [ -w "/mnt/c/users/$win_user" ]; then
+if [ ! -w "/mnt/c/users/$win_user" ]; then
     tarball_target_win=""
 fi
 printf "

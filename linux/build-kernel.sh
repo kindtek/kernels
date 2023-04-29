@@ -228,7 +228,8 @@ Enter the url of a config file to use
     Hint: to use a file on Github make sure to use a raw file url starting with https://raw.githubusercontent.com
 "
         read config_source
-        echo "checking if input is a url ..."
+        echo "
+checking if input is a url ..."
         if [ "$config_source" != "" ]; then
             if [[ "$config_source" =~ https?://.* ]]; then 
                 echo "yes"
@@ -243,24 +244,25 @@ Enter the url of a config file to use
             echo "not a url"
             config_source=$generic_config_source
         fi
-        if [ ! -r "$config_source" ]; then 
-            config_source=$generic_config_source
-            echo "could not read $config_source
-using generic Microsoft .config instead"
+    fi
+    if [ -r "$config_source" ]; then 
+        config_source=$generic_config_source
+        echo "config $config_source appears to be valid"
+    else    
+        echo "could not read $config_source
+choosing a generic alternative instead ..."
+        # reliable but the least desirable .. keep looking
+        if [ -r "config-wsl" ]; then 
+            config_source=config-wsl
         fi
-    fi
-    
-    # reliable but the least desirable .. keep looking
-    if [ -r "config-wsl" ]; then 
-        config_source=config-wsl
-    fi
-    # generic - slightly better
-    if [ -r "$cpu_arch/generic/$linux_kernel_version_mask/$config_alias" ]; then 
-        config_source=$cpu_arch/generic/$linux_kernel_version_mask/$config_alias
-    fi
-    # specific arch - best alternate 
-    if [ -r "$git_save_path/$config_alias_no_timestamp" ]; then
-        config_source=$git_save_path/$config_alias_no_timestamp
+        # generic - slightly better
+        if [ -r "$cpu_arch/generic/$linux_kernel_version_mask/$config_alias" ]; then 
+            config_source=$cpu_arch/generic/$linux_kernel_version_mask/$config_alias
+        fi
+        # specific arch - best alternate 
+        if [ -r "$git_save_path/$config_alias_no_timestamp" ]; then
+            config_source=$git_save_path/$config_alias_no_timestamp
+        fi
     fi
 fi
 

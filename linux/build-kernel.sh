@@ -373,7 +373,7 @@ if (( $quick_install )); then
     mv -vf --backup=numbered $wslconfig $wslconfig.old
     sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}_$timestamp_id/g" k-cache/sample.wslconfig           
     cp -vf k-cache/sample.wslconfig $wslconfig  
-elif [ $install = "y"]; then
+elif [ $install = "y" ]; then
     echo "
     
 install $package_full_name kernel ($kernel_alias) to WSL? y/(n)"

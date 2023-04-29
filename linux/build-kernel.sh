@@ -355,7 +355,7 @@ if [ -w "$nix_save_path" ]; then
     cp -fv --backup=numbered $tarball_source_nix $tarball_target_nix.bak
     cp -fv $tarball_source_nix $tarball_target_nix 
 else
-    echo "unable to save kernel package to home directory"
+    echo "unable to save kernel package to Linux home directory"
 fi
 
 # win
@@ -369,7 +369,7 @@ if [ -w "$win_save_path" ]; then
     cp -fv $tarball_source_win $tarball_target_win
 else
     echo "
-unable to save kernel package to home directory"
+unable to save kernel package to Windows home directory"
 fi
 win_user_home=/mnt/c/users/$win_user
 wslconfig=$win_user_home/.wslconfig
@@ -445,7 +445,7 @@ type any other key and then press ENTER to manually reboot at a later time"
     if [ "$restart" != "" ]; then
         echo "
 
-enter 'reboot' into a linux terminal 
+use command 'reboot' in a linux terminal with root privileges
 
             - OR - 
 
@@ -461,11 +461,17 @@ copy/pasta this into a windows terminal:
         reboot
     fi
     
-    echo "revert to the old kernel/settings with:
-    wsl.exe --shutdown
-    del c:\users\$win_user\.wslconfig
-    move c:\users\$win_user\.wslconfig.old c:\users\n8kin\.wslconfig
-    wsl.exe -d $WSL_DISTRO_NAME"
+    echo "
+
+    powershell.exe -Command wsl.exe --shutdown;
+    powershell.exe -Command del c:\users\$win_user\.wslconfig;
+    powershell.exe -Command move c:\users\$win_user\.wslconfig.old c:\users\$win_user\.wslconfig;
+    powershell.exe -Command wsl.exe -d $WSL_DISTRO_NAME
+    
+    
+copy/pasta the above code into any Windows shell to revert to the previous kernel/settings";
+
+
 else
     echo "quick_install == $quick_install"
 fi

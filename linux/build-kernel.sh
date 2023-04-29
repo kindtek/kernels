@@ -373,7 +373,7 @@ if (( $quick_install )); then
     mv -vf --backup=numbered $wslconfig $wslconfig.old
     sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}_$timestamp_id/g" k-cache/sample.wslconfig           
     cp -vf k-cache/sample.wslconfig $wslconfig  
-else
+elif [ $install = "y"]; then
     echo "
     
 install $package_full_name kernel ($kernel_alias) to WSL? y/(n)"
@@ -420,8 +420,10 @@ $(cat $wslconfig_old)"
     fi
 fi
 
+echo "kernel build process complete"
+
 if (( $quick_install )); then
-            echo "
+    echo "
         
 restarting wsl is required to boot into the kernel 
 
@@ -429,20 +431,18 @@ try to automatically restart?
 
 Press ENTER to reboot now
 type any other key and then press ENTER to manually reboot at a later time"
-
-read restart
-
+    read restart
     if [ "$restart" != "" ]; then
         echo "
 
-    enter 'reboot' into a linux terminal 
+enter 'reboot' into a linux terminal 
 
-                - OR - 
+            - OR - 
 
-    copy/pasta this into a windows terminal:
+copy/pasta this into a windows terminal:
 
-        wsl.exe --shutdown
-        wsl.exe -d $WSL_DISTRO_NAME
+    wsl.exe --shutdown
+    wsl.exe -d $WSL_DISTRO_NAME
 
 
         "

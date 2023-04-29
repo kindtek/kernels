@@ -490,7 +490,7 @@ copy/pasta this into a windows terminal:
     
     
 copy/pasta the above code into any Windows shell to revert to the previous kernel/settings";
-
+fi
 
 # else
 #     echo "quick_install == $quick_install"

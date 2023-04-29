@@ -437,11 +437,9 @@ if (( $zfs )); then
     fi
 fi
 
-if (( $user_config_flag )) ; then
-    # replace kernel source .config with the config generated from a custom config
-    cp -fv $config_source $linux_build_dir/.config
-fi
 
+# replace kernel source .config with the config generated from a custom config
+cp -fv $config_source $linux_build_dir/.config
 
 cd $linux_build_dir
 yes "" | make oldconfig
@@ -476,9 +474,9 @@ cd ..
 # move back to base dir  folder with github (relative) path
 mkdir -pv $git_save_path 2>/dev/null
 # queue files to be saved to repo
-if [ "$user_config_flag" ]; then
+# if (( $user_config_flag )); then
     cp -fv --backup=numbered $linux_build_dir/.config $config_target_git
-fi
+# fi
 cp -fv --backup=numbered $linux_build_dir/$kernel_source $kernel_target_git
 
 

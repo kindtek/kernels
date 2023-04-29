@@ -380,7 +380,7 @@ printf "
 
 echo "
 press ENTER to confirm details and continue
-press any key + ENTER to exit"
+type any character; press ENTER to exit"
 read confirm
 if [ "$confirm" != "" ]; then
     exit
@@ -523,7 +523,7 @@ printf "
 " "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}"
     echo "
 press ENTER to confirm details and continue
-press any key + ENTER to exit"
+type any character; press ENTER to exit"
     read install_kernel
     if [ "$install_kernel" = "" ]; then
         win_user_home=/mnt/c/users/$win_user && \
@@ -590,7 +590,7 @@ restarting WSL is required to boot into the kernel
 
 
 Press ENTER to reboot WSL now
-press any key + ENTER to reboot WSL at a later time"
+type any character; press ENTER to reboot WSL at a later time"
     read restart
     if [ "$restart" != "" ]; then
         echo "

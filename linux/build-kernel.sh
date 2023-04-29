@@ -401,7 +401,7 @@ save kernel package to Windows home directory C:\\users\\__________
         echo "
             C:\\users\\$win_user is not writeable
             package will not be saved to Windows home directory ...
-            
+
         "
     fi
 fi
@@ -409,7 +409,7 @@ fi
 win_save_path=/mnt/c/users/$win_user/k-cache
 kernel_source=arch/$cpu_arch/boot/bzImage
 kernel_target_git=$git_save_path/$kernel_alias_no_timestamp
-config_target_git=$git_save_path/$config_alias
+config_target_git=$git_save_path/$config_alias_no_timestamp
 kernel_target_nix=$nix_save_path/$kernel_alias
 config_target_nix=$nix_save_path/$config_alias
 kernel_target_win=$win_save_path/$kernel_alias

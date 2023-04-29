@@ -400,7 +400,7 @@ save    - type name of windows home directory; press ENTER"
         #     # win_user=$(echo $win_user | sed -E 's/^\s*([A-Za-z0-9]:?\\*)([A-Za-z0-9]*\\)*([A-Za-z0-9]+)+$/\3/g')        
         #     # win_user=$(echo $win_user | sed -E 's/^\s*([A-Za-z0-9]:?\\*)([A-Za-z0-9]*\\?\\?)*([A-Za-z0-9]+)+$/\3/g')
         else
-            $win_user=$(echo $win_user | cut --delimiter='/' --fields=1)
+            win_user=$(echo $win_user | cut --delimiter='/' --fields=1)
         fi
     # fi
     if [ "$win_user" != "" ] && [ -w "/mnt/c/users/$win_user" ]; then

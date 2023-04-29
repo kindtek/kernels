@@ -484,8 +484,8 @@ fi
 # win
 # package a known working wslconfig file along with the kernel and config file
 mkdir -p $win_save_path 2>/dev/null
-sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}/g" ../../../dvlp/mnt/home/.wslconfig
-cp -fv --backup=numbered ../../../dvlp/mnt/home/.wslconfig k-cache/.wslconfig
+sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}/g" ../../../dvlp/mnt/%HOME%/sample.wslconfig
+cp -fv --backup=numbered ../../../dvlp/mnt/%HOME%/sample.wslconfig k-cache/.wslconfig
 ps_fname=install-$package_full_name-$timestamp_id.ps1
 echo "
 # for executing option b outside of this directory 

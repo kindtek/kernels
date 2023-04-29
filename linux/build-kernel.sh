@@ -420,7 +420,11 @@ $(cat $wslconfig_old)"
     fi
 fi
 
-echo "kernel build process complete"
+echo "
+
+kernel build process complete
+
+"
 
 if (( $quick_install )); then
     echo "

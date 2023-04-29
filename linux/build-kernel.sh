@@ -3,7 +3,7 @@ user_config_flag=False
 user_entry_flag=False
 kernel_type=$1
 config_source=$2
-zfs=${3:+True}
+zfs=$3
 win_user=${4:-'user'}
 quick_install=${4:+True}
 # interact=False
@@ -15,7 +15,7 @@ quick_install=${4:+True}
 kernel_file_suffix="W"
 # config_file_suffix="_wsl"
 linux_build_dir=linux-build
-# if (( $zfs )); then
+# if [ "$zfs" = "zfs" ];  then
 #     echo "zfs == True
 # LINENO: ${LINENO}"
 # elif ! (( $zfs )); then
@@ -26,7 +26,7 @@ linux_build_dir=linux-build
 # LINENO: ${LINENO}"
 # fi
 
-if (( $zfs )); then
+if [ "$zfs" = "zfs" ];  then
     zfs_build_dir=zfs-build
     zfs_repo=https://github.com/openzfs/zfs.git
     zfs_version_query="git -c versionsort.suffix=- ls-remote --refs --sort=version:refname --tags $zfs_repo"
@@ -108,7 +108,7 @@ else
     echo "linux version:$linux_kernel_version"
     echo "linux version type:$linux_kernel_type_tag"
 fi
-if (( $zfs )); then
+if [ "$zfs" = "zfs" ];  then
 #     echo "zfs == True
 # LINENO: ${LINENO}"
     echo "zfs version tag:$zfs_version_tag"
@@ -499,7 +499,7 @@ if [ -d "$linux_build_dir/.git" ]; then
 else
     git clone $linux_repo --single-branch --branch $linux_kernel_version_tag --progress -- $linux_build_dir
 fi
-if (( $zfs )); then
+if [ "$zfs" = "zfs" ];  then
 #     echo "zfs == True
 # LINENO: ${LINENO}"
     if [ -d "$zfs_build_dir/.git" ]; then
@@ -522,7 +522,7 @@ cp -fv $config_source $linux_build_dir/.config
 cd $linux_build_dir
 yes "" | make oldconfig
 yes "" | make prepare scripts 
-if (( $zfs )); then
+if [ "$zfs" = "zfs" ];  then
 #     echo "zfs == True
 # LINENO: ${LINENO}"
     cd ../$zfs_build_dir && \
@@ -533,7 +533,7 @@ if (( $zfs )); then
 fi
 
 cd ../$linux_build_dir
-if (( $zfs )); then
+if [ "$zfs" = "zfs" ];  then
 #     echo "zfs == True
 # LINENO: ${LINENO}"
     sed -i 's/\# CONFIG_ZFS is not set/CONFIG_ZFS=y/g' .config
@@ -792,8 +792,8 @@ echo "
     powershell.exe -Command wsl.exe --shutdown; powershell.exe -Command wsl.exe -d $WSL_DISTRO_NAME;    
     
 
-" | tee $win_save_path/.kindtek-kernel-rollback.cmd
-cp $win_save_path/.kindtek-kernel-rollback.cmd $win_save_path/k-cache/.kindtek-kernel-rollback.ps1
+" | tee $win_save_path/kindtek-kernel-rollback.cmd
+cp $win_save_path/kindtek-kernel-rollback.cmd $win_save_path/kindtek-kernel-rollback.ps1
     if [ "$restart" = "" ]; then
         echo " attempting to restart WSL ... 
         "

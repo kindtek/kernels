@@ -308,8 +308,8 @@ skip        - press ENTER
 install     - type y; press ENTER
 "
     read install
-    if [ "$install" = "y" ] || [ "$install" = "Y" ]; then
-        if [ "$4" == "" ]; then win_user=""; fi
+    if [ "$install" = "y" ]; then
+        if [ "$4" = "" ]; then win_user=""; fi
         install="y" && \
         echo "
 
@@ -348,14 +348,23 @@ install to Windows home directory C:\\users\\__________
         else
             $win_user=$(echo $win_user | cut --delimiter='/' --fields=1)
         fi
-    fi
-    echo "
-    kernel will be installed for user '$win_user' ..
-"
-else
-    # if [ "$install" = "y" ] || [ "$install" = "Y" ]; then
-        if [ "$4" == "" ]; then win_user=""; fi
+    if [ -w "/mnt/c/users/$win_user" ]; then
+
         echo "
+    kernel will be installed for user '$win_user' ..
+"   
+    else
+       echo "
+C:\\users\\$win_user is not writeable
+package will not be saved to Windows home directory
+
+"
+        sleep 5    
+    fi
+    else
+    # if [ "$install" = "y" ] || [ "$install" = "Y" ]; then
+        if [ "$4" = "" ]; then win_user=""; fi
+            echo "
 
 
 
@@ -368,13 +377,14 @@ else
 
 found these existing home directories:
     "
-        ls -da /mnt/c/users/*/ | tail -n +4 | sed -r -e 's/^\/mnt\/c\/users\/([ A-Za-z0-9]*)*\/+$/\t\1/g'
-        echo " 
+            ls -da /mnt/c/users/*/ | tail -n +4 | sed -r -e 's/^\/mnt\/c\/users\/([ A-Za-z0-9]*)*\/+$/\t\1/g'
+            echo " 
 
 
 save kernel package to Windows home directory C:\\users\\__________
 
         - type name of windows home directory; press ENTER" 
+        fi
         if [ "$win_user" != "" ]; then
             echo "confirm     - press ENTER to install kernel in C:\\users\\$win_user
             "
@@ -393,7 +403,7 @@ save kernel package to Windows home directory C:\\users\\__________
             $win_user=$(echo $win_user | cut --delimiter='/' --fields=1)
         fi
     # fi
-    if [ -w /mnt/c/users/$win_user ]; then
+    if [ -w "/mnt/c/users/$win_user" ]; then
         echo "
         kernel package will be saved to C:\\users\\$win_user ...
 "   

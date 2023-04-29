@@ -673,8 +673,7 @@ now      - Press ENTER
 later    - type any character; press ENTER
 "
     read restart
-    if [ "$restart" != "" ]; then
-        echo "
+    echo "
 
 
 
@@ -690,34 +689,23 @@ later    - type any character; press ENTER
 
 
 
-WSL REBOOT INSTRUCTIONS
------------------------
+    WSL REBOOT INSTRUCTIONS
+    -----------------------
 
-use command 'reboot' in a linux terminal with root privileges
+    use command 'reboot' in a linux terminal with root privileges
 
-            - OR - 
+                - OR - 
 
-copy/pasta the following line into any windows terminal (WIN + x, i):
+    copy/pasta the following line into any windows terminal (WIN + x, i):
 
-    powershell.exe -Command wsl.exe --shutdown; powershell.exe -Command wsl.exe -d $WSL_DISTRO_NAME
+        powershell.exe -Command wsl.exe --shutdown; powershell.exe -Command wsl.exe -d $WSL_DISTRO_NAME
 
 
-        "
-    else
-        ( su r00t && reboot ) || ( pwsh -Command wsl.exe --shutdown && pwsh -Command wsl.exe -d $WSL_DISTRO_NAME ) || \
-        echo "
+            "
+    if [ "$restart" = "" ]; then
+        echo " attempting to restart WSL ... "
+        ( su r00t && reboot ) || ( pwsh -Command wsl.exe --shutdown && pwsh -Command wsl.exe -d $WSL_DISTRO_NAME --exec 'WSL successfully restarted' && pwsh -Command wsl.exe -d $WSL_DISTRO_NAME ) || \
         
-MANUAL WSL REBOOT INSTRUCTIONS
------------------------
-
-use command 'reboot' in a linux terminal with root privileges ( aka \`sudo reboot\` )
-
-            - OR - 
-
-copy/pasta the following line into any windows terminal (WIN + x, i):
-
-    powershell.exe -Command wsl.exe --shutdown; powershell.exe -Command wsl.exe -d $WSL_DISTRO_NAME
-"
     fi
     
     echo "

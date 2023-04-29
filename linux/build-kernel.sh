@@ -125,7 +125,8 @@ if [ "$cpu_vendor" = GenuineIntel ]; then cpu_vendor=intel; fi
 linux_kernel_version_mask=${linux_kernel_version/\./_}
 kernel_alias_no_timestamp=${linux_kernel_version/\./L}
 linux_kernel_version_mask=${linux_kernel_version_mask//[\.-]/}
-kernel_alias=${kernel_alias_no_timestamp//[\.-]/}${kernel_file_suffix}_${timestamp_id}
+kernel_alias_no_timestamp=${kernel_alias_no_timestamp//[\.-]/}${kernel_file_suffix}_${timestamp_id}
+kernel_alias+=_${timestamp_id}
 package_full_name=Linux-$linux_kernel_version-$linux_kernel_type_tag
 config_alias=.config_${kernel_alias}
 config_alias_no_timestamp=.config_${kernel_alias_no_timestamp}

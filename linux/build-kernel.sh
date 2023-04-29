@@ -531,6 +531,15 @@ type any character; press ENTER to exit"
         quick_install=True
         if [ -f "$wsl_config_install" ]; then
             echo "
+
+
+
+
+
+
+
+
+
             
 .wslconfig found in $win_user_home
 

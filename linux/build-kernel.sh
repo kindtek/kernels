@@ -175,7 +175,7 @@ printf "
   Configuration File:
     $config_source
 
-======================================
+==================================================================
 
 " "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}"
 

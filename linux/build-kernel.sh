@@ -308,9 +308,6 @@ skip        - press ENTER
 install     - type y; press ENTER
 "
     read install
-    if [ "$install" = "" ]; then
-        install="y"
-    fi
     if [ "$install" = "Y" ]; then
         install="y"
     fi

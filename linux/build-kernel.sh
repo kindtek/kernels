@@ -16,6 +16,8 @@ kernel_file_suffix="W"
 config_file_suffix="_wsl"
 linux_build_dir=linux-build
 if [ $zfs ]; then
+    echo "zfs == true
+LINENO: ${LINENO}"
     zfs_build_dir=zfs-build
     zfs_repo=https://github.com/openzfs/zfs.git
     zfs_version_query="git -c versionsort.suffix=- ls-remote --refs --sort=version:refname --tags $zfs_repo"
@@ -94,6 +96,8 @@ else
     echo "linux version type:$linux_kernel_type_tag"
 fi
 if [ $zfs ]; then
+    echo "zfs == true
+LINENO: ${LINENO}"
     echo "zfs version tag:$zfs_version_tag"
     echo "zfs version:$zfs_version"
     kernel_file_suffix+="Z"
@@ -261,7 +265,8 @@ else
     git clone $linux_repo --single-branch --branch $linux_kernel_version_tag --progress -- $linux_build_dir
 fi
 if [ $zfs ]; then
-    echo "zfs == true"
+    echo "zfs == true
+LINENO: ${LINENO}"
     if [ -d "$zfs_build_dir/.git" ]; then
         cd $zfs_build_dir
         if [ ! $quick_install ]; then 
@@ -285,6 +290,8 @@ cd $linux_build_dir
 yes "" | make oldconfig
 yes "" | make prepare scripts 
 if [ $zfs ]; then
+    echo "zfs == true
+LINENO: ${LINENO}"
     cd ../$zfs_build_dir && \
     bash autogen.sh && \
     bash configure --prefix=/ --libdir=/lib --includedir=/usr/include --datarootdir=/usr/share --enable-linux-builtin=yes --with-linux=../$linux_build_dir --with-linux-obj=../$linux_build_dir && \
@@ -294,6 +301,8 @@ fi
 
 cd ../$linux_build_dir
 if [ $zfs ]; then
+    echo "zfs == true
+LINENO: ${LINENO}"
     sed -i 's/\# CONFIG_ZFS is not set/CONFIG_ZFS=y/g' .config
 fi
 yes "" | make -j $(expr $(nproc) - 1)

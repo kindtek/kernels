@@ -707,12 +707,15 @@ WSL REVERT INSTRUCTIONS
 
 copy/pasta this into any windows terminal (WIN + x, i):
 
+"
+echo "
     powershell.exe -Command del c:\\users\\$win_user\\.wslconfig;
     powershell.exe -Command move c:\\users\\$win_user\\.wslconfig.old c:\\users\\$win_user\\.wslconfig;
     powershell.exe -Command wsl.exe --shutdown; powershell.exe -Command wsl.exe -d $WSL_DISTRO_NAME;    
     
 
-";
+" tee $win_save_path/k-cache/.kindtek-kernel-rollback.cmd
+cp $win_save_path/k-cache/.kindtek-kernel-rollback.cmd $win_save_path/k-cache/.kindtek-kernel-rollback.ps1
     if [ "$restart" = "" ]; then
         echo " attempting to restart WSL ... 
         "

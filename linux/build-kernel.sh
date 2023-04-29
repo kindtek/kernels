@@ -229,9 +229,15 @@ Enter the url of a config file to use
 "
         read config_source
         if [ "$config_source" = "" ]; then
-            wget "$config_source"
-            echo $config_source | cut --delimiter='/' --fields=1
-            config_source=$generic_config_source
+            if [[ "$config_source" =~ https?://.* ]]; then 
+                wget "$config_source"
+                config_source=${pwd}$( echo $config_source | cut --delimiter='/' --fields=1 )
+            fi
+            if ! [ -r $config_source ]; then 
+                config_source=$generic_config_source
+                echo "could not read $config_source
+using generic Microsoft .config instead"
+            fi
         fi
     fi
     

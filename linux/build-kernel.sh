@@ -529,7 +529,7 @@ cd Split-Path \$mypath -Parent
 #    
 #   copy without '#' 
 #   edit the path if you extracted the tar file to a different location
-#    ./$win_save_path/$package_full_name/$ps_fname
+#    .$win_save_path/$package_full_name/$ps_fname
 
 " | tee k-cache/$ps_fname
 if [ -w "$win_save_path" ]; then

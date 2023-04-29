@@ -261,6 +261,7 @@ else
     git clone $linux_repo --single-branch --branch $linux_kernel_version_tag --progress -- $linux_build_dir
 fi
 if [ $zfs ]; then
+    echo "zfs == true"
     if [ -d "$zfs_build_dir/.git" ]; then
         cd $zfs_build_dir
         if [ ! $quick_install ]; then 

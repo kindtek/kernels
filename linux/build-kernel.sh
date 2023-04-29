@@ -439,7 +439,10 @@ if [ "$linux_kernel_version" = "" ]; then
     "
 fi
 padding="----------"
-# display info while waiting on repo to clone
+
+if [ -w "/mnt/c/users/$win_user" ]; then
+    $tarball_target_win=""
+fi
 printf "
 
 
@@ -456,13 +459,13 @@ printf "
 
   Compressed Kernel/Config:
     $tarball_target_nix
-    $tarball_target_win      
-
+    %s      
 ==================================================================
 ==================================================================
 ==================================================================
 
-" "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}"
+" "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}" "$tarball_target_win
+"
 
 echo "
 continue    - press ENTER to confirm

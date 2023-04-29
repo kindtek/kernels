@@ -5152,7 +5152,8 @@ CONFIG_RUNTIME_TESTING_MENU=y
 # CONFIG_TEST_MEMCAT_P is not set
 # CONFIG_TEST_MEMINIT is not set
 # CONFIG_TEST_FREE_PAGES is not set
-# CONFIG_TEST_FPU is not set
+# CONFIG_TEST_FPU is not set C:\\users\\$win_user is not writeable
+            package will not be saved to Windows home directory ...
 # CONFIG_TEST_CLOCKSOURCE_WATCHDOG is not set
 CONFIG_ARCH_USE_MEMTEST=y
 # CONFIG_MEMTEST is not set

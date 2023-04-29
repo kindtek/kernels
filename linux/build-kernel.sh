@@ -273,8 +273,11 @@ if [ $zfs ]; then
         git clone $zfs_repo --single-branch --branch $zfs_version_tag --progress -- $zfs_build_dir 
     fi
 fi
-# replace kernel source .config with user's
-cp -fv $config_source $linux_build_dir/.config
+
+if [ $user_config_flag ]; then
+    # replace kernel source .config with the config generated from a custom config
+    cp -fv $config_source $linux_build_dir/.config
+fi
 
 cd $linux_build_dir
 yes "" | make oldconfig

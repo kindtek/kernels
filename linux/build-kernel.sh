@@ -125,8 +125,7 @@ if [ "$cpu_vendor" = GenuineIntel ]; then cpu_vendor=intel; fi
 linux_kernel_version_mask=${linux_kernel_version/\./_}
 kernel_alias=${linux_kernel_version/\./L}
 linux_kernel_version_mask=${linux_kernel_version_mask//[\.-]/}
-kernel_alias=${kernel_alias//[\.-]/}${kernel_file_suffix}
-package_alias=linux-$linux_kernel_version_mask
+kernel_alias=${kernel_alias//[\.-]/}${kernel_file_suffix}_${timestamp_id}
 package_full_name=Linux-$linux_kernel_version-$linux_kernel_type_tag
 config_alias=.config_${kernel_alias}_${timestamp_id}
 git_save_path=$cpu_arch/$cpu_vendor/$linux_kernel_version_mask
@@ -478,8 +477,53 @@ fi
 # win
 # package a known working wslconfig file along with the kernel and config file
 mkdir -p $win_save_path 2>/dev/null
-sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}_$timestamp_id/g" ../../../dvlp/mnt/home/.wslconfig
+sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}/g" ../../../dvlp/mnt/home/.wslconfig
 cp -fv --backup=numbered ../../../dvlp/mnt/home/.wslconfig k-cache/.wslconfig
+ps_fname=install-$package_full_name-$timestamp_id.ps1
+echo "
+# for executing option b outside of this directory 
+# the below two lines are unnecessary to copy
+\$mypath = \$MyInvocation.MyCommand.Path
+cd Split-Path \$mypath -Parent
+# the above two lines are unnecessary to copy
+
+#############################################################################
+# ________________ WSL KERNEL INSTALLATION INSTRUCTIONS ____________________#
+# --------------------------------------------------------------------------#
+# --------------------- FOR CURRENT WINDOWS ACCOUNT ------------------------#
+# --------------------------------------------------------------------------#
+#############################################################################
+#####   OPTION A  #####                                                     #
+#############################################################################
+##### copy/pasta this into any Windows terminal (WIN + x, i): ###########
+##### uncomment to replace/move old .wslconfig 
+#
+#
+#   to delete   - uncomment the following line:
+#               powershell.exe -Command del %HOME%\\.wslconfig;
+#
+#   to move     - uncomment the following line:
+#               powershell.exe -Command move .wslconfig %HOME%\\.wslconfig;
+    powershell.exe -Command copy ${kernel_alias} %HOME%\\${kernel_alias};
+    powershell.exe -Command wsl.exe --shutdown;
+    powershell.exe -Command wsl.exe -d $WSL_DISTRO_NAME
+#
+#############################################################################
+# --------------------------------------------------------------------------#
+# ---------------------------    OR    -------------------------------------# 
+# --------------------------------------------------------------------------#
+#############################################################################
+#####   OPTION B  #####                                                     #
+#############################################################################
+##### copy/pasta this into any windows terminal (WIN + x, i): ###########
+##### uncomment to replace/move old .wslconfig 
+#
+##### copy/pasta this into any windows terminal while in this directory (WIN + x, i): ######
+##### ( copy without '#' )
+#
+#    ./$ps_fname
+
+" | tee k-cache/$ps_fname
 if [ -w "$win_save_path" ]; then
     tar -czvf $tarball_source_win -C k-cache .
     cp -fv --backup=numbered $tarball_source_win $tarball_target_win.bak
@@ -489,13 +533,13 @@ else
 unable to save kernel package to Windows home directory"
 fi
 win_user_home=/mnt/c/users/$win_user
-wsl_kernel_install=${win_user_home}/${kernel_alias}_$timestamp_id
+wsl_kernel_install=${win_user_home}/${kernel_alias}
 wsl_config_install=${win_user_home}/.wslconfig
 if (( $quick_install )); then
     # copy kernel and wsl config right away
-    cp -vf k-cache/$kernel_alias "${win_user_home}/${kernel_alias}_$timestamp_id" 
+    cp -vf k-cache/$kernel_alias $wsl_kernel_install 
     mv -vf --backup=numbered $wsl_config_install $wsl_config_install.old
-    sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}_$timestamp_id/g" k-cache/.wslconfig           
+    sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}/g" k-cache/.wslconfig           
     cp -vf k-cache/.wslconfig $wsl_config_install  
 elif [ "$install" = "y" ]; then
 
@@ -527,7 +571,7 @@ type any character; press ENTER to exit"
     read install_kernel
     if [ "$install_kernel" = "" ]; then
         win_user_home=/mnt/c/users/$win_user && \
-        cp -vf k-cache/$kernel_alias "${win_user_home}/${kernel_alias}_$timestamp_id" 
+        cp -vf k-cache/${kernel_alias} $wsl_kernel_install
         quick_install=True
         if [ -f "$wsl_config_install" ]; then
             echo "
@@ -559,18 +603,18 @@ continue with .wslconfig replacement?
                     wslconfig_new="
 [wsl2]
 
-kernel=C\:\\\\users\\\\$win_user\\\\${kernel_alias}_$timestamp_id
+kernel=C\:\\\\users\\\\$win_user\\\\${kernel_alias}
 $(cat $wsl_config_install_old)"
                     echo "$wsl_config_install_new" > $wsl_config_install
                 fi
             else
                 mv -vf --backup=numbered $wsl_config_install $wsl_config_install.old
-                sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}_$timestamp_id/g" k-cache/.wslconfig           
+                sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}/g" k-cache/.wslconfig           
                 cp -vf k-cache/.wslconfig $wsl_config_install  
             fi
         else
             mv -vf --backup=numbered $wsl_config_install $wsl_config_install.old
-            sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}_$timestamp_id/g" k-cache/.wslconfig           
+            sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}/g" k-cache/.wslconfig           
             cp -vf k-cache/.wslconfig $wsl_config_install          
         fi
     fi
@@ -625,7 +669,7 @@ use command 'reboot' in a linux terminal with root privileges
 
             - OR - 
 
-copy/pasta this into any windows terminal (win key + x, i):
+copy/pasta this into any windows terminal (WIN + x, i):
 
     wsl.exe --shutdown
     wsl.exe -d $WSL_DISTRO_NAME
@@ -656,7 +700,7 @@ copy/pasta this into any windows terminal (win key + x, i):
 REVERT INSTRUCTIONS
 -------------------
 
-copy/pasta this into any windows terminal (win key + x, i):
+copy/pasta this into any windows terminal (WIN + x, i):
 
     powershell.exe -Command wsl.exe --shutdown;
     powershell.exe -Command del c:\\users\\$win_user\\.wslconfig;

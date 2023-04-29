@@ -13,7 +13,7 @@ quick_install=${4:+True}
 # linux_kernel_version="5.15.90.1"
 # zfs_version="2.1.11"
 kernel_file_suffix="W"
-config_file_suffix="_wsl"
+# config_file_suffix="_wsl"
 linux_build_dir=linux-build
 # if (( $zfs )); then
 #     echo "zfs == True
@@ -49,7 +49,7 @@ if [ "$kernel_type" = "latest" ]; then
     linux_kernel_type_tag="LATEST-WSL"
     linux_kernel_version=${linux_kernel_version_tag#"v"}
     kernel_file_suffix+="L"
-    config_file_suffix+="_latest"
+    # config_file_suffix+="_latest"
     echo "linux version tag:$linux_kernel_version_tag"
     echo "linux version:$linux_kernel_version"
     echo "linux version tag:$linux_kernel_type_tag"
@@ -58,7 +58,7 @@ elif [ "$kernel_type" = "latest-rc" ]; then
     zfs=False
     linux_build_dir=linux-build-torvalds
     kernel_file_suffix+="R"
-    config_file_suffix+="_rc"
+    # config_file_suffix+="_rc"
     linux_repo=https://github.com/torvalds/linux.git
     linux_version_query="git ls-remote --refs --sort=version:refname --tags $linux_repo "
     linux_kernel_version_tag=$($linux_version_query | tail --lines=1 | cut --delimiter='/' --fields=3) 
@@ -75,7 +75,7 @@ elif [ "$kernel_type" = "stable" ]; then
     zfs=False
     linux_build_dir=linux-build-gregkh
     kernel_file_suffix+="S"
-    config_file_suffix+="_stable"
+    # config_file_suffix+="_stable"
     linux_repo=https://github.com/gregkh/linux.git
     # linux_version_query="git ls-remote --refs --sort=version:refname --tags $linux_repo "
     linux_version_query="git -c versionsort.suffix=- ls-remote --refs --sort=version:refname --tags $linux_repo "
@@ -92,7 +92,7 @@ else
     zfs_version=2.1.11
     zfs_version_tag=zfs-$zfs_version
     kernel_file_suffix+="B"
-    config_file_suffix+="_basic"
+    # config_file_suffix+="_basic"
     linux_build_dir=linux-build-msft
     linux_repo=https://github.com/microsoft/WSL2-Linux-Kernel.git
     linux_version_query="git -c versionsort.suffix=+ ls-remote --refs --sort=version:refname --tags $linux_repo "
@@ -110,9 +110,9 @@ if (( $zfs )); then
     echo "zfs version tag:$zfs_version_tag"
     echo "zfs version:$zfs_version"
     kernel_file_suffix+="Z"
-    config_file_suffix+="-zfs"
+    # config_file_suffix+="-zfs"
 fi
-config_file_suffix+="0"
+# config_file_suffix+="0"
 kernel_file_suffix+="0"
 timestamp_id=$(date -d "today" +"%Y%m%d%H%M%S")
 # deduce architecture of this machine
@@ -128,7 +128,7 @@ linux_kernel_version_mask=${linux_kernel_version_mask//[\.-]/}
 kernel_alias=${kernel_alias//[\.-]/}${kernel_file_suffix}
 package_alias=linux-$linux_kernel_version_mask
 package_full_name=Linux-$linux_kernel_version-$linux_kernel_type_tag
-config_alias=.config_${kernel_alias}${config_file_suffix}
+config_alias=.config_${kernel_alias}_${timestamp_id}
 git_save_path=$cpu_arch/$cpu_vendor/$linux_kernel_version_mask
 nix_save_path=$HOME/k-cache
 
@@ -139,6 +139,7 @@ if [ ! "$config_source" = "" ] && [ -r "$config_source" ] && [ -s "$config_sourc
     user_config_flag=True
 else
 # try alternates if user config doesn't work 
+    # download reliable .config
     if [ ! -r "config-wsl" ]; then
         wget https://raw.githubusercontent.com/microsoft/WSL2-Linux-Kernel/linux-msft-wsl-5.15.y/Microsoft/config-wsl
     fi
@@ -387,8 +388,8 @@ fi
 # win
 # package a known working wslconfig file along with the kernel and config file
 mkdir -p $win_save_path 2>/dev/null
-sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}_$timestamp_id/g" ../../../dvlp/mnt/home/sample.wslconfig
-cp -fv --backup=numbered ../../../dvlp/mnt/home/sample.wslconfig k-cache/sample.wslconfig
+sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}_$timestamp_id/g" ../../../dvlp/mnt/home/.wslconfig
+cp -fv --backup=numbered ../../../dvlp/mnt/home/.wslconfig k-cache/.wslconfig
 if [ -w "$win_save_path" ]; then
     tar -czvf $tarball_source_win -C k-cache .
     cp -fv --backup=numbered $tarball_source_win $tarball_target_win.bak
@@ -403,8 +404,8 @@ if (( $quick_install )); then
     # copy kernel and wsl config right away
     cp -vf k-cache/$kernel_alias "${win_user_home}/${kernel_alias}_$timestamp_id" 
     mv -vf --backup=numbered $wslconfig $wslconfig.old
-    sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}_$timestamp_id/g" k-cache/sample.wslconfig           
-    cp -vf k-cache/sample.wslconfig $wslconfig  
+    sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}_$timestamp_id/g" k-cache/.wslconfig           
+    cp -vf k-cache/.wslconfig $wslconfig  
 elif [ $install = "y" ]; then
     echo "
     
@@ -441,13 +442,13 @@ $(cat $wslconfig_old)"
                 fi
             else
                 mv -vf --backup=numbered $wslconfig $wslconfig.old
-                sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}_$timestamp_id/g" k-cache/sample.wslconfig           
-                cp -vf k-cache/sample.wslconfig $wslconfig  
+                sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}_$timestamp_id/g" k-cache/.wslconfig           
+                cp -vf k-cache/.wslconfig $wslconfig  
             fi
         else
             mv -vf --backup=numbered $wslconfig $wslconfig.old
-            sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}_$timestamp_id/g" k-cache/sample.wslconfig           
-            cp -vf k-cache/sample.wslconfig $wslconfig          
+            sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}_$timestamp_id/g" k-cache/.wslconfig           
+            cp -vf k-cache/.wslconfig $wslconfig          
         fi
     fi
 fi
@@ -500,8 +501,8 @@ copy/pasta this into a windows terminal:
 copy/pasta this into a windows terminal:
 
     powershell.exe -Command wsl.exe --shutdown;
-    powershell.exe -Command del c:\users\$win_user\.wslconfig;
-    powershell.exe -Command move c:\users\$win_user\.wslconfig.old c:\users\$win_user\.wslconfig;
+    powershell.exe -Command del c:\\users\\$win_user\\.wslconfig;
+    powershell.exe -Command move c:\\users\\$win_user\\.wslconfig.old c:\\users\\$win_user\\.wslconfig;
     powershell.exe -Command wsl.exe -d $WSL_DISTRO_NAME
     
     

@@ -283,8 +283,11 @@ if (( $quick_install )); then
     fi    
 else
     echo "
-install kernel when finished?
-y/(n)"
+install the kernel into WSL when build is finished?
+
+skip        - press ENTER
+install     - type y; press ENTER
+"
     read install
     if [ "$install" = "y" ] || [ "$install" = "Y" ]; then
         install="y" && \

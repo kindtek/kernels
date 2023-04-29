@@ -19,10 +19,10 @@ if [ $zfs = True ]; then
     echo "zfs == True
 LINENO: ${LINENO}"
 elif [ $zfs = False ]; then
-    echo "zfs == True
+    echo "zfs == False
 LINENO: ${LINENO}"
 else 
-    echo "zfs == ??
+    echo "zfs === $zfs
 LINENO: ${LINENO}"
 fi
 

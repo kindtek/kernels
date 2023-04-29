@@ -172,8 +172,11 @@ if [ ! "$config_source" = "" ] && [ -r "$config_source" ] && [ -s "$config_sourc
 else
 # try alternates if user config doesn't work 
     # download reliable .config
+    echo "
+searching for a saved config file at $git_save_path/$config_alias_no_timestamp
+"
     if [ ! -r "$git_save_path/$config_alias_no_timestamp" ]; then
-        $generic_config_source=https://raw.githubusercontent.com/microsoft/WSL2-Linux-Kernel/linux-msft-wsl-5.15.y/Microsoft/config-wsl
+        generic_config_source=https://raw.githubusercontent.com/microsoft/WSL2-Linux-Kernel/linux-msft-wsl-5.15.y/Microsoft/config-wsl
         echo "
 
 

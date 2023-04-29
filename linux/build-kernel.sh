@@ -225,7 +225,7 @@ enter the name of your windows home directory
 echo "                    
 
 
-r" && \
+" && \
         win_user_orig=$win_user && \
         read win_user
         if [ "$win_user" = "" ]; then

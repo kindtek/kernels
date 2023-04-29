@@ -203,6 +203,16 @@ y/(n)"
     if [ "$install" = "y" ] || [ "$install" = "Y" ]; then
         install="y" && \
         echo "
+
+
+
+
+
+
+
+
+
+        
 enter the name of your windows home directory 
 
     Hint: choose from the following:"
@@ -442,6 +452,8 @@ kernel build process complete
 
 if (( $quick_install )); then
     echo "
+        
+
         
 restarting wsl is required to boot into the kernel 
 

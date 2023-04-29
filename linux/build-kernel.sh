@@ -170,7 +170,7 @@ Enter the url of a config file to use
         "
         read config_source
         if [ "$config_source" = "" ]
-            
+            config_source=$generic_config_source
         fi
     fi
     

@@ -383,17 +383,17 @@ found these existing home directories:
 
 save kernel package to Windows home directory C:\\users\\__________
 
-        - type name of windows home directory; press ENTER" 
+save    - type name of windows home directory; press ENTER" 
         fi
-        if [ "$win_user" != "" ]; then
-            echo "confirm     - press ENTER to install kernel in C:\\users\\$win_user
+        if [ "$4" != "" ] && ; then
+            echo "confirm - press ENTER to install kernel in C:\\users\\$win_user
             "
         else
             echo " "
         fi
-        win_user_orig=$win_user && \
+        win_user_orig=$4 && \
         read win_user
-        if [ "$win_user" = "" ]; then
+        if [ "$win_user_orig" != "" ] && [ -w "/mnt/c/users/$win_user_orig" ]; then
             win_user=${win_user_orig}
         # else 
         #     # if the user tries inputting a path name take everything to the right of the last \

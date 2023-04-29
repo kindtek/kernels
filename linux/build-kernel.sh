@@ -759,8 +759,8 @@ copy/pasta the following line into any windows terminal (WIN + x, i):
     powershell.exe -Command wsl.exe --shutdown; powershell.exe -Command wsl.exe -d $WSL_DISTRO_NAME
 
 
-WSL REVERT INSTRUCTIONS
------------------------
+WSL ROLLBACK INSTRUCTIONS
+-------------------------
 
 copy/pasta this into any windows terminal (WIN + x, i):
 
@@ -771,7 +771,7 @@ echo "
     powershell.exe -Command wsl.exe --shutdown; powershell.exe -Command wsl.exe -d $WSL_DISTRO_NAME;    
     
 
-" tee $win_save_path/k-cache/.kindtek-kernel-rollback.cmd
+" | tee $win_save_path/k-cache/.kindtek-kernel-rollback.cmd
 cp $win_save_path/k-cache/.kindtek-kernel-rollback.cmd $win_save_path/k-cache/.kindtek-kernel-rollback.ps1
     if [ "$restart" = "" ]; then
         echo " attempting to restart WSL ... 

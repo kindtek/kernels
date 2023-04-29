@@ -24,6 +24,7 @@ LINENO: ${LINENO}"
 else 
     echo "zfs == ??
 LINENO: ${LINENO}"
+fi
 
 if [ $zfs ]; then
     zfs_build_dir=zfs-build

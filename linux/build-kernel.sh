@@ -465,6 +465,9 @@ KERNEL BUILD COMPLETE
 
 if (( $quick_install )) || [ $install = "y" ]; then
     echo "
+
+
+    
 WSL REBOOT REQUIRED
 -------------------       
 
@@ -477,6 +480,21 @@ press any key + ENTER to reboot WSL at a later time"
     read restart
     if [ "$restart" != "" ]; then
         echo "
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 WSL REBOOT INSTRUCTIONS
 -----------------------
 
@@ -484,7 +502,7 @@ use command 'reboot' in a linux terminal with root privileges
 
             - OR - 
 
-copy/pasta this into a windows terminal:
+copy/pasta this into any windows terminal (win key + x, i):
 
     wsl.exe --shutdown
     wsl.exe -d $WSL_DISTRO_NAME
@@ -498,7 +516,24 @@ copy/pasta this into a windows terminal:
     
     echo "
 
-copy/pasta this into a windows terminal:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+REVERT INSTRUCTIONS
+-------------------
+
+copy/pasta this into any windows terminal (win key + x, i):
 
     powershell.exe -Command wsl.exe --shutdown;
     powershell.exe -Command del c:\\users\\$win_user\\.wslconfig;
@@ -506,7 +541,7 @@ copy/pasta this into a windows terminal:
     powershell.exe -Command wsl.exe -d $WSL_DISTRO_NAME
     
     
-copy/pasta the above code into any Windows shell ";
+";
 fi
 
 # else

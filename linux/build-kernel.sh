@@ -179,7 +179,7 @@ printf "
 
 " "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}"
 
-if [ $quick_install ]; then
+if (( $quick_install )); then
     echo " press ENTER to install kernel when finished
 "
     read install
@@ -264,7 +264,7 @@ press ENTER to confirm details and continue"
 read confirm
 if [ -d "$linux_build_dir/.git" ]; then
     cd $linux_build_dir
-    if [ ! $quick_install ]; then
+    if ! (( $quick_install )); then
         git reset --hard
         git clean -fxd
     fi
@@ -278,7 +278,7 @@ if [ $zfs ]; then
 LINENO: ${LINENO}"
     if [ -d "$zfs_build_dir/.git" ]; then
         cd $zfs_build_dir
-        if [ ! $quick_install ]; then 
+        if ! (( $quick_install )); then 
             git reset --hard
             git clean -fxd
         fi
@@ -367,7 +367,7 @@ unable to save kernel package to home directory"
 fi
 win_user_home=/mnt/c/users/$win_user
 wslconfig=$win_user_home/.wslconfig
-if [ $quick_install ]; then
+if (( $quick_install )); then
     # copy kernel and wsl config right away
     cp -vf k-cache/$kernel_alias "${win_user_home}/${kernel_alias}_$timestamp_id" 
     mv -vf --backup=numbered $wslconfig $wslconfig.old
@@ -420,7 +420,7 @@ $(cat $wslconfig_old)"
     fi
 fi
 
-if [ $quick_install ]; then
+if (( $quick_install )); then
             echo "
         
 restarting wsl is required to boot into the kernel 

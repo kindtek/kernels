@@ -249,7 +249,7 @@ printf "
 echo "
 press ENTER to confirm details and continue"
 read confirm
-if [ $install = "y" ] && [ -d "$linux_build_dir/.git" ]; then
+if [ -d "$linux_build_dir/.git" ]; then
     cd $linux_build_dir
     if [ ! $quick_install ]; then
         git reset --hard
@@ -257,7 +257,7 @@ if [ $install = "y" ] && [ -d "$linux_build_dir/.git" ]; then
     fi
     git checkout $linux_kernel_version_tag --progress
     cd ..
-elif [ ! -d "$linux_build_dir/.git" ]; then
+else
     git clone $linux_repo --single-branch --branch $linux_kernel_version_tag --progress -- $linux_build_dir
 fi
 if [ $zfs ]; then
@@ -269,7 +269,7 @@ if [ $zfs ]; then
         fi
         git checkout $zfs_version_tag --progress
         cd ..
-    elif [ ! -d "$zfs_build_dir/.git" ]; then
+    else
         git clone $zfs_repo --single-branch --branch $zfs_version_tag --progress -- $zfs_build_dir 
     fi
 fi
@@ -278,6 +278,7 @@ if [ $user_config_flag ]; then
     # replace kernel source .config with the config generated from a custom config
     cp -fv $config_source $linux_build_dir/.config
 fi
+
 
 cd $linux_build_dir
 yes "" | make oldconfig

@@ -308,8 +308,14 @@ skip        - press ENTER
 install     - type y; press ENTER
 "
     read install
+    if [ "$install" = "" ]; then
+        install="y"
+    fi
+    if [ "$install" = "Y" ]; then
+        install="y"
+    fi
     if [ "$install" = "y" ]; then
-        will_be_saved_installed=saved
+        saved_or_installed=installed
         if [ "$4" = "" ]; then win_user=""; fi
         install="y" && \
         echo "
@@ -341,25 +347,19 @@ install to Windows home directory C:\\users\\__________
         win_user_orig=$win_user && \
         read win_user
         if [ "$win_user" = "" ]; then
-            win_user=${win_user_orig:-'user'}
+            win_user=${win_user_orig}
         # else 
         #     # if the user tries inputting a path name take everything to the right of the last \
         #     # win_user=$(echo $win_user | sed -E 's/^\s*([A-Za-z0-9]:?\\*)([A-Za-z0-9]*\\)*([A-Za-z0-9]+)+$/\3/g')        
         #     # win_user=$(echo $win_user | sed -E 's/^\s*([A-Za-z0-9]:?\\*)([A-Za-z0-9]*\\?\\?)*([A-Za-z0-9]+)+$/\3/g')
         else
             win_user=$(echo $win_user | cut --delimiter='/' --fields=1)
-        fi
-        if [ -w "/mnt/c/users/$win_user" ]; then
-
-        echo "
-    kernel will be installed for user '$win_user' ..
-"
-        fi   
-    fi
-    # if [ "$install" = "y" ] || [ "$install" = "Y" ]; then
-    if [ "$4" = "" ]; then 
-        win_user=""
-        echo "
+        fi 
+    else 
+        saved_or_installed=saved 
+        if [ "$4" = "" ]; then 
+            win_user=""
+            echo "
 
 
 
@@ -379,24 +379,27 @@ found these existing home directories:
 save kernel package to Windows home directory C:\\users\\__________
 
 save    - type name of windows home directory; press ENTER" 
-    else
-        echo "confirm - press ENTER to install kernel in C:\\users\\$win_user
-        "
+        else
+            echo "confirm - press ENTER to install kernel in C:\\users\\$win_user
+            "
+        fi
+        read win_user
+        if [ "$4" != "" ] && [ -w "/mnt/c/users/$4" ]; then
+            win_user=${4}
+        # else 
+        #     # if the user tries inputting a path name take everything to the right of the last \
+        #     # win_user=$(echo $win_user | sed -E 's/^\s*([A-Za-z0-9]:?\\*)([A-Za-z0-9]*\\)*([A-Za-z0-9]+)+$/\3/g')        
+        #     # win_user=$(echo $win_user | sed -E 's/^\s*([A-Za-z0-9]:?\\*)([A-Za-z0-9]*\\?\\?)*([A-Za-z0-9]+)+$/\3/g')
+        else
+            win_user=$(echo $win_user | cut --delimiter='/' --fields=1)
+        fi
     fi
-    read win_user
-    if [ "$4" != "" ] && [ -w "/mnt/c/users/$4" ]; then
-        win_user=${4}
-    # else 
-    #     # if the user tries inputting a path name take everything to the right of the last \
-    #     # win_user=$(echo $win_user | sed -E 's/^\s*([A-Za-z0-9]:?\\*)([A-Za-z0-9]*\\)*([A-Za-z0-9]+)+$/\3/g')        
-    #     # win_user=$(echo $win_user | sed -E 's/^\s*([A-Za-z0-9]:?\\*)([A-Za-z0-9]*\\?\\?)*([A-Za-z0-9]+)+$/\3/g')
-    else
-        win_user=$(echo $win_user | cut --delimiter='/' --fields=1)
-    fi
+    # if [ "$install" = "y" ] || [ "$install" = "Y" ]; then
+    
     if [ "$win_user" != "" ] && [ -w "/mnt/c/users/$win_user" ]; then
         
         echo "
-        kernel package will be $will_be_saved_installed to C:\\users\\$win_user ...
+        kernel package will be $saved_or_installed to C:\\users\\$win_user ...
 "   
     else
         echo "

@@ -221,8 +221,7 @@ Press ENTER to continue and use the generic Microsoft .config downloaded from:
 Enter the url of a config file to use
 
     Hint: to use a file on Github make sure to use a raw file url starting with https://raw.githubusercontent.com
-
-        "
+"
         read config_source
         if [ "$config_source" = "" ]; then
             config_source=$generic_config_source
@@ -296,13 +295,13 @@ y/(n)"
 
 
 
+save location: C:\\users\\$win_user
 
-
-press ENTER to confirm save location as C:\\users\\$win_user
+confirm     - press ENTER to confirm 
         
     - OR -
 
-enter the name of your windows home directory 
+custom      - enter name of target windows home directory; press ENTER
 
     Hint 
     choose from:
@@ -378,8 +377,9 @@ printf "
 " "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}"
 
 echo "
-press ENTER to confirm details and continue
-type any character; press ENTER to exit"
+continue    - press ENTER to confirm
+exit        - type any character; press ENTER
+"
 read confirm
 if [ "$confirm" != "" ]; then
     exit
@@ -566,8 +566,9 @@ printf "
 
 " "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}"
     echo "
-press ENTER to confirm details and continue
-type any character; press ENTER to exit"
+continue    - press ENTER to confirm details 
+exit        - type any character; press ENTER to exit
+"
     read install_kernel
     if [ "$install_kernel" = "" ]; then
         win_user_home=/mnt/c/users/$win_user && \
@@ -635,15 +636,16 @@ if (( $quick_install )) || [ $install = "y" ]; then
 
 
 
-WSL REBOOT REQUIRED
--------------------       
+WSL REBOOT
+----------       
 
         
 restarting WSL is required to boot into the kernel 
 
-
-Press ENTER to reboot WSL now
-type any character; press ENTER to reboot WSL at a later time"
+would you like to reboot WSL ...
+now      - Press ENTER
+later    - type any character; press ENTER
+"
     read restart
     if [ "$restart" != "" ]; then
         echo "

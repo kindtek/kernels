@@ -309,9 +309,9 @@ found these existing home directories:
         echo " 
 
 
-install to Windows home directory?
+install to Windows home directory C:\\users\\__________
 
-customize   - type name of windows home directory; press ENTER" 
+        - type name of windows home directory; press ENTER" 
         if [ "$win_user" != "" ]; then
             echo "confirm     - press ENTER to install kernel in C:\\users\\$win_user
             "

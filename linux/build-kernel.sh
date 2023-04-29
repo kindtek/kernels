@@ -352,6 +352,58 @@ install to Windows home directory C:\\users\\__________
     echo "
     kernel will be installed for user '$win_user' ..
 "
+else
+    # if [ "$install" = "y" ] || [ "$install" = "Y" ]; then
+        if [ "$4" == "" ]; then win_user=""; fi
+        echo "
+
+
+
+
+
+
+
+
+
+
+found these existing home directories:
+    "
+        ls -da /mnt/c/users/*/ | tail -n +4 | sed -r -e 's/^\/mnt\/c\/users\/([ A-Za-z0-9]*)*\/+$/\t\1/g'
+        echo " 
+
+
+save kernel package to Windows home directory C:\\users\\__________
+
+        - type name of windows home directory; press ENTER" 
+        if [ "$win_user" != "" ]; then
+            echo "confirm     - press ENTER to install kernel in C:\\users\\$win_user
+            "
+        else
+            echo " "
+        fi
+        win_user_orig=$win_user && \
+        read win_user
+        if [ "$win_user" = "" ]; then
+            win_user=${win_user_orig}
+        # else 
+        #     # if the user tries inputting a path name take everything to the right of the last \
+        #     # win_user=$(echo $win_user | sed -E 's/^\s*([A-Za-z0-9]:?\\*)([A-Za-z0-9]*\\)*([A-Za-z0-9]+)+$/\3/g')        
+        #     # win_user=$(echo $win_user | sed -E 's/^\s*([A-Za-z0-9]:?\\*)([A-Za-z0-9]*\\?\\?)*([A-Za-z0-9]+)+$/\3/g')
+        else
+            $win_user=$(echo $win_user | cut --delimiter='/' --fields=1)
+        fi
+    # fi
+    if [ -w /mnt/c/users/$win_user ]; then
+        echo "
+        kernel package will be saved to C:\\users\\$win_user ...
+"   
+    else
+        echo "
+            C:\\users\\$win_user is not writeable
+            package will not be saved to Windows home directory ...
+            
+        "
+    fi
 fi
 
 win_save_path=/mnt/c/users/$win_user/k-cache
@@ -719,12 +771,12 @@ cp $win_save_path/k-cache/.kindtek-kernel-rollback.cmd $win_save_path/k-cache/.k
     if [ "$restart" = "" ]; then
         echo " attempting to restart WSL ... 
         "
-        ( pwsh -Command wsl.exe --shutdown && \
-        pwsh -Command wsl.exe -d $WSL_DISTRO_NAME --exec echo "WSL successfully restarted
+        ( powershell.exe -Command wsl.exe --shutdown && \
+        powershell.exe -Command wsl.exe -d $WSL_DISTRO_NAME --exec echo "WSL successfully restarted
         
         
         " && \
-        pwsh -Command wsl.exe -d $WSL_DISTRO_NAME ) || \
+        powershell.exe -Command wsl.exe -d $WSL_DISTRO_NAME ) || \
         ( echo "unable to restart WSL. manual restart using above code required" )
         
     fi

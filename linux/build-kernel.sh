@@ -450,7 +450,7 @@ kernel build process complete
 
 "
 
-if (( $quick_install )); then
+if (( $quick_install )) || [ $install = "y" ]; then
     echo "
         
 
@@ -492,9 +492,9 @@ copy/pasta this into a windows terminal:
 copy/pasta the above code into any Windows shell to revert to the previous kernel/settings";
 
 
-else
-    echo "quick_install == $quick_install"
-fi
+# else
+#     echo "quick_install == $quick_install"
+# fi
 # cp -fv --backup=numbered $kernel_source $kernel_target_nix
 # cp -fv --backup=numbered .config $nix_save_path/$config_alias
 

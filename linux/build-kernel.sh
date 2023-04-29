@@ -229,6 +229,8 @@ Enter the url of a config file to use
 "
         read config_source
         if [ "$config_source" = "" ]; then
+            wget "$config_source"
+            echo $config_source | cut --delimiter='/' --fields=1
             config_source=$generic_config_source
         fi
     fi
@@ -623,7 +625,7 @@ continue with .wslconfig replacement?
             read replace_wslconfig
             if [ "$replace_wslconfig" = "n" ] || [ "$replace_wslconfig" = "N" ]; then
                 if grep -q '^\s?\#?\skernel=.*' "$wsl_config_install"; then
-                    sed -i "s/\s*\#*\s*kernel=C.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\$kernel_alias_/g" $wsl_config_install
+                    sed -i "s/\s*\#*\s*kernel=C.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}/g" $wsl_config_install
                 else
                     wslconfig_old="$(cat $wsl_config_install)"
                     wslconfig_new="
@@ -671,6 +673,7 @@ would you like to reboot WSL ...
 
 now      - Press ENTER
 later    - type any character; press ENTER
+
 "
     read restart
     echo "

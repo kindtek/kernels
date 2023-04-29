@@ -289,7 +289,7 @@ if (( $zfs )); then
     fi
 fi
 
-if [ $user_config_flag ]; then
+if (( $user_config_flag )) ; then
     # replace kernel source .config with the config generated from a custom config
     cp -fv $config_source $linux_build_dir/.config
 fi

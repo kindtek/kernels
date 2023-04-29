@@ -228,20 +228,24 @@ Enter the url of a config file to use
     Hint: to use a file on Github make sure to use a raw file url starting with https://raw.githubusercontent.com
 "
         read config_source
+        echo "checking if input is a url ..."
         if [ "$config_source" != "" ]; then
+            echo "yes"
             if [[ "$config_source" =~ https?://.* ]]; then 
+                is_url=yes
                 echo "attempting to download $config_source ...
                 "
                 wget "$config_source"
                 config_source=${pwd}$( echo $config_source | cut --delimiter='/' --fields=1 )
             fi
-            if [ ! -r "$config_source" ]; then 
-                config_source=$generic_config_source
-                echo "could not read $config_source
-using generic Microsoft .config instead"
-            fi
         else
+            echo "not a url"
             config_source=$generic_config_source
+        fi
+        if [ ! -r "$config_source" ]; then 
+            config_source=$generic_config_source
+            echo "could not read $config_source
+using generic Microsoft .config instead"
         fi
     fi
     

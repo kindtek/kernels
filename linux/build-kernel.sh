@@ -212,7 +212,7 @@ y/(n)"
 
 
 
-press ENTER to confirm save location as C:\\users\\$win_use
+press ENTER to confirm save location as C:\\users\\$win_user
         
     - OR -
 

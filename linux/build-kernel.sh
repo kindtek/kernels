@@ -140,9 +140,40 @@ if [ ! "$config_source" = "" ] && [ -r "$config_source" ] && [ -s "$config_sourc
 else
 # try alternates if user config doesn't work 
     # download reliable .config
-    if [ ! -r "config-wsl" ]; then
-        wget https://raw.githubusercontent.com/microsoft/WSL2-Linux-Kernel/linux-msft-wsl-5.15.y/Microsoft/config-wsl
+    if [ -r "$git_save_path/$config_alias" ]; then
+        $generic_config_source=https://raw.githubusercontent.com/microsoft/WSL2-Linux-Kernel/linux-msft-wsl-5.15.y/Microsoft/config-wsl
+        echo "
+        
+No saved .config files match this kernel version and platform"
+        if [ ! -r "config-wsl" ]; then
+            wget $generic_config_source
+        fi
+        if [ ! -r "config-wsl" ]; then
+            echo "Oooops. Failed to download generic .config file.
+
+Exiting ...
+
+"
+            exit
+        fi
+        echo "
+
+Press ENTER to continue and use the generic Microsoft .config downloaded from:
+    $generic_config_source
+
+        -- OR --
+
+Enter the url of a config file to use
+
+    Hint: to use a file on Github make sure to use a raw file url starting with https://raw.githubusercontent.com
+
+        "
+        read config_source
+        if [ "$config_source" = "" ]
+            
+        fi
     fi
+    
     # reliable but the least desirable .. keep looking
     if [ -r "config-wsl" ]; then 
         config_source=config-wsl

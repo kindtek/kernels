@@ -396,7 +396,7 @@ save    - type name of windows home directory; press ENTER"
     if [ "$win_user" != "" ] && [ -w "/mnt/c/users/$win_user" ]; then
         
         echo "
-        kernel package will be $saved_or_installed to C:\\users\\$win_user ...
+kernel package will be $saved_or_installed to C:\\users\\$win_user ...
 "   
     else
         echo "

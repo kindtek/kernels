@@ -230,13 +230,14 @@ Enter the url of a config file to use
         read config_source
         echo "checking if input is a url ..."
         if [ "$config_source" != "" ]; then
-            echo "yes"
             if [[ "$config_source" =~ https?://.* ]]; then 
-                is_url=yes
+                echo "yes"
                 echo "attempting to download $config_source ...
                 "
                 wget "$config_source"
                 config_source=${pwd}$( echo $config_source | cut --delimiter='/' --fields=1 )
+            else 
+                echo "not a url"
             fi
         else
             echo "not a url"

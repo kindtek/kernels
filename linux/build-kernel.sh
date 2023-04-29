@@ -24,8 +24,8 @@ LINENO: ${LINENO}"
 else 
     echo "zfs == ??
 LINENO: ${LINENO}"
-fi
 
+if [ $zfs ]; then
     zfs_build_dir=zfs-build
     zfs_repo=https://github.com/openzfs/zfs.git
     zfs_version_query="git -c versionsort.suffix=- ls-remote --refs --sort=version:refname --tags $zfs_repo"

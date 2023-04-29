@@ -290,7 +290,7 @@ install     - type y; press ENTER
 "
     read install
     if [ "$install" = "y" ] || [ "$install" = "Y" ]; then
-        if [ "$4" == "" ]; then $win_user=""; fi
+        if [ "$4" == "" ]; then win_user=""; fi
         install="y" && \
         echo "
 
@@ -309,7 +309,7 @@ found these existing home directories:
         echo " 
 
 
-install to Windows home directory '$win_user'?
+install to Windows home directory?
 
 customize   - type name of windows home directory; press ENTER" 
         if [ "$win_user" != "" ]; then

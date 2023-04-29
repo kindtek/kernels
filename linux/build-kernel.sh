@@ -403,7 +403,7 @@ save    - type name of windows home directory; press ENTER"
             $win_user=$(echo $win_user | cut --delimiter='/' --fields=1)
         fi
     # fi
-    if [ -w "/mnt/c/users/$win_user" ]; then
+    if [ "$win_user" != "" ] && [ -w "/mnt/c/users/$win_user" ]; then
         echo "
         kernel package will be saved to C:\\users\\$win_user ...
 "   

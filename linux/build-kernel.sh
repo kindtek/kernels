@@ -206,7 +206,7 @@ y/(n)"
 enter the name of your windows home directory 
 
     Hint: choose from the following:"
-    ls -da /mnt/c/users */ | tail -n +4 | sed -r -e 's/^([ A-Za-z0-9]*)*\/+$/\1/g'
+    ls -da /mnt/c/users */ | tail -n +4 | sed -r -e 's/^([ A-Za-z0-9]*)*\/+$/\t\t\1/g'
 echo "                    
                     - OR -
 

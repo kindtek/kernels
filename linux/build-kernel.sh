@@ -229,7 +229,7 @@ Enter the url of a config file to use
 "
         read config_source
         echo "
-checking if input is a url ..."
+# checking if input is a url ..."
         if [ "$config_source" != "" ]; then
             if [[ "$config_source" =~ https?://.* ]]; then 
                 echo "yes"
@@ -237,12 +237,12 @@ checking if input is a url ..."
                 "
                 wget "$config_source"
                 config_source=${pwd}$( echo $config_source | cut --delimiter='/' --fields=1 )
+                # config_source=${pwd}/$( echo $config_source | sed -r -e 's/^([A-Za-z0-9-_/:])*\/([A-Za-z0-9-_/])+$/\2/g' )
             else 
                 echo "not a url"
             fi
         else
             echo "not a url"
-            config_source=$generic_config_source
         fi
     fi
     if [ -r "$config_source" ]; then 

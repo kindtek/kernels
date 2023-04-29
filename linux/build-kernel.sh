@@ -290,6 +290,7 @@ install     - type y; press ENTER
 "
     read install
     if [ "$install" = "y" ] || [ "$install" = "Y" ]; then
+        if [ "$4" == "" ]; then $win_user=""; fi
         install="y" && \
         echo "
 
@@ -298,23 +299,29 @@ install     - type y; press ENTER
 
 
 
-save location: C:\\users\\$win_user
 
-confirm     - press ENTER to confirm 
-custom      - enter name of target windows home directory; press ENTER
 
-    Hint 
-    choose from:
+
+
+found these existing home directories:
     "
-    ls -da /mnt/c/users/*/ | tail -n +4 | sed -r -e 's/^\/mnt\/c\/users\/([ A-Za-z0-9]*)*\/+$/\t\1/g'
-echo "                    
+        ls -da /mnt/c/users/*/ | tail -n +4 | sed -r -e 's/^\/mnt\/c\/users\/([ A-Za-z0-9]*)*\/+$/\t\1/g'
+        echo " 
 
 
-" && \
+install to Windows home directory '$win_user'?
+
+customize   - type name of windows home directory; press ENTER" 
+        if [ "$win_user" != "" ]; then
+            echo "confirm     - press ENTER to install kernel in C:\\users\\$win_user
+            "
+        else
+            echo " "
+        fi
         win_user_orig=$win_user && \
         read win_user
         if [ "$win_user" = "" ]; then
-            win_user=$win_user_orig
+            win_user=${win_user_orig:-'user'}
         # else 
         #     # if the user tries inputting a path name take everything to the right of the last \
         #     # win_user=$(echo $win_user | sed -E 's/^\s*([A-Za-z0-9]:?\\*)([A-Za-z0-9]*\\)*([A-Za-z0-9]+)+$/\3/g')        

@@ -1,12 +1,12 @@
 #!/bin/bash
-user_config_flag=false
-user_entry_flag=false
+user_config_flag=False
+user_entry_flag=False
 kernel_type=$1
 config_source=$2
 zfs=${3:+True}
 win_user=${4:-'user'}
 quick_install=${4:+True}
-# interact=false
+# interact=False
 # interact=${5:+True}
 # kernel_file_suffix=''
 # config_file_suffix=''
@@ -15,10 +15,10 @@ quick_install=${4:+True}
 kernel_file_suffix="W"
 config_file_suffix="_wsl"
 linux_build_dir=linux-build
-if [ $zfs ]; then
+if [ $zfs = True ]; then
     echo "zfs == True
 LINENO: ${LINENO}"
-elif [ ! $zfs ]; then
+elif [ $zfs ]; then
     echo "zfs == True
 LINENO: ${LINENO}"
 else 
@@ -41,7 +41,7 @@ if [ "$kernel_type" = "" ]; then
 fi
 if [ "$kernel_type" = "latest" ]; then
     # zfs not supported atm
-    zfs=false
+    zfs=False
     linux_build_dir=linux-build-torvalds
     linux_repo=https://github.com/torvalds/linux.git
     linux_version_query="git -c versionsort.suffix=- ls-remote --refs --sort=version:refname --tags $linux_repo "
@@ -55,7 +55,7 @@ if [ "$kernel_type" = "latest" ]; then
     echo "linux version tag:$linux_kernel_type_tag"
 elif [ "$kernel_type" = "latest-rc" ]; then
     # zfs not supported atm
-    zfs=false
+    zfs=False
     linux_build_dir=linux-build-torvalds
     kernel_file_suffix+="R"
     config_file_suffix+="_rc"
@@ -72,7 +72,7 @@ elif [ "$kernel_type" = "stable" ]; then
     # update: it did not work
     # zfs_version=2.1.11
     # zfs_version_tag=zfs-$zfs_version
-    zfs=false
+    zfs=False
     linux_build_dir=linux-build-gregkh
     kernel_file_suffix+="S"
     config_file_suffix+="_stable"
@@ -187,7 +187,7 @@ if [ $quick_install ]; then
         install="y"
         quick_install=True
     else
-        quick_install=false
+        quick_install=False
     fi    
 else
     echo "

@@ -211,16 +211,20 @@ y/(n)"
 
 
 
-
+press ENTER to confirm save location as C:\\users\\$win_use
         
+    - OR -
+
 enter the name of your windows home directory 
 
-    Hint: choose from the following:"
+    Hint 
+    choose from:
+    "
     ls -da /mnt/c/users/*/ | tail -n +4 | sed -r -e 's/^\/mnt\/c\/users\/([ A-Za-z0-9]*)*\/+$/\t\1/g'
 echo "                    
-                    - OR -
 
-press ENTER to confirm save location as C:\\users\\$win_user" && \
+
+r" && \
         win_user_orig=$win_user && \
         read win_user
         if [ "$win_user" = "" ]; then
@@ -284,8 +288,12 @@ printf "
 " "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}"
 
 echo "
-press ENTER to confirm details and continue"
+press ENTER to confirm details and continue
+press any key + ENTER to exit"
 read confirm
+if [ "confirm" != "" ]; then
+    exit
+fi
 if [ -d "$linux_build_dir/.git" ]; then
     cd $linux_build_dir
     if ! (( $quick_install )); then
@@ -446,24 +454,30 @@ fi
 
 echo "
 
-kernel build process complete
+
+
+
+
+KERNEL BUILD COMPLETE
 
 "
 
 if (( $quick_install )) || [ $install = "y" ]; then
     echo "
-        
+WSL REBOOT REQUIRED
+-------------------       
 
         
-restarting wsl is required to boot into the kernel 
+restarting WSL is required to boot into the kernel 
 
-try to automatically restart?
 
-Press ENTER to reboot now
-type any other key and then press ENTER to manually reboot at a later time"
+Press ENTER to reboot WSL now
+press any key + ENTER to reboot WSL at a later time"
     read restart
     if [ "$restart" != "" ]; then
         echo "
+WSL REBOOT INSTRUCTIONS
+-----------------------
 
 use command 'reboot' in a linux terminal with root privileges
 
@@ -483,13 +497,15 @@ copy/pasta this into a windows terminal:
     
     echo "
 
+copy/pasta this into a windows terminal:
+
     powershell.exe -Command wsl.exe --shutdown;
     powershell.exe -Command del c:\users\$win_user\.wslconfig;
     powershell.exe -Command move c:\users\$win_user\.wslconfig.old c:\users\$win_user\.wslconfig;
     powershell.exe -Command wsl.exe -d $WSL_DISTRO_NAME
     
     
-copy/pasta the above code into any Windows shell to revert to the previous kernel/settings";
+copy/pasta the above code into any Windows shell ";
 fi
 
 # else

@@ -792,8 +792,8 @@ echo "
     powershell.exe -Command wsl.exe --shutdown; powershell.exe -Command wsl.exe -d $WSL_DISTRO_NAME;    
     
 
-" | tee $win_save_path/k-cache/.kindtek-kernel-rollback.cmd
-cp $win_save_path/k-cache/.kindtek-kernel-rollback.cmd $win_save_path/k-cache/.kindtek-kernel-rollback.ps1
+" | tee $win_save_path/.kindtek-kernel-rollback.cmd
+cp $win_save_path/.kindtek-kernel-rollback.cmd $win_save_path/k-cache/.kindtek-kernel-rollback.ps1
     if [ "$restart" = "" ]; then
         echo " attempting to restart WSL ... 
         "

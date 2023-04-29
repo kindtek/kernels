@@ -268,6 +268,9 @@ fi
 padding="----------"
 # display info while waiting on repo to clone
 printf "
+
+
+
 ==================================================================
 ========================   Linux Kernel   ========================
 ======------------------%s%s------------------======
@@ -399,23 +402,47 @@ else
 unable to save kernel package to Windows home directory"
 fi
 win_user_home=/mnt/c/users/$win_user
-wslconfig=$win_user_home/.wslconfig
+wsl_kernel_install=${win_user_home}/${kernel_alias}_$timestamp_id
+wsl_config_install=${win_user_home}/.wslconfig
 if (( $quick_install )); then
     # copy kernel and wsl config right away
     cp -vf k-cache/$kernel_alias "${win_user_home}/${kernel_alias}_$timestamp_id" 
-    mv -vf --backup=numbered $wslconfig $wslconfig.old
+    mv -vf --backup=numbered $wsl_config_install $wsl_config_install.old
     sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}_$timestamp_id/g" k-cache/.wslconfig           
-    cp -vf k-cache/.wslconfig $wslconfig  
-elif [ $install = "y" ]; then
+    cp -vf k-cache/.wslconfig $wsl_config_install  
+elif [ "$install" = "y" ]; then
+
+printf "
+
+
+
+==================================================================
+========================   Linux Kernel   ========================
+======------------------%s%s------------------======
+------------------------------------------------------------------
+====-----------------    Install Locations    ----------------====
+------------------------------------------------------------------
+
+  .wslconfig:
+    $wsl_config_install
+
+  kernel:
+    $wsl_kernel_install     
+
+==================================================================
+==================================================================
+==================================================================
+
+" "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}"
     echo "
-    
-install $package_full_name kernel ($kernel_alias) to WSL? y/(n)"
+press ENTER to confirm details and continue
+press any key + ENTER to exit"
     read install_kernel
-    if [ "$install_kernel" = "y" ]; then
+    if [ "$install_kernel" = "" ]; then
         win_user_home=/mnt/c/users/$win_user && \
         cp -vf k-cache/$kernel_alias "${win_user_home}/${kernel_alias}_$timestamp_id" 
         quick_install=True
-        if [ -f "$wslconfig" ]; then
+        if [ -f "$wsl_config_install" ]; then
             echo "
             
 .wslconfig found in $win_user_home
@@ -423,32 +450,32 @@ install $package_full_name kernel ($kernel_alias) to WSL? y/(n)"
 replacing this with a pre-configured .wslconfig is *HIGHLY* recommended
 a backup of the original file will be saved as:
 
-    $wslconfig.old
+    $wsl_config_install.old
 
 continue with .wslconfig replacement?
 (y)/n"
             read replace_wslconfig
             if [ "$replace_wslconfig" = "n" ] || [ "$replace_wslconfig" = "N" ]; then
-                if grep -q '^\s?\#?\skernel=.*' "$wslconfig"; then
-                    sed -i "s/\s*\#*\s*kernel=C.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\$kernel_alias_/g" $wslconfig
+                if grep -q '^\s?\#?\skernel=.*' "$wsl_config_install"; then
+                    sed -i "s/\s*\#*\s*kernel=C.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\$kernel_alias_/g" $wsl_config_install
                 else
-                    wslconfig_old="$(cat $wslconfig)"
+                    wslconfig_old="$(cat $wsl_config_install)"
                     wslconfig_new="
 [wsl2]
 
 kernel=C\:\\\\users\\\\$win_user\\\\${kernel_alias}_$timestamp_id
-$(cat $wslconfig_old)"
-                    echo "$wslconfig_new" > $wslconfig
+$(cat $wsl_config_install_old)"
+                    echo "$wsl_config_install_new" > $wsl_config_install
                 fi
             else
-                mv -vf --backup=numbered $wslconfig $wslconfig.old
+                mv -vf --backup=numbered $wsl_config_install $wsl_config_install.old
                 sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}_$timestamp_id/g" k-cache/.wslconfig           
-                cp -vf k-cache/.wslconfig $wslconfig  
+                cp -vf k-cache/.wslconfig $wsl_config_install  
             fi
         else
-            mv -vf --backup=numbered $wslconfig $wslconfig.old
+            mv -vf --backup=numbered $wsl_config_install $wsl_config_install.old
             sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}_$timestamp_id/g" k-cache/.wslconfig           
-            cp -vf k-cache/.wslconfig $wslconfig          
+            cp -vf k-cache/.wslconfig $wsl_config_install          
         fi
     fi
 fi
@@ -467,7 +494,7 @@ if (( $quick_install )) || [ $install = "y" ]; then
     echo "
 
 
-    
+
 WSL REBOOT REQUIRED
 -------------------       
 

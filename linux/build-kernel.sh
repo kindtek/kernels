@@ -204,10 +204,12 @@ y/(n)"
         install="y" && \
         echo "
 enter the name of your windows home directory 
-                    
+    Hint: choose from the following:"
+    ls -da */ | sed -r -e 's/^([ A-Za-z0-9]*)*\/+$/\1/g'
+echo "                    
                     - OR -
 
-press ENTER to confirm save location as C:\\\\users\\$win_user" && \
+press ENTER to confirm save location as C:\\users\\$win_user" && \
         win_user_orig=$win_user && \
         read win_user
         if [ "$win_user" = "" ]; then
@@ -216,8 +218,13 @@ press ENTER to confirm save location as C:\\\\users\\$win_user" && \
         #     # if the user tries inputting a path name take everything to the right of the last \
         #     # win_user=$(echo $win_user | sed -E 's/^\s*([A-Za-z0-9]:?\\*)([A-Za-z0-9]*\\)*([A-Za-z0-9]+)+$/\3/g')        
         #     # win_user=$(echo $win_user | sed -E 's/^\s*([A-Za-z0-9]:?\\*)([A-Za-z0-9]*\\?\\?)*([A-Za-z0-9]+)+$/\3/g')
+        else
+            $win_user=$(echo $win_user | cut --delimiter='/' --fields=1)
         fi
     fi
+    echo "
+    kernel will be installed for user '$win_user' ..
+"
 fi
 
 win_save_path=/mnt/c/users/$win_user/k-cache

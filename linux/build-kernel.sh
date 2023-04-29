@@ -668,6 +668,7 @@ WSL REBOOT
 restarting WSL is required to boot into the kernel 
 
 would you like to reboot WSL ...
+
 now      - Press ENTER
 later    - type any character; press ENTER
 "

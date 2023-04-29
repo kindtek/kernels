@@ -385,7 +385,7 @@ save kernel package to Windows home directory C:\\users\\__________
 
 save    - type name of windows home directory; press ENTER" 
         fi
-        if [ "$4" != "" ] && ; then
+        if [ "$4" != "" ]; then
             echo "confirm - press ENTER to install kernel in C:\\users\\$win_user
             "
         else

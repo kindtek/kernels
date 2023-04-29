@@ -309,6 +309,7 @@ install     - type y; press ENTER
 "
     read install
     if [ "$install" = "y" ]; then
+        will_be_saved_installed=saved
         if [ "$4" = "" ]; then win_user=""; fi
         install="y" && \
         echo "
@@ -348,23 +349,17 @@ install to Windows home directory C:\\users\\__________
         else
             win_user=$(echo $win_user | cut --delimiter='/' --fields=1)
         fi
-    if [ -w "/mnt/c/users/$win_user" ]; then
+        if [ -w "/mnt/c/users/$win_user" ]; then
 
         echo "
     kernel will be installed for user '$win_user' ..
-"   
-    else
-       echo "
-C:\\users\\$win_user is not writeable
-package will not be saved to Windows home directory
-
 "
-        sleep 5    
+        fi   
     fi
-    else
     # if [ "$install" = "y" ] || [ "$install" = "Y" ]; then
-        if [ "$4" = "" ]; then win_user=""; fi
-            echo "
+    if [ "$4" = "" ]; then 
+        win_user=""
+        echo "
 
 
 
@@ -376,36 +371,32 @@ package will not be saved to Windows home directory
 
 
 found these existing home directories:
-    "
-            ls -da /mnt/c/users/*/ | tail -n +4 | sed -r -e 's/^\/mnt\/c\/users\/([ A-Za-z0-9]*)*\/+$/\t\1/g'
-            echo " 
+"
+        ls -da /mnt/c/users/*/ | tail -n +4 | sed -r -e 's/^\/mnt\/c\/users\/([ A-Za-z0-9]*)*\/+$/\t\1/g'
+        echo " 
 
 
 save kernel package to Windows home directory C:\\users\\__________
 
 save    - type name of windows home directory; press ENTER" 
-        fi
-        if [ "$4" != "" ]; then
-            echo "confirm - press ENTER to install kernel in C:\\users\\$win_user
-            "
-        else
-            echo " "
-        fi
-        win_user_orig=$4 && \
-        read win_user
-        if [ "$win_user_orig" != "" ] && [ -w "/mnt/c/users/$win_user_orig" ]; then
-            win_user=${win_user_orig}
-        # else 
-        #     # if the user tries inputting a path name take everything to the right of the last \
-        #     # win_user=$(echo $win_user | sed -E 's/^\s*([A-Za-z0-9]:?\\*)([A-Za-z0-9]*\\)*([A-Za-z0-9]+)+$/\3/g')        
-        #     # win_user=$(echo $win_user | sed -E 's/^\s*([A-Za-z0-9]:?\\*)([A-Za-z0-9]*\\?\\?)*([A-Za-z0-9]+)+$/\3/g')
-        else
-            win_user=$(echo $win_user | cut --delimiter='/' --fields=1)
-        fi
-    # fi
+    else
+        echo "confirm - press ENTER to install kernel in C:\\users\\$win_user
+        "
+    fi
+    read win_user
+    if [ "$4" != "" ] && [ -w "/mnt/c/users/$4" ]; then
+        win_user=${4}
+    # else 
+    #     # if the user tries inputting a path name take everything to the right of the last \
+    #     # win_user=$(echo $win_user | sed -E 's/^\s*([A-Za-z0-9]:?\\*)([A-Za-z0-9]*\\)*([A-Za-z0-9]+)+$/\3/g')        
+    #     # win_user=$(echo $win_user | sed -E 's/^\s*([A-Za-z0-9]:?\\*)([A-Za-z0-9]*\\?\\?)*([A-Za-z0-9]+)+$/\3/g')
+    else
+        win_user=$(echo $win_user | cut --delimiter='/' --fields=1)
+    fi
     if [ "$win_user" != "" ] && [ -w "/mnt/c/users/$win_user" ]; then
+        
         echo "
-        kernel package will be saved to C:\\users\\$win_user ...
+        kernel package will be $will_be_saved_installed to C:\\users\\$win_user ...
 "   
     else
         echo "
@@ -413,8 +404,8 @@ Oooops - C:\\users\\$win_user is an invalid save location
 package will not be saved to Windows home directory ...
 
         "
-        sleep 5
     fi
+    sleep 4
 fi
 
 win_save_path=/mnt/c/users/$win_user/k-cache

@@ -450,6 +450,13 @@ copy/pasta this into a windows terminal:
         su r00t
         reboot
     fi
+    
+    echo "revert to the old kernel/settings with:
+    wsl.exe --shutdown
+    del c:\users\$win_user\.wslconfig
+    move c:\users\$win_user\.wslconfig.old c:\users\n8kin\.wslconfig
+    wsl.exe -d $WSL_DISTRO_NAME"
+
 fi
 # cp -fv --backup=numbered $kernel_source $kernel_target_nix
 # cp -fv --backup=numbered .config $nix_save_path/$config_alias

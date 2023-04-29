@@ -248,8 +248,20 @@ Enter the url of a config file to use
 fi
 
 padding="----------"
-# display info while waiting on repo to clone
 printf "
+
+
+
+
+
+
+
+
+
+
+
+
+
 ==================================================================
 ========================   Linux Kernel   ========================
 ======------------------%s%s------------------======

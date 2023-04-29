@@ -135,7 +135,39 @@ nix_save_path=$HOME/k-cache
 # check that the user supplied source exists if not try to pick the best .config file available
 # user choice is best if it exists
 if [ ! "$config_source" = "" ] && [ -r "$config_source" ] && [ -s "$config_source" ]; then
-    echo "config: $config_source"
+    echo "config: $config_source
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    "
     user_config_flag=True
 else
 # try alternates if user config doesn't work 
@@ -143,7 +175,31 @@ else
     if [ -r "$git_save_path/$config_alias" ]; then
         $generic_config_source=https://raw.githubusercontent.com/microsoft/WSL2-Linux-Kernel/linux-msft-wsl-5.15.y/Microsoft/config-wsl
         echo "
-        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 No saved .config files match this kernel version and platform"
         if [ ! -r "config-wsl" ]; then
             wget $generic_config_source

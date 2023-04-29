@@ -704,7 +704,10 @@ later    - type any character; press ENTER
             "
     if [ "$restart" = "" ]; then
         echo " attempting to restart WSL ... "
-        ( su r00t && reboot ) || ( pwsh -Command wsl.exe --shutdown && pwsh -Command wsl.exe -d $WSL_DISTRO_NAME --exec 'WSL successfully restarted' && pwsh -Command wsl.exe -d $WSL_DISTRO_NAME ) || \
+        ( su r00t && reboot ) || \
+        ( pwsh -Command wsl.exe --shutdown && \
+        pwsh -Command wsl.exe -d $WSL_DISTRO_NAME --exec 'WSL successfully restarted' && \
+        pwsh -Command wsl.exe -d $WSL_DISTRO_NAME ) 
         
     fi
     

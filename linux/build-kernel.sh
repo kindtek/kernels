@@ -716,7 +716,7 @@ copy/pasta this into any windows terminal (WIN + x, i):
         echo " attempting to restart WSL ... 
         "
         ( pwsh -Command wsl.exe --shutdown && \
-        pwsh -Command wsl.exe -d $WSL_DISTRO_NAME --exec "WSL successfully restarted
+        pwsh -Command wsl.exe -d $WSL_DISTRO_NAME --exec echo "WSL successfully restarted
         
         
         " && \

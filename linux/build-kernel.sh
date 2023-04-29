@@ -5,9 +5,9 @@ kernel_type=$1
 config_source=$2
 zfs=${3:+true}
 win_user=${4:-'user'}
-quick_install=${4:+true}
+quick_install=${4:+True}
 # interact=false
-# interact=${5:+true}
+# interact=${5:+True}
 # kernel_file_suffix=''
 # config_file_suffix=''
 # linux_kernel_version="5.15.90.1"
@@ -16,8 +16,16 @@ kernel_file_suffix="W"
 config_file_suffix="_wsl"
 linux_build_dir=linux-build
 if [ $zfs ]; then
-    echo "zfs == true
+    echo "zfs == True
 LINENO: ${LINENO}"
+elif [ ! $zfs ]; then
+    echo "zfs == True
+LINENO: ${LINENO}"
+else 
+    echo "zfs == ??
+LINENO: ${LINENO}"
+fi
+
     zfs_build_dir=zfs-build
     zfs_repo=https://github.com/openzfs/zfs.git
     zfs_version_query="git -c versionsort.suffix=- ls-remote --refs --sort=version:refname --tags $zfs_repo"
@@ -96,7 +104,7 @@ else
     echo "linux version type:$linux_kernel_type_tag"
 fi
 if [ $zfs ]; then
-    echo "zfs == true
+    echo "zfs == True
 LINENO: ${LINENO}"
     echo "zfs version tag:$zfs_version_tag"
     echo "zfs version:$zfs_version"
@@ -127,7 +135,7 @@ nix_save_path=$HOME/k-cache
 # user choice is best if it exists
 if [ ! "$config_source" = "" ] && [ -r "$config_source" ] && [ -s "$config_source" ]; then
     echo "config: $config_source"
-    user_config_flag=true
+    user_config_flag=True
 else
 # try alternates if user config doesn't work 
     if [ ! -r "config-wsl" ]; then
@@ -176,7 +184,7 @@ if [ $quick_install ]; then
     read install
     if [ "$install" = "" ]; then
         install="y"
-        quick_install=true
+        quick_install=True
     else
         quick_install=false
     fi    
@@ -265,7 +273,7 @@ else
     git clone $linux_repo --single-branch --branch $linux_kernel_version_tag --progress -- $linux_build_dir
 fi
 if [ $zfs ]; then
-    echo "zfs == true
+    echo "zfs == True
 LINENO: ${LINENO}"
     if [ -d "$zfs_build_dir/.git" ]; then
         cd $zfs_build_dir
@@ -290,7 +298,7 @@ cd $linux_build_dir
 yes "" | make oldconfig
 yes "" | make prepare scripts 
 if [ $zfs ]; then
-    echo "zfs == true
+    echo "zfs == True
 LINENO: ${LINENO}"
     cd ../$zfs_build_dir && \
     bash autogen.sh && \
@@ -301,7 +309,7 @@ fi
 
 cd ../$linux_build_dir
 if [ $zfs ]; then
-    echo "zfs == true
+    echo "zfs == True
 LINENO: ${LINENO}"
     sed -i 's/\# CONFIG_ZFS is not set/CONFIG_ZFS=y/g' .config
 fi
@@ -370,7 +378,7 @@ else
 install $package_full_name kernel ($kernel_alias) to WSL? y/(n)"
     read install_kernel
     if [ "$install_kernel" = "y" ] || [ "$install_kernel" = "Y" ]; then
-        quick_install=true && \
+        quick_install=True && \
         win_user_home=/mnt/c/users/$win_user && \
         cp -vf k-cache/$kernel_alias "${win_user_home}/${kernel_alias}_$timestamp_id"
         if [ -f "$wslconfig" ]; then

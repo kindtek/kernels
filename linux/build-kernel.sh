@@ -12,11 +12,11 @@ quick_install=${4:+true}
 # config_file_suffix=''
 # linux_kernel_version="5.15.90.1"
 # zfs_version="2.1.11"
-linux_build_dir=linux-build
-zfs_build_dir=zfs-build
 kernel_file_suffix="W"
 config_file_suffix="_wsl"
+linux_build_dir=linux-build
 if [ $zfs ]; then
+    zfs_build_dir=zfs-build
     zfs_repo=https://github.com/openzfs/zfs.git
     zfs_version_query="git -c versionsort.suffix=- ls-remote --refs --sort=version:refname --tags $zfs_repo"
     zfs_version_tag=$($zfs_version_query | tail --lines=1 | cut --delimiter='/' --fields=3)

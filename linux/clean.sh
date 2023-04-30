@@ -1,3 +1,4 @@
+#!/bin/bash
 basic_dir="linux-build-msft"
 latest_dir="linux-build-torvalds"
 stable_dir="linux-build-gregkh"
@@ -52,13 +53,13 @@ echo "
     
     
 "
-        read clean_target
+        read -r -p "(exit)" clean_target
 else
     clean_target=$arg1
 fi
 
     if [ "${clean_target,,}" = "basic" ] || [ "${clean_target,,}" = "b" ]; then
-        cd $basic_dir
+        cd $basic_dir || ( echo "change to directory $basic_dir failed" && exit )
         if [ -d ".git" ]; then
             git reset --hard
             git clean -fxd
@@ -66,7 +67,7 @@ fi
         cd ..
     fi
     if [ "${clean_target,,}" = "stable" ] || [ "${clean_target,,}" = "s" ]; then
-        cd $stable_dir
+        cd $stable_dir || ( echo "change to directory $stable_dir failed" && exit )
         if [ -d ".git" ]; then
             git reset --hard
             git clean -fxd
@@ -75,7 +76,7 @@ fi
     fi
     if [ "${clean_target,,}" = "latest" ] || [ "${clean_target,,}" = "l" ] || \
        [ "${clean_target,,}" = "latest-rc" ]; then
-        cd $latest_dir
+        cd $latest_dir || ( echo "change to directory $latest_dir failed" && exit )
         if [ -d ".git" ]; then
             git reset --hard
             git clean -fxd
@@ -83,7 +84,7 @@ fi
         cd ..
     fi
     if [ "${clean_target,,}" = "zfs" ] || [ "${clean_target,,}" = "z" ]; then
-        cd $zfs_dir
+        cd $zfs_dir || ( echo "change to directory $zfs_dir failed" && exit )
         git reset --hard
         git clean -fxd
         cd ..

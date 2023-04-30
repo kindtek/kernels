@@ -1,6 +1,5 @@
 #!/bin/bash
 user_config_flag=False
-user_entry_flag=False
 kernel_type=$1
 config_source=$2
 zfs=$3
@@ -27,7 +26,7 @@ linux_build_dir=linux-build
 # fi
 
 if [ "$zfs" = "zfs" ];  then
-    zfs_build_dir=zfs-build
+    zfs_build_dir="zfs-build"
     zfs_repo=https://github.com/openzfs/zfs.git
     zfs_version_query="git -c versionsort.suffix=- ls-remote --refs --sort=version:refname --tags $zfs_repo"
     zfs_version_tag=$($zfs_version_query | tail --lines=1 | cut --delimiter='/' --fields=3)
@@ -306,7 +305,7 @@ printf "
 
 " "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}"
 
-if (( $quick_wsl_install )); then
+if (( quick_wsl_install )); then
     echo "install kernel when finished?
 "
 read -r -p"(y)
@@ -495,22 +494,22 @@ if [ "$confirm" != "" ]; then
     exit
 fi
 if [ -d "$linux_build_dir/.git" ]; then
-    cd $linux_build_dir
-    if ! (( $quick_wsl_install )); then
+    cd "$linux_build_dir" || exit
+    if ! (( quick_wsl_install )); then
         git reset --hard
         git clean -fxd
     fi
-    git checkout $linux_kernel_version_tag --progress
+    git checkout "$linux_kernel_version_tag" --progress
     cd ..
 else
-    git clone $linux_repo --single-branch --branch $linux_kernel_version_tag --progress -- $linux_build_dir
+    git clone $linux_repo --single-branch --branch "$linux_kernel_version_tag" --progress -- $linux_build_dir
 fi
 if [ "$zfs" = "zfs" ];  then
 #     echo "zfs == True
 # LINENO: ${LINENO}"
     if [ -d "$zfs_build_dir/.git" ]; then
-        cd $zfs_build_dir
-        if ! (( $quick_wsl_install )); then 
+        cd "$zfs_build_dir" || exit
+        if ! (( quick_wsl_install )); then 
             git reset --hard
             git clean -fxd
         fi
@@ -525,8 +524,8 @@ fi
 # replace kernel source .config with the config generated from a custom config
 cp -fv $config_source $linux_build_dir/.config
 
-cd $linux_build_dir
-if (( $quick_wsl_install )); then
+cd $linux_build_dir || exit
+if (( quick_wsl_install )); then
     # prompt bypass
     yes "" | make oldconfig
     yes "" | make prepare scripts 
@@ -544,16 +543,16 @@ if [ "$zfs" = "zfs" ];  then
     yes "" | make install 
 fi
 
-cd ../$linux_build_dir
+cd ../$linux_build_dir || exit
 if [ "$zfs" = "zfs" ];  then
 #     echo "zfs == True
 # LINENO: ${LINENO}"
     sed -i 's/\# CONFIG_ZFS is not set/CONFIG_ZFS=y/g' .config
 fi
-if (( $quick_wsl_install )); then
-    yes "" | make -j $(expr $(nproc) - 1)
+if (( quick_wsl_install )); then
+    yes "" | make -j "$(expr "$(nproc)" - 1)"
 else
-    make -j $(expr $(nproc) - 1)
+    make -j "$(expr "$(nproc)" - 1)"
 fi
 make modules_wsl_install
 # kernel is baked - time to distribute fresh copies
@@ -566,7 +565,7 @@ fi
 
 cd ..
 # move back to base dir  folder with github (relative) path
-mkdir -pv $git_save_path 2>/dev/null
+mkdir -pv "$git_save_path" 2>/dev/null
 # queue files to be saved to repo
 # if (( $user_config_flag )); then
     cp -fv --backup=numbered $linux_build_dir/.config $config_target_git
@@ -579,22 +578,22 @@ cp -fv --backup=numbered $linux_build_dir/$kernel_source $kernel_target_git
 mkdir -pv k-cache 2>/dev/null
 rm -rfv k-cache/*
 rm -rfv k-cache/.*
-cp -fv --backup=numbered  $config_source k-cache/$config_alias
-cp -fv --backup=numbered  $linux_build_dir/$kernel_source k-cache/$kernel_alias
-touch k-cache/$package_full_name
+cp -fv --backup=numbered  "$config_source" "k-cache/$config_alias"
+cp -fv --backup=numbered  "$linux_build_dir/$kernel_source" "k-cache/$kernel_alias"
+touch "k-cache/$package_full_name"
 # work on *nix first
-mkdir -pv $nix_k_cache 2>/dev/null
+mkdir -pv "$nix_k_cache" 2>/dev/null
 if [ -w "$nix_k_cache" ]; then
-    tar -czvf $tarball_source_nix -C k-cache .
-    cp -fv --backup=numbered $tarball_source_nix $tarball_target_nix.bak
-    cp -fv $tarball_source_nix $tarball_target_nix 
+    tar -czvf "$tarball_source_nix" -C k-cache .
+    cp -fv --backup=numbered "$tarball_source_nix" "$tarball_target_nix.bak"
+    cp -fv "$tarball_source_nix" "$tarball_target_nix" 
 else
     echo "unable to save kernel package to Linux home directory"
 fi
 
 # win
 # package a known working wslconfig file along with the kernel and config file
-mkdir -p $win_k_cache 2>/dev/null
+mkdir -p "$win_k_cache" 2>/dev/null
 sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}/g" ../../../dvlp/mnt/%HOME%/sample.wslconfig
 cp -fv --backup=numbered ../../../dvlp/mnt/%HOME%/sample.wslconfig k-cache/.wslconfig
 ps_wsl_install=$win_k_cache/install-wsl-kernel.ps1
@@ -647,11 +646,11 @@ cd Split-Path \$mypath -Parent
 #>> .$ps_wsl_install
 
 #############################################################################
-" | tee $ps_wsl_install
+" | tee "$ps_wsl_install"
 if [ -w "$win_k_cache" ]; then
-    tar -czvf $tarball_source_win -C k-cache .
-    cp -fv --backup=numbered $tarball_source_win $tarball_target_win.bak
-    cp -fv $tarball_source_win $tarball_target_win
+    tar -czvf "$tarball_source_win" -C k-cache .
+    cp -fv --backup=numbered "$tarball_source_win" "$tarball_target_win.bak"
+    cp -fv "$tarball_source_win" "$tarball_target_win"
 else
     echo "
 unable to save kernel package to Windows home directory"
@@ -659,9 +658,9 @@ fi
 win_user_home=/mnt/c/users/$win_user
 wsl_kernel=${win_user_home}/${kernel_alias}
 wsl_config=${win_user_home}/.wslconfig
-if (( $quick_wsl_install )); then
+if (( quick_wsl_install )); then
     # copy kernel and wsl config right away
-    cp -vf k-cache/$kernel_alias $wsl_kernel 
+    cp -vf "k-cache/$kernel_alias" "$wsl_kernel" 
     mv -vf --backup=numbered "$wsl_config" "$wsl_config.old"
     sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}/g" k-cache/.wslconfig           
     cp -vf k-cache/.wslconfig "$wsl_config"  
@@ -696,7 +695,7 @@ read -r -p"(confirm)
 " install_wsl_kernel
     if [ "$install_wsl_kernel" = "" ]; then
         win_user_home=/mnt/c/users/$win_user && \
-        cp -vf k-cache/${kernel_alias} $wsl_kernel
+        cp -vf "k-cache/${kernel_alias}" "$wsl_kernel"
         quick_wsl_install=True
         if [ -f "$wsl_config" ]; then
 echo "
@@ -725,13 +724,13 @@ read -r -p"(y)
                 if grep -q '^\s?\#?\skernel=.*' "$wsl_config"; then
                     sed -i "s/\s*\#*\s*kernel=C.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}/g" $wsl_config
                 else
-                    wslconfig_old="$(cat $wsl_config)"
+                    wslconfig_old="$(cat "$wsl_config")"
                     wslconfig_new="
 [wsl2]
 
 kernel=C\:\\\\users\\\\$win_user\\\\${kernel_alias}
-$(cat $wsl_config_old)"
-                    echo "$wsl_config_new" > "$wsl_config"
+$(cat "$wslconfig_old")"
+                    echo "$wslconfig_new" > "$wsl_config"
                 fi
             else
                 mv -vf --backup=numbered "$wsl_config" "$wsl_config.old"
@@ -756,7 +755,7 @@ KERNEL BUILD COMPLETE
 
 "
 
-if (( $quick_wsl_install )) || [ $wsl_install = "y" ]; then
+if (( quick_wsl_install )) || [ "$wsl_install" = "y" ]; then
 echo "
 
 
@@ -801,7 +800,7 @@ echo "
     powershell.exe -Command wsl.exe --shutdown; powershell.exe -Command wsl.exe -d $WSL_DISTRO_NAME;    
     
 
-" | tee $ps_wsl_rollback
+" | tee "$ps_wsl_rollback"
 read -r -p"(next)"
 echo "
 
@@ -815,7 +814,7 @@ echo "
     powershell.exe -Command wsl.exe --shutdown; powershell.exe -Command wsl.exe -d $WSL_DISTRO_NAME
     powershell.exe -Command wsl.exe -d $WSL_DISTRO_NAME --exec echo 'WSL successfully restarted'
 
-" | tee $ps_wsl_restart
+" | tee "$ps_wsl_restart"
 read -r -p"(next)"
 echo "
 
@@ -835,7 +834,8 @@ for example, you can open a powershell terminal (WIN + x, i) and run:
 
     * make sure the terminal opens to your home directory (which happens automatically when using the WIN + x shortcut)"
     
-read -r -p"(end)"
+read -r -p "
+(end)"
     if [ "$wsl_restart" = "" ]; then
         echo " attempting to restart WSL ... 
         "

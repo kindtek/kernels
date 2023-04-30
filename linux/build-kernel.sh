@@ -791,7 +791,7 @@ echo "
 
 
 recovery scripts will be displayed on your screen next
-please leave this window open until WSL has been full booted in case you need to copy/pasta to rollback to a working configuration
+please leave this window open until WSL has been rebooted in case you need to copy/pasta to rollback to a working configuration
 "
 read -r -p "(go to WSL kernel rollback instructions)
 "

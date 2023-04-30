@@ -231,7 +231,7 @@ Enter the url of a config file to use
 
     Hint: to use a file on Github make sure to use a raw file url starting with https://raw.githubusercontent.com
 "
-read -p "($generic_config_source)
+read -r -p"($generic_config_source)
 " config_source
 echo "
 # checking if input is a url ..."
@@ -241,7 +241,7 @@ echo "
                 echo "attempting to download $config_source ...
                 "
                 wget "$config_source"
-                config_source=${pwd}$( echo $config_source | cut --delimiter='/' --fields=1 )
+                config_source=$( echo "$config_source" | cut --delimiter='/' --fields=1 )
                 # config_source=${pwd}/$( echo $config_source | sed -r -e 's/^([A-Za-z0-9-_/:])*\/([A-Za-z0-9-_/])+$/\2/g' )
             else 
                 echo "not a url"
@@ -309,7 +309,7 @@ printf "
 if (( $quick_wsl_install )); then
     echo "install kernel when finished?
 "
-read -p "(y)
+read -r -p"(y)
 " wsl_install
     if [ "$wsl_install" = "" ]; then
         wsl_install="y"
@@ -324,7 +324,7 @@ else
 echo "
 install the kernel into WSL when build is finished?
 "
-read -p "(n)
+read -r -p"(n)
 " wsl_install
     if [ "${wsl_install,,}" = "y" ] || [ "${wsl_install,,}" = "yes" ]; then
         wsl_install="y"
@@ -358,13 +358,13 @@ echo "
 
 install kernel in C:\\users\\$win_user ?
             "
-read -p "(confirm)
+read -r -p"(confirm)
 " win_user 
         else
 echo "
     C:\\users\\__________ 
 "
-read -p "(skip)
+read -r -p"(skip)
 " win_user 
         fi
         win_user_orig=$win_user && \
@@ -406,7 +406,7 @@ save kernel package to Windows home directory C:\\users\\__________
             echo "${save_or_wsl_install_mask} kernel files to C:\\users\\$win_user ?
             "
         fi
-read -p "(${save_or_wsl_install_mask})
+read -r -p"(${save_or_wsl_install_mask})
 " win_user
         if [ "$4" != "" ] && [ -w "/mnt/c/users/$4" ]; then
             win_user=${4}
@@ -489,7 +489,7 @@ printf "
 echo "
 continue or exit?
 "
-read -p "(continue)
+read -r -p"(continue)
 " confirm
 if [ "$confirm" != "" ]; then
     exit
@@ -662,9 +662,9 @@ wsl_config=${win_user_home}/.wslconfig
 if (( $quick_wsl_install )); then
     # copy kernel and wsl config right away
     cp -vf k-cache/$kernel_alias $wsl_kernel 
-    mv -vf --backup=numbered $wsl_config $wsl_config.old
+    mv -vf --backup=numbered "$wsl_config" "$wsl_config.old"
     sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}/g" k-cache/.wslconfig           
-    cp -vf k-cache/.wslconfig $wsl_config  
+    cp -vf k-cache/.wslconfig "$wsl_config"  
 elif [ "$wsl_install" = "y" ]; then
 
 printf "
@@ -692,7 +692,7 @@ printf "
 echo "
 confirm or exit?
 "
-read -p "(confirm)
+read -r -p"(confirm)
 " install_wsl_kernel
     if [ "$install_wsl_kernel" = "" ]; then
         win_user_home=/mnt/c/users/$win_user && \
@@ -719,7 +719,7 @@ a backup of the original file will be saved as:
 
 continue with .wslconfig replacement?
 "
-read -p "(y)
+read -r -p"(y)
 " replace_wslconfig
             if [ "$replace_wslconfig" = "n" ] || [ "$replace_wslconfig" = "N" ]; then
                 if grep -q '^\s?\#?\skernel=.*' "$wsl_config"; then
@@ -731,17 +731,17 @@ read -p "(y)
 
 kernel=C\:\\\\users\\\\$win_user\\\\${kernel_alias}
 $(cat $wsl_config_old)"
-                    echo "$wsl_config_new" > $wsl_config
+                    echo "$wsl_config_new" > "$wsl_config"
                 fi
             else
-                mv -vf --backup=numbered $wsl_config $wsl_config.old
+                mv -vf --backup=numbered "$wsl_config" "$wsl_config.old"
                 sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}/g" k-cache/.wslconfig           
-                cp -vf k-cache/.wslconfig $wsl_config  
+                cp -vf k-cache/.wslconfig "$wsl_config"  
             fi
         else
-            mv -vf --backup=numbered $wsl_config $wsl_config.old
+            mv -vf --backup=numbered "$wsl_config" "$wsl_config.old"
             sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}/g" k-cache/.wslconfig           
-            cp -vf k-cache/.wslconfig $wsl_config          
+            cp -vf k-cache/.wslconfig "$wsl_config"          
         fi
     fi
 fi
@@ -766,7 +766,7 @@ WSL REBOOT
 
 would you like to reboot WSL now or later?
 "
-read -p "(now)
+read -r -p"(now)
 " wsl_restart
 echo "
 
@@ -802,7 +802,7 @@ echo "
     
 
 " | tee $ps_wsl_rollback
-read -p "(next)"
+read -r -p"(next)"
 echo "
 
 
@@ -816,17 +816,7 @@ echo "
     powershell.exe -Command wsl.exe -d $WSL_DISTRO_NAME --exec echo 'WSL successfully restarted'
 
 " | tee $ps_wsl_restart
-read -p "(next)"
-    if [ "$wsl_restart" = "" ]; then
-        echo " attempting to restart WSL ... 
-        "
-        ( pwsh .$ps_wsl_restart ) || \
-        ( echo "unable to restart WSL. manual restart using required:
-        
-    # copy/pasta to restart wsl
-    powershell.exe -Command wsl.exe --shutdown; powershell.exe -Command wsl.exe -d $WSL_DISTRO_NAME;    
-" ) 
-    fi
+read -r -p"(next)"
 echo "
 
 the above instructions were displayed to copy in case of emergency and are also saved in the k-cache:
@@ -845,7 +835,18 @@ for example, you can open a powershell terminal (WIN + x, i) and run:
 
     * make sure the terminal opens to your home directory (which happens automatically when using the WIN + x shortcut)"
     
-read -p "(end)"
+read -r -p"(end)"
+    if [ "$wsl_restart" = "" ]; then
+        echo " attempting to restart WSL ... 
+        "
+        ( pwsh -file "$ps_wsl_restart" ) || \
+        ( echo "unable to restart WSL. manual restart required:
+        
+    # copy/pasta to restart wsl
+    powershell.exe -Command wsl.exe --shutdown; powershell.exe -Command wsl.exe -d $WSL_DISTRO_NAME;    
+" ) 
+    fi
+
     
 fi
 

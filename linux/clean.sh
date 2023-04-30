@@ -59,21 +59,27 @@ fi
 
     if [ "${clean_target,,}" = "basic" ] || [ "${clean_target,,}" = "b" ]; then
         cd $basic_dir
-        git reset --hard
-        git clean -fxd
+        if [ -d ".git" ]; then
+            git reset --hard
+            git clean -fxd
+        fi
         cd ..
     fi
     if [ "${clean_target,,}" = "stable" ] || [ "${clean_target,,}" = "s" ]; then
         cd $stable_dir
-        git reset --hard
-        git clean -fxd
+        if [ -d ".git" ]; then
+            git reset --hard
+            git clean -fxd
+        fi
         cd ..
     fi
     if [ "${clean_target,,}" = "latest" ] || [ "${clean_target,,}" = "l" ] || \
        [ "${clean_target,,}" = "latest-rc" ]; then
         cd $latest_dir
-        git reset --hard
-        git clean -fxd
+        if [ -d ".git" ]; then
+            git reset --hard
+            git clean -fxd
+        fi
         cd ..
     fi
     if [ "${clean_target,,}" = "zfs" ] || [ "${clean_target,,}" = "z" ]; then

@@ -705,7 +705,7 @@ printf "
 echo "
 install or exit?
 "
-read -r -p "(install $package_full_name into WSL)
+read -r -p "(install $package_full_name into $WSL_DISTRO_NAME WSL)
 " install_wsl_kernel
     if [ "$install_wsl_kernel" = "" ]; then
         win_user_home=/mnt/c/users/$win_user && \

@@ -65,7 +65,7 @@ if [ "$clean_target" = "k-cache" ]; then
         rm -rfv k-cache/*
         rm -rfv k-cache/.*
     fi
-    if [ $clean_target = "" ]; then
+    if [ "$clean_target" = "" ]; then
         exit
     fi
     clean_target=""

@@ -659,8 +659,8 @@ cd Split-Path \$mypath -Parent
 #>> ./$ps_wsl_install_kernel_id
 
 #############################################################################
-" | tee "wsl-kernel-install.ps1"
-cp "wsl-kernel-install.ps1" "$win_k_cache/$ps_wsl_install_kernel_id"
+" | tee "$win_k_cache/wsl-kernel-install.ps1"
+cp "$win_k_cache/wsl-kernel-install.ps1" "$win_k_cache/$ps_wsl_install_kernel_id"
 if [ -w "$win_k_cache" ]; then
     tar -czvf "$tarball_source_win" -C k-cache .
     cp -fv --backup=numbered "$tarball_source_win" "$tarball_target_win.bak"

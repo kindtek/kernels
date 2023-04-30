@@ -426,7 +426,8 @@ kernel package will be ${save_or_wsl_install_mask}ed to C:\\users\\$win_user
 archives and recovery scripts will be saved to C:\\users\\$win_user\\k-cache
 "  
 read -r -p "
-(continue)" 
+(continue)
+" 
     else
 echo "
 Oooops - C:\\users\\$win_user is an invalid save location

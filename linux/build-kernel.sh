@@ -362,6 +362,7 @@ read -p "(confirm)
 " win_user 
         else
 echo "
+    C:\\users\\__________ 
 "
 read -p "(skip)
 " win_user 

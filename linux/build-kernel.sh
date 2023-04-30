@@ -359,10 +359,9 @@ read -p "(confirm)" win_user
         else
 echo "
 
-(skip)"
+read -p (skip)" win_user 
         fi
         win_user_orig=$win_user && \
-read -p "(skip install)" win_user 
         if [ "$win_user" = "" ]; then
             win_user=${win_user_orig}
         # else 

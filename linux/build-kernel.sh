@@ -423,7 +423,10 @@ read -r -p "(${save_or_wsl_install_mask})
         
 echo "
 kernel package will be ${save_or_wsl_install_mask}ed to C:\\users\\$win_user ...
-"   
+archives and recovery scripts will be saved to C:\\users\\$win_user\\k-cache
+"  
+read -r -p "
+(continue)" 
     else
 echo "
 Oooops - C:\\users\\$win_user is an invalid save location
@@ -431,17 +434,16 @@ package will not be saved to Windows home directory ...
 
         "
     fi
-    sleep 3
 fi
 
 win_k_cache=/mnt/c/users/$win_user/k-cache
 kernel_source=arch/$cpu_arch/boot/bzImage
 kernel_target_git=$git_save_path/$kernel_alias_no_timestamp
 config_target_git=$git_save_path/$config_alias_no_timestamp
-kernel_target_nix=$nix_k_cache/$kernel_alias
-config_target_nix=$nix_k_cache/$config_alias
-kernel_target_win=$win_k_cache/$kernel_alias
-config_target_win=$win_k_cache/$config_alias
+# kernel_target_nix=$nix_k_cache/$kernel_alias
+# config_target_nix=$nix_k_cache/$config_alias
+# kernel_target_win=$win_k_cache/$kernel_alias
+# config_target_win=$win_k_cache/$config_alias
 tarball_target_nix=$nix_k_cache/$package_full_name.tar.gz
 tarball_target_win=$win_k_cache/$package_full_name.tar.gz
 tarball_source_nix=$package_full_name.tar.gz

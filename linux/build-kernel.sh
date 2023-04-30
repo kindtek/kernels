@@ -608,6 +608,7 @@ cd Split-Path \$mypath -Parent
 #####   OPTION A  #####                                                 #####
 #############################################################################
 #####   copy/pasta this into any Windows terminal (WIN + x, i):         #####
+####                                                                    #####
 #####   copy without '#>>' to replace (delete/move) .wslconfig          #####
 #
 #   # delete
@@ -629,15 +630,15 @@ cd Split-Path \$mypath -Parent
 #####   OPTION B  #####                                                 #####
 #############################################################################
 ####    copy/pasta this into any windows terminal (WIN + x, i):         #####
-####    uncomment to replace/move old .wslconfig                        #####
 ####                                                                    #####
-####    copy/pasta without '#>>' into any windows terminal while        ##### 
-####    in this directory                                               ##### 
+####    copy/pasta without '#>>' to navigate to this                    #####
+####    directory and run the script from option A                      #####                                              ##### 
 #
 #
 #   # edit the path if you extracted the tar file to a different location
-#   # run option A script above
-#>> .$win_save_path/$package_full_name/$ps_fname
+#>> cd %HOME%/k-cache
+#   # execute script in this file
+#>> ./$ps_fname
 
 #############################################################################
 " | tee k-cache/$ps_fname

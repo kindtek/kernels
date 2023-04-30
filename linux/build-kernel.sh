@@ -591,7 +591,7 @@ fi
 mkdir -p $win_save_path 2>/dev/null
 sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}/g" ../../../dvlp/mnt/%HOME%/sample.wslconfig
 cp -fv --backup=numbered ../../../dvlp/mnt/%HOME%/sample.wslconfig k-cache/.wslconfig
-ps_install=$win_save_path/k-cache/install-$package_full_name-$timestamp_id.ps1
+ps_install=$win_save_path/k-cache/install-wsl-kernel.ps1
 ps_restart=$win_save_path/k-cache/restart-wsl.ps1
 ps_rollback=$win_save_path/k-cache/rollback-wsl-kernel.ps1
 echo "

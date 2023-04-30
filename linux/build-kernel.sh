@@ -597,8 +597,8 @@ fi
 # win
 # package a known working wslconfig file along with the kernel and config file
 mkdir -p "$win_k_cache" 2>/dev/null
-rm -f "$win_k_cache"/wsl-install.ps1
-rm -rf "$win_k_cache"/wsl-install_"${kernel_alias}"*
+rm -fv "$win_k_cache"/wsl-install.ps1
+rm -rfv "$win_k_cache"/wsl-install_"${kernel_alias_no_timestamp}"*
 sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}/g" ../../../dvlp/mnt/%HOME%/sample.wslconfig
 cp -fv --backup=numbered ../../../dvlp/mnt/%HOME%/sample.wslconfig k-cache/.wslconfig
 

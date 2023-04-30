@@ -31,7 +31,7 @@ if [ "$arg1" = "" ]; then
 
 
 
-    press ENTER to exit or choose something to clean
+press ENTER to exit or choose something to clean
 
 "
     if [ -d "$basic_dir/.git" ]; then
@@ -49,9 +49,7 @@ if [ "$arg1" = "" ]; then
         echo "      - [z]fs"
     fi
         echo "      - [k]-cache"
-echo "        
-    
-    
+echo "         
 "
 read -r -p "(exit)
 " clean_target

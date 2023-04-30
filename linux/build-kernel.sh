@@ -833,7 +833,7 @@ echo "
 ONE LAST THING
 --------------
 
-the above instructions were displayed to copy in case of emergency and are also accessible in the k-cache ($win_k_cache):
+the above scripts and instructions were displayed in case you need to copy them and are also accessible in the k-cache ($win_k_cache):
 
     -   wsl-install.ps1
     -   wsl-rollback.ps1
@@ -847,7 +847,7 @@ for example, you can open a powershell terminal (WIN + x, i) and run:
 
 .. and this will restart WSL
 
-* when running the command make sure the terminal is open to your home directory - this is automatically loaded when using the WIN + x shortcut"
+* when running the command make sure the terminal is open to your home directory - thankfully, this is automatically loaded when using the WIN + x shortcut"
     
 read -r -p "
 (finish and try to restart WSL)"

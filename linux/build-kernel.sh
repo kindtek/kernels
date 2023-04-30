@@ -343,13 +343,15 @@ echo "
 echo " 
 
 
-install to Windows home directory C:\\users\\__________ ?
+install to Windows home directory?
+
     choose from:
 " 
         ls -da /mnt/c/users/*/ | tail -n +4 | sed -r -e 's/^\/mnt\/c\/users\/([ A-Za-z0-9]*)*\/+$/\t\1/g'
 
         if [ "$win_user" != "" ]; then
 echo "
+    C:\\users\\__________ 
 
 install kernel in C:\\users\\$win_user ?
             "

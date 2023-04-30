@@ -426,7 +426,7 @@ kernel package will be ${save_or_wsl_install_mask}ed to C:\\users\\$win_user
 archives and recovery scripts will be saved to C:\\users\\$win_user\\k-cache
 "  
 read -r -p "
-(build kernel)
+(continue)
 " 
     else
 echo "
@@ -491,7 +491,7 @@ printf "
 echo "
 continue or exit?
 "
-read -r -p "(continue)
+read -r -p "(build kernel)
 " continue
 if [ "$continue" != "" ]; then
     exit

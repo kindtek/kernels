@@ -328,7 +328,7 @@ read -p "(n)
 " wsl_install
     if [ "${wsl_install,,}" = "y" ] || [ "${wsl_install,,}" = "yes" ]; then
         wsl_install="y"
-        save_or_wsl_install_mask=wsl_install
+        save_or_wsl_install_mask=install
         if [ "$4" = "" ]; then win_user=""; fi
         wsl_install="y" && \
 echo "

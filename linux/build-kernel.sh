@@ -306,9 +306,9 @@ printf "
 " "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}"
 
 if (( $quick_install )); then
-    echo " press ENTER to install kernel when finished
+    echo "install kernel when finished?
 "
-    read install
+    read install -p "(y)"
     if [ "$install" = "" ]; then
         install="y"
     fi
@@ -324,16 +324,13 @@ if (( $quick_install )); then
 else
     echo "
 install the kernel into WSL when build is finished?
-
-skip        - press ENTER
-install     - type y; press ENTER
 "
-    read install
+    read install -p "(n)"
     if [ "$install" = "Y" ]; then
         install="y"
     fi
     if [ "$install" = "y" ]; then
-        saved_or_installed=installed
+        save_or_install_mask=install
         if [ "$4" = "" ]; then win_user=""; fi
         install="y" && \
         echo "
@@ -347,23 +344,28 @@ install     - type y; press ENTER
 
 
 
-found these existing home directories:
     "
-        ls -da /mnt/c/users/*/ | tail -n +4 | sed -r -e 's/^\/mnt\/c\/users\/([ A-Za-z0-9]*)*\/+$/\t\1/g'
         echo " 
 
 
-install to Windows home directory C:\\users\\__________
+install to Windows home directory C:\\users\\__________ ?
+    choose from:
+" 
+        ls -da /mnt/c/users/*/ | tail -n +4 | sed -r -e 's/^\/mnt\/c\/users\/([ A-Za-z0-9]*)*\/+$/\t\1/g'
 
-        - type name of windows home directory; press ENTER" 
         if [ "$win_user" != "" ]; then
-            echo "confirm     - press ENTER to install kernel in C:\\users\\$win_user
+            echo "
+
+install kernel in C:\\users\\$win_user ?
             "
+            read win_user  -p "(confirm)"
         else
-            echo " "
+            echo "
+
+(skip)"
         fi
         win_user_orig=$win_user && \
-        read win_user
+        read win_user  -p "(skip)"
         if [ "$win_user" = "" ]; then
             win_user=${win_user_orig}
         # else 
@@ -374,7 +376,7 @@ install to Windows home directory C:\\users\\__________
             win_user=$(echo $win_user | cut --delimiter='/' --fields=1)
         fi 
     else 
-        saved_or_installed=saved 
+        save_or_install_mask=save 
         if [ "$4" = "" ]; then 
             win_user=""
             echo "
@@ -388,20 +390,21 @@ install to Windows home directory C:\\users\\__________
 
 
 
-found these existing home directories:
 "
-        ls -da /mnt/c/users/*/ | tail -n +4 | sed -r -e 's/^\/mnt\/c\/users\/([ A-Za-z0-9]*)*\/+$/\t\1/g'
         echo " 
 
 
 save kernel package to Windows home directory C:\\users\\__________
 
-save    - type name of windows home directory; press ENTER" 
+    choose from:
+" 
+        ls -da /mnt/c/users/*/ | tail -n +4 | sed -r -e 's/^\/mnt\/c\/users\/([ A-Za-z0-9]*)*\/+$/\t\1/g'
+
         else
-            echo "confirm - press ENTER to install kernel in C:\\users\\$win_user
+            echo "${save_or_install_mask} kernel files to C:\\users\\$win_user ?
             "
         fi
-        read win_user
+        read win_user -p "(${save_or_install_mask})"
         if [ "$4" != "" ] && [ -w "/mnt/c/users/$4" ]; then
             win_user=${4}
         # else 
@@ -417,7 +420,7 @@ save    - type name of windows home directory; press ENTER"
     if [ "$win_user" != "" ] && [ -w "/mnt/c/users/$win_user" ]; then
         
         echo "
-kernel package will be $saved_or_installed to C:\\users\\$win_user ...
+kernel package will be ${save_or_install_mask}ed to C:\\users\\$win_user ...
 "   
     else
         echo "
@@ -481,10 +484,9 @@ printf "
 "
 
 echo "
-continue    - press ENTER to confirm
-exit        - type any character; press ENTER
+continue or exit?
 "
-read confirm
+read confirm -p "(continue)"
 if [ "$confirm" != "" ]; then
     exit
 fi
@@ -684,10 +686,9 @@ printf "
 
 " "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}"
     echo "
-continue    - press ENTER to confirm details and install kernel
-exit        - type any character; press ENTER to exit
+confirm or exit?
 "
-    read install_kernel
+    read install_kernel -p "(confirm)"
     if [ "$install_kernel" = "" ]; then
         win_user_home=/mnt/c/users/$win_user && \
         cp -vf k-cache/${kernel_alias} $wsl_kernel_install
@@ -712,8 +713,8 @@ a backup of the original file will be saved as:
     $wsl_config_install.old
 
 continue with .wslconfig replacement?
-(y)/n"
-            read replace_wslconfig
+"
+            read replace_wslconfig  -p "(y)"
             if [ "$replace_wslconfig" = "n" ] || [ "$replace_wslconfig" = "N" ]; then
                 if grep -q '^\s?\#?\skernel=.*' "$wsl_config_install"; then
                     sed -i "s/\s*\#*\s*kernel=C.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}/g" $wsl_config_install
@@ -757,16 +758,9 @@ if (( $quick_install )) || [ $install = "y" ]; then
 WSL REBOOT
 ----------       
 
-        
-restarting WSL is required to boot into the kernel 
-
-would you like to reboot WSL ...
-
-now      - Press ENTER
-later    - type any character; press ENTER
-
+would you like to reboot WSL now or later?
 "
-    read restart
+    read restart -p "(now)"
     echo "
 
 
@@ -801,6 +795,7 @@ echo "
     
 
 " | tee $ps_rollback
+read -p "(next)"
 echo "
 
 
@@ -814,6 +809,7 @@ echo "
     powershell.exe -Command wsl.exe -d $WSL_DISTRO_NAME --exec echo 'WSL successfully restarted'
 
 " | tee $ps_restart
+read -p "(next)"
     if [ "$restart" = "" ]; then
         echo " attempting to restart WSL ... 
         "
@@ -842,6 +838,7 @@ for example, you can open a powershell terminal (WIN + x, i) and run:
 
     * make sure the terminal opens to your home directory (which happens automatically when using the WIN + x shortcut)"
     
+read -p "(end)"
     
 fi
 

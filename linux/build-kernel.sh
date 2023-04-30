@@ -622,16 +622,16 @@ cd Split-Path \$mypath -Parent
 #####   copy without '#>>' to replace (delete/move) .wslconfig          #####
 #
 #   # delete
-#>> powershell.exe -Command del %HOME%\\.wslconfig;
+#>> powershell.exe -Command del \$HOME\\.wslconfig;
 #
 #   # move file out of the way   
-#>> powershell.exe -Command move .wslconfig %HOME%\\.wslconfig;
+#>> powershell.exe -Command move .wslconfig \$HOME\\.wslconfig;
     
     # extract
     wsl.exe -d $WSL_DISTRO_NAME exec tar -xvzf $package_full_name.tar.gz
 
     # copy file
-    powershell.exe -Command copy ${kernel_alias} %HOME%\\${kernel_alias};
+    powershell.exe -Command copy ${kernel_alias} \$HOME\\${kernel_alias};
     # restart wsl
     powershell.exe -Command wsl.exe --exec echo 'WSL successfully restarted'; powershell.exe -Command wsl.exe;
 

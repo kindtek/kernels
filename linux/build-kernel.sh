@@ -591,7 +591,9 @@ fi
 mkdir -p $win_save_path 2>/dev/null
 sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}/g" ../../../dvlp/mnt/%HOME%/sample.wslconfig
 cp -fv --backup=numbered ../../../dvlp/mnt/%HOME%/sample.wslconfig k-cache/.wslconfig
-ps_fname=install-$package_full_name-$timestamp_id.ps1
+ps_install=$win_save_path/k-cache/install-$package_full_name-$timestamp_id.ps1
+ps_restart=$win_save_path/k-cache/restart-wsl.ps1
+ps_rollback=$win_save_path/k-cache/rollback-wsl-kernel.ps1
 echo "
 # for executing option b outside of this directory 
 # the below two lines are unnecessary to copy
@@ -635,13 +637,11 @@ cd Split-Path \$mypath -Parent
 ####    directory and run the script from option A                      #####                                              ##### 
 #
 #
-#   # edit the path if you extracted the tar file to a different location
-#>> cd %HOME%/k-cache
-#   # execute script in this file
-#>> ./$ps_fname
+#   # execute option A script saved in this file
+#>> .$ps_install
 
 #############################################################################
-" | tee k-cache/$ps_fname
+" | tee $ps_install
 if [ -w "$win_save_path" ]; then
     tar -czvf $tarball_source_win -C k-cache .
     cp -fv --backup=numbered $tarball_source_win $tarball_target_win.bak
@@ -783,44 +783,64 @@ later    - type any character; press ENTER
 
 
 
-WSL REBOOT INSTRUCTIONS
------------------------
+"
 
-use command 'reboot' in a linux terminal with root privileges
+echo "  powershell.exe -Command wsl.exe --shutdown; powershell.exe -Command wsl.exe -d $WSL_DISTRO_NAME" | tee $ps_restart
 
-            - OR - 
-
-copy/pasta the following line into any windows terminal (WIN + x, i):
-
-    powershell.exe -Command wsl.exe --shutdown; powershell.exe -Command wsl.exe -d $WSL_DISTRO_NAME
+echo "
 
 
 WSL ROLLBACK INSTRUCTIONS
 -------------------------
 
-copy/pasta this into any windows terminal (WIN + x, i):
-
-"
+copy/pasta this into any windows terminal (WIN + x, i):"
 echo "
     powershell.exe -Command del c:\\users\\$win_user\\.wslconfig;
     powershell.exe -Command move c:\\users\\$win_user\\.wslconfig.old c:\\users\\$win_user\\.wslconfig;
     powershell.exe -Command wsl.exe --shutdown; powershell.exe -Command wsl.exe -d $WSL_DISTRO_NAME;    
     
 
-" | tee $win_save_path/kindtek-kernel-rollback.cmd
-cp $win_save_path/kindtek-kernel-rollback.cmd $win_save_path/kindtek-kernel-rollback.ps1
+" | tee $ps_rollback
+echo "
+
+
+WSL REBOOT INSTRUCTIONS
+-----------------------
+
+copy/pasta the following line into any windows terminal (WIN + x, i):
+"
+echo "
+    powershell.exe -Command wsl.exe --shutdown; powershell.exe -Command wsl.exe -d $WSL_DISTRO_NAME
+    powershell.exe -Command wsl.exe -d $WSL_DISTRO_NAME --exec echo 'WSL successfully restarted'
+
+" | tee $ps_restart
     if [ "$restart" = "" ]; then
         echo " attempting to restart WSL ... 
         "
-        ( powershell.exe -Command wsl.exe --shutdown && \
-        powershell.exe -Command wsl.exe -d $WSL_DISTRO_NAME --exec echo "WSL successfully restarted
+        ( pwsh .$ps_restart ) || \
+        ( echo "unable to restart WSL. manual restart using required:
         
-        
-        " && \
-        powershell.exe -Command wsl.exe -d $WSL_DISTRO_NAME ) || \
-        ( echo "unable to restart WSL. manual restart using above code required" )
-        
+    # copy/pasta to restart wsl
+    powershell.exe -Command wsl.exe --shutdown; powershell.exe -Command wsl.exe -d $WSL_DISTRO_NAME;    
+" ) 
     fi
+    echo "
+
+the above instructions were displayed to copy in case of emergency and are also saved in the k-cache:
+
+    -   $ps_install
+    -   $ps_rollback
+    -   $ps_restart
+
+this makes it easy for you to install the kernel, rollback it back, or restart WSL without copying and pasting multiple lines of code
+
+for example, you can open a powershell terminal (WIN + x, i) and run:
+
+    ./k-cache/restart-wsl.ps1
+
+.. and this will restart WSL
+
+    * make sure the terminal opens to your home directory (which happens automatically when using the WIN + x shortcut)"
     
     
 fi

@@ -422,7 +422,7 @@ read -r -p "(${save_or_wsl_install_mask})
     if [ "$win_user" != "" ] && [ -w "/mnt/c/users/$win_user" ]; then
         
 echo "
-kernel package will be ${save_or_wsl_install_mask}ed to C:\\users\\$win_user ...
+kernel package will be ${save_or_wsl_install_mask}ed to C:\\users\\$win_user
 archives and recovery scripts will be saved to C:\\users\\$win_user\\k-cache
 "  
 read -r -p "

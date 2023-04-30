@@ -53,7 +53,8 @@ echo "
     
     
 "
-        read -r -p "(exit)" clean_target
+read -r -p "(exit)
+" clean_target
 else
     clean_target=$arg1
 fi

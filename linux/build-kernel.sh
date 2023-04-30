@@ -801,7 +801,7 @@ please leave this window open until WSL has been rebooted in case you need to co
 "
 read -r -p "(see WSL recovery instructions)
 "
-echo "  powershell.exe -Command wsl.exe --shutdown; wsl.exe --exec echo 'WSL successfully restarted'; powershell.exe -Command wsl.exe;" | tee "wsl-restart.ps1" 2>/dev/null
+echo "  powershell.exe -Command wsl.exe --shutdown; wsl.exe --exec echo 'WSL successfully restarted'; powershell.exe -Command wsl.exe;" | tee "wsl-restart.ps1" &>/dev/null
 
 echo "
 

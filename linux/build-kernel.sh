@@ -564,7 +564,7 @@ if [ ! -f "$kernel_source" ]; then
 Ooops. The kernel did not build. Exiting ..."
 exit
 fi
-ps_wsl_install_kernel_id=wsl-kernel-install_$timestamp_id.ps1
+ps_wsl_install_kernel_id=wsl-kernel-install_$kernel_alias.ps1
 
 cd ..
 # move back to base dir  folder with github (relative) path
@@ -597,6 +597,8 @@ fi
 # win
 # package a known working wslconfig file along with the kernel and config file
 mkdir -p "$win_k_cache" 2>/dev/null
+rm -f "$win_k_cache"/wsl-install.ps1
+rm -rf "$win_k_cache"/wsl-install_"${kernel_alias}"*
 sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}/g" ../../../dvlp/mnt/%HOME%/sample.wslconfig
 cp -fv --backup=numbered ../../../dvlp/mnt/%HOME%/sample.wslconfig k-cache/.wslconfig
 

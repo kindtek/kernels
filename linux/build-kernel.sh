@@ -612,17 +612,18 @@ cd Split-Path \$mypath -Parent
 #
 #
 #   to delete   - uncomment the following line:
-#               powershell.exe -Command del %HOME%\\.wslconfig;
+#   powershell.exe -Command del %HOME%\\.wslconfig;
 #
 #   to move     - uncomment the following line:
-#               powershell.exe -Command move .wslconfig %HOME%\\.wslconfig;
+#   powershell.exe -Command move .wslconfig %HOME%\\.wslconfig;
+    
     powershell.exe -Command copy ${kernel_alias} %HOME%\\${kernel_alias};
     powershell.exe -Command wsl.exe --shutdown; powershell.exe -Command wsl.exe;
 #
 #############################################################################
-# --------------------------------------------------------------------------#
-# ---------------------------    OR    -------------------------------------# 
-# --------------------------------------------------------------------------#
+
+####-------------------------    OR    ----------------------------------#### 
+
 #############################################################################
 #####   OPTION B  #####                                                     #
 #############################################################################
@@ -634,8 +635,10 @@ cd Split-Path \$mypath -Parent
 #    
 #   copy without '#' 
 #   edit the path if you extracted the tar file to a different location
-#    .$win_save_path/$package_full_name/$ps_fname
-
+#
+#   .$win_save_path/$package_full_name/$ps_fname
+#
+#############################################################################
 " | tee k-cache/$ps_fname
 if [ -w "$win_save_path" ]; then
     tar -czvf $tarball_source_win -C k-cache .

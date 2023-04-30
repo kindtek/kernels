@@ -41,12 +41,12 @@ if [ "$kernel_type" = "" ]; then
 fi
 if [ "$kernel_type" = "latest" ]; then
     # zfs not supported atm
-    zfs=False
+    zfs=False; linux_kernel_type_tag=;
     linux_build_dir=linux-build-torvalds
     linux_repo=https://github.com/torvalds/linux.git
     linux_version_query="git -c versionsort.suffix=- ls-remote --refs --sort=version:refname --tags $linux_repo "
     linux_kernel_version_tag=$($linux_version_query | tail --lines=1 | cut --delimiter='/' --fields=3) 
-    linux_kernel_type_tag="LATEST-WSL"
+    linux_kernel_type_tag="LATEST-WSL${linux_kernel_type_tag}"
     linux_kernel_version=${linux_kernel_version_tag#"v"}
     kernel_file_suffix+="L"
     # config_file_suffix+="_latest"
@@ -55,14 +55,14 @@ if [ "$kernel_type" = "latest" ]; then
     echo "linux version tag:$linux_kernel_type_tag"
 elif [ "$kernel_type" = "latest-rc" ]; then
     # zfs not supported atm
-    zfs=False
+    zfs=False; linux_kernel_type_tag=;
     linux_build_dir=linux-build-torvalds
     kernel_file_suffix+="R"
     # config_file_suffix+="_rc"
     linux_repo=https://github.com/torvalds/linux.git
     linux_version_query="git ls-remote --refs --sort=version:refname --tags $linux_repo "
     linux_kernel_version_tag=$($linux_version_query | tail --lines=1 | cut --delimiter='/' --fields=3) 
-    linux_kernel_type_tag="LATEST_RC-WSL"
+    linux_kernel_type_tag="LATEST_RC-WSL${linux_kernel_type_tag}"
     linux_kernel_version=${linux_kernel_version_tag#"v"}
     echo "linux version tag:$linux_kernel_version_tag"
     echo "linux version:$linux_kernel_version"
@@ -72,7 +72,7 @@ elif [ "$kernel_type" = "stable" ]; then
     # update: it did not work
     # zfs_version=2.1.11
     # zfs_version_tag=zfs-$zfs_version
-    zfs=False
+    zfs=False; linux_kernel_type_tag=;
     linux_build_dir=linux-build-gregkh
     kernel_file_suffix+="S"
     # config_file_suffix+="_stable"
@@ -80,7 +80,7 @@ elif [ "$kernel_type" = "stable" ]; then
     # linux_version_query="git ls-remote --refs --sort=version:refname --tags $linux_repo "
     linux_version_query="git -c versionsort.suffix=- ls-remote --refs --sort=version:refname --tags $linux_repo "
     linux_kernel_version_tag=$($linux_version_query | grep -v -e "-rc[0-9]\+$" | tail --lines=1 | cut --delimiter='/' --fields=3) 
-    linux_kernel_type_tag="STABLE-WSL"
+    linux_kernel_type_tag="STABLE-WSL${linux_kernel_type_tag}"
     linux_kernel_version=${linux_kernel_version_tag#"v"}
     echo "linux version query: $linux_version_query"
     echo "linux version tag:$linux_kernel_version_tag"
@@ -98,7 +98,7 @@ else
     linux_repo=https://github.com/microsoft/WSL2-Linux-Kernel.git
     linux_version_query="git -c versionsort.suffix=+ ls-remote --refs --sort=version:refname --tags $linux_repo "
     linux_kernel_version_tag=$($linux_version_query | grep -v -e "-rc[0-9]\+$" | tail --lines=1 | cut --delimiter='/' --fields=3) 
-    linux_kernel_type_tag="BASIC-WSL"
+    linux_kernel_type_tag="BASIC-WSL${linux_kernel_type_tag}"
     linux_kernel_version=${linux_kernel_version_tag#"linux-msft-wsl"}
     linux_kernel_version=${linux_kernel_version_tag%".y"}
     # manually set version due to known bug that breaks 5.15 build with werror: pointer may be used after 'realloc' [-Werror=use-after-free] https://gcc.gnu.org/bugzilla/show_bug.cgi?id=104069

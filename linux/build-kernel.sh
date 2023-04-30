@@ -511,9 +511,11 @@ if [ -d "$linux_build_dir/.git" ]; then
         git reset --hard
         git clean -fxd
     fi
+    echo "checking out $linux_kernel_version_tag ..."
     git checkout "$linux_kernel_version_tag" --progress
     cd ..
 else
+    echo "cloning $linux_kernel_version_tag ..."
     git clone $linux_repo --single-branch --branch "$linux_kernel_version_tag" --progress -- $linux_build_dir
 fi
 if [ "$zfs" = "zfs" ];  then
@@ -525,9 +527,11 @@ if [ "$zfs" = "zfs" ];  then
             git reset --hard
             git clean -fxd
         fi
+        echo "checking out $zfs_version_tag ..."
         git checkout "$zfs_version_tag" --progress
         cd ..
     else
+        echo "cloning $zfs_version_tag ..."
         git clone "$zfs_repo" --single-branch --branch "$zfs_version_tag" --progress -- "$zfs_build_dir" 
     fi
 fi

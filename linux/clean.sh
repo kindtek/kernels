@@ -51,7 +51,7 @@ if [ "$arg1" = "" ]; then
 echo "        
     
     
-    build type: "
+"
         read clean_target
 else
     clean_target=$arg1

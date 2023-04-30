@@ -426,7 +426,7 @@ package will not be saved to Windows home directory ...
 
         "
     fi
-    sleep 4
+    sleep 3
 fi
 
 win_save_path=/mnt/c/users/$win_user/k-cache

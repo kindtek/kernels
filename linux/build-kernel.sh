@@ -352,6 +352,7 @@ install to Windows home directory?
         ls -da /mnt/c/users/*/ | tail -n +4 | sed -r -e 's/^\/mnt\/c\/users\/([ A-Za-z0-9]*)*\/+$/\t\1/g'
 
         if [ "$win_user" != "" ]; then
+            win_user_orig=$win_user
 echo "
     C:\\users\\__________ 
 
@@ -360,7 +361,6 @@ install kernel in C:\\users\\$win_user ?
 read -r -p "(continue)
 " win_user 
         else
-            win_user_orig=$win_user
 echo "
     C:\\users\\__________ 
 "

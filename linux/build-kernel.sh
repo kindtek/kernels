@@ -312,10 +312,7 @@ if (( $quick_install )); then
     if [ "$install" = "" ]; then
         install="y"
     fi
-    if [ "$install" = "Y" ]; then
-        install="y"
-    fi
-    if [ "$install" = "y" ]; then
+    if [ "${install,,}" = "y" ] || [ "${install,,}" = "yes" ]; then
         install="y"
         quick_install=True
     else
@@ -326,10 +323,8 @@ else
 install the kernel into WSL when build is finished?
 "
     read install -p "(n)"
-    if [ "$install" = "Y" ]; then
+    if [ "${install,,}" = "y" ] || [ "${install,,}" = "yes" ]; then
         install="y"
-    fi
-    if [ "$install" = "y" ]; then
         save_or_install_mask=install
         if [ "$4" = "" ]; then win_user=""; fi
         install="y" && \
@@ -415,7 +410,7 @@ read win_user -p "(${save_or_install_mask})"
             win_user=$(echo $win_user | cut --delimiter='/' --fields=1)
         fi
     fi
-    # if [ "$install" = "y" ] || [ "$install" = "Y" ]; then
+    # if [ "$install" = "y" ] || [ "${install,,}" = "y" ]; then
     
     if [ "$win_user" != "" ] && [ -w "/mnt/c/users/$win_user" ]; then
         

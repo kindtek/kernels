@@ -231,7 +231,7 @@ Enter the url of a config file to use
 
     Hint: to use a file on Github make sure to use a raw file url starting with https://raw.githubusercontent.com
 "
-        read config_source -p "($generic_config_source)"
+read config_source -p "($generic_config_source)"
 echo "
 # checking if input is a url ..."
         if [ "$config_source" != "" ]; then
@@ -308,7 +308,7 @@ printf "
 if (( $quick_wsl_install )); then
     echo "install kernel when finished?
 "
-    read wsl_install -p "(y)"
+read wsl_install -p "(y)"
     if [ "$wsl_install" = "" ]; then
         wsl_install="y"
     fi
@@ -355,7 +355,7 @@ echo "
 
 install kernel in C:\\users\\$win_user ?
             "
-            read win_user  -p "(confirm)"
+read win_user  -p "(confirm)"
         else
 echo "
 

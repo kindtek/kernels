@@ -605,39 +605,45 @@ cd Split-Path \$mypath -Parent
 # --------------------- FOR CURRENT WINDOWS ACCOUNT ------------------------#
 # --------------------------------------------------------------------------#
 #############################################################################
+
+
+#############################################################################
 #####   OPTION A  #####                                                     #
 #############################################################################
-##### copy/pasta this into any Windows terminal (WIN + x, i): ###############
-##### uncomment to replace/move old .wslconfig 
+#####   copy/pasta this into any Windows terminal (WIN + x, i):         #####
+#####   copy without '#>>' to replace (delete/move) .wslconfig          #####
 #
+#   # delete
+#>> powershell.exe -Command del %HOME%\\.wslconfig;
 #
-#   to delete   - uncomment the following line:
-#   powershell.exe -Command del %HOME%\\.wslconfig;
-#
-#   to move     - uncomment the following line:
-#   powershell.exe -Command move .wslconfig %HOME%\\.wslconfig;
+#   # move file out of the way   
+#>> powershell.exe -Command move .wslconfig %HOME%\\.wslconfig;
     
+    # copy file
     powershell.exe -Command copy ${kernel_alias} %HOME%\\${kernel_alias};
+    # restart wsl
     powershell.exe -Command wsl.exe --shutdown; powershell.exe -Command wsl.exe;
-#
+
 #############################################################################
 
+
 ####-------------------------    OR    ----------------------------------#### 
+
 
 #############################################################################
 #####   OPTION B  #####                                                     #
 #############################################################################
-#### copy/pasta this into any windows terminal (WIN + x, i):      ###########
-#### uncomment to replace/move old .wslconfig 
+####    copy/pasta this into any windows terminal (WIN + x, i):         #####
+####    uncomment to replace/move old .wslconfig                        #####
+####                                                                    #####
+####    copy/pasta without '#>>' into any windows terminal while        ##### 
+####    in this directory                                               ##### 
 #
-#### copy/pasta this into any windows terminal while in this directory  ##### 
 #
-#    
-#   copy without '#' 
-#   edit the path if you extracted the tar file to a different location
-#
-#   .$win_save_path/$package_full_name/$ps_fname
-#
+#   # edit the path if you extracted the tar file to a different location
+#   # run option A script above
+#>> .$win_save_path/$package_full_name/$ps_fname
+
 #############################################################################
 " | tee k-cache/$ps_fname
 if [ -w "$win_save_path" ]; then

@@ -358,7 +358,7 @@ install kernel in C:\\users\\$win_user ?
 read -p "(confirm)" win_user 
         else
 echo "
-
+"
 read -p "(skip)" win_user 
         fi
         win_user_orig=$win_user && \

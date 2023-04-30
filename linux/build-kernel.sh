@@ -847,7 +847,7 @@ for example, you can open a powershell terminal (WIN + x, i) and run:
 
 .. and this will restart WSL
 
-* make sure the terminal is open to your home directory (automatically loaded when using the WIN + x shortcut)"
+* when running the command make sure the terminal is open to your home directory - this is automatically loaded when using the WIN + x shortcut"
     
 read -r -p "
 (finish and try to restart WSL)"

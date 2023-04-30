@@ -562,7 +562,10 @@ if [ ! -f "$kernel_source" ]; then
 Ooops. The kernel did not build. Exiting ..."
 exit
 fi
-
+ps_wsl_install=$win_k_cache/wsl-kernel-install.ps1
+ps_wsl_install_kernel_id=$win_k_cache/wsl-kernel-install_$timestamp_id.ps1
+ps_wsl_restart=$win_k_cache/wsl-restart.ps1
+ps_wsl_rollback=$win_k_cache/wsl-kernel-rollback.ps1
 cd ..
 # move back to base dir  folder with github (relative) path
 mkdir -pv "$git_save_path" 2>/dev/null
@@ -596,9 +599,7 @@ fi
 mkdir -p "$win_k_cache" 2>/dev/null
 sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}/g" ../../../dvlp/mnt/%HOME%/sample.wslconfig
 cp -fv --backup=numbered ../../../dvlp/mnt/%HOME%/sample.wslconfig k-cache/.wslconfig
-ps_wsl_install=$win_k_cache/install-wsl-kernel.ps1
-ps_wsl_restart=$win_k_cache/restart-wsl.ps1
-ps_wsl_rollback=$win_k_cache/rollback-wsl-kernel.ps1
+
 echo "
 # for executing option b outside of this directory 
 # the below two lines are unnecessary to copy
@@ -643,10 +644,11 @@ cd Split-Path \$mypath -Parent
 #
 #
 #   # execute option A script saved in this file
-#>> .$ps_wsl_install
+#>> .$ps_wsl_install_kernel_id
 
 #############################################################################
 " | tee "$ps_wsl_install"
+cp "$ps_wsl_install" "$ps_wsl_install_kernel_id"
 if [ -w "$win_k_cache" ]; then
     tar -czvf "$tarball_source_win" -C k-cache .
     cp -fv --backup=numbered "$tarball_source_win" "$tarball_target_win.bak"

@@ -135,7 +135,7 @@ package_full_name=Linux-$linux_kernel_version-$linux_kernel_type_tag
 config_alias=.config_${kernel_alias}
 config_alias_no_timestamp=.config_${kernel_alias_no_timestamp}
 git_save_path=$cpu_arch/$cpu_vendor/$linux_kernel_version_mask
-nix_save_path=$HOME/k-cache
+nix_k_cache=$HOME/k-cache
 
 # check that the user supplied source exists if not try to pick the best .config file available
 # user choice is best if it exists
@@ -429,16 +429,16 @@ package will not be saved to Windows home directory ...
     sleep 3
 fi
 
-win_save_path=/mnt/c/users/$win_user/k-cache
+win_k_cache=/mnt/c/users/$win_user/k-cache
 kernel_source=arch/$cpu_arch/boot/bzImage
 kernel_target_git=$git_save_path/$kernel_alias_no_timestamp
 config_target_git=$git_save_path/$config_alias_no_timestamp
-kernel_target_nix=$nix_save_path/$kernel_alias
-config_target_nix=$nix_save_path/$config_alias
-kernel_target_win=$win_save_path/$kernel_alias
-config_target_win=$win_save_path/$config_alias
-tarball_target_nix=$nix_save_path/$package_full_name.tar.gz
-tarball_target_win=$win_save_path/$package_full_name.tar.gz
+kernel_target_nix=$nix_k_cache/$kernel_alias
+config_target_nix=$nix_k_cache/$config_alias
+kernel_target_win=$win_k_cache/$kernel_alias
+config_target_win=$win_k_cache/$config_alias
+tarball_target_nix=$nix_k_cache/$package_full_name.tar.gz
+tarball_target_win=$win_k_cache/$package_full_name.tar.gz
 tarball_source_nix=$package_full_name.tar.gz
 tarball_source_win=$package_full_name.tar.gz
 
@@ -577,8 +577,8 @@ cp -fv --backup=numbered  $config_source k-cache/$config_alias
 cp -fv --backup=numbered  $linux_build_dir/$kernel_source k-cache/$kernel_alias
 touch k-cache/$package_full_name
 # work on *nix first
-mkdir -pv $nix_save_path 2>/dev/null
-if [ -w "$nix_save_path" ]; then
+mkdir -pv $nix_k_cache 2>/dev/null
+if [ -w "$nix_k_cache" ]; then
     tar -czvf $tarball_source_nix -C k-cache .
     cp -fv --backup=numbered $tarball_source_nix $tarball_target_nix.bak
     cp -fv $tarball_source_nix $tarball_target_nix 
@@ -588,12 +588,12 @@ fi
 
 # win
 # package a known working wslconfig file along with the kernel and config file
-mkdir -p $win_save_path 2>/dev/null
+mkdir -p $win_k_cache 2>/dev/null
 sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}/g" ../../../dvlp/mnt/%HOME%/sample.wslconfig
 cp -fv --backup=numbered ../../../dvlp/mnt/%HOME%/sample.wslconfig k-cache/.wslconfig
-ps_install=$win_save_path/k-cache/install-wsl-kernel.ps1
-ps_restart=$win_save_path/k-cache/restart-wsl.ps1
-ps_rollback=$win_save_path/k-cache/rollback-wsl-kernel.ps1
+ps_install=$win_k_cache/install-wsl-kernel.ps1
+ps_restart=$win_k_cache/restart-wsl.ps1
+ps_rollback=$win_k_cache/rollback-wsl-kernel.ps1
 echo "
 # for executing option b outside of this directory 
 # the below two lines are unnecessary to copy
@@ -642,7 +642,7 @@ cd Split-Path \$mypath -Parent
 
 #############################################################################
 " | tee $ps_install
-if [ -w "$win_save_path" ]; then
+if [ -w "$win_k_cache" ]; then
     tar -czvf $tarball_source_win -C k-cache .
     cp -fv --backup=numbered $tarball_source_win $tarball_target_win.bak
     cp -fv $tarball_source_win $tarball_target_win
@@ -849,10 +849,10 @@ fi
 #     echo "quick_install == $quick_install"
 # fi
 # cp -fv --backup=numbered $kernel_source $kernel_target_nix
-# cp -fv --backup=numbered .config $nix_save_path/$config_alias
+# cp -fv --backup=numbered .config $nix_k_cache/$config_alias
 
-# if [ -d "$win_save_path" ]; then cp -fv --backup=numbered  $kernel_source $win_save_path/$config_alias; fi
-# if [ -d "$win_save_path" ]; then cp -fv --backup=numbered  $kernel_source $win_save_path/$kernel_alias; fi
+# if [ -d "$win_k_cache" ]; then cp -fv --backup=numbered  $kernel_source $win_k_cache/$config_alias; fi
+# if [ -d "$win_k_cache" ]; then cp -fv --backup=numbered  $kernel_source $win_k_cache/$kernel_alias; fi
 
 
 # cleanup

@@ -357,7 +357,7 @@ echo "
 
 install kernel in C:\\users\\$win_user ?
             "
-read -r -p "(confirm)
+read -r -p "(continue)
 " win_user 
         else
 echo "
@@ -417,7 +417,7 @@ read -r -p "(${save_or_wsl_install_mask})
             win_user=$(echo "$win_user" | cut --delimiter='/' --fields=1)
         fi
     fi
-    # if [ "$wsl_install" = "y" ] || [ "${wsl_install,,}" = "y" ]; then
+    # if [ "$wsl_install" = "y" ] || [ "${wsl_install,,}" = "yes" ]; then
     
     if [ "$win_user" != "" ] && [ -w "/mnt/c/users/$win_user" ]; then
         
@@ -489,8 +489,8 @@ echo "
 continue or exit?
 "
 read -r -p "(continue)
-" confirm
-if [ "$confirm" != "" ]; then
+" continue
+if [ "$continue" != "" ]; then
     exit
 fi
 if [ -d "$linux_build_dir/.git" ]; then
@@ -664,7 +664,7 @@ if (( quick_wsl_install )); then
     mv -vf --backup=numbered "$wsl_config" "$wsl_config.old"
     sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}/g" k-cache/.wslconfig           
     cp -vf k-cache/.wslconfig "$wsl_config"  
-elif [ "$wsl_install" = "y" ]; then
+elif [ "$wsl_install" = "y" ] || [ "$wsl_install" = "yes" ]; then
 
 printf "
 
@@ -689,9 +689,9 @@ printf "
 
 " "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}"
 echo "
-confirm or exit?
+continue or exit?
 "
-read -r -p "(confirm)
+read -r -p "(continue)
 " install_wsl_kernel
     if [ "$install_wsl_kernel" = "" ]; then
         win_user_home=/mnt/c/users/$win_user && \
@@ -720,7 +720,7 @@ continue with .wslconfig replacement?
 "
 read -r -p "(y)
 " replace_wslconfig
-            if [ "$replace_wslconfig" = "n" ] || [ "$replace_wslconfig" = "N" ]; then
+            if [ "${replace_wslconfig,,}" = "n" ] || [ "${replace_wslconfig,,}" = "no" ]; then
                 if grep -q '^\s?\#?\skernel=.*' "$wsl_config"; then
                     sed -i "s/\s*\#*\s*kernel=C.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}/g" "$wsl_config"
                 else
@@ -755,7 +755,7 @@ KERNEL BUILD COMPLETE
 
 "
 
-if (( quick_wsl_install )) || [ "$wsl_install" = "y" ]; then
+if (( quick_wsl_install )) || [ "${wsl_install,,}" = "y" ] || [ "${wsl_install,,}" = "yes" ]; then
 echo "
 
 
@@ -801,7 +801,8 @@ copy/pasta this into any windows terminal (WIN + x, i):"
     
 
 # " | tee "$ps_wsl_rollback"
-read -r -p "(next)"
+read -r -p "(next)
+"
 echo "
 
 

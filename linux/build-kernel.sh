@@ -568,9 +568,9 @@ cd ..
 mkdir -pv "$git_save_path" 2>/dev/null
 # queue files to be saved to repo
 # if (( $user_config_flag )); then
-    cp -fv --backup=numbered $linux_build_dir/.config $config_target_git
+    cp -fv --backup=numbered $linux_build_dir/.config "$config_target_git"
 # fi
-cp -fv --backup=numbered $linux_build_dir/$kernel_source $kernel_target_git
+cp -fv --backup=numbered $linux_build_dir/"$kernel_source" "$kernel_target_git"
 
 
 # build/move tar with version control if [tar]get directory is writeable
@@ -722,7 +722,7 @@ read -r -p "(y)
 " replace_wslconfig
             if [ "$replace_wslconfig" = "n" ] || [ "$replace_wslconfig" = "N" ]; then
                 if grep -q '^\s?\#?\skernel=.*' "$wsl_config"; then
-                    sed -i "s/\s*\#*\s*kernel=C.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}/g" $wsl_config
+                    sed -i "s/\s*\#*\s*kernel=C.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}/g" "$wsl_config"
                 else
                     wslconfig_old="$(cat "$wsl_config")"
                     wslconfig_new="

@@ -564,10 +564,8 @@ if [ ! -f "$kernel_source" ]; then
 Ooops. The kernel did not build. Exiting ..."
 exit
 fi
-ps_wsl_install=$win_k_cache/wsl-kernel-install.ps1
-ps_wsl_install_kernel_id=$win_k_cache/wsl-kernel-install_$timestamp_id.ps1
-ps_wsl_restart=$win_k_cache/wsl-restart.ps1
-ps_wsl_rollback=$win_k_cache/wsl-kernel-rollback.ps1
+ps_wsl_install_kernel_id=wsl-kernel-install_$timestamp_id.ps1
+
 cd ..
 # move back to base dir  folder with github (relative) path
 mkdir -pv "$git_save_path" 2>/dev/null
@@ -646,11 +644,11 @@ cd Split-Path \$mypath -Parent
 #
 #
 #   # execute option A script saved in this file
-#>> .$ps_wsl_install_kernel_id
+#>> ./$ps_wsl_install_kernel_id
 
 #############################################################################
-" | tee "$ps_wsl_install"
-cp "$ps_wsl_install" "$ps_wsl_install_kernel_id"
+" | tee "wsl-install.ps1"
+cp "wsl-install.ps1" "$win_k_cache/$ps_wsl_install_kernel_id"
 if [ -w "$win_k_cache" ]; then
     tar -czvf "$tarball_source_win" -C k-cache .
     cp -fv --backup=numbered "$tarball_source_win" "$tarball_target_win.bak"
@@ -789,7 +787,7 @@ echo "
 
 "
 
-echo "  powershell.exe -Command wsl.exe --shutdown; wsl.exe --exec echo 'WSL successfully restarted'; powershell.exe -Command wsl.exe;" | tee "$ps_wsl_restart"
+echo "  powershell.exe -Command wsl.exe --shutdown; wsl.exe --exec echo 'WSL successfully restarted'; powershell.exe -Command wsl.exe;" | tee "wsl-restart.ps1"
 
 echo "
 
@@ -804,7 +802,7 @@ echo "
     powershell.exe -Command wsl.exe --shutdown; wsl.exe --exec echo 'WSL successfully restarted'; powershell.exe -Command wsl.exe -d $WSL_DISTRO_NAME;    
     
 
-" | tee "$ps_wsl_rollback"
+" | tee "wsl-rollback"
 read -r -p "(next)
 "
 echo "
@@ -819,16 +817,16 @@ echo "
     powershell.exe -Command wsl.exe --shutdown; powershell.exe -Command wsl.exe --exec echo 'WSL successfully restarted';
     powershell.exe -Command wsl.exe -d $WSL_DISTRO_NAME
 
-" | tee "$ps_wsl_restart"
+" | tee "wsl-restart.ps1"
 read -r -p "(next)
 "
 echo "
 
 the above instructions were displayed to copy in case of emergency and are also saved in the k-cache:
 
-    -   $ps_wsl_install
-    -   $ps_wsl_rollback
-    -   $ps_wsl_restart
+    -   wsl-install.ps1
+    -   wsl-rollback.ps1
+    -   wsl-restart.ps1
 
 this makes it easy for you to install the kernel, rollback it back, or restart WSL without copying and pasting multiple lines of code
 
@@ -845,7 +843,7 @@ read -r -p "
     if [ "$wsl_restart" = "" ]; then
         echo " attempting to restart WSL ... 
         "
-        ( pwsh -file "$ps_wsl_restart" ) || \
+        ( pwsh -file "$win_k_cache/wsl-restart.ps1" ) || \
         ( echo "unable to restart WSL. manual restart required:
         
     # copy/pasta to restart wsl

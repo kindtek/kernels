@@ -794,13 +794,13 @@ WSL ROLLBACK INSTRUCTIONS
 -------------------------
 
 copy/pasta this into any windows terminal (WIN + x, i):"
-# echo "
-#     powershell -Command del c:\\users\\$win_user\\.wslconfig;
-#     powershell -Command move c:\\users\\$win_user\\.wslconfig.old c:\\users\\$win_user\\.wslconfig;
-#     powershell -Command wsl.exe --shutdown; powershell -Command wsl.exe -d $WSL_DISTRO_NAME" powershell -Command wsl.exe -d $WSL_DISTRO_NAME;    
+echo "
+    powershell -Command del c:\\users\\$win_user\\.wslconfig;
+    powershell -Command move c:\\users\\$win_user\\.wslconfig.old c:\\users\\$win_user\\.wslconfig;
+    powershell -Command wsl.exe --shutdown; powershell -Command wsl.exe -d $WSL_DISTRO_NAME powershell -Command wsl.exe -d $WSL_DISTRO_NAME;    
     
 
-# " | tee "$ps_wsl_rollback"
+" | tee "$ps_wsl_rollback"
 read -r -p "(next)
 "
 echo "

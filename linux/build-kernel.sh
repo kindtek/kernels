@@ -773,7 +773,7 @@ WSL REBOOT
 
 would you like to reboot WSL now or later?
 "
-read -r -p "(reboot now)
+read -r -p "(reboot WSL now)
 " wsl_restart
 echo "
 
@@ -849,9 +849,10 @@ for example, you can open a powershell terminal (WIN + x, i) and run:
 
 * when running the command make sure the terminal is open to your home directory - thankfully, this is automatically loaded when using the WIN + x shortcut"
     
+
+    if [ "$wsl_restart" = "" ]; then
 read -r -p "
 (finish and try to restart WSL)"
-    if [ "$wsl_restart" = "" ]; then
         echo " attempting to restart WSL ... 
         "
         ( pwsh -file "$win_k_cache/wsl-restart.ps1" ) || \
@@ -863,7 +864,16 @@ read -r -p "
 
 "; read -r -p "
 (close)"; echo "
-(use WIN + x, i to open a Windows terminal)"       ) 
+
+Goodbye!
+
+use WIN + x, i to open a Windows terminal"       ) 
+    else
+read -r -p "
+(close)";
+echo "
+
+Goodbye!"
     fi
 
     

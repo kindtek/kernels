@@ -55,6 +55,7 @@ fi
         cd linux-build-msft
         git reset --hard
         git clean -fxd
+        cd ..
     fi
     if [ "$clean_target" = "stable" ]; then
         cd linux-build-gregkh
@@ -84,7 +85,7 @@ if [ "$clean_target" = "k-cache" ]; then
         rm -rfv k-cache/*
         rm -rfv k-cache/.*
     fi
-    if [ "$clean_target" = "" ]; then
+    if [ "$clean_target" = "" ] || [ "$1" != "" ]; then
         exit
     fi
     clean_target=""

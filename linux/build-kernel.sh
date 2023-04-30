@@ -374,7 +374,7 @@ read -r -p"(skip)
         #     # win_user=$(echo $win_user | sed -E 's/^\s*([A-Za-z0-9]:?\\*)([A-Za-z0-9]*\\)*([A-Za-z0-9]+)+$/\3/g')        
         #     # win_user=$(echo $win_user | sed -E 's/^\s*([A-Za-z0-9]:?\\*)([A-Za-z0-9]*\\?\\?)*([A-Za-z0-9]+)+$/\3/g')
         else
-            win_user=$(echo $win_user | cut --delimiter='/' --fields=1)
+            win_user=$(echo "$win_user" | cut --delimiter='/' --fields=1)
         fi 
     else 
         save_or_wsl_install_mask=save 
@@ -414,7 +414,7 @@ read -r -p"(${save_or_wsl_install_mask})
         #     # win_user=$(echo $win_user | sed -E 's/^\s*([A-Za-z0-9]:?\\*)([A-Za-z0-9]*\\)*([A-Za-z0-9]+)+$/\3/g')        
         #     # win_user=$(echo $win_user | sed -E 's/^\s*([A-Za-z0-9]:?\\*)([A-Za-z0-9]*\\?\\?)*([A-Za-z0-9]+)+$/\3/g')
         else
-            win_user=$(echo $win_user | cut --delimiter='/' --fields=1)
+            win_user=$(echo "$win_user" | cut --delimiter='/' --fields=1)
         fi
     fi
     # if [ "$wsl_install" = "y" ] || [ "${wsl_install,,}" = "y" ]; then
@@ -513,16 +513,16 @@ if [ "$zfs" = "zfs" ];  then
             git reset --hard
             git clean -fxd
         fi
-        git checkout $zfs_version_tag --progress
+        git checkout "$zfs_version_tag" --progress
         cd ..
     else
-        git clone $zfs_repo --single-branch --branch $zfs_version_tag --progress -- $zfs_build_dir 
+        git clone "$zfs_repo" --single-branch --branch "$zfs_version_tag" --progress -- "$zfs_build_dir" 
     fi
 fi
 
 
 # replace kernel source .config with the config generated from a custom config
-cp -fv $config_source $linux_build_dir/.config
+cp -fv "$config_source" $linux_build_dir/.config
 
 cd $linux_build_dir || exit
 if (( quick_wsl_install )); then
@@ -536,7 +536,7 @@ fi
 if [ "$zfs" = "zfs" ];  then
 #     echo "zfs == True
 # LINENO: ${LINENO}"
-    cd ../$zfs_build_dir && \
+    (cd ../"$zfs_build_dir") || (exit) 
     bash autogen.sh && \
     bash configure --prefix=/ --libdir=/lib --includedir=/usr/include --datarootdir=/usr/share --enable-linux-builtin=yes --with-linux=../$linux_build_dir --with-linux-obj=../$linux_build_dir && \
     bash copy-builtin ../$linux_build_dir && \

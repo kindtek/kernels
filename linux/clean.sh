@@ -8,24 +8,43 @@ while [ "$clean_target" = "" ]; do
 if [ "$arg1" = "" ]; then
         echo "
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     press ENTER to exit or choose something to clean
+
 "
     if [ -d "linux-build-msft/.git" ]; then
-        echo "        basic"
+        echo "      - basic"
     fi
     if [ -d "linux-build-gregkh/.git" ]; then
-        echo "        stable"
+        echo "      - stable"
     fi
     if [ -d "linux-build-torvalds/.git" ]; then
-        echo "        latest"
-        echo "        latest-rc"
+        echo "      - latest"
+        echo "      - latest-rc"
 
     fi
     if [ -d "zfs-build/.git" ]; then
-        echo "        zfs"
+        echo "      - zfs"
     fi
-        echo "        k-cache"
+        echo "      - k-cache"
 echo "        
+    
+    
     build type: "
         read clean_target
 else

@@ -360,13 +360,13 @@ install kernel in C:\\users\\$win_user ?
 read -r -p "(continue)
 " win_user 
         else
+            win_user_orig=$win_user
 echo "
     C:\\users\\__________ 
 "
 read -r -p "(skip)
 " win_user 
         fi
-        win_user_orig=$win_user && \
         if [ "$win_user" = "" ]; then
             win_user=${win_user_orig}
         # else 

@@ -230,7 +230,7 @@ Enter the url of a config file to use
 
     Hint: to use a file on Github make sure to use a raw file url starting with https://raw.githubusercontent.com
 "
-read -r -p "($generic_config_source)
+[ "$win_user" = "docker" ] || read -r -p "($generic_config_source)
 " config_source
 echo "
 # checking if input is a url ..."
@@ -254,7 +254,7 @@ echo "
         echo "config $config_source appears to be valid"
     else    
         echo "could not read $config_source
-choosing a generic alternative instead ..."
+choosing an alternative ..."
         # reliable but the least desirable .. keep looking
         if [ -r "config-wsl" ]; then 
             config_source=config-wsl
@@ -267,6 +267,8 @@ choosing a generic alternative instead ..."
         if [ -r "$git_save_path/$config_alias_no_timestamp" ]; then
             config_source=$git_save_path/$config_alias_no_timestamp
         fi
+
+        echo "picked $config_source"
     fi
 fi
 
@@ -308,7 +310,7 @@ printf "
 if (( quick_wsl_install )); then
     echo "install kernel when finished?
 "
-read -r -p "(y)
+[ "$win_user" = "docker" ] || read -r -p "(y)
 " wsl_install
     if [ "$wsl_install" = "" ]; then
         wsl_install="y"
@@ -323,7 +325,7 @@ else
 echo "
 install the kernel into WSL when build is finished?
 "
-read -r -p "(n)
+[ "$win_user" = "docker" ] || read -r -p "(n)
 " wsl_install
     if [ "${wsl_install,,}" = "y" ] || [ "${wsl_install,,}" = "yes" ]; then
         wsl_install="y"
@@ -358,13 +360,13 @@ echo "
 
 install kernel in C:\\users\\$win_user ?
             "
-read -r -p "(continue)
+[ "$win_user" = "docker" ] || read -r -p "(continue)
 " win_user 
         else
 echo "
     C:\\users\\__________ 
 "
-read -r -p "(skip)
+[ "$win_user" = "docker" ] || read -r -p "(skip)
 " win_user 
         fi
         if [ "$win_user" = "" ]; then
@@ -405,9 +407,9 @@ save kernel package to Windows home directory C:\\users\\__________
             echo "${save_or_wsl_install_mask} kernel files to C:\\users\\$win_user ?
             "
         fi
-read -r -p "(${save_or_wsl_install_mask})
+[ "$win_user" = "docker" ] || read -r -p "(${save_or_wsl_install_mask})
 " win_user
-        if [ "$4" != "" ] && [ -w "/mnt/c/users/$4" ]; then
+        if [ "$4" != "" ] && [ "$4" != "docker" ] && [ -w "/mnt/c/users/$4" ]; then
             win_user=${4}
         # else 
         #     # if the user tries inputting a path name take everything to the right of the last \
@@ -419,13 +421,14 @@ read -r -p "(${save_or_wsl_install_mask})
     fi
     # if [ "$wsl_install" = "y" ] || [ "${wsl_install,,}" = "yes" ]; then
     
-    if [ "$win_user" != "" ] && [ -w "/mnt/c/users/$win_user" ]; then
+    if [ "$win_user" != "" ] && [ -w "/mnt/c/users/$win_user" ] || \
+    [ "$win_user" = "docker" ]; then
         
 echo "
 kernel package will be ${save_or_wsl_install_mask}ed to C:\\users\\$win_user
 archives and recovery scripts will be saved to C:\\users\\$win_user\\k-cache
 "  
-read -r -p "
+[ "$win_user" = "docker" ] || read -r -p "
 (continue)
 " 
     else
@@ -497,7 +500,7 @@ printf "
 echo "
 build kernel or exit?
 "
-read -r -p "(build)
+[ "$win_user" = "docker" ] || read -r -p "(build)
 " continue
 if [ "$continue" != "" ]; then
     exit
@@ -705,7 +708,7 @@ printf "
 echo "
 install or exit?
 "
-read -r -p "(install $package_full_name into $WSL_DISTRO_NAME WSL)
+[ "$win_user" = "docker" ] || read -r -p "(install $package_full_name into $WSL_DISTRO_NAME WSL)
 " install_wsl_kernel
     if [ "$install_wsl_kernel" = "" ]; then
         win_user_home=/mnt/c/users/$win_user && \
@@ -732,7 +735,7 @@ a backup of the original file will be saved as:
 
 continue with .wslconfig replacement?
 "
-read -r -p "(y)
+[ "$win_user" = "docker" ] || read -r -p "(y)
 " replace_wslconfig
             if [ "${replace_wslconfig,,}" = "n" ] || [ "${replace_wslconfig,,}" = "no" ]; then
                 if grep -q '^\s?\#?\skernel=.*' "$wsl_config"; then
@@ -779,7 +782,7 @@ WSL REBOOT
 
 would you like to reboot WSL now or later?
 "
-read -r -p "(reboot WSL now)
+[ "$win_user" = "docker" ] || read -r -p "(reboot WSL now)
 " wsl_restart
 echo "
 
@@ -799,7 +802,7 @@ echo "
 recovery scripts will be displayed on your screen next
 please leave this window open until WSL has been rebooted in case you need to copy/pasta to rollback to a working configuration
 "
-read -r -p "(see WSL recovery instructions)
+[ "$win_user" = "docker" ] || read -r -p "(see WSL recovery instructions)
 "
 echo "  powershell.exe -Command wsl.exe --shutdown; wsl.exe --exec echo 'WSL successfully restarted'; powershell.exe -Command wsl.exe;" | tee "$win_k_cache/wsl-restart.ps1" &>/dev/null
 
@@ -817,7 +820,7 @@ echo "
     
 
 " | tee "wsl-kernel-rollback.ps1"
-read -r -p "(see WSL reboot instructions)
+[ "$win_user" = "docker" ] || read -r -p "(see WSL reboot instructions)
 "
 echo "
 
@@ -832,7 +835,7 @@ echo "
     powershell.exe -Command wsl.exe -d $WSL_DISTRO_NAME
 
 "
-read -r -p "(see helpful shortcuts)
+[ "$win_user" = "docker" ] || read -r -p "(see helpful shortcuts)
 "
 echo "
 
@@ -857,7 +860,7 @@ for example, you can open a powershell terminal (WIN + x, i) and run:
     
 
     if [ "$wsl_restart" = "" ]; then
-read -r -p "
+[ "$win_user" = "docker" ] || read -r -p "
 (finish and try to restart WSL)"
         echo " attempting to restart WSL ... 
         "
@@ -868,14 +871,14 @@ read -r -p "
     powershell.exe -Command wsl.exe --exec echo 'WSL successfully restarted'; powershell.exe -Command wsl.exe -d $WSL_DISTRO_NAME;
 
 
-"; read -r -p "
+"; [ "$win_user" = "docker" ] || read -r -p "
 (close)"; echo "
 
 Goodbye!
 
 use WIN + x, i to open a Windows terminal"       ) 
     else
-read -r -p "
+[ "$win_user" = "docker" ] || read -r -p "
 (close)";
 echo "
 

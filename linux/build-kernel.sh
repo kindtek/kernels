@@ -789,9 +789,11 @@ echo "
 
 
 
-
+recovery scripts will be displayed on your screen next
+please leave this window open until WSL has been full booted in case you need to copy/pasta to rollback to a working configuration
 "
-
+read -r -p "(next)
+"
 echo "  powershell.exe -Command wsl.exe --shutdown; wsl.exe --exec echo 'WSL successfully restarted'; powershell.exe -Command wsl.exe;" | tee "wsl-restart.ps1" 2>/dev/null
 
 echo "

@@ -757,7 +757,7 @@ WSL REBOOT
 
 would you like to reboot WSL now or later?
 "
-read restart -p "(now)"
+read wsl_restart -p "(now)"
 echo "
 
 
@@ -807,7 +807,7 @@ echo "
 
 " | tee $ps_wsl_restart
 read -p "(next)"
-    if [ "$restart" = "" ]; then
+    if [ "$wsl_restart" = "" ]; then
         echo " attempting to restart WSL ... 
         "
         ( pwsh .$ps_wsl_restart ) || \

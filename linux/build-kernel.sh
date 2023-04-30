@@ -230,7 +230,7 @@ Enter the url of a config file to use
 
     Hint: to use a file on Github make sure to use a raw file url starting with https://raw.githubusercontent.com
 "
-read -r -p"($generic_config_source)
+read -r -p "($generic_config_source)
 " config_source
 echo "
 # checking if input is a url ..."
@@ -308,7 +308,7 @@ printf "
 if (( quick_wsl_install )); then
     echo "install kernel when finished?
 "
-read -r -p"(y)
+read -r -p "(y)
 " wsl_install
     if [ "$wsl_install" = "" ]; then
         wsl_install="y"
@@ -323,7 +323,7 @@ else
 echo "
 install the kernel into WSL when build is finished?
 "
-read -r -p"(n)
+read -r -p "(n)
 " wsl_install
     if [ "${wsl_install,,}" = "y" ] || [ "${wsl_install,,}" = "yes" ]; then
         wsl_install="y"
@@ -357,13 +357,13 @@ echo "
 
 install kernel in C:\\users\\$win_user ?
             "
-read -r -p"(confirm)
+read -r -p "(confirm)
 " win_user 
         else
 echo "
     C:\\users\\__________ 
 "
-read -r -p"(skip)
+read -r -p "(skip)
 " win_user 
         fi
         win_user_orig=$win_user && \
@@ -405,7 +405,7 @@ save kernel package to Windows home directory C:\\users\\__________
             echo "${save_or_wsl_install_mask} kernel files to C:\\users\\$win_user ?
             "
         fi
-read -r -p"(${save_or_wsl_install_mask})
+read -r -p "(${save_or_wsl_install_mask})
 " win_user
         if [ "$4" != "" ] && [ -w "/mnt/c/users/$4" ]; then
             win_user=${4}
@@ -488,7 +488,7 @@ printf "
 echo "
 continue or exit?
 "
-read -r -p"(continue)
+read -r -p "(continue)
 " confirm
 if [ "$confirm" != "" ]; then
     exit
@@ -691,7 +691,7 @@ printf "
 echo "
 confirm or exit?
 "
-read -r -p"(confirm)
+read -r -p "(confirm)
 " install_wsl_kernel
     if [ "$install_wsl_kernel" = "" ]; then
         win_user_home=/mnt/c/users/$win_user && \
@@ -718,7 +718,7 @@ a backup of the original file will be saved as:
 
 continue with .wslconfig replacement?
 "
-read -r -p"(y)
+read -r -p "(y)
 " replace_wslconfig
             if [ "$replace_wslconfig" = "n" ] || [ "$replace_wslconfig" = "N" ]; then
                 if grep -q '^\s?\#?\skernel=.*' "$wsl_config"; then
@@ -765,7 +765,7 @@ WSL REBOOT
 
 would you like to reboot WSL now or later?
 "
-read -r -p"(now)
+read -r -p "(now)
 " wsl_restart
 echo "
 
@@ -785,7 +785,7 @@ echo "
 
 "
 
-echo "  powershell -Command wsl.exe --shutdown; powershell -Command wsl.exe -d $WSL_DISTRO_NAME" | tee $ps_wsl_restart
+echo "  powershell -Command wsl.exe --shutdown; powershell -Command wsl.exe -d $WSL_DISTRO_NAME" | tee "$ps_wsl_restart"
 
 echo "
 
@@ -801,7 +801,7 @@ echo "
     
 
 " | tee "$ps_wsl_rollback"
-read -r -p"(next)"
+read -r -p "(next)"
 echo "
 
 
@@ -815,7 +815,7 @@ echo "
     powershell -Command wsl.exe -d $WSL_DISTRO_NAME
 
 " | tee "$ps_wsl_restart"
-read -r -p"(next)"
+read -r -p "(next)"
 echo "
 
 the above instructions were displayed to copy in case of emergency and are also saved in the k-cache:

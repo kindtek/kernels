@@ -45,7 +45,7 @@ press ENTER to exit or choose something to clean
         echo "      - [l]atest-rc"
 
     fi
-    if [ -d "zfs-build/.git" ]; then
+    if [ -d "$zfs_dir/.git" ]; then
         echo "      - [z]fs"
     fi
         echo "      - [k]-cache"
@@ -84,8 +84,10 @@ fi
     fi
     if [ "${clean_target,,}" = "zfs" ] || [ "${clean_target,,}" = "z" ]; then
         cd $zfs_dir || ( echo "change to directory $zfs_dir failed" && exit )
-        git reset --hard
-        git clean -fxd
+        if [ -d ".git" ]; then
+            git reset --hard
+            git clean -fxd
+        fi
         cd ..
     fi
     if [ "${clean_target,,}" = "k-cache" ] || [ "${clean_target,,}" = "k" ] ; then

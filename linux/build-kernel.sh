@@ -628,7 +628,7 @@ cd Split-Path \$mypath -Parent
 #>> powershell.exe -Command move .wslconfig %HOME%\\.wslconfig;
     
     # extract
-    wsl.exe -d $WSL_DISTRO_NAME exec 'tar -xvzf $package_full_name.tar.gz'
+    wsl.exe -d $WSL_DISTRO_NAME exec tar -xvzf $package_full_name.tar.gz
 
     # copy file
     powershell.exe -Command copy ${kernel_alias} %HOME%\\${kernel_alias};

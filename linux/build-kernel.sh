@@ -627,7 +627,7 @@ cd Split-Path \$mypath -Parent
     # copy file
     powershell -Command copy ${kernel_alias} %HOME%\\${kernel_alias};
     # restart wsl
-    powershell -Command wsl.exe --shutdown; powershell -Command wsl.exe;
+    powershell -Command wsl.exe -d $WSL_DISTRO_NAME --exec echo 'WSL successfully restarted'; powershell -Command wsl.exe;
 
 #############################################################################
 
@@ -797,7 +797,7 @@ copy/pasta this into any windows terminal (WIN + x, i):"
 echo "
     powershell -Command del c:\\users\\$win_user\\.wslconfig;
     powershell -Command move c:\\users\\$win_user\\.wslconfig.old c:\\users\\$win_user\\.wslconfig;
-    powershell -Command wsl.exe --shutdown; powershell -Command wsl.exe -d $WSL_DISTRO_NAME;    
+    powershell -Command wsl.exe --shutdown; powershell -Command wsl.exe -d $WSL_DISTRO_NAME" powershell -Command wsl.exe -d $WSL_DISTRO_NAME;    
     
 
 " | tee "$ps_wsl_rollback"
@@ -811,8 +811,8 @@ WSL REBOOT INSTRUCTIONS
 copy/pasta the following line into any windows terminal (WIN + x, i):
 "
 echo "
-    powershell -Command wsl.exe --shutdown; powershell -Command wsl.exe -d $WSL_DISTRO_NAME
-    powershell -Command wsl.exe -d $WSL_DISTRO_NAME --exec echo 'WSL successfully restarted'
+    powershell -Command wsl.exe --shutdown; powershell -Command wsl.exe -d $WSL_DISTRO_NAME --exec echo 'WSL successfully restarted';
+    powershell -Command wsl.exe -d $WSL_DISTRO_NAME
 
 " | tee "$ps_wsl_restart"
 read -r -p"(next)"
@@ -843,7 +843,7 @@ read -r -p "
         ( echo "unable to restart WSL. manual restart required:
         
     # copy/pasta to restart wsl
-    powershell -Command wsl.exe --shutdown; powershell -Command wsl.exe -d $WSL_DISTRO_NAME;    
+    powershell -Command wsl.exe -d $WSL_DISTRO_NAME --exec echo 'WSL successfully restarted'; powershell -Command wsl.exe -d $WSL_DISTRO_NAME;    
 " ) 
     fi
 

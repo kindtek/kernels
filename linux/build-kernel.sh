@@ -434,6 +434,12 @@ Oooops - C:\\users\\$win_user is an invalid save location
 package will not be saved to Windows home directory ...
 
         "
+        sleep 2
+        echo ""
+        sleep 1
+        echo ""
+        sleep 1
+        echo ""
     fi
 fi
 

@@ -5,7 +5,7 @@ kernel_type=$1
 config_source=$2
 zfs=$3
 win_user=${4:-'user'}
-quick_install=${4:+True}
+quick_wsl_install=${4:+True}
 # interact=False
 # interact=${5:+True}
 # kernel_file_suffix=''
@@ -305,29 +305,29 @@ printf "
 
 " "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}"
 
-if (( $quick_install )); then
+if (( $quick_wsl_install )); then
     echo "install kernel when finished?
 "
-    read install -p "(y)"
-    if [ "$install" = "" ]; then
-        install="y"
+    read wsl_install -p "(y)"
+    if [ "$wsl_install" = "" ]; then
+        wsl_install="y"
     fi
-    if [ "${install,,}" = "y" ] || [ "${install,,}" = "yes" ]; then
-        install="y"
-        quick_install=True
+    if [ "${wsl_install,,}" = "y" ] || [ "${wsl_install,,}" = "yes" ]; then
+        wsl_install="y"
+        quick_wsl_install=True
     else
-        quick_install=False
+        quick_wsl_install=False
     fi    
 else
-    echo "
+echo "
 install the kernel into WSL when build is finished?
 "
-    read install -p "(n)"
-    if [ "${install,,}" = "y" ] || [ "${install,,}" = "yes" ]; then
-        install="y"
-        save_or_install_mask=install
+read wsl_install -p "(n)"
+    if [ "${wsl_install,,}" = "y" ] || [ "${wsl_install,,}" = "yes" ]; then
+        wsl_install="y"
+        save_or_wsl_install_mask=wsl_install
         if [ "$4" = "" ]; then win_user=""; fi
-        install="y" && \
+        wsl_install="y" && \
 echo "
 
 
@@ -371,7 +371,7 @@ read win_user  -p "(skip install)"
             win_user=$(echo $win_user | cut --delimiter='/' --fields=1)
         fi 
     else 
-        save_or_install_mask=save 
+        save_or_wsl_install_mask=save 
         if [ "$4" = "" ]; then 
             win_user=""
 echo "
@@ -396,10 +396,10 @@ save kernel package to Windows home directory C:\\users\\__________
         ls -da /mnt/c/users/*/ | tail -n +4 | sed -r -e 's/^\/mnt\/c\/users\/([ A-Za-z0-9]*)*\/+$/\t\1/g'
 
         else
-            echo "${save_or_install_mask} kernel files to C:\\users\\$win_user ?
+            echo "${save_or_wsl_install_mask} kernel files to C:\\users\\$win_user ?
             "
         fi
-read win_user -p "(${save_or_install_mask})"
+read win_user -p "(${save_or_wsl_install_mask})"
         if [ "$4" != "" ] && [ -w "/mnt/c/users/$4" ]; then
             win_user=${4}
         # else 
@@ -410,12 +410,12 @@ read win_user -p "(${save_or_install_mask})"
             win_user=$(echo $win_user | cut --delimiter='/' --fields=1)
         fi
     fi
-    # if [ "$install" = "y" ] || [ "${install,,}" = "y" ]; then
+    # if [ "$wsl_install" = "y" ] || [ "${wsl_install,,}" = "y" ]; then
     
     if [ "$win_user" != "" ] && [ -w "/mnt/c/users/$win_user" ]; then
         
 echo "
-kernel package will be ${save_or_install_mask}ed to C:\\users\\$win_user ...
+kernel package will be ${save_or_wsl_install_mask}ed to C:\\users\\$win_user ...
 "   
     else
 echo "
@@ -487,7 +487,7 @@ if [ "$confirm" != "" ]; then
 fi
 if [ -d "$linux_build_dir/.git" ]; then
     cd $linux_build_dir
-    if ! (( $quick_install )); then
+    if ! (( $quick_wsl_install )); then
         git reset --hard
         git clean -fxd
     fi
@@ -501,7 +501,7 @@ if [ "$zfs" = "zfs" ];  then
 # LINENO: ${LINENO}"
     if [ -d "$zfs_build_dir/.git" ]; then
         cd $zfs_build_dir
-        if ! (( $quick_install )); then 
+        if ! (( $quick_wsl_install )); then 
             git reset --hard
             git clean -fxd
         fi
@@ -517,7 +517,7 @@ fi
 cp -fv $config_source $linux_build_dir/.config
 
 cd $linux_build_dir
-if (( $quick_install )); then
+if (( $quick_wsl_install )); then
     # prompt bypass
     yes "" | make oldconfig
     yes "" | make prepare scripts 
@@ -541,12 +541,12 @@ if [ "$zfs" = "zfs" ];  then
 # LINENO: ${LINENO}"
     sed -i 's/\# CONFIG_ZFS is not set/CONFIG_ZFS=y/g' .config
 fi
-if (( $quick_install )); then
+if (( $quick_wsl_install )); then
     yes "" | make -j $(expr $(nproc) - 1)
 else
     make -j $(expr $(nproc) - 1)
 fi
-make modules_install
+make modules_wsl_install
 # kernel is baked - time to distribute fresh copies
 if [ ! -f "$kernel_source" ]; then
     echo "
@@ -588,9 +588,9 @@ fi
 mkdir -p $win_k_cache 2>/dev/null
 sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}/g" ../../../dvlp/mnt/%HOME%/sample.wslconfig
 cp -fv --backup=numbered ../../../dvlp/mnt/%HOME%/sample.wslconfig k-cache/.wslconfig
-ps_install=$win_k_cache/install-wsl-kernel.ps1
-ps_restart=$win_k_cache/restart-wsl.ps1
-ps_rollback=$win_k_cache/rollback-wsl-kernel.ps1
+ps_wsl_install=$win_k_cache/install-wsl-kernel.ps1
+ps_wsl_restart=$win_k_cache/restart-wsl.ps1
+ps_wsl_rollback=$win_k_cache/rollback-wsl-kernel.ps1
 echo "
 # for executing option b outside of this directory 
 # the below two lines are unnecessary to copy
@@ -635,10 +635,10 @@ cd Split-Path \$mypath -Parent
 #
 #
 #   # execute option A script saved in this file
-#>> .$ps_install
+#>> .$ps_wsl_install
 
 #############################################################################
-" | tee $ps_install
+" | tee $ps_wsl_install
 if [ -w "$win_k_cache" ]; then
     tar -czvf $tarball_source_win -C k-cache .
     cp -fv --backup=numbered $tarball_source_win $tarball_target_win.bak
@@ -648,15 +648,15 @@ else
 unable to save kernel package to Windows home directory"
 fi
 win_user_home=/mnt/c/users/$win_user
-wsl_kernel_install=${win_user_home}/${kernel_alias}
-wsl_config_install=${win_user_home}/.wslconfig
-if (( $quick_install )); then
+wsl_kernel=${win_user_home}/${kernel_alias}
+wsl_config=${win_user_home}/.wslconfig
+if (( $quick_wsl_install )); then
     # copy kernel and wsl config right away
-    cp -vf k-cache/$kernel_alias $wsl_kernel_install 
-    mv -vf --backup=numbered $wsl_config_install $wsl_config_install.old
+    cp -vf k-cache/$kernel_alias $wsl_kernel 
+    mv -vf --backup=numbered $wsl_config $wsl_config.old
     sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}/g" k-cache/.wslconfig           
-    cp -vf k-cache/.wslconfig $wsl_config_install  
-elif [ "$install" = "y" ]; then
+    cp -vf k-cache/.wslconfig $wsl_config  
+elif [ "$wsl_install" = "y" ]; then
 
 printf "
 
@@ -670,10 +670,10 @@ printf "
 ------------------------------------------------------------------
 
   .wslconfig:
-    $wsl_config_install
+    $wsl_config
 
   kernel:
-    $wsl_kernel_install     
+    $wsl_kernel     
 
 ==================================================================
 ==================================================================
@@ -683,12 +683,12 @@ printf "
 echo "
 confirm or exit?
 "
-read install_kernel -p "(confirm)"
-    if [ "$install_kernel" = "" ]; then
+read install_wsl_kernel -p "(confirm)"
+    if [ "$install_wsl_kernel" = "" ]; then
         win_user_home=/mnt/c/users/$win_user && \
-        cp -vf k-cache/${kernel_alias} $wsl_kernel_install
-        quick_install=True
-        if [ -f "$wsl_config_install" ]; then
+        cp -vf k-cache/${kernel_alias} $wsl_kernel
+        quick_wsl_install=True
+        if [ -f "$wsl_config" ]; then
 echo "
 
 
@@ -705,32 +705,32 @@ echo "
 replacing this with a pre-configured .wslconfig is *HIGHLY* recommended
 a backup of the original file will be saved as:
 
-    $wsl_config_install.old
+    $wsl_config.old
 
 continue with .wslconfig replacement?
 "
 read replace_wslconfig -p "(y)"
             if [ "$replace_wslconfig" = "n" ] || [ "$replace_wslconfig" = "N" ]; then
-                if grep -q '^\s?\#?\skernel=.*' "$wsl_config_install"; then
-                    sed -i "s/\s*\#*\s*kernel=C.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}/g" $wsl_config_install
+                if grep -q '^\s?\#?\skernel=.*' "$wsl_config"; then
+                    sed -i "s/\s*\#*\s*kernel=C.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}/g" $wsl_config
                 else
-                    wslconfig_old="$(cat $wsl_config_install)"
+                    wslconfig_old="$(cat $wsl_config)"
                     wslconfig_new="
 [wsl2]
 
 kernel=C\:\\\\users\\\\$win_user\\\\${kernel_alias}
-$(cat $wsl_config_install_old)"
-                    echo "$wsl_config_install_new" > $wsl_config_install
+$(cat $wsl_config_old)"
+                    echo "$wsl_config_new" > $wsl_config
                 fi
             else
-                mv -vf --backup=numbered $wsl_config_install $wsl_config_install.old
+                mv -vf --backup=numbered $wsl_config $wsl_config.old
                 sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}/g" k-cache/.wslconfig           
-                cp -vf k-cache/.wslconfig $wsl_config_install  
+                cp -vf k-cache/.wslconfig $wsl_config  
             fi
         else
-            mv -vf --backup=numbered $wsl_config_install $wsl_config_install.old
+            mv -vf --backup=numbered $wsl_config $wsl_config.old
             sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}/g" k-cache/.wslconfig           
-            cp -vf k-cache/.wslconfig $wsl_config_install          
+            cp -vf k-cache/.wslconfig $wsl_config          
         fi
     fi
 fi
@@ -745,7 +745,7 @@ KERNEL BUILD COMPLETE
 
 "
 
-if (( $quick_install )) || [ $install = "y" ]; then
+if (( $quick_wsl_install )) || [ $wsl_install = "y" ]; then
 echo "
 
 
@@ -774,7 +774,7 @@ echo "
 
 "
 
-echo "  powershell.exe -Command wsl.exe --shutdown; powershell.exe -Command wsl.exe -d $WSL_DISTRO_NAME" | tee $ps_restart
+echo "  powershell.exe -Command wsl.exe --shutdown; powershell.exe -Command wsl.exe -d $WSL_DISTRO_NAME" | tee $ps_wsl_restart
 
 echo "
 
@@ -789,7 +789,7 @@ echo "
     powershell.exe -Command wsl.exe --shutdown; powershell.exe -Command wsl.exe -d $WSL_DISTRO_NAME;    
     
 
-" | tee $ps_rollback
+" | tee $ps_wsl_rollback
 read -p "(next)"
 echo "
 
@@ -803,12 +803,12 @@ echo "
     powershell.exe -Command wsl.exe --shutdown; powershell.exe -Command wsl.exe -d $WSL_DISTRO_NAME
     powershell.exe -Command wsl.exe -d $WSL_DISTRO_NAME --exec echo 'WSL successfully restarted'
 
-" | tee $ps_restart
+" | tee $ps_wsl_restart
 read -p "(next)"
     if [ "$restart" = "" ]; then
         echo " attempting to restart WSL ... 
         "
-        ( pwsh .$ps_restart ) || \
+        ( pwsh .$ps_wsl_restart ) || \
         ( echo "unable to restart WSL. manual restart using required:
         
     # copy/pasta to restart wsl
@@ -819,9 +819,9 @@ echo "
 
 the above instructions were displayed to copy in case of emergency and are also saved in the k-cache:
 
-    -   $ps_install
-    -   $ps_rollback
-    -   $ps_restart
+    -   $ps_wsl_install
+    -   $ps_wsl_rollback
+    -   $ps_wsl_restart
 
 this makes it easy for you to install the kernel, rollback it back, or restart WSL without copying and pasting multiple lines of code
 
@@ -838,7 +838,7 @@ read -p "(end)"
 fi
 
 # else
-#     echo "quick_install == $quick_install"
+#     echo "quick_wsl_install == $quick_install"
 # fi
 # cp -fv --backup=numbered $kernel_source $kernel_target_nix
 # cp -fv --backup=numbered .config $nix_k_cache/$config_alias

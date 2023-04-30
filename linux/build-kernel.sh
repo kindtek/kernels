@@ -489,9 +489,9 @@ printf "
 "
 
 echo "
-continue or exit?
+build kernel or exit?
 "
-read -r -p "(build kernel)
+read -r -p "(build)
 " continue
 if [ "$continue" != "" ]; then
     exit
@@ -598,8 +598,8 @@ fi
 # win
 # package a known working wslconfig file along with the kernel and config file
 mkdir -p "$win_k_cache" 2>/dev/null
-rm -fv "$win_k_cache"/wsl-install.ps1
-rm -rfv "$win_k_cache"/wsl-install_"${kernel_alias_no_timestamp}"*
+rm -fv "$win_k_cache"/wsl-kernel-install.ps1
+rm -rfv "$win_k_cache"/wsl-kernel-install_"${kernel_alias_no_timestamp}"*
 sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}/g" ../../../dvlp/mnt/%HOME%/sample.wslconfig
 cp -fv --backup=numbered ../../../dvlp/mnt/%HOME%/sample.wslconfig k-cache/.wslconfig
 
@@ -653,8 +653,8 @@ cd Split-Path \$mypath -Parent
 #>> ./$ps_wsl_install_kernel_id
 
 #############################################################################
-" | tee "wsl-install.ps1"
-cp "wsl-install.ps1" "$win_k_cache/$ps_wsl_install_kernel_id"
+" | tee "wsl-kernel-install.ps1"
+cp "wsl-kernel-install.ps1" "$win_k_cache/$ps_wsl_install_kernel_id"
 if [ -w "$win_k_cache" ]; then
     tar -czvf "$tarball_source_win" -C k-cache .
     cp -fv --backup=numbered "$tarball_source_win" "$tarball_target_win.bak"
@@ -773,7 +773,7 @@ WSL REBOOT
 
 would you like to reboot WSL now or later?
 "
-read -r -p "(reboot wsl now)
+read -r -p "(reboot now)
 " wsl_restart
 echo "
 
@@ -793,7 +793,7 @@ echo "
 recovery scripts will be displayed on your screen next
 please leave this window open until WSL has been rebooted in case you need to copy/pasta to rollback to a working configuration
 "
-read -r -p "(go to WSL kernel rollback instructions)
+read -r -p "(see WSL recovery instructions)
 "
 echo "  powershell.exe -Command wsl.exe --shutdown; wsl.exe --exec echo 'WSL successfully restarted'; powershell.exe -Command wsl.exe;" | tee "wsl-restart.ps1" 2>/dev/null
 
@@ -810,8 +810,8 @@ echo "
     powershell.exe -Command wsl.exe --shutdown; wsl.exe --exec echo 'WSL successfully restarted'; powershell.exe -Command wsl.exe -d $WSL_DISTRO_NAME;    
     
 
-" | tee "wsl-rollback"
-read -r -p "(go to wsl reboot instructions)
+" | tee "wsl-kernel-rollback.ps1"
+read -r -p "(see WSL reboot instructions)
 "
 echo "
 
@@ -826,17 +826,17 @@ echo "
     powershell.exe -Command wsl.exe -d $WSL_DISTRO_NAME
 
 " | tee "wsl-restart.ps1"
-read -r -p "(go to one last thing)
+read -r -p "(see helpful shortcuts)
 "
 echo "
 
-ONE LAST THING
---------------
+HELPFUL SHORTCUTS
+-----------------
 
 the above scripts and instructions were displayed in case you need to copy them and are also accessible in the k-cache ($win_k_cache):
 
-    -   wsl-install.ps1
-    -   wsl-rollback.ps1
+    -   wsl-kernel-install.ps1
+    -   wsl-kernel-rollback.ps1
     -   wsl-restart.ps1
 
 this makes it easy for you to install the kernel, rollback it back, or restart WSL without copying and pasting multiple lines of code

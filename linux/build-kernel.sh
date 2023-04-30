@@ -32,8 +32,6 @@ if [ "$zfs" = "zfs" ];  then
     zfs_version_tag=$($zfs_version_query | tail --lines=1 | cut --delimiter='/' --fields=3)
     zfs_version=${zfs_version_tag#"zfs-"}
     linux_kernel_type_tag=$linux_kernel_type_tag-ZFS
-    echo "zfs version tag:$zfs_version_tag"
-    echo "zfs version:$zfs_version"
 fi
 if [ "$kernel_type" = "" ]; then
     kernel_type="stable"
@@ -49,9 +47,6 @@ if [ "$kernel_type" = "latest" ]; then
     linux_kernel_version=${linux_kernel_version_tag#"v"}
     kernel_file_suffix+="L"
     # config_file_suffix+="_latest"
-    echo "linux version tag:$linux_kernel_version_tag"
-    echo "linux version:$linux_kernel_version"
-    echo "linux version tag:$linux_kernel_type_tag"
 elif [ "$kernel_type" = "latest-rc" ]; then
     # zfs not supported atm
     zfs=False; linux_kernel_type_tag=;
@@ -63,9 +58,6 @@ elif [ "$kernel_type" = "latest-rc" ]; then
     linux_kernel_version_tag=$($linux_version_query | tail --lines=1 | cut --delimiter='/' --fields=3) 
     linux_kernel_type_tag="LATEST_RC-WSL${linux_kernel_type_tag}"
     linux_kernel_version=${linux_kernel_version_tag#"v"}
-    echo "linux version tag:$linux_kernel_version_tag"
-    echo "linux version:$linux_kernel_version"
-    echo "linux version tag:$linux_kernel_type_tag"
 elif [ "$kernel_type" = "stable" ]; then
     # latest tag doesn't work properly with zfs so manually update for zfs version possibly compatible with 6.2.9+
     # update: it did not work
@@ -81,10 +73,6 @@ elif [ "$kernel_type" = "stable" ]; then
     linux_kernel_version_tag=$($linux_version_query | grep -v -e "-rc[0-9]\+$" | tail --lines=1 | cut --delimiter='/' --fields=3) 
     linux_kernel_type_tag="STABLE-WSL${linux_kernel_type_tag}"
     linux_kernel_version=${linux_kernel_version_tag#"v"}
-    echo "linux version query: $linux_version_query"
-    echo "linux version tag:$linux_kernel_version_tag"
-    echo "linux version:$linux_kernel_version"
-    echo "linux kernel type:$linux_kernel_type_tag"
 # elif [ "$kernel_type"="basic" ]; then
 else 
     # (BASIC)
@@ -103,18 +91,38 @@ else
     # manually set version due to known bug that breaks 5.15 build with werror: pointer may be used after 'realloc' [-Werror=use-after-free] https://gcc.gnu.org/bugzilla/show_bug.cgi?id=104069
     linux_kernel_version_tag=linux-msft-wsl-6.1.y
     linux_kernel_version=6.1
-    echo "linux version tag:$linux_kernel_version_tag"
-    echo "linux version:$linux_kernel_version"
-    echo "linux version type:$linux_kernel_type_tag"
+
 fi
 if [ "$zfs" = "zfs" ];  then
 #     echo "zfs == True
 # LINENO: ${LINENO}"
-    echo "zfs version tag:$zfs_version_tag"
-    echo "zfs version:$zfs_version"
     kernel_file_suffix+="Z"
     # config_file_suffix+="-zfs"
 fi
+
+package_full_name=Linux-$linux_kernel_version-$linux_kernel_type_tag
+
+if [ "$2" = "get-version" ]; then
+    if [ "$zfs" = "zfs" ];  then
+        echo -n "$zfs_version"
+        exit
+    else
+        echo -n "$linux_kernel_version"
+        exit
+    fi
+fi
+if [ "$2" = "get-package" ]; then
+    echo -n "$package_full_name"
+    exit
+fi
+
+    echo "zfs version tag:$zfs_version_tag"
+    echo "zfs version:$zfs_version"
+    echo "linux version query: $linux_version_query"
+    echo "linux version tag:$linux_kernel_version_tag"
+    echo "linux version:$linux_kernel_version"
+    echo "linux version type:$linux_kernel_type_tag"
+
 # config_file_suffix+="0"
 # kernel_file_suffix+="0"
 timestamp_id=$(date -d "today" +"%Y%m%d%H%M%S")
@@ -130,7 +138,6 @@ kernel_alias_no_timestamp=${linux_kernel_version/\./L}
 linux_kernel_version_mask=${linux_kernel_version_mask//[\.-]/}
 kernel_alias_no_timestamp=${kernel_alias_no_timestamp//[\.-]/}${kernel_file_suffix}
 kernel_alias=${kernel_alias_no_timestamp}_${timestamp_id}
-package_full_name=Linux-$linux_kernel_version-$linux_kernel_type_tag
 config_alias=.config_${kernel_alias}
 config_alias_no_timestamp=.config_${kernel_alias_no_timestamp}
 git_save_path=$cpu_arch/$cpu_vendor/$linux_kernel_version_mask
@@ -570,7 +577,7 @@ if (( quick_wsl_install )); then
 else
     make -j "$(expr "$(nproc)" - 1)"
 fi
-make modules_wsl_install
+make modules install
 # kernel is baked - time to distribute fresh copies
 if [ ! -f "$kernel_source" ]; then
     echo "

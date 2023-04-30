@@ -792,7 +792,7 @@ echo "
 
 "
 
-echo "  powershell.exe -Command wsl.exe --shutdown; wsl.exe --exec echo 'WSL successfully restarted'; powershell.exe -Command wsl.exe;" | tee "wsl-restart.ps1"
+echo "  powershell.exe -Command wsl.exe --shutdown; wsl.exe --exec echo 'WSL successfully restarted'; powershell.exe -Command wsl.exe;" | tee "wsl-restart.ps1" 2>/dev/null
 
 echo "
 

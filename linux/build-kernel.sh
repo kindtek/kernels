@@ -426,7 +426,7 @@ kernel package will be ${save_or_wsl_install_mask}ed to C:\\users\\$win_user
 archives and recovery scripts will be saved to C:\\users\\$win_user\\k-cache
 "  
 read -r -p "
-(continue)
+(build kernel)
 " 
     else
 echo "
@@ -697,9 +697,9 @@ printf "
 
 " "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}"
 echo "
-continue or exit?
+install or exit?
 "
-read -r -p "(continue)
+read -r -p "(install $package_full_name into WSL)
 " install_wsl_kernel
     if [ "$install_wsl_kernel" = "" ]; then
         win_user_home=/mnt/c/users/$win_user && \
@@ -773,7 +773,7 @@ WSL REBOOT
 
 would you like to reboot WSL now or later?
 "
-read -r -p "(now)
+read -r -p "(reboot wsl now)
 " wsl_restart
 echo "
 
@@ -793,15 +793,15 @@ echo "
 recovery scripts will be displayed on your screen next
 please leave this window open until WSL has been full booted in case you need to copy/pasta to rollback to a working configuration
 "
-read -r -p "(next)
+read -r -p "(go to WSL kernel rollback instructions)
 "
 echo "  powershell.exe -Command wsl.exe --shutdown; wsl.exe --exec echo 'WSL successfully restarted'; powershell.exe -Command wsl.exe;" | tee "wsl-restart.ps1" 2>/dev/null
 
 echo "
 
 
-WSL ROLLBACK INSTRUCTIONS
--------------------------
+WSL KERNEL ROLLBACK INSTRUCTIONS
+--------------------------------
 
 copy/pasta this into any windows terminal (WIN + x, i):"
 echo "
@@ -811,7 +811,7 @@ echo "
     
 
 " | tee "wsl-rollback"
-read -r -p "(next)
+read -r -p "(go to wsl reboot instructions)
 "
 echo "
 
@@ -826,11 +826,14 @@ echo "
     powershell.exe -Command wsl.exe -d $WSL_DISTRO_NAME
 
 " | tee "wsl-restart.ps1"
-read -r -p "(next)
+read -r -p "(go to one last thing)
 "
 echo "
 
-the above instructions were displayed to copy in case of emergency and are also saved in the k-cache:
+ONE LAST THING
+--------------
+
+the above instructions were displayed to copy in case of emergency and are also accessible in the k-cache ($win_k_cache):
 
     -   wsl-install.ps1
     -   wsl-rollback.ps1
@@ -844,10 +847,10 @@ for example, you can open a powershell terminal (WIN + x, i) and run:
 
 .. and this will restart WSL
 
-    * make sure the terminal opens to your home directory (which happens automatically when using the WIN + x shortcut)"
+* make sure the terminal is open to your home directory (automatically loaded when using the WIN + x shortcut)"
     
 read -r -p "
-(end)"
+(finish and try to restart WSL)"
     if [ "$wsl_restart" = "" ]; then
         echo " attempting to restart WSL ... 
         "
@@ -855,8 +858,12 @@ read -r -p "
         ( echo "unable to restart WSL. manual restart required:
         
     # copy/pasta to restart wsl
-    powershell.exe -Command wsl.exe --exec echo 'WSL successfully restarted'; powershell.exe -Command wsl.exe -d $WSL_DISTRO_NAME;    
-" ) 
+    powershell.exe -Command wsl.exe --exec echo 'WSL successfully restarted'; powershell.exe -Command wsl.exe -d $WSL_DISTRO_NAME;
+
+
+"; read -r -p "
+(close)"; echo "
+(use WIN + x, i to open a Windows terminal)"       ) 
     fi
 
     

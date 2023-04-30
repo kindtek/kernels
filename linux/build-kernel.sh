@@ -520,8 +520,14 @@ fi
 cp -fv $config_source $linux_build_dir/.config
 
 cd $linux_build_dir
-yes "" | make oldconfig
-yes "" | make prepare scripts 
+if (( $quick_install )); then
+    # prompt bypass
+    yes "" | make oldconfig
+    yes "" | make prepare scripts 
+else
+    make oldconfig
+    make prepare scripts 
+fi
 if [ "$zfs" = "zfs" ];  then
 #     echo "zfs == True
 # LINENO: ${LINENO}"
@@ -538,7 +544,11 @@ if [ "$zfs" = "zfs" ];  then
 # LINENO: ${LINENO}"
     sed -i 's/\# CONFIG_ZFS is not set/CONFIG_ZFS=y/g' .config
 fi
-yes "" | make -j $(expr $(nproc) - 1)
+if (( $quick_install )); then
+    yes "" | make -j $(expr $(nproc) - 1)
+else
+    make -j $(expr $(nproc) - 1)
+fi
 make modules_install
 # kernel is baked - time to distribute fresh copies
 if [ ! -f "$kernel_source" ]; then

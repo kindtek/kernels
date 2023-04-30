@@ -34,20 +34,20 @@ if [ "$arg1" = "" ]; then
 
 "
     if [ -d "$basic_dir/.git" ]; then
-        echo "      - basic"
+        echo "      - [b]asic"
     fi
     if [ -d "$stable_dir/.git" ]; then
-        echo "      - stable"
+        echo "      - [s]table"
     fi
     if [ -d "$latest_dir/.git" ]; then
-        echo "      - latest"
-        echo "      - latest-rc"
+        echo "      - [l]atest"
+        echo "      - [l]atest-rc"
 
     fi
     if [ -d "zfs-build/.git" ]; then
-        echo "      - zfs"
+        echo "      - [z]fs"
     fi
-        echo "      - k-cache"
+        echo "      - [k]-cache"
 echo "        
     
     
@@ -69,7 +69,8 @@ fi
         git clean -fxd
         cd ..
     fi
-    if [ "${clean_target,,}" = "latest" ] || [ "${clean_target,,}" = "l" ]; then
+    if [ "${clean_target,,}" = "latest" ] || [ "${clean_target,,}" = "l" ] || \
+       [ "${clean_target,,}" = "latest-rc" ]; then
         cd $latest_dir
         git reset --hard
         git clean -fxd

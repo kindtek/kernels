@@ -677,8 +677,10 @@ cd Split-Path \$mypath -Parent
 cp "$win_k_cache/wsl-kernel-install.ps1" "$win_k_cache/$ps_wsl_install_kernel_id"
 if [ -w "$win_k_cache" ]; then
     tar -czvf "$tarball_source_win" -C k-cache .
-    cp -fv --backup=numbered "$tarball_source_win" "$tarball_target_win.bak"
-    cp -fv "$tarball_source_win" "$tarball_target_win"
+    if [ "$tarball_target_win" != "" ]; then
+        cp -fv --backup=numbered "$tarball_source_win" "$tarball_target_win.bak"
+        cp -fv "$tarball_source_win" "$tarball_target_win"
+    fi
 else
     echo "
 unable to save kernel package to Windows home directory"

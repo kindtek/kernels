@@ -32,6 +32,7 @@ if [ "$zfs" = "zfs" ];  then
     zfs_version_tag=$($zfs_version_query | tail --lines=1 | cut --delimiter='/' --fields=3)
     zfs_version=${zfs_version_tag#"zfs-"}
     linux_kernel_type_tag=$linux_kernel_type_tag-ZFS
+    kernel_file_suffix+="Z"
 fi
 if [ "$kernel_type" = "" ]; then
     kernel_type="stable"
@@ -93,12 +94,11 @@ else
     linux_kernel_version=6.1
 
 fi
-if [ "$zfs" = "zfs" ];  then
-#     echo "zfs == True
-# LINENO: ${LINENO}"
-    kernel_file_suffix+="Z"
-    # config_file_suffix+="-zfs"
-fi
+# if [ "$zfs" = "zfs" ];  then
+# #     echo "zfs == True
+# # LINENO: ${LINENO}"
+#     # config_file_suffix+="-zfs"
+# fi
 
 package_full_name=Linux-$linux_kernel_version-$linux_kernel_type_tag
 
@@ -845,6 +845,7 @@ copy/pasta the following line into any windows terminal (WIN + x, i):
 "
 echo "
     powershell.exe -Command wsl.exe --shutdown; powershell.exe -Command wsl.exe --exec echo 'WSL successfully restarted';
+    ./k-cache/wsl-restart
     powershell.exe -Command wsl.exe -d $WSL_DISTRO_NAME
 
 "

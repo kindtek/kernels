@@ -559,7 +559,7 @@ fi
 if [ "$zfs" = "zfs" ];  then
 #     echo "zfs == True
 # LINENO: ${LINENO}"
-    (cd ../"$zfs_build_dir") || (exit) 
+    cd ../"$zfs_build_dir" || exit 
     bash autogen.sh && \
     bash configure --prefix=/ --libdir=/lib --includedir=/usr/include --datarootdir=/usr/share --enable-linux-builtin=yes --with-linux=../$linux_build_dir --with-linux-obj=../$linux_build_dir && \
     bash copy-builtin ../$linux_build_dir && \

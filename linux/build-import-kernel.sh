@@ -608,14 +608,15 @@ rm -rfv k-cache/*_*
 rm -rfv k-cache/Linux-*
 # remove wsl install ps file
 rm -rfv k-cache/wsl-kernel-install.ps1
+# remove tarball
+rm -rfv k-cache/*.tar.gz
 cp -fv --backup=numbered  "$config_source" "k-cache/$config_alias"
 cp -fv --backup=numbered  "$linux_build_dir/$kernel_source" "k-cache/$kernel_alias"
 touch "k-cache/$package_full_name"
 # work on *nix first
 mkdir -pv "$nix_k_cache" 2>/dev/null
 if [ -w "$nix_k_cache" ]; then
-    tar -czvf "$tarball_source_nix" -C k-cache .
-    cp -fv --backup=numbered "$tarball_source_nix" "$tarball_target_nix.bak"
+    tar -czvf "$tarball_source_nix" -C k-cache k-cache
     cp -fv "$tarball_source_nix" "$tarball_target_nix" 
 else
     echo "unable to save kernel package to Linux home directory"
@@ -684,9 +685,9 @@ cd Split-Path \$mypath -Parent
 if [ -w "$win_k_cache" ]; then
 cp "k-cache/wsl-kernel-install.ps1" "$win_k_cache/wsl-kernel-install.ps1"
     cp "$win_k_cache/wsl-kernel-install.ps1" "$win_k_cache/$ps_wsl_install_kernel_id"
-    tar -czvf "$tarball_source_win" -C k-cache .
+    tar -czvf "$tarball_source_win" -C k-cache k-cache
     if [ "$tarball_target_win" != "" ]; then
-        cp -fv --backup=numbered "$tarball_source_win" "$tarball_target_win.bak"
+        # cp -fv --backup=numbered "$tarball_source_win" "$tarball_target_win.bak"
         cp -fv "$tarball_source_win" "$tarball_target_win"
     fi
 else

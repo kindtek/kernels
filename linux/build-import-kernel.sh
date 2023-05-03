@@ -354,7 +354,7 @@ echo "
 echo " 
 
 
-install to Windows home directory?
+install to which Windows home directory?
 
     choose from:
 " 
@@ -600,8 +600,14 @@ cp -fv --backup=numbered $linux_build_dir/"$kernel_source" "$kernel_target_git"
 # build/move tar with version control if [tar]get directory is writeable
 # save copies in timestamped dir to keep organized
 mkdir -pv k-cache 2>/dev/null
-rm -rfv k-cache/*
-rm -rfv k-cache/.*
+# remove config
+rm -rfv k-cache/.config_*
+# remove kernel
+rm -rfv k-cache/*_*
+# remove empty file tag
+rm -rfv k-cache/Linux-*
+# remove wsl install ps file
+rm -rfv k-cache/wsl-kernel-install.ps1
 cp -fv --backup=numbered  "$config_source" "k-cache/$config_alias"
 cp -fv --backup=numbered  "$linux_build_dir/$kernel_source" "k-cache/$kernel_alias"
 touch "k-cache/$package_full_name"

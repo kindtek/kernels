@@ -56,6 +56,7 @@ enter a kernel name to install:
             fi
         fi
         if [ "${selected_kernel_install_file}" = "" ]; then
+            echo "using $latest_kernel_install_file ..."
             selected_kernel_install_file=$latest_kernel_install_file
         fi
     done

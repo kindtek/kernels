@@ -70,6 +70,8 @@ elif [ "$2" = "latest" ]; then
 " install_latest
     if [ "$install_latest" != "" ]; then
         exit
+    else
+        selected_kernel_install_file=$latest_kernel
     fi
 else 
     selected_kernel_install_file="wsl-kernel-install_${2}_${3}.ps1"

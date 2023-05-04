@@ -62,16 +62,17 @@ enter a kernel name to install:
     done
 elif [ "$2" = "latest" ]; then
     selected_kernel_install_file="$(ls -t1 wsl-kernel-install_${selected_kernel_install_file}* | head -n 1 )"
-    latest_kernel=$( echo "$selected_kernel_install_file" | sed -r -e "s/^\.\/wsl-kernel-install_(.*)_(.*)\.ps1$/\t\1_\2/g")
+    latest_kernel=$( echo "$selected_kernel_install_file" | sed -nr "s/^wsl-kernel-install_(.*)_(.*)\.ps1$/\1_\2/p")
 
-    echo "install latest built kernel $latest_kernel?"
+    echo "
+install latest built kernel $latest_kernel?"
     read -r -p "
-(install)
+(install latest)
 " install_latest
     if [ "$install_latest" != "" ]; then
         exit
-    else
-        selected_kernel_install_file=$latest_kernel
+    # else
+    #     selected_kernel_install_file=$latest_kernel
     fi
 else 
     selected_kernel_install_file="wsl-kernel-install_${2}_${3}.ps1"
@@ -81,10 +82,21 @@ if [ ! -f "$selected_kernel_install_file" ]; then
     echo "could not find $selected_kernel_install_file
 exiting ..."
 else 
-    old_kernel=$(sed -i "s/\s*\#*\s*kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\(.*)/\1/g")          
-    pwsh del ../"$old_kernel" -verbose
+    wsl_config=/mnt/c/users/$win_user/.wslconfig 
+    old_kernel=$(sed -nr "s/^\s*\#*\s*kernel=(.*)\\\\\\\\([A-Za-z0-9_-]+)$/\2/p" "$wsl_config")
+    echo "old kernel: $old_kernel"       
+    pwsh -Command del ../"$old_kernel" -verbose
+    echo "running:  $selected_kernel_install_file"
     pwsh -file "$selected_kernel_install_file"
-    sed -i "s/\s*\#*\s*kernel=C\:\\\\\\\\users\\\\\\\\docker\\\\\\\\(.*)/kernel=C\:\\\\\\\\users\\\\\\\\docker\\\\\\\\\1/g" /mnt/c/users/$win_user/.wslconfig         
+    sed -i -r "s/^\s*\#*\s*(kernel=.*)docker(.*)+$/\1$win_user\2/g" "$wsl_config"    
+    echo "
+    powershell.exe -Command del ..\\.wslconfig;
+    powershell.exe -Command move ..\\.wslconfig.old ..\\.wslconfig;
+    powershell.exe -Command .\\wsl-kernel-install_${old_kernel}
+    powershell.exe -Command .\\wsl-restart;    
+    
+
+" | tee "wsl-kernel-rollback.ps1"     
 
 fi
 

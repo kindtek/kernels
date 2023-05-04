@@ -642,10 +642,10 @@ echo "
 #####   copy without '#>>' to replace (delete/move) .wslconfig          #####
 #
 #   # delete
-#>> powershell.exe -Command del ..\\.wslconfig -verbose;
+#>> powershell.exe -Command del ..\\.wslconfig -Force -verbose;
 #
 #   # move file out of the way   
-    powershell.exe -Command move ..\\.wslconfig ..\\.wslconfig.old -verbose;
+    powershell.exe -Command move ..\\.wslconfig ..\\.wslconfig.old -Force -verbose;
     
     # extract
     wsl.exe exec tar -xvzf $package_full_name.tar.gz
@@ -766,7 +766,7 @@ continue with .wslconfig replacement?
 " replace_wslconfig
             if [ "${replace_wslconfig,,}" = "n" ] || [ "${replace_wslconfig,,}" = "no" ]; then
                 if grep -q '^\s?\#?\skernel=.*' "$wsl_config"; then
-                    sed -i "s/\s*\#*\s*kernel=C.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}/g" "$wsl_config"
+                    sed -i "s/\s*\#*\s*kernel=C.*/kernel=C\\\\\\\\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}/g" "$wsl_config"
                 else
                     wslconfig_old="$(cat "$wsl_config")"
                     wslconfig_new="
@@ -778,12 +778,12 @@ $(cat "$wslconfig_old")"
                 fi
             else
                 mv -vf --backup=numbered "$wsl_config" "$wsl_config.old"
-                sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}/g" k-cache/.wslconfig           
+                sed -i "s/\s*\#*\s*kernel=.*/kernel=C\\\\\\\\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}/g" k-cache/.wslconfig           
                 cp -vf k-cache/.wslconfig "$wsl_config"  
             fi
         else
             mv -vf --backup=numbered "$wsl_config" "$wsl_config.old"
-            sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}/g" k-cache/.wslconfig           
+            sed -i "s/\s*\#*\s*kernel=.*/kernel=C\\\\\\\\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}/g" k-cache/.wslconfig           
             cp -vf k-cache/.wslconfig "$wsl_config"          
         fi
     fi
@@ -832,6 +832,7 @@ please leave this window open until WSL has been rebooted in case you need to co
 [ "$win_user" = "docker" ] || read -r -p "(see WSL recovery instructions)
 "
 echo "  powershell.exe -Command wsl.exe --shutdown; wsl.exe --exec echo 'WSL successfully restarted'; powershell.exe -Command wsl.exe;" | tee "$win_k_cache/wsl-restart.ps1" &>/dev/null
+old_kernel=$(sed -nr "s/^\s*\#*\s*kernel=(.*)\\\\\\\\([A-Za-z0-9_-]+)$/\2/p" "$wsl_config")
 
 [ "$win_user" = "docker" ] || echo "
 
@@ -841,9 +842,10 @@ WSL KERNEL ROLLBACK INSTRUCTIONS
 
 copy/pasta this into any windows terminal (WIN + x, i):"
 echo "
-    powershell.exe -Command del c:\\users\\$win_user\\.wslconfig;
-    powershell.exe -Command move c:\\users\\$win_user\\.wslconfig.old c:\\users\\$win_user\\.wslconfig;
-    powershell.exe -Command wsl.exe --shutdown; wsl.exe --exec echo 'WSL successfully restarted'; powershell.exe -Command wsl.exe -d $WSL_DISTRO_NAME;    
+    powershell.exe -Command del ..\\.wslconfig;
+    powershell.exe -Command move ..\\.wslconfig.old ..\\.wslconfig;
+    powershell.exe -Command .\\wsl-kernel-install_${old_kernel}
+    powershell.exe -Command .\\wsl-restart;    
     
 
 " | tee "wsl-kernel-rollback.ps1"

@@ -607,26 +607,18 @@ rm -rfv k-cache/*_*
 # remove empty file tag
 rm -rfv k-cache/Linux-*
 # remove wsl install ps file
-rm -rfv k-cache/wsl-kernel-install.ps1
+rm -rfv k-cache/wsl-kernel-install*
 # remove tarball
 rm -rfv k-cache/*.tar.gz
 cp -fv --backup=numbered  "$config_source" "k-cache/$config_alias"
 cp -fv --backup=numbered  "$linux_build_dir/$kernel_source" "k-cache/$kernel_alias"
-touch "k-cache/$package_full_name"
-# work on *nix first
-mkdir -pv "$nix_k_cache" 2>/dev/null
-if [ -w "$nix_k_cache" ]; then
-    tar -czvf "k-cache/$tarball_filename" -C k-cache k-cache
-    cp -fv "k-cache/$tarball_filename" "$tarball_target_nix" 
-else
-    echo "unable to save kernel package to Linux home directory"
-fi
+# touch "k-cache/$package_full_name"
 
 # win
 # package a known working wslconfig file along with the kernel and config file
 mkdir -p "$win_k_cache" 2>/dev/null
-rm -fv "$win_k_cache/wsl-kernel-install.ps1"
-rm -rfv "$win_k_cache/wsl-kernel-install_${kernel_alias_no_timestamp}*"
+# rm -fv "$win_k_cache/wsl-kernel-install.ps1"
+# rm -rfv "$win_k_cache/wsl-kernel-install_${kernel_alias_no_timestamp}*"
 sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}/g" ../../../dvlp/mnt/%HOME%/sample.wslconfig
 cp -fv --backup=numbered ../../../dvlp/mnt/%HOME%/sample.wslconfig k-cache/.wslconfig
 
@@ -682,9 +674,19 @@ echo "
 #############################################################################
 " | tee "k-cache/wsl-kernel-install.ps1"
 
-rm "k-cache/$tarball_filename"
+# rm "k-cache/$tarball_filename"
 tar -czvf "k-cache/$tarball_filename" -C k-cache k-cache
-if [ -w "$win_k_cache" ]; then
+# work on *nix first
+mkdir -pv "$nix_k_cache" 2>/dev/null
+if [ -w "$nix_k_cache" ]; then
+    # tar -czvf "k-cache/$tarball_filename" -C k-cache k-cache
+    cp -fv "k-cache/$tarball_filename" "$tarball_target_nix" 
+else
+    echo "unable to save kernel package to Linux home directory"
+fi
+# now win
+mkdir -pv "$win_k_cache" 2>/dev/null
+if [ "$win_user" != "docker" ] && [ -w "$win_k_cache" ]; then
 cp "k-cache/wsl-kernel-install.ps1" "$win_k_cache/wsl-kernel-install.ps1"
     cp "$win_k_cache/wsl-kernel-install.ps1" "$win_k_cache/$ps_wsl_install_kernel_id"
     if [ "$tarball_target_win" != "" ]; then

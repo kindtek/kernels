@@ -1,5 +1,5 @@
 #!/bin/bash
-HOME=/r00t
+timestamp_id=$(date -d "today" +"%Y%m%d%H%M%S")
 user_config_flag=False
 kernel_type=$1
 config_source=$2
@@ -102,6 +102,7 @@ fi
 # fi
 
 package_full_name=Linux-$linux_kernel_version-$linux_kernel_type_tag
+package_full_name_id=Linux-$linux_kernel_version-$linux_kernel_type_tag-$timestamp_id
 
 if [ "$2" = "get-version" ]; then
     if [ "$zfs" = "zfs" ];  then
@@ -124,9 +125,6 @@ fi
     echo "linux version:$linux_kernel_version"
     echo "linux version type:$linux_kernel_type_tag"
 
-# config_file_suffix+="0"
-# kernel_file_suffix+="0"
-timestamp_id=$(date -d "today" +"%Y%m%d%H%M%S")
 # deduce architecture of this machine
 cpu_vendor=$(grep -Pom 1 '^vendor_id\s*:\s*\K.*' /proc/cpuinfo)
 cpu_arch=$(uname -m)
@@ -464,7 +462,7 @@ config_target_git=$git_save_path/$config_alias_no_timestamp
 # config_target_win=$win_k_cache/$config_alias
 tarball_target_nix=$nix_k_cache/$package_full_name.tar.gz
 tarball_target_win=$win_k_cache/$package_full_name.tar.gz
-tarball_filename=$package_full_name.tar.gz
+tarball_filename=$package_full_name_id.tar.gz
 
 if [ "$linux_kernel_version" = "" ]; then
 echo "
@@ -648,7 +646,7 @@ echo "
     powershell.exe -Command move ..\\.wslconfig ..\\.wslconfig.old -Force -verbose;
     
     # extract
-    wsl.exe exec tar -xvzf $package_full_name.tar.gz
+    wsl.exe exec tar -xvzf $package_full_name_id.tar.gz
 
     # copy file
     powershell.exe -Command copy ${kernel_alias} ..\\${kernel_alias} -verbose;

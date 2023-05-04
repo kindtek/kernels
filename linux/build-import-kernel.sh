@@ -645,13 +645,14 @@ echo "
 #>> powershell.exe -Command del \$HOME\\.wslconfig;
 #
 #   # move file out of the way   
-#>> powershell.exe -Command move .wslconfig \$HOME\\.wslconfig;
+    powershell.exe -Command move ..\\.wslconfig ..\\.wslconfig.old;
     
     # extract
     wsl.exe exec tar -xvzf $package_full_name.tar.gz
 
     # copy file
-    powershell.exe -Command copy ${kernel_alias} \$HOME\\${kernel_alias};
+    powershell.exe -Command copy ${kernel_alias} ..\\${kernel_alias};
+    powershell.exe -Command copy ${config_alias} ..\\${config_alias};
     # restart wsl
     powershell.exe -Command wsl.exe --exec echo 'WSL successfully restarted'; powershell.exe -Command wsl.exe;
 

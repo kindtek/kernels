@@ -676,7 +676,7 @@ echo "
 " | tee "k-cache/wsl-kernel-install.ps1"
 cp -fv "k-cache/wsl-kernel-install.ps1" "k-cache/$ps_wsl_install_kernel_id"
 # rm "k-cache/$tarball_filename"
-tar -czvf "$tarball_filename" -C k-cache k-cache
+tar -czvf "k-cache/$tarball_filename" -C k-cache .
 # work on *nix first
 mkdir -pv "$nix_k_cache" 2>/dev/null
 if [ -w "$nix_k_cache" ]; then

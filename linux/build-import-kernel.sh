@@ -642,7 +642,7 @@ echo "
 #####   copy without '#>>' to replace (delete/move) .wslconfig          #####
 #
 #   # delete
-#>> powershell.exe -Command del \$HOME\\.wslconfig -verbose;
+#>> powershell.exe -Command del ..\\.wslconfig -verbose;
 #
 #   # move file out of the way   
     powershell.exe -Command move ..\\.wslconfig ..\\.wslconfig.old -verbose;

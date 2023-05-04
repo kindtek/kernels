@@ -115,7 +115,7 @@ if [ "$2" = "get-package" ]; then
     echo -n "$package_full_name"
     exit
 fi
-    echo: "home: $HOME"
+    echo "home: $HOME"
     echo "zfs version tag:$zfs_version_tag"
     echo "zfs version:$zfs_version"
     echo "linux version query: $linux_version_query"

@@ -673,7 +673,7 @@ echo "
 
 #############################################################################
 " | tee "k-cache/wsl-kernel-install.ps1"
-
+cp "k-cache/wsl-kernel-install.ps1" "$win_k_cache/$ps_wsl_install_kernel_id"
 # rm "k-cache/$tarball_filename"
 tar -czvf "k-cache/$tarball_filename" -C k-cache k-cache
 # work on *nix first
@@ -890,7 +890,7 @@ for example, you can open a powershell terminal (WIN + x, i) and run:
 (finish and try to restart WSL)"
         echo " attempting to restart WSL ... 
         "
-        ( pwsh -file "$win_k_cache/wsl-restart.ps1" ) || \
+         pwsh -file "$win_k_cache/wsl-restart.ps1"  || \
         ( echo "unable to restart WSL. manual restart required:
         
     # copy/pasta to restart wsl

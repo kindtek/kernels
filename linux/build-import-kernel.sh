@@ -330,7 +330,7 @@ if (( quick_wsl_install )); then
         quick_wsl_install=False
     fi    
 else
-echo "
+[ "$win_user" = "docker" ] || echo "
 install the kernel into WSL when build is finished?
 "
 [ "$win_user" = "docker" ] || read -r -p "(n)
@@ -412,7 +412,7 @@ save kernel package to Windows home directory C:\\users\\__________
         ls -da /mnt/c/users/*/ | tail -n +4 | sed -r -e 's/^\/mnt\/c\/users\/([ A-Za-z0-9]*)*\/+$/\t\1/g'
 
         else
-            echo "${save_or_wsl_install_mask} kernel files to C:\\users\\$win_user ?
+            [ "$win_user" = "docker" ] || echo "${save_or_wsl_install_mask} kernel files to C:\\users\\$win_user ?
             "
         fi
 [ "$win_user" = "docker" ] || read -r -p "(${save_or_wsl_install_mask})
@@ -432,7 +432,7 @@ save kernel package to Windows home directory C:\\users\\__________
     if [ "$win_user" != "" ] && [ -w "/mnt/c/users/$win_user" ] || \
     [ "$win_user" = "docker" ]; then
         
-echo "
+[ "$win_user" = "docker" ] || echo "
 kernel package will be ${save_or_wsl_install_mask}ed to C:\\users\\$win_user
 archives and recovery scripts will be saved to C:\\users\\$win_user\\k-cache
 "  
@@ -480,7 +480,7 @@ padding="----------"
 if [ ! -w "/mnt/c/users/$win_user" ]; then
     tarball_target_win=""
 fi
-printf "
+[ "$win_user" = "docker" ] || printf "
 
 
 

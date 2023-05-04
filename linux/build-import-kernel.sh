@@ -654,7 +654,7 @@ echo "
     powershell.exe -Command copy ${kernel_alias} ..\\${kernel_alias} -verbose;
     powershell.exe -Command copy .wslconfig ..\\.wslconfig -verbose;
     # restart wsl
-    powershell.exe -File wsl-restart;
+    powershell.exe -Command .\\wsl-restart.ps1;
 
 #############################################################################
 

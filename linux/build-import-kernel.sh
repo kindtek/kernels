@@ -1,5 +1,5 @@
 #!/bin/bash
-su r00t
+HOME=/r00t
 user_config_flag=False
 kernel_type=$1
 config_source=$2

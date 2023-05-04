@@ -81,6 +81,8 @@ if [ ! -f "$selected_kernel_install_file" ]; then
     echo "could not find $selected_kernel_install_file
 exiting ..."
 else 
+    old_kernel=$(sed -i "s/\s*\#*\s*kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\(.*)/\1/g")          
+    pwsh del ../"$old_kernel" -verbose
     pwsh -file "$selected_kernel_install_file"
 fi
 

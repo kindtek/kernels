@@ -524,7 +524,7 @@ if [ -d "$linux_build_dir/.git" ]; then
     cd ..
 else
     echo "cloning $linux_kernel_version_tag ..."
-    git clone $linux_repo --single-branch --branch "$linux_kernel_version_tag" --progress -- $linux_build_dir
+    git clone $linux_repo --single-branch --branch "$linux_kernel_version_tag" --depth=1 --progress -- $linux_build_dir
 fi
 if [ "$zfs" = "zfs" ];  then
 #     echo "zfs == True

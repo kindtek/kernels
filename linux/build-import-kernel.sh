@@ -642,19 +642,19 @@ echo "
 #####   copy without '#>>' to replace (delete/move) .wslconfig          #####
 #
 #   # delete
-#>> powershell.exe -Command del \$HOME\\.wslconfig;
+#>> powershell.exe -Command del \$HOME\\.wslconfig -verbose;
 #
 #   # move file out of the way   
-    powershell.exe -Command move ..\\.wslconfig ..\\.wslconfig.old;
+    powershell.exe -Command move ..\\.wslconfig ..\\.wslconfig.old -verbose;
     
     # extract
     wsl.exe exec tar -xvzf $package_full_name.tar.gz
 
     # copy file
-    powershell.exe -Command copy ${kernel_alias} ..\\${kernel_alias};
-    powershell.exe -Command copy ${config_alias} ..\\${config_alias};
+    powershell.exe -Command copy ${kernel_alias} ..\\${kernel_alias} -verbose;
+    powershell.exe -Command copy ${config_alias} ..\\${config_alias} -verbose;
     # restart wsl
-    powershell.exe -Command wsl.exe --exec echo 'WSL successfully restarted'; powershell.exe -Command wsl.exe;
+    powershell.exe -Command wsl.exe --shutdown; powershell.exe -Command wsl.exe --exec echo 'WSL successfully restarted'; powershell.exe -Command wsl.exe;
 
 #############################################################################
 
@@ -833,7 +833,7 @@ please leave this window open until WSL has been rebooted in case you need to co
 "
 echo "  powershell.exe -Command wsl.exe --shutdown; wsl.exe --exec echo 'WSL successfully restarted'; powershell.exe -Command wsl.exe;" | tee "$win_k_cache/wsl-restart.ps1" &>/dev/null
 
-echo "
+[ "$win_user" = "docker" ] || echo "
 
 
 WSL KERNEL ROLLBACK INSTRUCTIONS

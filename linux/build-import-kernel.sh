@@ -631,11 +631,11 @@ sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${k
 cp -fv --backup=numbered ../../../dvlp/mnt/%HOME%/sample.wslconfig k-cache/.wslconfig
 
 echo "
-# for executing option b outside of this directory 
-# the below two lines are unnecessary to copy
-\$mypath = \$MyInvocation.MyCommand.Path
-cd Split-Path \$mypath -Parent
-# the above two lines are unnecessary to copy
+# # for executing option b outside of this directory 
+# # the below two lines are unnecessary to copy
+# \$mypath = \$MyInvocation.MyCommand.Path
+# cd Split-Path \$mypath -Parent
+# # the above two lines are unnecessary to copy
 
 #############################################################################
 # ________________ WSL KERNEL INSTALLATION INSTRUCTIONS ____________________#

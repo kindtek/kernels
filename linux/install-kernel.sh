@@ -21,7 +21,7 @@ win_k_cache="/mnt/c/users/$win_user/k-cache"
 mkdir -p "$win_k_cache"
 cd "$win_k_cache" || exit
 
-if [ ! -f "wsl-kernel-install_${2}_${3}.ps1" ]; then
+if [ ! -f "wsl-kernel-install_${2}_${3}.ps1" ] && [ "$2" != "latest" ]; then
 
     while [ ! -f "$selected_kernel_install_file" ]; do
         latest_kernel_install_file="$(exec find . -name "wsl-kernel-install_${2}_*" | head -n 1)"
@@ -60,6 +60,17 @@ enter a kernel name to install:
             selected_kernel_install_file=$latest_kernel_install_file
         fi
     done
+elif [ "$2" = "latest" ]; then
+    selected_kernel_install_file="$(ls -t1 wsl-kernel-install_${selected_kernel_install_file}* | head -n 1 )"
+    latest_kernel=$( echo "$selected_kernel_install_file" | sed -r -e "s/^\.\/wsl-kernel-install_(.*)_(.*)\.ps1$/\t\1_\2/g")
+
+    echo "install latest built kernel $latest_kernel?"
+    read -r -p "
+(install)
+" install_latest
+    if [ "$install_latest" != "" ]; then
+        exit
+    fi
 else 
     selected_kernel_install_file="wsl-kernel-install_${2}_${3}.ps1"
 fi

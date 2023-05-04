@@ -692,7 +692,7 @@ if [ "$win_user" != "docker" ] && [ -w "$win_k_cache" ]; then
         # cp -fv --backup=numbered "$tarball_filename" "$tarball_target_win.bak"
         cp -fv "$tarball_filename" "$tarball_target_win"
     fi
-else
+elif [ "$win_user" != "docker" ]; then
     echo "
 unable to save kernel package to Windows home directory"
 fi

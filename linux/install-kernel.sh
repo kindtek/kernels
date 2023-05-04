@@ -70,6 +70,9 @@ install latest built kernel $latest_kernel?"
 (install latest)
 " install_latest
     if [ "$install_latest" != "" ]; then
+        echo "
+build completed and no install requested.
+exiting..."
         exit
     # else
     #     selected_kernel_install_file=$latest_kernel
@@ -88,12 +91,15 @@ else
     # make sure there actually was an old kernel before deleting
     if [ "$old_kernel" != "" ]; then
         rm -fv ../"$old_kernel" 
-        mv -v "$old_kernel"  "wsl-kernel-rollback.ps1"
+        cp -v "wsl-kernel-install_$old_kernel.ps1"  "wsl-kernel-rollback.ps1"
         rm -v ".config_$old_kernel"
     fi
     echo "running:  $selected_kernel_install_file"
     pwsh -file "$selected_kernel_install_file"
-    sed -i -r "s/^\s*\#*\s*(kernel=.*)docker(.*)+$/\1$win_user\2/g" "$wsl_config"    
+    # replace docker with win_user
+    sed -i -r "s/^\s*\#*\s*(kernel=.*)docker(.*)+$/\1$win_user\2/g" "$wsl_config"  
+    # just to be sure docker user is fully replaced
+    sed -i -r "s/^\s*\#*\s*(kernel=.*)docker(.*)+$/\1$win_user\2/g" ".wslconfig"      
 echo "
 
 

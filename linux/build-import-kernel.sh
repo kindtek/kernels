@@ -464,8 +464,7 @@ config_target_git=$git_save_path/$config_alias_no_timestamp
 # config_target_win=$win_k_cache/$config_alias
 tarball_target_nix=$nix_k_cache/$package_full_name.tar.gz
 tarball_target_win=$win_k_cache/$package_full_name.tar.gz
-tarball_source_nix=$package_full_name.tar.gz
-tarball_source_win=$package_full_name.tar.gz
+tarball_filename=$package_full_name.tar.gz
 
 if [ "$linux_kernel_version" = "" ]; then
 echo "
@@ -617,8 +616,8 @@ touch "k-cache/$package_full_name"
 # work on *nix first
 mkdir -pv "$nix_k_cache" 2>/dev/null
 if [ -w "$nix_k_cache" ]; then
-    tar -czvf "k-cache/$tarball_source_nix" -C k-cache k-cache
-    cp -fv "k-cache/$tarball_source_nix" "$tarball_target_nix" 
+    tar -czvf "k-cache/$tarball_filename" -C k-cache k-cache
+    cp -fv "k-cache/$tarball_filename" "$tarball_target_nix" 
 else
     echo "unable to save kernel package to Linux home directory"
 fi
@@ -683,13 +682,14 @@ echo "
 #############################################################################
 " | tee "k-cache/wsl-kernel-install.ps1"
 
+rm "k-cache/$tarball_filename"
+tar -czvf "k-cache/$tarball_filename" -C k-cache k-cache
 if [ -w "$win_k_cache" ]; then
 cp "k-cache/wsl-kernel-install.ps1" "$win_k_cache/wsl-kernel-install.ps1"
     cp "$win_k_cache/wsl-kernel-install.ps1" "$win_k_cache/$ps_wsl_install_kernel_id"
-    tar -czvf "$tarball_source_win" -C k-cache k-cache
     if [ "$tarball_target_win" != "" ]; then
-        # cp -fv --backup=numbered "$tarball_source_win" "$tarball_target_win.bak"
-        cp -fv "$tarball_source_win" "$tarball_target_win"
+        # cp -fv --backup=numbered "$tarball_filename" "$tarball_target_win.bak"
+        cp -fv "$tarball_filename" "$tarball_target_win"
     fi
 else
     echo "

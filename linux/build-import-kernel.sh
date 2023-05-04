@@ -839,8 +839,9 @@ WSL KERNEL ROLLBACK INSTRUCTIONS
 
 copy/pasta this into any windows terminal (WIN + x, i):"
 echo "
-    powershell.exe -Command del ..\\.wslconfig;
-    powershell.exe -Command move ..\\.wslconfig.old ..\\.wslconfig;
+    powershell.exe -Command move ..\\.wslconfig.old ..\\.wslconfig.new;
+    powershell.exe -Command move ..\\.wslconfig ..\\.wslconfig.old;
+    powershell.exe -Command move ..\\.wslconfig.new ..\\.wslconfig;
     powershell.exe -Command .\\wsl-kernel-install_${old_kernel}
     powershell.exe -Command .\\wsl-restart;    
     

@@ -84,6 +84,8 @@ else
     old_kernel=$(sed -i "s/\s*\#*\s*kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\(.*)/\1/g")          
     pwsh del ../"$old_kernel" -verbose
     pwsh -file "$selected_kernel_install_file"
+    sed -i "s/\s*\#*\s*kernel=C\:\\\\\\\\users\\\\\\\\docker\\\\\\\\(.*)/kernel=C\:\\\\\\\\users\\\\\\\\docker\\\\\\\\\1/g" /mnt/c/users/$win_user/.wslconfig         
+
 fi
 
 cd "$orig_pwd" || exit

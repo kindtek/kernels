@@ -671,8 +671,7 @@ echo "
 #>> ./$ps_wsl_install_kernel_id
 
 #############################################################################
-" | tee "k-cache/wsl-kernel-install.ps1"
-cp -fv "k-cache/wsl-kernel-install.ps1" "k-cache/$ps_wsl_install_kernel_id"
+" | tee "k-cache/$ps_wsl_install_kernel_id"
 # rm "k-cache/$tarball_filename"
 tar -czvf "k-cache/$tarball_filename" -C k-cache .
 # work on *nix first

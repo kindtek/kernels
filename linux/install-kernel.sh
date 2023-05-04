@@ -85,7 +85,12 @@ else
     wsl_config=/mnt/c/users/$win_user/.wslconfig 
     old_kernel=$(sed -nr "s/^\s*\#*\s*kernel=(.*)\\\\\\\\([A-Za-z0-9_-]+)$/\2/p" "$wsl_config")
     echo "old kernel: $old_kernel"       
-    pwsh -Command del ../"$old_kernel" -verbose
+    # make sure there actuall was an old kernel before deleting
+    if [ "$old_kernel" = "" ]; then
+        rm -fv ../"$old_kernel" 
+        mv -v "$old_kernel"  "wsl-kernel-rollback.ps1"
+        rm -v ".config_$old_kernel"
+    fi
     echo "running:  $selected_kernel_install_file"
     pwsh -file "$selected_kernel_install_file"
     sed -i -r "s/^\s*\#*\s*(kernel=.*)docker(.*)+$/\1$win_user\2/g" "$wsl_config"    

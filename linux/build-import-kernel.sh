@@ -617,8 +617,8 @@ touch "k-cache/$package_full_name"
 # work on *nix first
 mkdir -pv "$nix_k_cache" 2>/dev/null
 if [ -w "$nix_k_cache" ]; then
-    tar -czvf "$tarball_source_nix" -C k-cache k-cache
-    cp -fv "$tarball_source_nix" "$tarball_target_nix" 
+    tar -czvf "k-cache/$tarball_source_nix" -C k-cache k-cache
+    cp -fv "k-cache/$tarball_source_nix" "$tarball_target_nix" 
 else
     echo "unable to save kernel package to Linux home directory"
 fi

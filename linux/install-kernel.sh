@@ -104,9 +104,7 @@ else
     echo "running:  $selected_kernel_install_file"
     pwsh -file "$selected_kernel_install_file"
     # replace docker with win_user
-    sed -i -r "s/^\s*\#*\s*(kernel=.*)docker(.*)+$/\1$win_user\2/g" "$wsl_config"  
-    # just to be sure docker user is fully replaced
-    sed -i -r "s/^\s*\#*\s*(kernel=.*)docker(.*)+$/\1$win_user\2/g" ".wslconfig"      
+    
 echo "
 
 

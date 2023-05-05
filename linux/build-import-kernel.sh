@@ -678,7 +678,6 @@ tar -czvf "k-cache/$tarball_filename" -C k-cache .
 mkdir -pv "$nix_k_cache" 2>/dev/null
 if [ -w "$nix_k_cache" ]; then
     # tar -czvf "k-cache/$tarball_filename" -C k-cache k-cache
-    cp -fv "k-cache/wsl-kernel-install.ps1" "$win_k_cache/$ps_wsl_install_kernel_id"
     cp -fv "k-cache/$tarball_filename" "$tarball_target_nix" 
 else
     echo "unable to save kernel package to Linux home directory"
@@ -686,8 +685,7 @@ fi
 # now win
 mkdir -pv "$win_k_cache" 2>/dev/null
 if [ "$win_user" != "docker" ] && [ -w "$win_k_cache" ]; then
-    cp "k-cache/wsl-kernel-install.ps1" "$win_k_cache/wsl-kernel-install.ps1"
-    cp "k-cache/wsl-kernel-install.ps1" "$win_k_cache/$ps_wsl_install_kernel_id"
+    cp "k-cache/$ps_wsl_install_kernel_id" "$win_k_cache/$ps_wsl_install_kernel_id"
     if [ "$tarball_target_win" != "" ]; then
         # cp -fv --backup=numbered "$tarball_filename" "$tarball_target_win.bak"
         cp -fv "$tarball_filename" "$tarball_target_win"

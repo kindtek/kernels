@@ -43,12 +43,11 @@ enter a kernel name to install:
             latest_kernel_install_file="$(ls -t1 wsl-kernel-install_* )"
             read -r -p "
 ($(echo "$latest_kernel_install_file" | sed -r -e "s/^wsl-kernel-install_(.*)_(.*)\.ps1$/\1_\2/g"))
-" selected_kernel_install_file
-            if [ "${selected_kernel_install_file}" != "" ] && [ ! -f "$selected_kernel_install_file" ] && [ ! -f "$latest_kernel_install_file" ]; then
+" selected_kernel
+            if [ "${selected_kernel}" != "" ] && [ ! -f "wsl-kernel-install_$selected_kernel.ps1" ] && [ ! -f "$latest_kernel_install_file" ]; then
                 exit
-            elif [ -f "wsl-kernel-install_$selected_kernel_install_file" ]; then
-                latest_kernel_install_file="wsl-kernel-install_$selected_kernel_install_file"
-                selected_kernel_install_file=$latest_kernel_install_file
+            elif [ -f "wsl-kernel-install_$selected_kernel.ps1" ]; then
+                selected_kernel_install_file="wsl-kernel-install_$selected_kernel.ps1"
                 echo "user entered ${selected_kernel_install_file} ..."
             elif [ "$selected_kernel_install_file" = "" ] && [ -f "$latest_kernel_install_file" ]; then
                 echo "user confirmed ${latest_kernel_install_file} ..."
@@ -87,7 +86,7 @@ exiting..."
 else 
     while [ ! -f "$selected_kernel_install_file" ]; do
         # only focus on single match if $2 has matches
-        latest_kernel_install_file="$(exec find . -maxdepth 1 -name "wsl-kernel-install_*" | head -n 1 | sort -r)"
+        latest_kernel_install_file="$(exec find . -maxdepth 1 -name "wsl-kernel-install_*" 2>/dev/null | sed -r -e "s/^\.\/wsl-kernel-install_(.*)_(.*)\.ps1$/\t\1_\2/g" | sort -r)"
 
         echo "
 kernels available to install:
@@ -95,24 +94,26 @@ kernels available to install:
 
         name_timestamp
         --------------------"
-            find . -maxdepth 1 -name 'wsl-kernel-install_*' 2>/dev/null | sed -r -e "s/^wsl-kernel-install_(.*)_(.*)\.ps1$/\t\1_\2/g"
+            find . -maxdepth 1 -name 'wsl-kernel-install_*' 2>/dev/null | sed -r -e "s/^\.\/wsl-kernel-install_(.*)_(.*)\.ps1$/\t\1_\2/g" | sort -r
             echo "
 
 enter a kernel name to install:
 "
-        latest_kernel_install_file="$(ls -t1 wsl-kernel-install_* )"
+        latest_kernel="$(find . -maxdepth 1 -name 'wsl-kernel-install_*' 2>/dev/null | sed -r -e "s/^\.\/wsl-kernel-install_(.*)_(.*)\.ps1$/\1_\2/g" | head -n 1)"
         read -r -p "
-($(echo "$latest_kernel_install_file" | sed -r -e "s/^wsl-kernel-install_(.*)_(.*)\.ps1$/\1_\2/g"))
-" selected_kernel_install_file
-        if [ "${selected_kernel_install_file}" != "" ] && [ ! -f "$selected_kernel_install_file" ] && [ ! -f "$latest_kernel_install_file" ]; then
+($latest_kernel)
+" selected_kernel
+        if [ "${selected_kernel}" != "" ] && [ ! -f "wsl-kernel-install_$selected_kernel.ps1" ] && [ ! -f "wsl-kernel-install_$latest_kernel.ps1" ]; then
             exit
-        elif [ -f "wsl-kernel-install_$selected_kernel_install_file" ]; then
-            latest_kernel_install_file="wsl-kernel-install_$selected_kernel_install_file"
-            selected_kernel_install_file=$latest_kernel_install_file
-            echo "user entered ${selected_kernel_install_file} ..."
-        elif [ "$selected_kernel_install_file" = "" ] && [ -f "$latest_kernel_install_file" ]; then
-            echo "user confirmed ${latest_kernel_install_file} ..."
-            selected_kernel_install_file=$latest_kernel_install_file
+        elif [ -f "wsl-kernel-install_$selected_kernel.ps1" ]; then
+            selected_kernel_install_file="wsl-kernel-install_$selected_kernel.ps1"
+            echo "user entered ${selected_kernel} ..."
+        elif [ "$selected_kernel" = "" ] && [ -f "wsl-kernel-install_$latest_kernel.ps1" ]; then
+            echo "user confirmed ${latest_kernel} ..."
+            selected_kernel_install_file="wsl-kernel-install_$latest_kernel.ps1"
+        elif [ "$selected_kernel" = "" ]; then
+            echo "could not find ${latest_kernel} ..."
+            selected_kernel_install_file="wsl-kernel-install_$latest_kernel.ps1"
         fi
     done
 fi

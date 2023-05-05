@@ -649,7 +649,6 @@ echo "
     wsl.exe exec tar -xvzf $package_full_name_id.tar.gz
 
     # copy file
-    powershell.exe -Command copy ${kernel_alias} ..\\${kernel_alias} -verbose;
     powershell.exe -Command copy .wslconfig ..\\.wslconfig -verbose;
     # restart wsl
     powershell.exe -Command .\\wsl-restart.ps1;

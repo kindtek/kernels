@@ -94,10 +94,9 @@ exiting ..."
 else 
     wsl_config=../.wslconfig 
     old_kernel=$(sed -nr "s/^\s*\#*\s*kernel=(.*)\\\\\\\\([A-Za-z0-9_-]+)$/\2/p" "$wsl_config")
-    echo "old kernel: $old_kernel"       
     # make sure there actually was an old kernel before deleting
     if [ "$old_kernel" != "" ]; then
-        rm -fv ../"$old_kernel" 
+        rm -fv "$old_kernel" 
         cp -v "wsl-kernel-install_$old_kernel.ps1"  "wsl-kernel-rollback.ps1"
         rm -v ".config_$old_kernel"
     fi
@@ -115,9 +114,11 @@ copy/pasta this into any windows terminal (WIN + x, i):"
 echo "
     powershell.exe -Command move ..\\.wslconfig.old ..\\.wslconfig.new;
     powershell.exe -Command move ..\\.wslconfig ..\\.wslconfig.old;
-    powershell.exe -Command move ..\\.wslconfig.new ..\\.wslconfig;
-    powershell.exe -Command .\\wsl-kernel-install_${old_kernel}
-    powershell.exe -Command .\\wsl-restart;    
+    powershell.exe -Command move ..\\.wslconfig.new ..\\.wslconfig;"
+    if [ "$old_kernel" != "" ]; then
+        echo "    powershell.exe -Command .\\wsl-kernel-install_${old_kernel}"
+    fi   
+    echo "    powershell.exe -Command .\\wsl-restart;    
     
 
 " | tee "wsl-kernel-rollback.ps1"     

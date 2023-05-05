@@ -617,7 +617,7 @@ cp -fv --backup=numbered  "$linux_build_dir/$kernel_source" "k-cache/$kernel_ali
 mkdir -p "$win_k_cache" 2>/dev/null
 # rm -fv "$win_k_cache/wsl-kernel-install.ps1"
 # rm -rfv "$win_k_cache/wsl-kernel-install_${kernel_alias_no_timestamp}*"
-sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${kernel_alias}/g" ../../../dvlp/mnt/%HOME%/sample.wslconfig
+sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\k-cache\\\\\\\\${kernel_alias}/g" ../../../dvlp/mnt/%HOME%/sample.wslconfig
 cp -fv --backup=numbered ../../../dvlp/mnt/%HOME%/sample.wslconfig k-cache/.wslconfig
 
 echo "

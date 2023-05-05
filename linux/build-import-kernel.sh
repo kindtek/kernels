@@ -701,9 +701,10 @@ elseif (\$nix_os) {
 " | tee "k-cache/$ps_wsl_install_kernel_id"
 # rm "k-cache/$tarball_filename"
 tar -czvf "k-cache/$tarball_filename" -C k-cache .
-cp "k-cache/$tarball_filename" k-cache/latest.tar.gz
+# cp "k-cache/$tarball_filename" k-cache/latest.tar.gz
 # work on *nix first
 mkdir -pv "$nix_k_cache" 2>/dev/null
+
 if [ -w "$nix_k_cache" ]; then
     # tar -czvf "k-cache/$tarball_filename" -C k-cache k-cache
     cp -fv "k-cache/$tarball_filename" "$tarball_target_nix" 
@@ -725,13 +726,13 @@ fi
 win_user_home=/mnt/c/users/$win_user
 wsl_kernel=${win_user_home}/k-cache/${kernel_alias}
 wsl_config=${win_user_home}/.wslconfig
-if (( quick_wsl_install )); then
-    # copy kernel and wsl config right away
-    cp -vf "k-cache/$kernel_alias" "$wsl_kernel" 
-    mv -vf --backup=numbered "$wsl_config" "$wsl_config.old"
-    sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\k-cache\\\\\\\\${kernel_alias}/g" k-cache/.wslconfig           
-    cp -vf k-cache/.wslconfig "$wsl_config"  
-elif [ "$wsl_install" = "y" ] || [ "$wsl_install" = "yes" ]; then
+
+echo "
+
+KERNEL BUILD COMPLETE
+
+"
+
 
 printf "
 
@@ -756,158 +757,6 @@ printf "
 
 " "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}"
 
-fi
-# echo "
-# install or exit?
-# "
-# [ "$win_user" != "" ] || read -r -p "(install $package_full_name into $WSL_DISTRO_NAME WSL)
-# " install_wsl_kernel
-# win_user_home=/mnt/c/users/$win_user 
-#     if [ "$install_wsl_kernel" = "" ]; then
-#         && \
-#         # cp -vf "k-cache/${kernel_alias}" "$wsl_kernel"
-#         quick_wsl_install=True
-#         if [ -f "$wsl_config" ]; then
-# echo "
 
-
-
-
-
-
-
-
-
-            
-# .wslconfig found in $win_user_home
-
-# replacing this with a pre-configured .wslconfig is *HIGHLY* recommended
-# a backup of the original file will be saved as:
-
-#     $wsl_config.old
-
-# continue with .wslconfig replacement?
-# "
-# [ "$win_user" != "" ] || read -r -p "(y)
-# " replace_wslconfig
-#             if [ "${replace_wslconfig,,}" = "n" ] || [ "${replace_wslconfig,,}" = "no" ]; then
-#                 if grep -q '^\s?\#?\skernel=.*' "$wsl_config"; then
-#                     sed -i "s/\s*\#*\s*kernel=C.*/kernel=C\\\\\\\\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\k-cache\\\\\\\\${kernel_alias}/g" "$wsl_config"
-#                 else
-#                     wslconfig_old="$(cat "$wsl_config")"
-#                     wslconfig_new="
-# [wsl2]
-
-# kernel=C\:\\\\users\\\\$win_user\\\\${kernel_alias}
-# $(cat "$wslconfig_old")"
-#                     echo "$wslconfig_new" > "$wsl_config"
-#                 fi
-#             else
-#                 mv -vf --backup=numbered "$wsl_config" "$wsl_config.old"
-#                 sed -i "s/\s*\#*\s*kernel=.*/kernel=C\\\\\\\\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\k-cache\\\\\\\\${kernel_alias}/g" k-cache/.wslconfig           
-#                 cp -vf k-cache/.wslconfig "$wsl_config"  
-#             fi
-#         else
-#             mv -vf --backup=numbered "$wsl_config" "$wsl_config.old"
-#             sed -i "s/\s*\#*\s*kernel=.*/kernel=C\\\\\\\\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\k-cache\\\\\\\\${kernel_alias}/g" k-cache/.wslconfig           
-#             cp -vf k-cache/.wslconfig "$wsl_config"          
-#         fi
-#     fi
-# fi
-
-echo "
-
-
-
-
-
-KERNEL BUILD COMPLETE
-
-"
-
-if (( quick_wsl_install )) || [ "${wsl_install,,}" = "y" ] || [ "${wsl_install,,}" = "yes" ]; then
-[ "$win_user" != "" ] || read -r -p "(see kernel install instructions)
-"
-echo "
-
-
-WSL KERNEL INSTALL
--------------------------
-
-open a windows terminal to home directory (WIN + x, i) and copy/pasta:
-
-    ./k-cache/wsl-install-$kernel_alias
-"
-[ "$win_user" != "" ] || read -r -p "(see WSL recovery instructions)
-"
-old_kernel=$(sed -nr "s/^\s*\#*\s*kernel=(.*)\\\\\\\\([A-Za-z0-9_-]+)$/\2/p" "$wsl_config")
-if [ "$old_kernel" != "" ]; then
-    echo "
-
-
-WSL ROLLBACK INSTRUCTIONS
--------------------------
-
-open a windows terminal to home directory (WIN + x, i) and copy/pasta:
-
-    ./k-cache/wsl-install-$old_kernel
-"
-else 
-    echo "
-
-
-WSL ROLLBACK INSTRUCTIONS
--------------------------
-
-open a windows terminal to home directory (WIN + x, i) and copy/pasta:
-
-    move .wslconfig.old .wslconfig.new
-    move .wslconfig .wslconfig.old
-    move .wslconfig.new .wslconfig
-
-"    
-fi
-[ "$win_user" != "" ] || read -r -p "(see WSL reboot instructions)
-"
-echo "
-
-
-WSL REBOOT INSTRUCTIONS
------------------------
-
-open a windows terminal to home directory (WIN + x, i) and copy/pasta:
-
-    ./k-cache/wsl-restart
-"
-
-
-[ "$win_user" != "" ] || echo "
-install kernel $kernel_alias?
-"
-[ "$win_user" != "" ] || read -r -p "
-(open install tool)" install_kernel
-
-[ "$win_user" != "" ] || if [ "$install_kernel" = "" ]; then
-    bash install-kernel.sh "$win_user" "$kernel_alias_no_timestamp" "$timestamp_id"
-fi
-
-
-    
-fi
-
-# else
-#     echo "quick_wsl_install == $quick_install"
-# fi
-# cp -fv --backup=numbered $kernel_source $kernel_target_nix
-# cp -fv --backup=numbered .config $nix_k_cache/$config_alias
-
-# if [ -d "$win_k_cache" ]; then cp -fv --backup=numbered  $kernel_source $win_k_cache/$config_alias; fi
-# if [ -d "$win_k_cache" ]; then cp -fv --backup=numbered  $kernel_source $win_k_cache/$kernel_alias; fi
-
-
-# cleanup
-# rm -rf k-cache/*
-# rm -rf $linux_build_dir
-# rm -rf $temp_dir
-
+bash install-kernel.sh "$win_user" "$kernel_alias_no_timestamp" "$timestamp_id"
 

@@ -628,6 +628,7 @@ try {
             New-Variable -Option Constant -Name win_os -Value \$True -ErrorAction SilentlyContinue
             New-Variable -Option Constant -Name nix_os  -Value \$False -ErrorAction SilentlyContinue
             New-Variable -Option Constant -Name mac_os  -Value \$False -ErrorAction SilentlyContinue
+        }
     }
 } catch {}
 

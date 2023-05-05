@@ -126,4 +126,4 @@ fi
 
 cd "$orig_pwd" || exit
 
-powershell.exe -Command wsl.exe
+powershell.exe -Command wsl.exe || pwsh -Command wsl

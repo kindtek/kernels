@@ -621,11 +621,15 @@ sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\${k
 cp -fv --backup=numbered ../../../dvlp/mnt/%HOME%/sample.wslconfig k-cache/.wslconfig
 
 echo "
-# # for executing option b outside of this directory 
-# # the below two lines are unnecessary to copy
-# \$mypath = \$MyInvocation.MyCommand.Path
-# cd Split-Path \$mypath -Parent
-# # the above two lines are unnecessary to copy
+try {
+    # first check OS to use relevant powershell/wsl calls later
+    switch (Get-PSPlatform) {
+        'Win32NT' { 
+            New-Variable -Option Constant -Name win_os -Value $True -ErrorAction SilentlyContinue
+            New-Variable -Option Constant -Name nix_os  -Value $False -ErrorAction SilentlyContinue
+            New-Variable -Option Constant -Name mac_os  -Value $False -ErrorAction SilentlyContinue
+    }
+} catch {}
 
 #############################################################################
 # ________________ WSL KERNEL INSTALLATION INSTRUCTIONS ____________________#
@@ -638,6 +642,9 @@ echo "
 #####   copy/pasta this into any Windows terminal (WIN + x, i):         #####
 ####                                                                    #####
 #####   copy without '#>>' to replace (delete/move) .wslconfig          #####
+
+if ($win_os) {
+
 #
 #   # delete
 #>> powershell.exe -Command del ..\\.wslconfig -Force -verbose;
@@ -652,6 +659,26 @@ echo "
     powershell.exe -Command copy .wslconfig ..\\.wslconfig -verbose;
     # restart wsl
     powershell.exe -Command .\\wsl-restart.ps1;
+
+}
+elseif ($nix_os) {
+
+#
+#   # delete
+#>> pwsh -Command del ..\\.wslconfig -Force -verbose;
+#
+#   # move file out of the way   
+    pwsh -Command move ..\\.wslconfig ..\\.wslconfig.old -Force -verbose;
+    
+    # extract
+    wsl exec tar -xvzf $package_full_name_id.tar.gz
+
+    # copy file
+    pwsh -Command copy .wslconfig ..\\.wslconfig -verbose;
+    # restart wsl
+    pwsh -Command .\\wsl-restart.ps1;
+
+}
 
 #############################################################################
 

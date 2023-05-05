@@ -100,6 +100,11 @@ else
         rm -fv "$old_kernel" 
         cp -v "wsl-kernel-install_$old_kernel.ps1"  "wsl-kernel-rollback.ps1"
         rm -v ".config_$old_kernel"
+    else    
+        echo "
+move .wslconfig.old .wslconfig.new
+move .wslconfig .wslconfig.old
+move .wslconfig.new .wslconfig" | tee "wsl-kernel-rollback.ps1"
     fi
     echo "running:  $selected_kernel_install_file"
     pwsh -file "$selected_kernel_install_file"

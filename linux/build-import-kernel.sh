@@ -605,7 +605,7 @@ rm -rfv k-cache/*_*
 # remove empty file tag
 rm -rfv k-cache/Linux-*
 # remove wsl install ps file
-rm -rfv k-cache/wsl-kernel-install*
+rm -rfv k-cache/wsl-kernel-install_*
 # remove tarball
 rm -rfv k-cache/*.tar.gz
 cp -fv --backup=numbered  "$config_source" "k-cache/$config_alias"

@@ -625,9 +625,9 @@ try {
     # first check OS to use relevant powershell/wsl calls later
     switch (Get-PSPlatform) {
         'Win32NT' { 
-            New-Variable -Option Constant -Name win_os -Value $True -ErrorAction SilentlyContinue
-            New-Variable -Option Constant -Name nix_os  -Value $False -ErrorAction SilentlyContinue
-            New-Variable -Option Constant -Name mac_os  -Value $False -ErrorAction SilentlyContinue
+            New-Variable -Option Constant -Name win_os -Value \$True -ErrorAction SilentlyContinue
+            New-Variable -Option Constant -Name nix_os  -Value \$False -ErrorAction SilentlyContinue
+            New-Variable -Option Constant -Name mac_os  -Value \$False -ErrorAction SilentlyContinue
     }
 } catch {}
 
@@ -643,7 +643,7 @@ try {
 ####                                                                    #####
 #####   copy without '#>>' to replace (delete/move) .wslconfig          #####
 
-if ($win_os) {
+if (\$win_os) {
 
 #
 #   # delete
@@ -661,7 +661,7 @@ if ($win_os) {
     powershell.exe -Command .\\wsl-restart.ps1;
 
 }
-elseif ($nix_os) {
+elseif (\$nix_os) {
 
 #
 #   # delete

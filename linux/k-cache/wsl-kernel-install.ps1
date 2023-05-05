@@ -11,4 +11,4 @@ Write-Output wsl.exe -- $bashArgs
 
 
 # wsl.exe -u agl -- $("$("/hal/dvlw/dvlp/docker/kali/make-kernel.sh $bashArgs")")
-wsl.exe --cd /hal/dvlw/dvlp/kernels/linux exec ./install-kernel.sh $argArray[0] $argArray[1] $argArray[2]
+wsl.exe --cd /hal/dvlw/dvlp/kernels/linux exec bash -c ./install-kernel.sh $argArray[0] $argArray[1] $argArray[2]

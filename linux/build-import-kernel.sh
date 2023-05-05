@@ -700,6 +700,7 @@ elseif (\$nix_os) {
 " | tee "k-cache/$ps_wsl_install_kernel_id"
 # rm "k-cache/$tarball_filename"
 tar -czvf "k-cache/$tarball_filename" -C k-cache .
+cp "k-cache/$tarball_filename" k-cache/latest.tar.gz
 # work on *nix first
 mkdir -pv "$nix_k_cache" 2>/dev/null
 if [ -w "$nix_k_cache" ]; then

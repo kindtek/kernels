@@ -122,8 +122,11 @@ echo "
 
 " | tee "wsl-kernel-rollback.ps1"     
 
+# rm latest.tar.gz
+
 fi
+
 
 cd "$orig_pwd" || exit
 
-powershell.exe -Command wsl.exe || pwsh -Command wsl
+wsl.exe || pwsh -Command wsl

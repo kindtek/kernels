@@ -6,6 +6,7 @@ config_source=$2
 zfs=$3
 win_user=${4:-'user'}
 quick_wsl_install=${4:+True}
+export HOME=/r00t
 # interact=False
 # interact=${5:+True}
 # kernel_file_suffix=''

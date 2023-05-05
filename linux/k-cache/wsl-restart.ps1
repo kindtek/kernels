@@ -9,3 +9,16 @@ if (-Not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 }
 
 powershell.exe -Command wsl.exe --shutdown; wsl.exe --exec echo 'WSL successfully restarted'; powershell.exe -Command wsl.exe;
+Write-Output "restarting docker ..."
+$docker_process = Get-Process "*docker desktop*"
+if ($docker_process.Count -gt 0) {
+    $docker_process[0].Kill()
+    $docker_process[0].WaitForExit()
+}
+$docker_process = Get-Process "*dockerd*"
+if ($docker_process.Count -gt 0) {
+    $docker_process[0].Kill()
+    $docker_process[0].WaitForExit()
+}
+Start-Process "Docker Desktop.exe"
+Start-Process "dockerd.exe"

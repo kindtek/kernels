@@ -21,7 +21,7 @@ win_k_cache="/mnt/c/users/$win_user/k-cache"
 mkdir -p "$win_k_cache"
 cd "$win_k_cache" || exit
 
-if [ ! -f "wsl-kernel-install_${2}_${3}.ps1" ] && [ "$2" != "latest" ]; then
+if [ "$2" != "" ] && [ ! -f "wsl-kernel-install_${2}_${3}.ps1" ] && [ "$2" != "latest" ]; then
 
     while [ ! -f "$selected_kernel_install_file" ]; do
         # only focus on single match if $2 has matches
@@ -35,7 +35,7 @@ kernels available to install:
 
         name_timestamp
         --------------------"
-            ls -t1 wsl-kernel-install_* | sed -r -e "s/^wsl-kernel-install_(.*)_(.*)\.ps1$/\t\1_\2/g"
+            find . -name 'wsl-kernel-install_*' 2>/dev/null | sed -r -e "s/^wsl-kernel-install_(.*)_(.*)\.ps1$/\t\1_\2/g" | sort -r
             echo "
 
 enter a kernel name to install:
@@ -46,21 +46,22 @@ enter a kernel name to install:
 " selected_kernel_install_file
             if [ "${selected_kernel_install_file}" != "" ] && [ ! -f "$selected_kernel_install_file" ] && [ ! -f "$latest_kernel_install_file" ]; then
                 exit
-            elif [ -f "$selected_kernel_install_file" ]; then
+            elif [ -f "wsl-kernel-install_$selected_kernel_install_file" ]; then
+                latest_kernel_install_file="wsl-kernel-install_$selected_kernel_install_file"
+                selected_kernel_install_file=$latest_kernel_install_file
                 echo "user entered ${selected_kernel_install_file} ..."
-                latest_kernel_install_file=$selected_kernel_install_file
-            elif [ -f "$latest_kernel_install_file" ]; then
-                echo "user entered ${latest_kernel_install_file} ..."
+            elif [ "$selected_kernel_install_file" = "" ] && [ -f "$latest_kernel_install_file" ]; then
+                echo "user confirmed ${latest_kernel_install_file} ..."
                 selected_kernel_install_file=$latest_kernel_install_file
             fi
         fi
-        if [ "${selected_kernel_install_file}" = "" ]; then
-            echo "using $latest_kernel_install_file ..."
-            selected_kernel_install_file=$latest_kernel_install_file
-        fi
     done
+elif [ -f "wsl-kernel-install_${2}_${3}.ps1" ]; then
+    selected_kernel_install_file="wsl-kernel-install_${2}_${3}.ps1"
+    latest_kernel=$( echo "$selected_kernel_install_file" | sed -nr "s/^wsl-kernel-install_(.*)_(.*)\.ps1$/\1_\2/p")
+
 elif [ "$2" = "latest" ]; then
-    selected_kernel_install_file="$(ls -t1 wsl-kernel-install_* | head -n 1 )"
+    selected_kernel_install_file="$(find . -name 'wsl-kernel-install_*' 2>/dev/null | head -n 1)"
     latest_kernel=$( echo "$selected_kernel_install_file" | sed -nr "s/^wsl-kernel-install_(.*)_(.*)\.ps1$/\1_\2/p")
 
     echo "
@@ -83,12 +84,44 @@ exiting..."
     # else
     #     selected_kernel_install_file=$latest_kernel
     fi
+else 
+    while [ ! -f "$selected_kernel_install_file" ]; do
+        # only focus on single match if $2 has matches
+        latest_kernel_install_file="$(exec find . -maxdepth 1 -name "wsl-kernel-install_*" | head -n 1 | sort -r)"
+
+        echo "
+kernels available to install:
+
+
+        name_timestamp
+        --------------------"
+            find . -name 'wsl-kernel-install_*' 2>/dev/null | sed -r -e "s/^wsl-kernel-install_(.*)_(.*)\.ps1$/\t\1_\2/g"
+            echo "
+
+enter a kernel name to install:
+"
+        latest_kernel_install_file="$(ls -t1 wsl-kernel-install_* )"
+        read -r -p "
+($(echo "$latest_kernel_install_file" | sed -r -e "s/^wsl-kernel-install_(.*)_(.*)\.ps1$/\1_\2/g"))
+" selected_kernel_install_file
+        if [ "${selected_kernel_install_file}" != "" ] && [ ! -f "$selected_kernel_install_file" ] && [ ! -f "$latest_kernel_install_file" ]; then
+            exit
+        elif [ -f "wsl-kernel-install_$selected_kernel_install_file" ]; then
+            latest_kernel_install_file="wsl-kernel-install_$selected_kernel_install_file"
+            selected_kernel_install_file=$latest_kernel_install_file
+            echo "user entered ${selected_kernel_install_file} ..."
+        elif [ "$selected_kernel_install_file" = "" ] && [ -f "$latest_kernel_install_file" ]; then
+            echo "user confirmed ${latest_kernel_install_file} ..."
+            selected_kernel_install_file=$latest_kernel_install_file
+        fi
+    done
 fi
 
 if [ ! -f "$selected_kernel_install_file" ]; then
     echo "could not find $selected_kernel_install_file
 exiting ..."
-else 
+fi
+if [ -f "$selected_kernel_install_file" ]; then
     wsl_config=../.wslconfig 
     new_kernel=$( echo "$selected_kernel_install_file" | sed -nr "s/^wsl-kernel-install_(.*)_(.*)\.ps1$/\1_\2/p")
     old_kernel=$(sed -nr "s/^\s*\#*\s*kernel=(.*)\\\\\\\\([A-Za-z0-9_-]+)$/\2/p" "$wsl_config")

@@ -7,18 +7,56 @@ if (-Not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
         Exit
     }
 }
-
-powershell.exe -Command wsl.exe --shutdown; wsl.exe --exec echo 'WSL successfully restarted'; powershell.exe -Command wsl.exe;
+powershell.exe -Command wsl.exe --shutdown; 
 Write-Output "restarting docker ..."
-$docker_process = Get-Process "*docker desktop*"
-if ($docker_process.Count -gt 0) {
-    $docker_process[0].Kill()
-    $docker_process[0].WaitForExit()
-}
-$docker_process = Get-Process "*dockerd*"
-if ($docker_process.Count -gt 0) {
-    $docker_process[0].Kill()
-    $docker_process[0].WaitForExit()
-}
-Start-Process "Docker Desktop.exe"
-Start-Process "dockerd.exe"
+cmd.exe /c net stop docker
+cmd.exe /c net stop com.docker.service
+cmd.exe /c taskkill /IM "dockerd.exe" /F
+cmd.exe /c taskkill /IM "Docker Desktop.exe" /F
+cmd.exe /c net start docker
+cmd.exe /c net start com.docker.service
+wsl.exe --exec echo 'Docker restarted';
+
+# $docker_process = Get-Process "com.docker.service"
+# if ($docker_process.Count -gt 0) {
+#     $docker_process[0].Kill()
+#     Stop-Service -Name $docker_process
+#     $docker_process[0].WaitForExit()
+# }
+# $docker_process = Get-Process "com.docker.proxy"
+# if ($docker_process.Count -gt 0) {
+#     $docker_process[0].Kill()
+#     Stop-Service -Name $docker_process
+#     $docker_process[0].WaitForExit()
+# }
+# $docker_process = Get-Process "docker"
+# if ($docker_process.Count -gt 0) {
+#     $docker_process[0].Kill()
+#     Stop-Service -Name $docker_process
+#     $docker_process[0].WaitForExit()
+# }
+# $docker_process = Get-Process "com.dockerd.service"
+# if ($docker_process.Count -gt 0) {
+#     $docker_process[0].Kill()
+#     Stop-Service -Name $docker_process
+#     $docker_process[0].WaitForExit()
+# }
+# $docker_process = Get-Process "com.dockerd.proxy"
+# if ($docker_process.Count -gt 0) {
+#     $docker_process[0].Kill()
+#     Stop-Service -Name $docker_process
+#     $docker_process[0].WaitForExit()
+# }
+# $docker_process = Get-Process "dockerd"
+# if ($docker_process.Count -gt 0) {
+#     $docker_process[0].Kill()
+#     Stop-Service -Name $docker_process
+#     $docker_process[0].WaitForExit()
+# }
+# wsl.exe --exec echo 'WSL successfully restarted';
+# Start-Process "com.docker.service"
+# Start-Process "com.docker.proxy"
+# Start-Process "docker"
+# Start-Service "com.docker.service"
+# Start-Service "com.docker.proxy"
+# Start-Service "docker"

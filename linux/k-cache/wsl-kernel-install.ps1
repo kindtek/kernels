@@ -1,6 +1,5 @@
 $argString = $args -join " "
 $argArray = $argString.Split(" ")
-$bashArgs = ""
 for ($i = 0; $i -lt $argArray.Length; $i += 1) {
     $paramValue = $argArray[$i]
     if ( "$paramValue" -eq "" ) {

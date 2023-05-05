@@ -72,7 +72,7 @@ elif [ "$2" = "latest" ]; then
 
 
     
-install latest built kernel $latest_kernel?"
+install $latest_kernel kernel into WSL?"
     read -r -p "
 (install latest)
 " install_latest
@@ -93,6 +93,7 @@ if [ ! -f "$selected_kernel_install_file" ]; then
 exiting ..."
 else 
     wsl_config=../.wslconfig 
+    new_kernel=$( echo "$selected_kernel_install_file" | sed -nr "s/^wsl-kernel-install_(.*)_(.*)\.ps1$/\1_\2/p")
     old_kernel=$(sed -nr "s/^\s*\#*\s*kernel=(.*)\\\\\\\\([A-Za-z0-9_-]+)$/\2/p" "$wsl_config")
     # make sure there actually was an old kernel before deleting
     if [ "$old_kernel" != "" ]; then
@@ -102,28 +103,56 @@ else
     fi
     echo "running:  $selected_kernel_install_file"
     pwsh -file "$selected_kernel_install_file"
+    # installation happens here
+    cp -fv .wslconfig $wsl_config
     # replace docker with win_user
-    
-echo "
-
-
-WSL KERNEL ROLLBACK INSTRUCTIONS
---------------------------------
-
-copy/pasta this into any windows terminal (WIN + x, i):"
-echo "
-    powershell.exe -Command move ..\\.wslconfig.old ..\\.wslconfig.new;
-    powershell.exe -Command move ..\\.wslconfig ..\\.wslconfig.old;
-    powershell.exe -Command move ..\\.wslconfig.new ..\\.wslconfig;"
+        
     if [ "$old_kernel" != "" ]; then
-        echo "    powershell.exe -Command .\\wsl-kernel-install_${old_kernel}"
-    fi   
-    echo "    powershell.exe -Command .\\wsl-restart;    
-    
+        echo "
 
-" | tee "wsl-kernel-rollback.ps1"     
 
+WSL ROLLBACK INSTRUCTIONS
+-------------------------
+
+open a windows terminal to home directory (WIN + x, i) and copy/pasta:
+
+    ./k-cache/wsl-install-$old_kernel
+    "
+    else 
+        echo "
+
+
+WSL ROLLBACK INSTRUCTIONS
+-------------------------
+
+open a windows terminal to home directory (WIN + x, i) and copy/pasta:
+
+    move .wslconfig.old .wslconfig.new
+    move .wslconfig .wslconfig.old
+    move .wslconfig.new .wslconfig
+
+    "    
+    fi
+    echo "
+
+
+WSL KERNEL INSTALL
+-------------------------
+
+open a windows terminal to home directory (WIN + x, i) and copy/pasta:
+
+    ./k-cache/wsl-install-$new_kernel
+
+
+WSL REBOOT INSTRUCTIONS
+-----------------------
+
+open a windows terminal to home directory (WIN + x, i) and copy/pasta:
+
+    ./k-cache/wsl-restart
+"
 # rm latest.tar.gz
+    ./wsl-restart
 
 fi
 

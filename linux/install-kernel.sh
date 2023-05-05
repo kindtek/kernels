@@ -24,7 +24,7 @@ cd "$win_k_cache" || exit
 if [ ! -f "wsl-kernel-install_${2}_${3}.ps1" ] && [ "$2" != "latest" ]; then
 
     while [ ! -f "$selected_kernel_install_file" ]; do
-        latest_kernel_install_file="$(exec find . -name "wsl-kernel-install_${2}_*" | head -n 1)"
+        latest_kernel_install_file="$(exec find . -maxdepth 1 -name "wsl-kernel-install_${2}_*" | head -n 1)"
         if [ -f "$latest_kernel_install_file" ]; then
             latest_kernel=$( echo "$latest_kernel_install_file" | sed -r -e "s/^\.\/wsl-kernel-install_(.*)_(.*)\.ps1$/\t\1_\2/g")
             echo "
@@ -47,12 +47,14 @@ kernels available to install:
 
 enter a kernel name to install:
 "
-            latest_kernel_install_file="$(ls -t1 wsl-kernel-install_${selected_kernel_install_file}* | head -n 1 )"
+            latest_kernel_install_file="$(ls -t1 wsl-kernel-install_* )"
             read -r -p "
 ($(echo "$latest_kernel_install_file" | sed -r -e "s/^wsl-kernel-install_(.*)_(.*)\.ps1$/\1_\2/g"))
 " selected_kernel_install_file
-            if [ "$selected_kernel_install_file" != "" ]; then
+            if [ "${selected_kernel_install_file}" != "" ] && [ ! -f "$selected_kernel_install_file" ]; then
                 exit
+            elif [ "${selected_kernel_install_file}" != "" ] && [ ! -f "$selected_kernel_install_file" ]; then
+                echo "user entered ${selected_kernel_install_file} ..."
             fi
         fi
         if [ "${selected_kernel_install_file}" = "" ]; then
@@ -61,7 +63,7 @@ enter a kernel name to install:
         fi
     done
 elif [ "$2" = "latest" ]; then
-    selected_kernel_install_file="$(ls -t1 wsl-kernel-install_${selected_kernel_install_file}* | head -n 1 )"
+    selected_kernel_install_file="$(ls -t1 wsl-kernel-install_* | head -n 1 )"
     latest_kernel=$( echo "$selected_kernel_install_file" | sed -nr "s/^wsl-kernel-install_(.*)_(.*)\.ps1$/\1_\2/p")
 
     echo "
@@ -72,9 +74,9 @@ elif [ "$2" = "latest" ]; then
 
 
     
-install $latest_kernel kernel into WSL?"
+install $latest_kernel kernel into WSL or exit?"
     read -r -p "
-(install latest)
+(install $latest_kernel)
 " install_latest
     if [ "$install_latest" != "" ]; then
         echo "
@@ -84,8 +86,6 @@ exiting..."
     # else
     #     selected_kernel_install_file=$latest_kernel
     fi
-else 
-    selected_kernel_install_file="wsl-kernel-install_${2}_${3}.ps1"
 fi
 
 if [ ! -f "$selected_kernel_install_file" ]; then

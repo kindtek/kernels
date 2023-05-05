@@ -53,7 +53,7 @@ enter a kernel name to install:
 " selected_kernel_install_file
             if [ "${selected_kernel_install_file}" != "" ] && [ ! -f "$selected_kernel_install_file" ]; then
                 exit
-            elif [ "${selected_kernel_install_file}" != "" ] && [ ! -f "$selected_kernel_install_file" ]; then
+            elif [ -f "$selected_kernel_install_file" ]; then
                 echo "user entered ${selected_kernel_install_file} ..."
             fi
         fi

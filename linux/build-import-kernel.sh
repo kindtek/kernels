@@ -795,56 +795,47 @@ KERNEL BUILD COMPLETE
 "
 
 if (( quick_wsl_install )) || [ "${wsl_install,,}" = "y" ] || [ "${wsl_install,,}" = "yes" ]; then
-echo "
-
-
-
-WSL REBOOT
-----------       
-
-would you like to reboot WSL now or later?
+[ "$win_user" != "" ] || read -r -p "(see kernel install instructions)
 "
-[ "$win_user" != "" ] || read -r -p "(reboot WSL now)
-" wsl_restart
 echo "
 
 
+WSL KERNEL INSTALL
+-------------------------
 
+open a windows terminal to home directory (WIN + x, i) and copy/pasta:
 
-
-
-
-
-
-
-
-
-
-
-recovery scripts will be displayed on your screen next
-please leave this window open until WSL has been rebooted in case you need to copy/pasta to rollback to a working configuration
+    ./k-cache/wsl-install-$kernel_alias
 "
 [ "$win_user" != "" ] || read -r -p "(see WSL recovery instructions)
 "
-echo "  powershell.exe -Command wsl.exe --shutdown; wsl.exe --exec echo 'WSL successfully restarted'; powershell.exe -Command wsl.exe;" | tee "$win_k_cache/wsl-restart.ps1" &>/dev/null
 old_kernel=$(sed -nr "s/^\s*\#*\s*kernel=(.*)\\\\\\\\([A-Za-z0-9_-]+)$/\2/p" "$wsl_config")
+if [ "$old_kernel" != "" ]; then
+    echo "
 
-[ "$win_user" != "" ] || echo "
+
+WSL ROLLBACK INSTRUCTIONS
+-------------------------
+
+open a windows terminal to home directory (WIN + x, i) and copy/pasta:
+
+    ./k-cache/wsl-install-$old_kernel
+"
+else 
+    echo "
 
 
-WSL KERNEL ROLLBACK INSTRUCTIONS
---------------------------------
+WSL ROLLBACK INSTRUCTIONS
+-------------------------
 
-copy/pasta this into any windows terminal (WIN + x, i):"
-echo "
-    powershell.exe -Command move ..\\.wslconfig.old ..\\.wslconfig.new -verbose;
-    powershell.exe -Command move ..\\.wslconfig ..\\.wslconfig.old -verbose;
-    powershell.exe -Command move ..\\.wslconfig.new ..\\.wslconfig -verbose;
-    powershell.exe -Command .\\wsl-kernel-install_${old_kernel}
-    powershell.exe -Command .\\wsl-restart;    
-    
+open a windows terminal to home directory (WIN + x, i) and copy/pasta:
 
-" | tee "wsl-kernel-rollback.ps1"
+    move .wslconfig.old .wslconfig.new
+    move .wslconfig .wslconfig.old
+    move .wslconfig.new .wslconfig
+
+"    
+fi
 [ "$win_user" != "" ] || read -r -p "(see WSL reboot instructions)
 "
 echo "
@@ -853,63 +844,22 @@ echo "
 WSL REBOOT INSTRUCTIONS
 -----------------------
 
-copy/pasta the following line into any windows terminal (WIN + x, i):
-"
-echo "
-    powershell.exe -Command wsl.exe --shutdown; powershell.exe -Command wsl.exe --exec echo 'WSL successfully restarted';
+open a windows terminal to home directory (WIN + x, i) and copy/pasta:
+
     ./k-cache/wsl-restart
-    powershell.exe -Command wsl.exe -d $WSL_DISTRO_NAME
-
 "
-[ "$win_user" != "" ] || read -r -p "(see helpful shortcuts)
+
+
+[ "$win_user" != "" ] || echo "
+install kernel $kernel_alias?
 "
-echo "
-
-HELPFUL SHORTCUTS
------------------
-
-the above scripts and instructions were displayed in case you need to copy them and are also accessible in the k-cache ($win_k_cache):
-
-    -   wsl-kernel-install.ps1
-    -   wsl-kernel-rollback.ps1
-    -   wsl-restart.ps1
-
-this makes it easy for you to install the kernel, rollback it back, or restart WSL without copying and pasting multiple lines of code
-
-for example, you can open a powershell terminal (WIN + x, i) and run:
-
-    ./k-cache/restart-wsl.ps1
-
-.. and this will restart WSL
-
-* when running the command make sure the terminal is open to your home directory - thankfully, this is automatically loaded when using the WIN + x shortcut"
-    
-
-    if [ "$wsl_restart" = "" ]; then
 [ "$win_user" != "" ] || read -r -p "
-(finish and try to restart WSL)"
-        echo " attempting to restart WSL ... 
-        "
-         pwsh -file "$win_k_cache/wsl-restart.ps1"  || \
-        ( echo "unable to restart WSL. manual restart required:
-        
-    # copy/pasta to restart wsl
-    powershell.exe -Command wsl.exe --exec echo 'WSL successfully restarted'; powershell.exe -Command wsl.exe -d $WSL_DISTRO_NAME;
+(open install tool)" install_kernel
 
+[ "$win_user" != "" ] || if [ "$install_kernel" = "" ]; then
+    bash install-kernel.sh "$win_user" "$kernel_alias_no_timestamp" "$timestamp_id"
+fi
 
-"; [ "$win_user" != "" ] || read -r -p "
-(close)"; echo "
-
-Goodbye!
-
-use WIN + x, i to open a Windows terminal"       ) 
-    else
-[ "$win_user" != "" ] || read -r -p "
-(close)";
-echo "
-
-Goodbye!"
-    fi
 
     
 fi

@@ -95,7 +95,7 @@ kernels available to install:
 
         name_timestamp
         --------------------"
-            find . -name 'wsl-kernel-install_*' 2>/dev/null | sed -r -e "s/^wsl-kernel-install_(.*)_(.*)\.ps1$/\t\1_\2/g"
+            find . -maxdepth 1 -name 'wsl-kernel-install_*' 2>/dev/null | sed -r -e "s/^wsl-kernel-install_(.*)_(.*)\.ps1$/\t\1_\2/g"
             echo "
 
 enter a kernel name to install:

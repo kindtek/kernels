@@ -105,7 +105,6 @@ else
     pwsh -file "$selected_kernel_install_file"
     # installation happens here
     cp -fv .wslconfig $wsl_config
-    # replace docker with win_user
         
     if [ "$old_kernel" != "" ]; then
         echo "

@@ -4,13 +4,9 @@ $bashArgs = ""
 for ($i = 0; $i -lt $argArray.Length; $i += 1) {
     $paramValue = $argArray[$i]
     if ( "$paramValue" -eq "" ) {
-        $paramValue = "`"`""
+        $argArray[$i] = "`"`""
     }
-    $bashArgs += " `'"
-    $bashArgs += ${paramValue}
-    $bashArgs += "`' "
 }
-Write-Output wsl.exe -- $bashArgs
 
 
 # wsl.exe -u agl -- $("$("/hal/dvlw/dvlp/docker/kali/make-kernel.sh $bashArgs")")

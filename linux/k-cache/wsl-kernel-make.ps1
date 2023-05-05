@@ -1,1 +1,1 @@
-wsl.exe exec "bash /hal/dvlw/dvlp/docker/kali/make-kernel.sh" "$1" "$2" "$3" "$4"
+wsl.exe exec "/hal/dvlw/dvlp/docker/kali/make-kernel.sh" "$1" "$2" "$3" "$4"

@@ -65,6 +65,13 @@ elif [ "$2" = "latest" ]; then
     latest_kernel=$( echo "$selected_kernel_install_file" | sed -nr "s/^wsl-kernel-install_(.*)_(.*)\.ps1$/\1_\2/p")
 
     echo "
+
+
+
+
+
+
+    
 install latest built kernel $latest_kernel?"
     read -r -p "
 (install latest)

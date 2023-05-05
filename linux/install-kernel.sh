@@ -44,12 +44,14 @@ enter a kernel name to install:
             read -r -p "
 ($(echo "$latest_kernel_install_file" | sed -r -e "s/^wsl-kernel-install_(.*)_(.*)\.ps1$/\1_\2/g"))
 " selected_kernel_install_file
-            if [ "${selected_kernel_install_file}" != "" ] && [ ! -f "$selected_kernel_install_file" ]; then
+            if [ "${selected_kernel_install_file}" != "" ] && [ ! -f "$selected_kernel_install_file" ] && [ ! -f "$latest_kernel_install_file" ]; then
                 exit
+            elif [ -f "$selected_kernel_install_file" ]; then
+                echo "user entered ${selected_kernel_install_file} ..."
+                latest_kernel_install_file=$selected_kernel_install_file
             elif [ -f "$latest_kernel_install_file" ]; then
                 echo "user entered ${latest_kernel_install_file} ..."
                 selected_kernel_install_file=$latest_kernel_install_file
-
             fi
         fi
         if [ "${selected_kernel_install_file}" = "" ]; then

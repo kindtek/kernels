@@ -51,7 +51,7 @@ mkdir -p "$win_k_cache"
 cd "$win_k_cache" || exit
 # if [ -f "wsl-kernel-install_${2}*_${3}*.ps1" ]; then
 if [ "${2}" = "latest" ]; then
-    selected_kernel_install_file="$(find . -name 'wsl-kernel-install_*' 2>/dev/null | sort | head -n 1)"
+    selected_kernel_install_file="$(find . -maxdepth 1 -name 'wsl-kernel-install_*' 2>/dev/null | sort | head -n 1)"
     latest_kernel=$( echo "$selected_kernel_install_file" | sed -nr "s/^\.\/wsl-kernel-install_(.*)_(.*)\.ps1$/\1_\2/p")
     if [ "$latest_kernel" = "" ]; then
         echo "there are no kernels available to install

@@ -314,10 +314,40 @@ printf "
 
 " "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}"
 
+cd /mnt/c/users || exit
+[ -d "$win_user" ] || echo " 
+
+
+save kernel build to which Windows home directory?"
+while [ ! -d "$win_user" ]; do
+    echo "
+
+    choose from:
+    " 
+    ls -da /mnt/c/users/*/ | tail -n +4 | sed -r -e 's/^\/mnt\/c\/users\/([ A-Za-z0-9]*)*\/+$/\t\1/g'
+
+    read -r -p "
+    C:\\users\\" win_user
+    if [ ! -d "$win_user" ]; then
+        echo "
+
+        
+        
+        
+
+
+
+
+
+
+
+C:\\users\\$win_user is not a home directory"
+    fi
+done
 if (( quick_wsl_install )); then
-    echo "install kernel when finished?
+    echo "install the kernel into WSL when build is finished?
 "
-[ "$win_user" != "" ] || read -r -p "(y)
+[ "$win_user" != "" ] || read -r -p "(yes)
 " wsl_install
     if [ "$wsl_install" = "" ]; then
         wsl_install="y"
@@ -329,111 +359,23 @@ if (( quick_wsl_install )); then
         quick_wsl_install=False
     fi    
 else
-[ "$win_user" != "" ] || echo "
+    echo "
 install the kernel into WSL when build is finished?
 "
-[ "$win_user" != "" ] || read -r -p "(n)
-" wsl_install
+    read -r -p "(no)
+ " wsl_install
     if [ "${wsl_install,,}" = "y" ] || [ "${wsl_install,,}" = "yes" ]; then
         wsl_install="y"
-        save_or_wsl_install_mask=install
-        if [ "$4" = "" ]; then win_user=""; fi
-        wsl_install="y" && \
-echo "
-
-
-
-
-
-
-
-
-
-
-    "
-echo " 
-
-
-install to which Windows home directory?
-
-    choose from:
-" 
-        ls -da /mnt/c/users/*/ | tail -n +4 | sed -r -e 's/^\/mnt\/c\/users\/([ A-Za-z0-9]*)*\/+$/\t\1/g'
-
-        if [ "$win_user" != "" ]; then
-            win_user_orig=$win_user
-echo "
-    C:\\users\\__________ 
-
-install kernel in C:\\users\\$win_user ?
-            "
-[ "$win_user" != "" ] || read -r -p "(continue)
-" win_user 
-        else
-echo "
-    C:\\users\\__________ 
-"
-[ "$win_user" != "" ] || read -r -p "(skip)
-" win_user 
-        fi
-        if [ "$win_user" = "" ]; then
-            win_user=${win_user_orig}
-        # else 
-        #     # if the user tries inputting a path name take everything to the right of the last \
-        #     # win_user=$(echo $win_user | sed -E 's/^\s*([A-Za-z0-9]:?\\*)([A-Za-z0-9]*\\)*([A-Za-z0-9]+)+$/\3/g')        
-        #     # win_user=$(echo $win_user | sed -E 's/^\s*([A-Za-z0-9]:?\\*)([A-Za-z0-9]*\\?\\?)*([A-Za-z0-9]+)+$/\3/g')
-        else
-            win_user=$(echo "$win_user" | cut --delimiter='/' --fields=1)
-        fi 
+        save_or_wsl_install_mask=install 
     else 
-        save_or_wsl_install_mask=save 
-        if [ "$4" = "" ]; then 
-            win_user=""
-echo "
-
-
-
-
-
-
-
-
-
-
-"
-echo " 
-
-
-save kernel package to Windows home directory C:\\users\\__________
-
-    choose from:
-" 
-        ls -da /mnt/c/users/*/ | tail -n +4 | sed -r -e 's/^\/mnt\/c\/users\/([ A-Za-z0-9]*)*\/+$/\t\1/g'
-
-        else
-            [ "$win_user" != "" ] || echo "${save_or_wsl_install_mask} kernel files to C:\\users\\$win_user ?
-            "
-        fi
-[ "$win_user" != "" ] || read -r -p "(${save_or_wsl_install_mask})
-" win_user
-        if [ "$4" != "" ] && [ "$4" != "docker" ] && [ -w "/mnt/c/users/$4" ]; then
-            win_user=${4}
-        # else 
-        #     # if the user tries inputting a path name take everything to the right of the last \
-        #     # win_user=$(echo $win_user | sed -E 's/^\s*([A-Za-z0-9]:?\\*)([A-Za-z0-9]*\\)*([A-Za-z0-9]+)+$/\3/g')        
-        #     # win_user=$(echo $win_user | sed -E 's/^\s*([A-Za-z0-9]:?\\*)([A-Za-z0-9]*\\?\\?)*([A-Za-z0-9]+)+$/\3/g')
-        else
-            win_user=$(echo "$win_user" | cut --delimiter='/' --fields=1)
-        fi
-    fi
-    # if [ "$wsl_install" = "y" ] || [ "${wsl_install,,}" = "yes" ]; then
-    
-    if [ "$win_user" != "" ] && [ -w "/mnt/c/users/$win_user" ] || \
+        save_or_wsl_install_mask=sav 
+    fi    
+    if [ -w "/mnt/c/users/$win_user" ] || \
     [ "$win_user" != "" ]; then
         
-[ "$win_user" != "" ] || echo "
-kernel package will be ${save_or_wsl_install_mask}ed to C:\\users\\$win_user
-archives and recovery scripts will be saved to C:\\users\\$win_user\\k-cache
+echo "
+.wslconfig will be ${save_or_wsl_install_mask}ed to C:\\users\\$win_user
+archives, installation/recovery scripts will be saved to C:\\users\\$win_user\\k-cache
 "  
 [ "$win_user" != "" ] || read -r -p "
 (continue)
@@ -595,9 +537,7 @@ mkdir -pv "$git_save_path" 2>/dev/null
 # fi
 cp -fv --backup=numbered $linux_build_dir/"$kernel_source" "$kernel_target_git"
 
-
-# build/move tar with version control if [tar]get directory is writeable
-# save copies in timestamped dir to keep organized
+# clear k-cache
 mkdir -pv k-cache 2>/dev/null
 # remove config
 rm -rfv k-cache/.config_*
@@ -632,8 +572,11 @@ try {
     }
 }
 catch {
+  	echo "could not start powershell with admin priveleges"
     # Start-Process -FilePath PowerShell.exe -ArgumentList \$CommandLine
 }
+
+write-host "path: \$pwd"
 #############################################################################
 # ________________ WSL KERNEL INSTALLATION INSTRUCTIONS ____________________#
 # --------------------- FOR CURRENT WINDOWS ACCOUNT ------------------------#
@@ -661,7 +604,9 @@ if (\$IsWindows) {
     # copy file
     powershell.exe -Command copy .wslconfig ..\\.wslconfig -verbose;
     # restart wsl
-    powershell.exe -Command .\\wsl-restart.ps1;
+    if (\"\$(\$args[0])\" -ne \"\"){
+        powershell.exe -Command .\\wsl-restart.ps1;
+    }
 
 }
 elseif (\$IsLinux) {
@@ -679,7 +624,9 @@ elseif (\$IsLinux) {
     # copy file
     pwsh -Command copy .wslconfig ..\\.wslconfig -verbose;
     # restart wsl
-    pwsh -Command .\\wsl-restart.ps1;
+    if (\"\$(\$args[0])\" -ne \"\"){
+        pwsh -Command .\\wsl-restart.ps1;
+    }
 
 } 
 else {
@@ -698,8 +645,9 @@ else {
     # copy file
     powershell.exe -Command copy .wslconfig ..\\.wslconfig -verbose;
     # restart wsl
-    powershell.exe -Command .\\wsl-restart.ps1;
-
+    if (\"\$(\$args[0])\" -ne \"\"){
+        powershell.exe -Command .\\wsl-restart.ps1;
+    }
 }
 
 #############################################################################
@@ -734,13 +682,13 @@ else
 fi
 # now win
 mkdir -pv "$win_k_cache" 2>/dev/null
-if [ "$win_user" = "" ] && [ -w "$win_k_cache" ]; then
+if [ -w "$win_k_cache" ]; then
     cp "k-cache/$ps_wsl_install_kernel_id" "$win_k_cache/$ps_wsl_install_kernel_id"
     if [ "$tarball_target_win" != "" ]; then
         # cp -fv --backup=numbered "$tarball_filename" "$tarball_target_win.bak"
         cp -fv "$tarball_filename" "$tarball_target_win"
     fi
-elif [ "$win_user" != "docker" ]; then
+else
     echo "
 unable to save kernel package to Windows home directory"
 fi
@@ -754,30 +702,31 @@ KERNEL BUILD COMPLETE
 
 "
 
-
-printf "
-
-
-
-==================================================================
-========================   Linux Kernel   ========================
-======------------------%s%s------------------======
-------------------------------------------------------------------
-====-----------------    Install Locations    ----------------====
-------------------------------------------------------------------
-
-  .wslconfig:
-    $wsl_config
-
-  kernel:
-    $wsl_kernel     
-
-==================================================================
-==================================================================
-==================================================================
-
-" "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}"
+if [ "${wsl_install,,}" = "y" ]; then
+    printf "
 
 
-bash install-kernel.sh "$win_user" "$kernel_alias_no_timestamp" "$timestamp_id"
+
+    ==================================================================
+    ========================   Linux Kernel   ========================
+    ======------------------%s%s------------------======
+    ------------------------------------------------------------------
+    ====-----------------    Install Locations    ----------------====
+    ------------------------------------------------------------------
+
+    .wslconfig:
+        $wsl_config
+
+    kernel:
+        $wsl_kernel     
+
+    ==================================================================
+    ==================================================================
+    ==================================================================
+
+    " "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}"
+
+
+    bash install-kernel.sh "$win_user" "$kernel_alias_no_timestamp" "$timestamp_id"
+fi
 

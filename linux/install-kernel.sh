@@ -47,7 +47,7 @@ win_k_cache="/mnt/c/users/$win_user/k-cache"
 mkdir -p "$win_k_cache"
 cd "$win_k_cache" || exit
 
-if [ "$2" != "" ] && [ ! -f "wsl-kernel-install_${2}_${3}.ps1" ] && [ "$2" != "latest" ]; then
+if [ "$2" != "" ] && [ "$2" != "latest" ] && [ ! -f "wsl-kernel-install_${2}_${3}.ps1" ]; then
 
     while [ ! -f "$selected_kernel_install_file" ]; do
         # only focus on single match if $2 has matches
@@ -113,7 +113,7 @@ no kernel install requested. exiting ...
     fi
 else 
     while [ ! -f "$selected_kernel_install_file" ]; do
-        # only focus on single match if $2 has matches
+        # get latest kernel
         latest_kernel_install_file="$(exec find . -maxdepth 1 -name "wsl-kernel-install_*" 2>/dev/null | sed -r -e "s/^\.\/wsl-kernel-install_(.*)_(.*)\.ps1$/\t\1_\2/g" | sort -r)"
 
         echo "
@@ -165,8 +165,25 @@ move .wslconfig.old .wslconfig.new
 move .wslconfig .wslconfig.old
 move .wslconfig.new .wslconfig" | tee "wsl-kernel-rollback.ps1"
     fi
-    echo "running:  $selected_kernel_install_file"
-    pwsh -file "$selected_kernel_install_file"
+    echo "
+
+
+
+
+
+
+    
+restart WSL when installation is complete?"
+    read -r -p "
+(install $latest_kernel and restart)
+" restart_wsl
+    if [ "$restart_wsl" = "" ]; then
+        echo "running:  $selected_kernel_install_file restart"
+        pwsh -file "$selected_kernel_install_file" restart
+    else
+        echo "running:  $selected_kernel_install_file"
+        pwsh -file "$selected_kernel_install_file"
+    fi
     # # installation happens here
     # cp -fv .wslconfig $wsl_config
         
@@ -214,7 +231,7 @@ open a windows terminal to home directory (WIN + x, i) and copy/pasta:
     ./k-cache/wsl-restart
 "
 # rm latest.tar.gz
-    pwsh -File wsl-restart.ps1
+    # pwsh -File wsl-restart.ps1
 
 fi
 

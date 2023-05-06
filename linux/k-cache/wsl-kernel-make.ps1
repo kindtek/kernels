@@ -1,3 +1,9 @@
+# usage : ./make-kernel username # (will build basic kernel)
+#         ./make-kernel username basic zfs nocache
+#         ./make-kernel username latest 
+#         ./make-kernel username stable "" path/to/config/file 
+
+
 try {
     if (-Not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] 'Administrator')) {
         if ([int](Get-CimInstance -Class Win32_OperatingSystem | Select-Object -ExpandProperty BuildNumber) -ge 6000) {

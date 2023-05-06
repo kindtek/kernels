@@ -1,3 +1,7 @@
+# usage : ./wsl-kernel-install          # (will prompt for username and list available kernels to install)
+#         ./wsl-kernel-install latest
+#         ./wsl-kernel-install L6 
+#         ./wsl-kernel-install L6 2023
 try {
     if (-Not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] 'Administrator')) {
         if ([int](Get-CimInstance -Class Win32_OperatingSystem | Select-Object -ExpandProperty BuildNumber) -ge 6000) {

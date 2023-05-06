@@ -376,10 +376,9 @@ install the kernel into WSL when build is finished?
     fi    
     
         
-printf "
-.wslconfig will be %sed to C:\\users\\%s
-archives, installation/recovery scripts will be saved to C:\\users\\%s\\k-cache
-"  "${save_or_wsl_install_mask}" "$win_user" "$win_user"
+    printf ".wslconfig will be %sed to C:\\users\\%s\narchives, installation/recovery scripts will be saved to C:\\users\\%s\\k-cache\n" \
+    "${save_or_wsl_install_mask}" "$win_user" "$win_user"
+
      [ ! -w "/mnt/c/users/$win_user" ] || read -r -p "
 (continue)
 " 
@@ -435,12 +434,12 @@ fi
 " "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}" "$tarball_target_win
 "
 
-echo "
+[ "$win_user" != "" ] || echo "
 build kernel or exit?
-"
-[ "$win_user" != "" ] || read -r -p "(build)
-" continue
-if [ "$continue" != "" ]; then
+" && \
+read -r -p "(build)
+" build
+if [ "$build" != "" ]; then
     exit
 fi
 if [ -d "$linux_build_dir/.git" ]; then

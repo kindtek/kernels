@@ -404,12 +404,8 @@ echo "
 
     "
 fi
-padding="----------"
 
-if [ ! -w "/mnt/c/users/$win_user" ]; then
-    tarball_target_win=""
-fi
-[ "$win_user" != "" ] || printf "
+printf "
 
 
 
@@ -502,9 +498,9 @@ if [ "$zfs" = "zfs" ];  then
     sed -i 's/\# CONFIG_ZFS is not set/CONFIG_ZFS=y/g' .config
 fi
 if (( quick_wsl_install )); then
-    yes "" | make -j "$(expr "$(nproc)" - 1)"
+    yes "" | make -j$(($(nproc) - 1))
 else
-    make -j "$(expr "$(nproc)" - 1)"
+    make -j$(($(nproc) - 1))
 fi
 make modules install
 # kernel is baked - time to distribute fresh copies
@@ -596,66 +592,69 @@ write-host "path: \$pwd"
 #####                                                                   #####
 #####   copy without '#>>' to replace (delete/move) .wslconfig          #####
 
-if (\$IsWindows) {
+if (\$IsLinux) {
 
 #
 #   # delete
-#>> powershell.exe -Command del ..\\.wslconfig -Force -verbose;
+#>> del ..\\.wslconfig -Force -verbose;
 #
 #   # move file out of the way   
-    powershell.exe -Command move ..\\.wslconfig ..\\.wslconfig.old -Force -verbose;
+    move ..\\.wslconfig ..\\.wslconfig.old -Force -verbose;
     
     # extract
     tar -xvzf $package_full_name_id.tar.gz
 
     # copy file
-    powershell.exe -Command copy .wslconfig ..\\.wslconfig -verbose;
+    copy .wslconfig ..\\.wslconfig -verbose;
     # restart wsl
     if (\"\$(\$args[0])\" -ne \"\"){
-        powershell.exe -Command .\\wsl-restart.ps1;
-    }
-
-}
-elseif (\$IsLinux) {
-
-#
-#   # delete
-#>> pwsh -Command del ..\\.wslconfig -Force -verbose;
-#
-#   # move file out of the way   
-    pwsh -Command move ..\\.wslconfig ..\\.wslconfig.old -Force -verbose;
-    
-    # extract
-    tar -xvzf $package_full_name_id.tar.gz
-
-    # copy file
-    pwsh -Command copy .wslconfig ..\\.wslconfig -verbose;
-    # restart wsl
-    if (\"\$(\$args[0])\" -ne \"\"){
-        pwsh -Command .\\wsl-restart.ps1;
+        # pwsh -Command .\\wsl-restart.ps1;
+        Start-Process -FilePath powershell.exe -ArgumentList  '\"-Command .\\wsl-restart.ps1\"' 
+        # .\\wsl-restart.ps1\"';
     }
 
 } 
 else {
-	echo "attempting install in WSL in unknown environment"
 
-	cd \$HOME\k-cache
+#
 #   # delete
-#>> powershell.exe -Command del ..\\.wslconfig -Force -verbose;
+#>> del ..\\.wslconfig -Force -verbose;
 #
 #   # move file out of the way   
-    powershell.exe -Command move ..\\.wslconfig ..\\.wslconfig.old -Force -verbose;
+    move ..\\.wslconfig ..\\.wslconfig.old -Force -verbose;
     
     # extract
-    wsl.exe exec tar -xvzf $package_full_name_id.tar.gz
+    tar -xvzf $package_full_name_id.tar.gz
 
     # copy file
-    powershell.exe -Command copy .wslconfig ..\\.wslconfig -verbose;
+    copy .wslconfig ..\\.wslconfig -verbose;
     # restart wsl
     if (\"\$(\$args[0])\" -ne \"\"){
-        powershell.exe -Command .\\wsl-restart.ps1;
+         .\\wsl-restart.ps1\"';
     }
+
 }
+
+# else {
+# 	echo "attempting install in WSL in unknown environment"
+
+# 	cd \$HOME\k-cache
+# #   # delete
+# #>> powershell.exe -Command del ..\\.wslconfig -Force -verbose;
+# #
+# #   # move file out of the way   
+#     powershell.exe -Command move ..\\.wslconfig ..\\.wslconfig.old -Force -verbose;
+    
+#     # extract
+#     wsl.exe exec tar -xvzf $package_full_name_id.tar.gz
+
+#     # copy file
+#     powershell.exe -Command copy .wslconfig ..\\.wslconfig -verbose;
+#     # restart wsl
+#     if (\"\$(\$args[0])\" -ne \"\"){
+#         powershell.exe -Command .\\wsl-restart.ps1;
+#     }
+# }
 
 #############################################################################
 

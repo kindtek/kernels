@@ -563,7 +563,7 @@ try {
 }
 catch {
   	echo "could not start powershell with admin priveleges"
-    # Start-Process -FilePath PowerShell.exe -ArgumentList \$CommandLine
+    Start-Process -FilePath PowerShell.exe -ArgumentList \$CommandLine
 }
 
 write-host "path: \$pwd"

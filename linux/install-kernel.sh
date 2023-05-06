@@ -207,7 +207,7 @@ if [ -f "$selected_kernel_install_file" ]; then
     
 restart WSL when installation is complete?"
     read -r -p "
-(install $latest_kernel and restart)
+(install $selected_kernel and restart)
 " restart_wsl
     wsl_config=../.wslconfig 
     new_kernel=$(echo "$selected_kernel_install_file" | sed -nr "s/^\.?\/?wsl-kernel-install_(.*)_(.*)\.ps1$/\1_\2/p")

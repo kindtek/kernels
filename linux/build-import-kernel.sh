@@ -537,9 +537,9 @@ Write-Host "path: \$pwd"
 ####    directory and run the script from option A                      #####                                              
 #                                                                       ##### 
 #
-#
-#   # execute option B script saved in this file
-#>> ./k-cache/$ps_wsl_install_kernel_id
+# navigate to k-cache and execute option B script saved in this file
+#>> cd k-cache
+#>> ./$ps_wsl_install_kernel_id
 
 
 ####-------------------------    OR    ----------------------------------#### 

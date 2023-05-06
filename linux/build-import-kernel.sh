@@ -586,11 +586,30 @@ write-host "path: \$pwd"
 # --------------------- FOR CURRENT WINDOWS ACCOUNT ------------------------#
 #############################################################################
 
+
 #############################################################################
-#####   OPTION A  #####                                                 #####
+#####   OPTION A  ###########################################################
+#####                   (works as long as files are in k-cache)         #####
+#############################################################################
+####    copy/pasta this into any windows terminal (WIN + x, i):         #####
+####                                                                    #####
+####    copy/pasta without '#>>' to navigate to this                    #####
+####    directory and run the script from option A                      #####                                              
+#                                                                       ##### 
+#
+#
+#   # execute option A script saved in this file
+#>> ./k-cache/$ps_wsl_install_kernel_id
+
+
+####-------------------------    OR    ----------------------------------#### 
+
+
+#############################################################################
+#####   OPTION B  #####                                                 #####
 #############################################################################
 #####   copy/pasta this into any Windows terminal (WIN + x, i):         #####
-####                                                                    #####
+#####                                                                   #####
 #####   copy without '#>>' to replace (delete/move) .wslconfig          #####
 
 if (\$IsWindows) {
@@ -655,20 +674,6 @@ else {
 }
 
 #############################################################################
-
-####-------------------------    OR    ----------------------------------#### 
-
-#############################################################################
-#####   OPTION B  #####                                                 #####
-#############################################################################
-####    copy/pasta this into any windows terminal (WIN + x, i):         #####
-####                                                                    #####
-####    copy/pasta without '#>>' to navigate to this                    #####
-####    directory and run the script from option A                      #####                                              ##### 
-#
-#
-#   # execute option A script saved in this file
-#>> ./$ps_wsl_install_kernel_id
 
 #############################################################################
 " | tee "k-cache/$ps_wsl_install_kernel_id"

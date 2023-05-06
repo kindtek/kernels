@@ -543,19 +543,20 @@ mkdir -p "$win_k_cache" 2>/dev/null
 sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\k-cache\\\\\\\\${kernel_alias}/g" ../../../dvlp/mnt/%HOME%/sample.wslconfig
 cp -fv --backup=numbered ../../../dvlp/mnt/%HOME%/sample.wslconfig k-cache/.wslconfig
 
-echo "
+
+tee "k-cache/\$ps_wsl_install_kernel_id" <<EOF
 try {
     if (-Not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] 'Administrator')) {
         if ([int](Get-CimInstance -Class Win32_OperatingSystem | Select-Object -ExpandProperty BuildNumber) -ge 6000) {
-            \$CommandLine = \"-File \`\"\" + \$MyInvocation.MyCommand.Path + \"\`\" \" + \$MyInvocation.UnboundArguments
+            \$CommandLine = \"-File \`\"\$MyInvocation.MyCommand.Path\`\" \" + \$MyInvocation.UnboundArguments
             Start-Process -FilePath powershell.exe -Verb Runas -WindowStyle \"Maximized\" -ArgumentList \$CommandLine
             Exit
         }
     }
 }
 catch {
-  	echo "could not start powershell with admin priveleges"
-    \$CommandLine = \"-File \`\"\" + \$MyInvocation.MyCommand.Path + \"\`\" \" + \$MyInvocation.UnboundArguments
+    Write-Host \"could not start powershell with admin privileges\"
+    \$CommandLine = \"-File \`\"\$MyInvocation.MyCommand.Path\`\" \" + \$MyInvocation.UnboundArguments
     if (\$IsLinux) {
         pwsh \$CommandLine
     }
@@ -565,12 +566,11 @@ catch {
     exit
 }
 
-write-host "path: \$pwd"
+Write-Host \"path: \$pwd\"
 #############################################################################
 # ________________ WSL KERNEL INSTALLATION INSTRUCTIONS ____________________#
 # --------------------- FOR CURRENT WINDOWS ACCOUNT ------------------------#
 #############################################################################
-
 
 #############################################################################
 #####   OPTION A  ###########################################################
@@ -584,7 +584,7 @@ write-host "path: \$pwd"
 #
 #
 #   # execute option A script saved in this file
-#>> ./k-cache/$ps_wsl_install_kernel_id
+#>> ./k-cache/\$ps_wsl_install_kernel_id
 
 
 ####-------------------------    OR    ----------------------------------#### 
@@ -607,14 +607,14 @@ if (\$IsLinux) {
     move ..\\.wslconfig ..\\.wslconfig.old -Force -verbose;
     
     # extract
-    tar -xvzf $package_full_name_id.tar.gz
+    tar -xvzf \$package_full_name_id.tar.gz
 
     # copy file
     copy .wslconfig ..\\.wslconfig -verbose;
     # restart wsl
     if (\"\$(\$args[0])\" -ne \"\"){
         # pwsh -Command .\\wsl-restart.ps1;
-        Start-Process -FilePath powershell.exe -ArgumentList  '\"-Command .\\wsl-restart.ps1\"' 
+        Start-Process -FilePath powershell.exe -ArgumentList '\"-Command .\\wsl-restart.ps1\"' 
         # .\\wsl-restart.ps1;
     }
 
@@ -630,7 +630,7 @@ else {
     move ..\\.wslconfig ..\\.wslconfig.old -Force -verbose;
     
     # extract
-    tar -xvzf $package_full_name_id.tar.gz
+    tar -xvzf \$package_full_name_id.tar.gz
 
     # copy file
     copy .wslconfig ..\\.wslconfig -verbose;
@@ -641,36 +641,10 @@ else {
 
 }
 
-Read-Host \"
-(exit)
-\"
-
-
-# else {
-# 	echo "attempting install in WSL in unknown environment"
-
-# 	cd \$HOME\k-cache
-# #   # delete
-# #>> powershell.exe -Command del ..\\.wslconfig -Force -verbose;
-# #
-# #   # move file out of the way   
-#     powershell.exe -Command move ..\\.wslconfig ..\\.wslconfig.old -Force -verbose;
-    
-#     # extract
-#     wsl.exe exec tar -xvzf $package_full_name_id.tar.gz
-
-#     # copy file
-#     powershell.exe -Command copy .wslconfig ..\\.wslconfig -verbose;
-#     # restart wsl
-#     if (\"\$(\$args[0])\" -ne \"\"){
-#         powershell.exe -Command .\\wsl-restart.ps1;
-#     }
-# }
-
 #############################################################################
 
-#############################################################################
-" | tee "k-cache/$ps_wsl_install_kernel_id"
+EOF
+
 # rm "k-cache/$tarball_filename"
 # tar -czvf "k-cache/$tarball_filename" -C k-cache .
 tar -czvf "$tarball_filename" -C k-cache .

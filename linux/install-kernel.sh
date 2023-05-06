@@ -37,6 +37,9 @@ echo "
 
 
 
+
+
+
 C:\\users\\$win_user is not a home directory"
     fi
     done
@@ -58,7 +61,18 @@ exiting ..."
     echo "
 
 
-latest kernel found: $latest_kernel
+
+
+
+
+
+
+
+
+
+
+
+kernel found ready to install: $latest_kernel
 
 
 

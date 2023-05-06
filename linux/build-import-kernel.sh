@@ -370,14 +370,10 @@ install the kernel into WSL when build is finished?
  " wsl_install
     if [ "${wsl_install,,}" = "y" ] || [ "${wsl_install,,}" = "yes" ]; then
         wsl_install="y"
-        save_or_wsl_install_mask=install 
-    else 
-        save_or_wsl_install_mask=sav 
     fi    
     
         
-    printf ".wslconfig will be %sed to C:\\users\\%s\narchives, installation/recovery scripts will be saved to C:\\users\\%s\\k-cache\n" \
-    "${save_or_wsl_install_mask}" "$win_user" "$win_user"
+    printf "installation/recovery scripts will be saved to C:\\users\\%s\\k-cache\n" "$win_user"
 
      [ ! -w "/mnt/c/users/$win_user" ] || read -r -p "
 (continue)

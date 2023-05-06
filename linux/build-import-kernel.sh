@@ -672,7 +672,9 @@ else {
 #############################################################################
 " | tee "k-cache/$ps_wsl_install_kernel_id"
 # rm "k-cache/$tarball_filename"
-tar -czvf "k-cache/$tarball_filename" -C k-cache .
+# tar -czvf "k-cache/$tarball_filename" -C k-cache .
+tar -czvf "$tarball_filename" -C k-cache .
+mv "$tarball_filename" "k-cache/$tarball_filename"
 # cp "k-cache/$tarball_filename" k-cache/latest.tar.gz
 # work on *nix first
 mkdir -pv "$nix_k_cache" 2>/dev/null

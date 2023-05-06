@@ -687,7 +687,7 @@ if [ -w "$win_k_cache" ]; then
     cp "k-cache/$ps_wsl_install_kernel_id" "$win_k_cache/$ps_wsl_install_kernel_id"
     if [ "$tarball_target_win" != "" ]; then
         # cp -fv --backup=numbered "$tarball_filename" "$tarball_target_win.bak"
-        cp -fv "$tarball_filename" "$tarball_target_win"
+        cp -fv "k-cache/$tarball_filename" "$tarball_target_win"
     fi
 else
     echo "

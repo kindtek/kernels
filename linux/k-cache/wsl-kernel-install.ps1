@@ -2,30 +2,28 @@
 #         ./wsl-kernel-install latest
 #         ./wsl-kernel-install L6 
 #         ./wsl-kernel-install L6 2023
-try {
-    if (-Not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] 'Administrator')) {
-        if ([int](Get-CimInstance -Class Win32_OperatingSystem | Select-Object -ExpandProperty BuildNumber) -ge 6000) {
-            $CommandLine = "-File `"" + $MyInvocation.MyCommand.Path + "`" " + $MyInvocation.UnboundArguments
-            Start-Process -FilePath powershell.exe -Verb Runas -WindowStyle "Maximized" -ArgumentList $CommandLine
-            Exit
-        }
+if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]'Administrator')) {
+    if ((Get-CimInstance -Class Win32_OperatingSystem | Select-Object -ExpandProperty BuildNumber) -ge 6000) {
+        $CommandLine = '-File "{0}" {1}' -f $MyInvocation.MyCommand.Path, $MyInvocation.UnboundArguments
+        Start-Process -FilePath powershell.exe -Verb Runas -WindowStyle Maximized -ArgumentList $CommandLine
+        Exit
     }
-}
-catch {
-    $CommandLine = "-File `"" + $MyInvocation.MyCommand.Path + "`" " + $MyInvocation.UnboundArguments
-    try {
-        Start-Process -FilePath powershell.exe -ArgumentList $CommandLine
-    } catch {}
-}
-write-host "path: $pwd.Path"
-$argString = $args -join " "
-$argArray = $argString.Split(" ")
-for ($i = 0; $i -lt $argArray.Length; $i += 1) {
-    $paramValue = $argArray[$i]
-    if ( "$paramValue" -eq "" ) {
-        $argArray[$i] = "`"`""
-    }
-    # write-host "param ${i}: $($argArray[$i])"
 }
 
-wsl.exe --cd /hal/dvlw/dvlp/kernels/linux exec ./install-kernel.sh "$($argArray[0])" "$($argArray[1])" "$($argArray[2])"
+Write-Host "Path: $($pwd.Path)"
+
+$args -split ' ' | ForEach-Object {
+    if ([string]::IsNullOrEmpty($_)) {
+        '""'
+    }
+    else {
+        $_
+    }
+} | ForEach-Object {
+    $_ = '"{0}"' -f $_
+}
+
+$argString = $args -join ' '
+$argArray = $argString.Split(' ')
+
+wsl.exe --cd /hal/dvlw/dvlp/kernels/linux exec ./install-kernel.sh $($argArray)

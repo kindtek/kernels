@@ -6,13 +6,13 @@
 
 $argString = $args -join " "
 $argArray = $argString.Split(" ")
-for ($i = 0; $i -lt $argArray.Length; $i += 1) {
-    $paramValue = $argArray[$i]
-    if ( "$paramValue" -eq "" ) {
+
+for ($i = 0; $i -lt $argArray.Count; $i++) {
+    if ($argArray[$i] -eq "") {
         $argArray[$i] = "`"`""
     }
-    # write-host "param ${i}: $($argArray[$i])"
 }
 
+$commandArgs = $argArray -join " "
 
-wsl.exe --cd /hal/dvlw/dvlp/docker/kali exec ./make-kernel.sh "$($argArray[0])" "$($argArray[1])" "$($argArray[2])" "$($argArray[3])"
+wsl.exe --cd /hal/dvlw/dvlp/docker/kali exec ./make-kernel.sh $commandArgs

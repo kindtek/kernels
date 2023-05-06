@@ -11,14 +11,18 @@ try {
 }
 catch {
     
-    if ($IsLinux) {
-        Start-Process -FilePath powershell.exe -ArgumentList $CommandLine
+    try {
+        if ($IsLinux) {
+            Start-Process -FilePath powershell.exe -ArgumentList $CommandLine
+        }
+        else {
+            
+            Start-Process -FilePath powershell.exe -Verb Runas -WindowStyle "Maximized" -ArgumentList $CommandLine
+        }
+        exit
     }
-    else {
-        
-        Start-Process -FilePath powershell.exe -Verb Runas -WindowStyle "Maximized" -ArgumentList $CommandLine
-    }
-    exit
+    catch {}
+
 }
 
 write-host "

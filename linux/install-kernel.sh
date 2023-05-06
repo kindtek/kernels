@@ -228,6 +228,7 @@ move .wslconfig.new .wslconfig" 2>/dev/null | tee "wsl-kernel-rollback.ps1"
     if [ "$old_kernel" != "" ]; then
         echo "
 
+
 _______________________________________________________________________
         WSL ROLLBACK INSTRUCTIONS
 -----------------------------------------------------------------------
@@ -238,6 +239,7 @@ open a windows terminal to home directory (WIN + x, i) and copy/pasta:
     "
     else 
         echo "
+
 
 _______________________________________________________________________
         WSL ROLLBACK INSTRUCTIONS
@@ -250,7 +252,7 @@ open a windows terminal to home directory (WIN + x, i) and copy/pasta:
     move .wslconfig.new .wslconfig
 "    
     fi
-    echo "-----------------------------------------------------------------------
+    echo "
 _______________________________________________________________________
         WSL KERNEL INSTALL INSTRUCTIONS
 -----------------------------------------------------------------------
@@ -258,7 +260,8 @@ _______________________________________________________________________
 open a windows terminal to home directory (WIN + x, i) and copy/pasta:
 
     ./k-cache/wsl-kernel-install-$new_kernel
------------------------------------------------------------------------
+
+
 _______________________________________________________________________
         WSL REBOOT INSTRUCTIONS
 -----------------------------------------------------------------------
@@ -266,10 +269,12 @@ _______________________________________________________________________
 open a windows terminal to home directory (WIN + x, i) and copy/pasta:
 
     ./k-cache/wsl-restart
+
+
+
 "
 # rm latest.tar.gz
     # pwsh -File wsl-restart.ps1
-    echo "-----------------------------------------------------------------------"
 fi
 
 

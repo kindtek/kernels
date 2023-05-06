@@ -318,7 +318,7 @@ orig_win_user=$win_user
 
 
 save kernel build to which Windows home directory?"
-while [ ! -d "/mnt/c/users/$win_user" ]; do
+[ ! -d "/mnt/c/users" ] || while [ ! -d "/mnt/c/users/$win_user" ]; do
     echo "
 
     choose from:
@@ -349,9 +349,9 @@ C:\\users\\$win_user is not a home directory"
     fi
 done
 if (( quick_wsl_install )); then
-    echo "install the kernel into WSL when build is finished?
-"
-[ "$win_user" != "" ] || read -r -p "(yes)
+    [ ! -d "/mnt/c/users/$win_user" ] || echo "install the kernel into WSL when build is finished?
+" && \
+read -r -p "(yes)
 " wsl_install
     if [ "$wsl_install" = "" ]; then
         wsl_install="y"
@@ -363,9 +363,9 @@ if (( quick_wsl_install )); then
         quick_wsl_install=False
     fi    
 else
-    echo "
+    [ ! -w "/mnt/c/users/$win_user" ] || echo "
 install the kernel into WSL when build is finished?
-"
+" && \
     read -r -p "(no)
  " wsl_install
     if [ "${wsl_install,,}" = "y" ] || [ "${wsl_install,,}" = "yes" ]; then
@@ -374,29 +374,15 @@ install the kernel into WSL when build is finished?
     else 
         save_or_wsl_install_mask=sav 
     fi    
-    if [ -w "/mnt/c/users/$win_user" ] || \
-    [ "$win_user" != "" ]; then
+    
         
-echo "
-.wslconfig will be ${save_or_wsl_install_mask}ed to C:\\users\\$win_user
-archives, installation/recovery scripts will be saved to C:\\users\\$win_user\\k-cache
-"  
-[ "$win_user" != "" ] || read -r -p "
+printf "
+.wslconfig will be %sed to C:\\users\\%s
+archives, installation/recovery scripts will be saved to C:\\users\\%s\\k-cache
+"  "${save_or_wsl_install_mask}" "$win_user" "$win_user"
+     [ ! -w "/mnt/c/users/$win_user" ] || read -r -p "
 (continue)
 " 
-    else
-echo "
-Oooops - C:\\users\\$win_user is an invalid save location
-package will not be saved to Windows home directory ...
-
-        "
-        sleep 2
-        echo ""
-        sleep 1
-        echo ""
-        sleep 1
-        echo ""
-    fi
 fi
 
 win_k_cache=/mnt/c/users/$win_user/k-cache

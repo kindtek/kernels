@@ -630,7 +630,7 @@ else {
     copy .wslconfig ..\\.wslconfig -verbose;
     # restart wsl
     if (\"\$(\$args[0])\" -ne \"\"){
-         .\\wsl-restart.ps1\"';
+         .\\wsl-restart.ps1;
     }
 
 }

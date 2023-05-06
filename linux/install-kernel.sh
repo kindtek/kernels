@@ -119,11 +119,11 @@ else
         if [ "${2}" != "" ]; then
             latest_kernel="$(find . -maxdepth 1 -name "wsl-kernel-install_${2}*_*" 2>/dev/null | sed -r -e "s/^\.\/wsl-kernel-install_(.*)_(.*)\.ps1$/\1_\2/g" | sort -r | head -n 1)"
             latest_kernel_install_file="wsl-kernel-install_${latest_kernel}.ps1"
-            output_msg="enter a kernel name to install:"
+            output_msg="kernels available to install matching ${2}*:"
         else
             latest_kernel="$(find . -maxdepth 1 -name 'wsl-kernel-install_*' 2>/dev/null | sed -r -e "s/^\.\/wsl-kernel-install_(.*)_(.*)\.ps1$/\1_\2/g" | sort -r | head -n 1)"
             latest_kernel_install_file="wsl-kernel-install_${latest_kernel}.ps1"
-            output_msg="kernels available to install matching ${2}*:"
+            output_msg="kernels available to install:"
         fi
         if [ -f "$latest_kernel_install_file" ]; then
             echo "

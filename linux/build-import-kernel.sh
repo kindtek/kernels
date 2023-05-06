@@ -314,12 +314,11 @@ printf "
 
 " "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}"
 
-cd /mnt/c/users || exit
-[ -d "$win_user" ] || echo " 
+[ -d "/mnt/c/users/$win_user" ] || echo " 
 
 
 save kernel build to which Windows home directory?"
-while [ ! -d "$win_user" ]; do
+while [ ! -d "/mnt/c/users/$win_user" ]; do
     echo "
 
     choose from:
@@ -327,8 +326,12 @@ while [ ! -d "$win_user" ]; do
     ls -da /mnt/c/users/*/ | tail -n +4 | sed -r -e 's/^\/mnt\/c\/users\/([ A-Za-z0-9]*)*\/+$/\t\1/g'
 
     read -r -p "
-    C:\\users\\" win_user
-    if [ ! -d "$win_user" ]; then
+
+(skip)  C:\\users\\" win_user
+    if [ "$win_user" = "" ]; then
+        break
+    fi
+    if [ ! -d "/mnt/c/users/$win_user" ]; then
         echo "
 
         

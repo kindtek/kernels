@@ -22,10 +22,8 @@ if ($IsWindows) {
     Write-Output "stopping docker ..."
     powershell.exe -Command cmd.exe /c net stop com.docker.service
     powershell.exe -Command cmd.exe /c taskkill /IM "'Docker Desktop.exe'" /F
-    Write-Output "stopping wsl ..."
-    powershell.exe -Command wsl.exe --shutdown; 
-    Write-Output "starting wsl ..."
-    powershell.exe -Command wsl.exe --exec echo 'wsl restarted';
+    Write-Output "restarting wsl ..."
+    powershell.exe -Command wsl.exe --shutdown; powershell.exe -Command wsl.exe --exec echo 'wsl restarted';
     Write-Output "starting docker ..."
     powershell.exe -Command cmd.exe /c net start com.docker.service
     powershell.exe -Command wsl.exe --exec echo 'docker restarted';
@@ -34,15 +32,13 @@ elseif ($IsLinux) {
     write-host "... from within WSL Linux distro
 "
     Write-Output "stopping docker ..."
-    pwsh -Command cmd.exe /c net stop com.docker.service
-    pwsh -Command cmd.exe /c taskkill /IM "'Docker Desktop.exe'" /F
-    Write-Output "stopping wsl ..."
-    pwsh -Command wsl.exe --shutdown; 
-    Write-Output "starting wsl ..."
-    pwsh -Command wsl.exe --exec echo 'wsl restarted';
+    pwsh Start-Process -FilePath cmd.exe -ArgumentList '/c net stop com.docker.service'
+    pwsh Start-Process -FilePath cmd.exe -ArgumentList '/c taskkill /IM "Docker Desktop.exe" /F'
+    Write-Output "restarting wsl ..."
+    pwsh Start-Process -FilePath wsl.exe -ArgumentList '--shutdown'; pwsh Start-Process -FilePath wsl.exe -ArgumentList '--exec echo "wsl restarted"';
     Write-Output "starting docker ..."
-    pwsh -Command cmd.exe /c net start com.docker.service
-    pwsh -Command wsl.exe --exec echo 'docker restarted';
+    pwsh Start-Process -FilePath cmd.exe -ArgumentList '/c net start com.docker.service'
+    pwsh Start-Process -FilePath wsl.exe -ArgumentList  '--exec echo "docker restarted"';
 }
 else {
     write-host "... from within unlabeled environment
@@ -51,10 +47,8 @@ else {
     Write-Output "stopping docker ..."
     powershell.exe -Command cmd.exe /c net stop com.docker.service
     powershell.exe -Command cmd.exe /c taskkill /IM "'Docker Desktop.exe'" /F
-    Write-Output "stopping wsl ..."
-    powershell.exe -Command wsl.exe --shutdown; 
-    Write-Output "starting wsl ..."
-    powershell.exe -Command wsl.exe --exec echo 'wsl restarted';
+    Write-Output "restarting wsl ..."
+    powershell.exe -Command wsl.exe --shutdown; powershell.exe -Command wsl.exe --exec echo 'wsl restarted';
     Write-Output "starting docker ..."
     powershell.exe -Command cmd.exe /c net start com.docker.service
     powershell.exe -Command wsl.exe --exec echo 'docker restarted';

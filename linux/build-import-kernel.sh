@@ -373,7 +373,10 @@ install the kernel into WSL when build is finished?
     fi    
     
         
-    printf "installation/recovery scripts will be saved to C:\\users\\%s\\k-cache\n" "$win_user"
+    printf "
+archives and installation/recovery scripts will be saved to %s
+    
+" "C:\\users\\$win_user\\k-cache"
 
      [ ! -w "/mnt/c/users/$win_user" ] || read -r -p "
 (continue)

@@ -55,7 +55,10 @@ if [ "${2}" = "latest" ]; then
     latest_kernel=$( echo "$selected_kernel_install_file" | sed -nr "s/^\.\/wsl-kernel-install_(.*)_(.*)\.ps1$/\1_\2/p")
     if [ "$latest_kernel" = "" ]; then
         echo "there are no kernels available to install
-exiting ..."
+" 
+        read -r -p "
+(exit)
+"
         exit
     fi
     echo "

@@ -173,6 +173,7 @@ enter a kernel name to install:
                 echo "user picked ${selected_kernel} ..."
             elif [ "$selected_kernel" = "" ] && [ -f "$latest_kernel_install_file" ]; then
                 echo "user confirmed ${latest_kernel_install_file} ..."
+                selected_kernel=$latest_kernel
                 selected_kernel_install_file=$latest_kernel_install_file
             fi
         elif [ "${2}" != "" ]; then

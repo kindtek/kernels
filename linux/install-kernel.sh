@@ -51,8 +51,8 @@ mkdir -p "$win_k_cache"
 cd "$win_k_cache" || exit
 # if [ -f "wsl-kernel-install_${2}*_${3}*.ps1" ]; then
 if [ "${2}" = "latest" ]; then
-    selected_kernel_install_file="$(find . -maxdepth 1 -name 'wsl-kernel-install_*' 2>/dev/null | sort -r  | head -n 1)"
-    latest_kernel=$( echo "$selected_kernel_install_file" | sed -nr "s/^\.\/wsl-kernel-install_(.*)_(.*)\.ps1$/\1_\2/p")
+    selected_kernel_install_file="$(ls -tx1 wsl-kernel-install_${2}*_*.ps1 | sed -nr "s/^wsl-kernel-install_(.*)_(.*)\.ps1$/wsl-kernel-install_\1_\2/p" | head -n 1)"
+    latest_kernel="$(ls -tx1 wsl-kernel-install_${2}*_*.ps1 | sed -nr "s/^wsl-kernel-install_(.*)_(.*)\.ps1$/\1_\2/p" | head -n 1)"
     if [ "$latest_kernel" = "" ]; then
         echo "there are no kernels available to install
 " 
@@ -75,12 +75,12 @@ if [ "${2}" = "latest" ]; then
 
 
 
-kernel found ready to install: $latest_kernel
+the most recently built kernel is: $latest_kernel
 
 
 
     
-install kernel into WSL or exit?"
+install kernel into WSL?"
     read -r -p "
 (install $latest_kernel)
 " install_latest
@@ -211,7 +211,7 @@ if [ -f "$selected_kernel_install_file" ]; then
     
 restart WSL when installation is complete?"
     read -r -p "
-(install $selected_kernel and restart)
+(install $selected_kernel and restart WSL)
 " restart_wsl
     wsl_config=../.wslconfig 
     new_kernel=$(echo "$selected_kernel_install_file" | sed -nr "s/^\.?\/?wsl-kernel-install_(.*)_(.*)\.ps1$/\1_\2/p")

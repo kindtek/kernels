@@ -597,7 +597,7 @@ else {
     move ..\\.wslconfig ..\\.wslconfig.old -Force -verbose;
     
     # extract
-    tar -xvzf \$package_full_name_id.tar.gz
+    tar -xvzf $package_full_name_id.tar.gz
 
     # copy file
     copy .wslconfig ..\\.wslconfig -verbose;
@@ -673,6 +673,6 @@ kernel:
 " "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}"
 
 
-bash install-kernel.sh "$win_user" "$kernel_alias_no_timestamp" "$timestamp_id"
+
 
 

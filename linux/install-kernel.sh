@@ -228,9 +228,9 @@ move .wslconfig.new .wslconfig" 2>/dev/null | tee "wsl-kernel-rollback.ps1"
     if [ "$old_kernel" != "" ]; then
         echo "
 
-
-WSL ROLLBACK INSTRUCTIONS
--------------------------
+_______________________________________________________________________
+        WSL ROLLBACK INSTRUCTIONS
+-----------------------------------------------------------------------
 
 open a windows terminal to home directory (WIN + x, i) and copy/pasta:
 
@@ -239,9 +239,9 @@ open a windows terminal to home directory (WIN + x, i) and copy/pasta:
     else 
         echo "
 
-
-WSL ROLLBACK INSTRUCTIONS
--------------------------
+_______________________________________________________________________
+        WSL ROLLBACK INSTRUCTIONS
+-------------------------------------------
 
 open a windows terminal to home directory (WIN + x, i) and copy/pasta:
 
@@ -250,19 +250,18 @@ open a windows terminal to home directory (WIN + x, i) and copy/pasta:
     move .wslconfig.new .wslconfig
 "    
     fi
-    echo "
-
-
-WSL KERNEL INSTALL
--------------------------
+    echo "-----------------------------------------------------------------------
+_______________________________________________________________________
+        WSL KERNEL INSTALL INSTRUCTIONS
+-----------------------------------------------------------------------
 
 open a windows terminal to home directory (WIN + x, i) and copy/pasta:
 
     ./k-cache/wsl-kernel-install-$new_kernel
-
-
-WSL REBOOT INSTRUCTIONS
------------------------
+-----------------------------------------------------------------------
+_______________________________________________________________________
+        WSL REBOOT INSTRUCTIONS
+-----------------------------------------------------------------------
 
 open a windows terminal to home directory (WIN + x, i) and copy/pasta:
 
@@ -270,7 +269,7 @@ open a windows terminal to home directory (WIN + x, i) and copy/pasta:
 "
 # rm latest.tar.gz
     # pwsh -File wsl-restart.ps1
-
+    echo "-----------------------------------------------------------------------"
 fi
 
 

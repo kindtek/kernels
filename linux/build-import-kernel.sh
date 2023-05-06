@@ -313,7 +313,7 @@ printf "
 ==================================================================
 
 " "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}"
-
+orig_win_user=$win_user
 [ ! -d "/mnt/c/users" ] || echo " 
 
 
@@ -329,6 +329,7 @@ while [ ! -d "/mnt/c/users/$win_user" ]; do
 
 (skip)  C:\\users\\" win_user
     if [ "$win_user" = "" ]; then
+        win_user=$orig_win_user
         break
     fi
     if [ ! -d "/mnt/c/users/$win_user" ]; then

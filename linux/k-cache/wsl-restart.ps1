@@ -20,16 +20,13 @@ if ($IsWindows) {
     write-host "... from within native Windows
 "
     Write-Output "stopping docker ..."
-    # powershell.exe -Command cmd.exe /c net stop docker
     powershell.exe -Command cmd.exe /c net stop com.docker.service
-    # powershell.exe -Command cmd.exe /c taskkill /IM "dockerd.exe" /F
     powershell.exe -Command cmd.exe /c taskkill /IM "'Docker Desktop.exe'" /F
     Write-Output "stopping wsl ..."
     powershell.exe -Command wsl.exe --shutdown; 
     Write-Output "starting wsl ..."
     powershell.exe -Command wsl.exe --exec echo 'wsl restarted';
     Write-Output "starting docker ..."
-    # powershell.exe -Command cmd.exe /c net start docker
     powershell.exe -Command cmd.exe /c net start com.docker.service
     powershell.exe -Command wsl.exe --exec echo 'docker restarted';
 }
@@ -37,34 +34,28 @@ elseif ($IsLinux) {
     write-host "... from within WSL Linux distro
 "
     Write-Output "stopping docker ..."
-    # powershell.exe -Command cmd.exe /c net stop docker
-    powershell.exe -Command cmd.exe /c net stop com.docker.service
-    # powershell.exe -Command cmd.exe /c taskkill /IM "dockerd.exe" /F
-    powershell.exe -Command cmd.exe /c taskkill /IM "'Docker Desktop.exe'" /F
+    pwsh -Command cmd.exe /c net stop com.docker.service
+    pwsh -Command cmd.exe /c taskkill /IM "'Docker Desktop.exe'" /F
     Write-Output "stopping wsl ..."
-    powershell.exe -Command wsl.exe --shutdown; 
+    pwsh -Command wsl.exe --shutdown; 
     Write-Output "starting wsl ..."
-    powershell.exe -Command wsl.exe --exec echo 'wsl restarted';
+    pwsh -Command wsl.exe --exec echo 'wsl restarted';
     Write-Output "starting docker ..."
-    # powershell.exe -Command cmd.exe /c net start docker
-    powershell.exe -Command cmd.exe /c net start com.docker.service
-    powershell.exe -Command wsl.exe --exec echo 'docker restarted';
+    pwsh -Command cmd.exe /c net start com.docker.service
+    pwsh -Command wsl.exe --exec echo 'docker restarted';
 }
 else {
     write-host "... from within unlabeled environment
 "
 
     Write-Output "stopping docker ..."
-    # powershell.exe -Command cmd.exe /c net stop docker
     powershell.exe -Command cmd.exe /c net stop com.docker.service
-    # powershell.exe -Command cmd.exe /c taskkill /IM "dockerd.exe" /F
     powershell.exe -Command cmd.exe /c taskkill /IM "'Docker Desktop.exe'" /F
     Write-Output "stopping wsl ..."
     powershell.exe -Command wsl.exe --shutdown; 
     Write-Output "starting wsl ..."
     powershell.exe -Command wsl.exe --exec echo 'wsl restarted';
     Write-Output "starting docker ..."
-    # powershell.exe -Command cmd.exe /c net start docker
     powershell.exe -Command cmd.exe /c net start com.docker.service
     powershell.exe -Command wsl.exe --exec echo 'docker restarted';
 

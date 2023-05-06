@@ -51,7 +51,7 @@ mkdir -p "$win_k_cache"
 cd "$win_k_cache" || exit
 # if [ -f "wsl-kernel-install_${2}*_${3}*.ps1" ]; then
 if [ "${2}" = "latest" ]; then
-    selected_kernel_install_file="$(find . -maxdepth 1 -name 'wsl-kernel-install_*' 2>/dev/null | sort | head -n 1)"
+    selected_kernel_install_file="$(find . -maxdepth 1 -name 'wsl-kernel-install_*' 2>/dev/null | sort -r  | head -n 1)"
     latest_kernel=$( echo "$selected_kernel_install_file" | sed -nr "s/^\.\/wsl-kernel-install_(.*)_(.*)\.ps1$/\1_\2/p")
     if [ "$latest_kernel" = "" ]; then
         echo "there are no kernels available to install
@@ -95,7 +95,7 @@ no kernel install requested. exiting ...
     #     selected_kernel_install_file=$latest_kernel
     fi 
 elif [ "${2}" != "" ] && [ "${3}" != "" ]; then
-    latest_kernel="$(find . -maxdepth 1 -name "wsl-kernel-install_${2}*_*${3}*.ps1" 2>/dev/null | sed -r -e "s/^\.\/wsl-kernel-install_(.*)_(.*)\.ps1$/\1_\2/g" | sort | head -n 1)"
+    latest_kernel="$(find . -maxdepth 1 -name "wsl-kernel-install_${2}*_*${3}*.ps1" 2>/dev/null | sed -r -e "s/^\.\/wsl-kernel-install_(.*)_(.*)\.ps1$/\1_\2/g" | sort -r  -r  | head -n 1)"
     latest_kernel_install_file="wsl-kernel-install_${latest_kernel}.ps1"
     if [ "$latest_kernel" = "" ]; then
         echo "there are no kernels available to install
@@ -109,7 +109,7 @@ exiting ..."
 "
 # elif [ "${2}" = "" ]; then
 #     while [ ! -f "$selected_kernel_install_file" ]; do
-#         latest_kernel="$(find . -maxdepth 1 -name 'wsl-kernel-install_*' 2>/dev/null | sed -r -e "s/^\.\/wsl-kernel-install_(.*)_(.*)\.ps1$/\1_\2/g" | sort | head -n 1)"
+#         latest_kernel="$(find . -maxdepth 1 -name 'wsl-kernel-install_*' 2>/dev/null | sed -r -e "s/^\.\/wsl-kernel-install_(.*)_(.*)\.ps1$/\1_\2/g" | sort -r  | head -n 1)"
 #         latest_kernel_install_file="wsl-kernel-install_${latest_kernel}.ps1"
 #         if [ -f "$latest_kernel_install_file" ]; then
 #             echo "
@@ -118,7 +118,7 @@ exiting ..."
 
 #         name_timestamp
 #         --------------------"
-#             find . -maxdepth 1 -name 'wsl-kernel-install_*' 2>/dev/null | sed -r -e "s/^\.\/wsl-kernel-install_(.*)_(.*)\.ps1$/\t\1_\2/g" | sort
+#             find . -maxdepth 1 -name 'wsl-kernel-install_*' 2>/dev/null | sed -r -e "s/^\.\/wsl-kernel-install_(.*)_(.*)\.ps1$/\t\1_\2/g" | sort -r 
 #             echo "
 
 # enter a kernel name to install:
@@ -143,11 +143,11 @@ else
         # only focus on single match if $2 has matches
         
         if [ "${2}" != "" ]; then
-            latest_kernel="$(find . -maxdepth 1 -name "wsl-kernel-install_${2}*_*" 2>/dev/null | sed -r -e "s/^\.\/wsl-kernel-install_(.*)_(.*)\.ps1$/\1_\2/g" | sort | head -n 1)"
+            latest_kernel="$(find . -maxdepth 1 -name "wsl-kernel-install_${2}*_*" 2>/dev/null | sed -r -e "s/^\.\/wsl-kernel-install_(.*)_(.*)\.ps1$/\1_\2/g" | sort -r  | head -n 1)"
             latest_kernel_install_file="wsl-kernel-install_${latest_kernel}.ps1"
             output_msg="kernels available to install matching ${2}*:"
         else
-            latest_kernel="$(find . -maxdepth 1 -name 'wsl-kernel-install_*' 2>/dev/null | sed -r -e "s/^\.\/wsl-kernel-install_(.*)_(.*)\.ps1$/\1_\2/g" | sort | head -n 1)"
+            latest_kernel="$(find . -maxdepth 1 -name 'wsl-kernel-install_*' 2>/dev/null | sed -r -e "s/^\.\/wsl-kernel-install_(.*)_(.*)\.ps1$/\1_\2/g" | sort -r  | head -n 1)"
             latest_kernel_install_file="wsl-kernel-install_${latest_kernel}.ps1"
             output_msg="kernels available to install:"
         fi
@@ -158,7 +158,7 @@ $output_msg
 
         name_timestamp
         --------------------"
-            find . -maxdepth 1 -name 'wsl-kernel-install_*' 2>/dev/null | sed -r -e "s/^\.\/wsl-kernel-install_(.*)_(.*)\.ps1$/\t\1_\2/g" | sort
+            find . -maxdepth 1 -name 'wsl-kernel-install_*' 2>/dev/null | sed -r -e "s/^\.\/wsl-kernel-install_(.*)_(.*)\.ps1$/\t\1_\2/g" | sort -r 
             echo "
 
 enter a kernel name to install:

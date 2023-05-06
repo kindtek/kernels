@@ -95,7 +95,7 @@ no kernel install requested. exiting ...
     #     selected_kernel_install_file=$latest_kernel
     fi 
 elif [ "${2}" != "" ] && [ "${3}" != "" ]; then
-    latest_kernel="$(find . -maxdepth 1 -name "wsl-kernel-install_${2}*_*${3}*.ps1" 2>/dev/null | sed -r -e "s/^\.\/wsl-kernel-install_(.*)_(.*)\.ps1$/\1_\2/g" | sort -r  -r  | head -n 1)"
+    latest_kernel="$(ls -txr1 wsl-kernel-install_${2}*_*${3}*.ps1 | sed -r -e "s/^wsl-kernel-install_(.*)_(.*)\.ps1$/\1_\2/g"  | head -n 1)"
     latest_kernel_install_file="wsl-kernel-install_${latest_kernel}.ps1"
     if [ "$latest_kernel" = "" ]; then
         echo "there are no kernels available to install
@@ -103,7 +103,7 @@ exiting ..."
         exit
     fi
     selected_kernel_install_file=$latest_kernel_install_file
-    latest_kernel=$( echo "$selected_kernel_install_file" | sed -nr "s/^wsl-kernel-install_(.*)_(.*)\.ps1$/\1_\2/p")  
+    selected_kernel=$latest_kernel 
     read -r -p "
 (install $latest_kernel)
 "

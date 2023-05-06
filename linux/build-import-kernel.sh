@@ -511,7 +511,7 @@ sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\k-c
 cp -fv --backup=numbered ../../../dvlp/mnt/%HOME%/sample.wslconfig k-cache/.wslconfig
 
 
-tee "k-cache/$ps_wsl_install_kernel_id" <<EOF
+tee "k-cache/$ps_wsl_install_kernel_id" >/dev/null <<EOF
 try {
     if (-Not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] 'Administrator')) {
         if ([int](Get-CimInstance -Class Win32_OperatingSystem | Select-Object -ExpandProperty BuildNumber) -ge 6000) {
@@ -550,7 +550,7 @@ Write-Host \"path: \$pwd\"
 #                                                                       ##### 
 #
 #
-#   # execute option A script saved in this file
+#   # execute option B script saved in this file
 #>> ./k-cache/$ps_wsl_install_kernel_id
 
 
@@ -579,16 +579,16 @@ if (\$IsLinux) {
     # copy file
     copy .wslconfig ..\\.wslconfig -verbose;
     # restart wsl
-    if (\"\$(\$args[0])\" -ne \"\"){
+    if ("\$(\$args[0])" -ne '""'){
         # pwsh -Command .\\wsl-restart.ps1;
-        Start-Process -FilePath powershell.exe -ArgumentList '\"-Command .\\wsl-restart.ps1\"' 
+        Start-Process -FilePath powershell.exe -ArgumentList '"-Command .\\wsl-restart.ps1"' 
         # .\\wsl-restart.ps1;
     }
 
 } 
 else {
 
-    cd \"\$env:USERPROFILE/k-cache\"
+    cd "\$env:USERPROFILE/k-cache"
 #
 #   # delete
 #>> del ..\\.wslconfig -Force -verbose;
@@ -602,7 +602,7 @@ else {
     # copy file
     copy .wslconfig ..\\.wslconfig -verbose;
     # restart wsl
-    if (\"\$(\$args[0])\" -ne \"\"){
+    if ("\$(\$args[0])" -ne '""'){
          .\\wsl-restart.ps1;
     }
 

@@ -6,13 +6,25 @@
 
 $argString = $args -join " "
 $argArray = $argString.Split(" ")
-
-for ($i = 0; $i -lt $argArray.Count; $i++) {
-    if ($argArray[$i] -eq "") {
+for ($i = 0; $i -lt $argArray.Length; $i += 1) {
+    $paramValue = $argArray[$i]
+    if ( "$paramValue" -eq "" ) {
         $argArray[$i] = "`"`""
     }
 }
 
-$commandArgs = $argArray -join " "
+$args -split ' ' | ForEach-Object {
+    if ([string]::IsNullOrEmpty($_)) {
+        '""'
+    }
+    else {
+        $_
+    }
+} | ForEach-Object {
+    $_ = '"{0}"' -f $_
+}
 
-wsl.exe --cd /hal/dvlw/dvlp/docker/kali exec ./make-kernel.sh $commandArgs
+$argString = $args -join ' '
+$argArray = $argString.Split(' ')
+
+wsl.exe --cd /hal/dvlw/dvlp/docker/kali exec ./make-kernel.sh $($argArray)

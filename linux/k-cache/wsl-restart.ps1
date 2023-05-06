@@ -1,28 +1,11 @@
 # source of the below self-elevating script: https://blog.expta.com/2017/03/how-to-self-elevate-powershell-script.html#:~:text=If%20User%20Account%20Control%20(UAC,select%20%22Run%20with%20PowerShell%22.
 # Self-elevate the script if required
-try {
-    if (-Not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] 'Administrator')) {
-        if ([int](Get-CimInstance -Class Win32_OperatingSystem | Select-Object -ExpandProperty BuildNumber) -ge 6000) {
-            $CommandLine = "-File `"" + $MyInvocation.MyCommand.Path + "`" " + $MyInvocation.UnboundArguments
-            Start-Process -FilePath powershell.exe -Verb Runas -WindowStyle "Maximized" -ArgumentList $CommandLine
-            Exit
-        }
+if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]'Administrator')) {
+    if ((Get-CimInstance -Class Win32_OperatingSystem | Select-Object -ExpandProperty BuildNumber) -ge 6000) {
+        $CommandLine = '-File "{0}" {1}' -f $MyInvocation.MyCommand.Path, $MyInvocation.UnboundArguments
+        Start-Process -FilePath powershell.exe -Verb Runas -WindowStyle Maximized -ArgumentList $CommandLine
+        Exit
     }
-}
-catch {
-    
-    try {
-        if ($IsLinux) {
-            Start-Process -FilePath powershell.exe -ArgumentList $CommandLine
-        }
-        else {
-            
-            Start-Process -FilePath powershell.exe -Verb Runas -WindowStyle "Maximized" -ArgumentList $CommandLine
-        }
-        exit
-    }
-    catch {}
-
 }
 
 write-host "

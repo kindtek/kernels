@@ -615,12 +615,13 @@ if (\$IsLinux) {
     if (\"\$(\$args[0])\" -ne \"\"){
         # pwsh -Command .\\wsl-restart.ps1;
         Start-Process -FilePath powershell.exe -ArgumentList  '\"-Command .\\wsl-restart.ps1\"' 
-        # .\\wsl-restart.ps1\"';
+        # .\\wsl-restart.ps1;
     }
 
 } 
 else {
 
+    cd \"\$env:USERPROFILE/k-cache\" || exit
 #
 #   # delete
 #>> del ..\\.wslconfig -Force -verbose;
@@ -639,6 +640,11 @@ else {
     }
 
 }
+
+Read-Host \"
+(exit)
+\"
+
 
 # else {
 # 	echo "attempting install in WSL in unknown environment"

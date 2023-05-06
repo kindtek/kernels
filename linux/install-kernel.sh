@@ -50,7 +50,11 @@ cd "$win_k_cache" || exit
 if [ "${2}" = "latest" ]; then
     selected_kernel_install_file="$(find . -name 'wsl-kernel-install_*' 2>/dev/null | sort -r | head -n 1)"
     latest_kernel=$( echo "$selected_kernel_install_file" | sed -nr "s/^\.\/wsl-kernel-install_(.*)_(.*)\.ps1$/\1_\2/p")
-
+    if [ "$latest_kernel" = "" ]; then
+        echo "there are no kernels available to install
+exiting ..."
+        exit
+    fi
     echo "
 
 
@@ -76,6 +80,11 @@ no kernel install requested. exiting ...
 elif [ "${2}" != "" ] && [ "${3}" != "" ]; then
     latest_kernel="$(find . -maxdepth 1 -name "wsl-kernel-install_${2}*_*${3}*.ps1" 2>/dev/null | sed -r -e "s/^\.\/wsl-kernel-install_(.*)_(.*)\.ps1$/\1_\2/g" | sort -r | head -n 1)"
     latest_kernel_install_file="wsl-kernel-install_${latest_kernel}.ps1"
+    if [ "$latest_kernel" = "" ]; then
+        echo "there are no kernels available to install
+exiting ..."
+        exit
+    fi
     selected_kernel_install_file=$latest_kernel_install_file
     latest_kernel=$( echo "$selected_kernel_install_file" | sed -nr "s/^wsl-kernel-install_(.*)_(.*)\.ps1$/\1_\2/p")  
     read -r -p "
@@ -125,7 +134,7 @@ else
             latest_kernel_install_file="wsl-kernel-install_${latest_kernel}.ps1"
             output_msg="kernels available to install:"
         fi
-        if [ -f "$latest_kernel_install_file" ]; then
+        if [ -f "$latest_kernel_install_file" ] && [ "$latest_kernel" != "" ]; then
             echo "
 $output_msg
 
@@ -169,7 +178,7 @@ enter a different kernel code to search or exit?
 fi
 
 
-if [ ! -f "$selected_kernel_install_file" ]; then
+if [ ! -f "$selected_kernel_install_file" ] || [ "$latest_kernel" = "" ]; then
     echo "could not find $selected_kernel_install_file
 exiting ..."
 fi

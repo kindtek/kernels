@@ -57,3 +57,7 @@ else {
     powershell.exe -Command wsl.exe --exec echo 'WSL and Docker restarted';
 
 }
+
+Read-Host "
+(done)
+"

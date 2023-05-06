@@ -557,12 +557,14 @@ try {
 }
 catch {
   	echo "could not start powershell with admin priveleges"
+    \$CommandLine = \"-File \`\"\" + \$MyInvocation.MyCommand.Path + \"\`\" \" + \$MyInvocation.UnboundArguments
     if (\$IsLinux) {
         pwsh -Command \$CommandLine
     }
     else {
         Start-Process -FilePath powershell.exe -ArgumentList \$CommandLine
     }
+    exit
 }
 
 write-host "path: \$pwd"

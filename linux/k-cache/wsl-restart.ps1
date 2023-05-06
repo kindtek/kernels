@@ -10,7 +10,7 @@ try {
     }
 }
 catch {
-    # Start-Process -FilePath PowerShell.exe -ArgumentList $CommandLine
+    Start-Process -FilePath PowerShell.exe -ArgumentList $CommandLine
 }
 
 write-host "attempting restart ..."

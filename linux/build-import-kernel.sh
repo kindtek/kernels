@@ -102,7 +102,6 @@ fi
 #     # config_file_suffix+="-zfs"
 # fi
 
-package_full_name=Linux-$linux_kernel_version-$linux_kernel_type_tag
 package_full_name_id=Linux-$linux_kernel_version-$linux_kernel_type_tag-$timestamp_id
 
 if [ "$2" = "get-version" ]; then
@@ -115,7 +114,7 @@ if [ "$2" = "get-version" ]; then
     fi
 fi
 if [ "$2" = "get-package" ]; then
-    echo -n "$package_full_name"
+    echo -n "$package_full_name_id"
     exit
 fi
     echo "home: $HOME"
@@ -391,8 +390,8 @@ config_target_git=$git_save_path/$config_alias_no_timestamp
 # config_target_nix=$nix_k_cache/$config_alias
 # kernel_target_win=$win_k_cache/$kernel_alias
 # config_target_win=$win_k_cache/$config_alias
-tarball_target_nix=$nix_k_cache/$package_full_name.tar.gz
-tarball_target_win=$win_k_cache/$package_full_name.tar.gz
+tarball_target_nix=$nix_k_cache/$package_full_name_id.tar.gz
+tarball_target_win=$win_k_cache/$package_full_name_id.tar.gz
 tarball_filename=$package_full_name_id.tar.gz
 
 if [ "$linux_kernel_version" = "" ]; then
@@ -535,7 +534,6 @@ rm -rfv k-cache/wsl-kernel-install_*
 rm -rfv k-cache/*.tar.gz
 cp -fv --backup=numbered  "$config_source" "k-cache/$config_alias"
 cp -fv --backup=numbered  "$linux_build_dir/$kernel_source" "k-cache/$kernel_alias"
-# touch "k-cache/$package_full_name"
 
 # win
 # package a known working wslconfig file along with the kernel and config file

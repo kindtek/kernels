@@ -515,15 +515,15 @@ tee "k-cache/$ps_wsl_install_kernel_id" >/dev/null <<EOF
 try {
     if (-Not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] 'Administrator')) {
         if ([int](Get-CimInstance -Class Win32_OperatingSystem | Select-Object -ExpandProperty BuildNumber) -ge 6000) {
-            \$CommandLine = \"-File \`\"\$MyInvocation.MyCommand.Path\`\" \" + \$MyInvocation.UnboundArguments
-            Start-Process -FilePath powershell.exe -Verb Runas -WindowStyle \"Maximized\" -ArgumentList \$CommandLine
+            \$CommandLine = "-File \`"\$MyInvocation.MyCommand.Path\`" " + \$MyInvocation.UnboundArguments
+            Start-Process -FilePath powershell.exe -Verb Runas -WindowStyle "Maximized" -ArgumentList \$CommandLine
             Exit
         }
     }
 }
 catch {
-    Write-Host \"could not start powershell with admin privileges\"
-    \$CommandLine = \"-File \`\"\$MyInvocation.MyCommand.Path\`\" \" + \$MyInvocation.UnboundArguments
+    Write-Host "could not start powershell with admin privileges"
+    \$CommandLine = "-File \`"\$MyInvocation.MyCommand.Path\`" " + \$MyInvocation.UnboundArguments
     if (\$IsLinux) {
         pwsh \$CommandLine
     }
@@ -533,7 +533,7 @@ catch {
     exit
 }
 
-Write-Host \"path: \$pwd\"
+Write-Host "path: \$pwd"
 #############################################################################
 # ________________ WSL KERNEL INSTALLATION INSTRUCTIONS ____________________#
 # --------------------- FOR CURRENT WINDOWS ACCOUNT ------------------------#
@@ -579,9 +579,9 @@ if (\$IsLinux) {
     # copy file
     copy .wslconfig ..\\.wslconfig -verbose;
     # restart wsl
-    if ("\$(\$args[0])" -ne '""'){
+    if ("\$(\$args[0])" -ne ""){
         # pwsh -Command .\\wsl-restart.ps1;
-        Start-Process -FilePath powershell.exe -ArgumentList '"-Command .\\wsl-restart.ps1"' 
+        Start-Process -FilePath powershell.exe -ArgumentList "-Command .\\wsl-restart.ps1"
         # .\\wsl-restart.ps1;
     }
 

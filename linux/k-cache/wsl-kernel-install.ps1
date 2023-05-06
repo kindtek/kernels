@@ -8,7 +8,10 @@ try {
     }
 }
 catch {
-    Start-Process -FilePath powershell.exe -ArgumentList $CommandLine
+    $CommandLine = "-File `"" + $MyInvocation.MyCommand.Path + "`" " + $MyInvocation.UnboundArguments
+    try {
+        Start-Process -FilePath powershell.exe -ArgumentList $CommandLine
+    } catch {}
 }
 write-host "path: $pwd.Path"
 $argString = $args -join " "

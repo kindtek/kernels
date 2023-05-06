@@ -347,40 +347,6 @@ save kernel build to which Windows home directory?"
 C:\\users\\$win_user is not a home directory"
     fi
 done
-if (( quick_wsl_install )); then
-    [ ! -d "/mnt/c/users/$win_user" ] || echo "install the kernel into WSL when build is finished?
-" && \
-read -r -p "(yes)
-" wsl_install
-    if [ "$wsl_install" = "" ]; then
-        wsl_install="y"
-    fi
-    if [ "${wsl_install,,}" = "y" ] || [ "${wsl_install,,}" = "yes" ]; then
-        wsl_install="y"
-        quick_wsl_install=1
-    else
-        quick_wsl_install=0
-    fi    
-else
-    [ ! -w "/mnt/c/users/$win_user" ] || echo "
-install the kernel into WSL when build is finished?
-" && \
-    read -r -p "(no)
- " wsl_install
-    if [ "${wsl_install,,}" = "y" ] || [ "${wsl_install,,}" = "yes" ]; then
-        wsl_install="y"
-    fi    
-    
-        
-    printf "
-archives and installation/recovery scripts will be saved to %s
-    
-" "C:\\users\\$win_user\\k-cache"
-
-     [ ! -w "/mnt/c/users/$win_user" ] || read -r -p "
-(continue)
-" 
-fi
 
 win_k_cache=/mnt/c/users/$win_user/k-cache
 kernel_source=arch/$cpu_arch/boot/bzImage
@@ -397,7 +363,8 @@ tarball_filename=$package_full_name_id.tar.gz
 if [ "$linux_kernel_version" = "" ]; then
 echo "
 
-    Sorry. Cannot continue. Exiting ...
+    couuld not get Linux kernel version ... 
+    cannot continue.
 
     Error: LINUX_KERNEL_VERSION_NOT_FOUND
 
@@ -681,39 +648,31 @@ KERNEL BUILD COMPLETE
 
 "
 
-if [ "${wsl_install,,}" = "y" ]; then
-    echo "
-    
-    
-    testing 123
-    wsl_install=y
-    
-    "
-fi
-    printf "
+
+printf "
 
 
 
-    ==================================================================
-    ========================   Linux Kernel   ========================
-    ======------------------%s%s------------------======
-    ------------------------------------------------------------------
-    ====-----------------    Install Locations    ----------------====
-    ------------------------------------------------------------------
+==================================================================
+========================   Linux Kernel   ========================
+======------------------%s%s------------------======
+------------------------------------------------------------------
+====-----------------    Install Locations    ----------------====
+------------------------------------------------------------------
 
-    .wslconfig:
-        $wsl_config
+.wslconfig:
+    $wsl_config
 
-    kernel:
-        $wsl_kernel     
+kernel:
+    $wsl_kernel     
 
-    ==================================================================
-    ==================================================================
-    ==================================================================
+==================================================================
+==================================================================
+==================================================================
 
-    " "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}"
+" "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}"
 
 
-    bash install-kernel.sh "$win_user" "$kernel_alias_no_timestamp" "$timestamp_id"
+bash install-kernel.sh "$win_user" "$kernel_alias_no_timestamp" "$timestamp_id"
 
 

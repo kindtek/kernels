@@ -557,7 +557,7 @@ catch {
   	echo "could not start powershell with admin priveleges"
     \$CommandLine = \"-File \`\"\" + \$MyInvocation.MyCommand.Path + \"\`\" \" + \$MyInvocation.UnboundArguments
     if (\$IsLinux) {
-        pwsh -Command \$CommandLine
+        pwsh \$CommandLine
     }
     else {
         Start-Process -FilePath powershell.exe -ArgumentList \$CommandLine

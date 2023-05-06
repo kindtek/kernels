@@ -194,6 +194,12 @@ restart WSL when installation is complete?"
         rm -fv "$old_kernel" 
         cp -v "wsl-kernel-install_$old_kernel.ps1"  "wsl-kernel-rollback.ps1"
         rm -v ".config_$old_kernel"
+    elif [ "$old_kernel" = "$new_kernel" ]; then
+        echo "there is nothing to install
+current kernel is also $new_kernel
+
+exiting ..."
+        exit
     else    
         echo "
 move .wslconfig.old .wslconfig.new

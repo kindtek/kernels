@@ -247,7 +247,7 @@ echo "
                 echo "attempting to download $config_source ...
                 "
                 wget "$config_source"
-                config_source=$( echo "$config_source" | cut --delimiter='/' --fields=1 )
+                config_source=$( echo "$config_source" | sed -r -e "s/^.*\/([A-Za-z0-9-_/:]*)$/\1/g" )
                 # config_source=${pwd}/$( echo $config_source | sed -r -e 's/^([A-Za-z0-9-_/:])*\/([A-Za-z0-9-_/])+$/\2/g' )
             else 
                 echo "not a url"
@@ -260,7 +260,7 @@ echo "
         # config_source=$generic_config_source
         echo "config $config_source appears to be valid"
     else    
-        echo "could not read $config_source
+        echo "config source is invalid (${config_source:-'blank'})
 choosing an alternative ..."
         # reliable but the least desirable .. keep looking
         if [ -r "config-wsl" ]; then 
@@ -314,7 +314,7 @@ printf "
 
 " "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}"
 
-[ -d "/mnt/c/users/$win_user" ] || echo " 
+[ ! -d "/mnt/c/users" ] || echo " 
 
 
 save kernel build to which Windows home directory?"
@@ -602,7 +602,7 @@ if (\$IsWindows) {
     powershell.exe -Command move ..\\.wslconfig ..\\.wslconfig.old -Force -verbose;
     
     # extract
-    wsl.exe exec tar -xvzf $package_full_name_id.tar.gz
+    tar -xvzf $package_full_name_id.tar.gz
 
     # copy file
     powershell.exe -Command copy .wslconfig ..\\.wslconfig -verbose;
@@ -622,7 +622,7 @@ elseif (\$IsLinux) {
     pwsh -Command move ..\\.wslconfig ..\\.wslconfig.old -Force -verbose;
     
     # extract
-    wsl.exe exec tar -xvzf $package_full_name_id.tar.gz
+    tar -xvzf $package_full_name_id.tar.gz
 
     # copy file
     pwsh -Command copy .wslconfig ..\\.wslconfig -verbose;

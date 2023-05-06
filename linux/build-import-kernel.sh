@@ -5,7 +5,7 @@ kernel_type=$1
 config_source=$2
 zfs=$3
 win_user=${4:-'user'}
-quick_wsl_install=${4:+True}
+quick_wsl_install=${4:+1}
 export HOME=/r00t
 # interact=False
 # interact=${5:+True}
@@ -357,9 +357,9 @@ read -r -p "(yes)
     fi
     if [ "${wsl_install,,}" = "y" ] || [ "${wsl_install,,}" = "yes" ]; then
         wsl_install="y"
-        quick_wsl_install=True
+        quick_wsl_install=1
     else
-        quick_wsl_install=False
+        quick_wsl_install=0
     fi    
 else
     [ ! -w "/mnt/c/users/$win_user" ] || echo "
@@ -544,7 +544,7 @@ sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\k-c
 cp -fv --backup=numbered ../../../dvlp/mnt/%HOME%/sample.wslconfig k-cache/.wslconfig
 
 
-tee "k-cache/\$ps_wsl_install_kernel_id" <<EOF
+tee "k-cache/$ps_wsl_install_kernel_id" <<EOF
 try {
     if (-Not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] 'Administrator')) {
         if ([int](Get-CimInstance -Class Win32_OperatingSystem | Select-Object -ExpandProperty BuildNumber) -ge 6000) {
@@ -584,7 +584,7 @@ Write-Host \"path: \$pwd\"
 #
 #
 #   # execute option A script saved in this file
-#>> ./k-cache/\$ps_wsl_install_kernel_id
+#>> ./k-cache/$ps_wsl_install_kernel_id
 
 
 ####-------------------------    OR    ----------------------------------#### 
@@ -607,7 +607,7 @@ if (\$IsLinux) {
     move ..\\.wslconfig ..\\.wslconfig.old -Force -verbose;
     
     # extract
-    tar -xvzf \$package_full_name_id.tar.gz
+    tar -xvzf $package_full_name_id.tar.gz
 
     # copy file
     copy .wslconfig ..\\.wslconfig -verbose;
@@ -621,7 +621,7 @@ if (\$IsLinux) {
 } 
 else {
 
-    cd \"\$env:USERPROFILE/k-cache\" || exit
+    cd \"\$env:USERPROFILE/k-cache\"
 #
 #   # delete
 #>> del ..\\.wslconfig -Force -verbose;
@@ -682,6 +682,14 @@ KERNEL BUILD COMPLETE
 "
 
 if [ "${wsl_install,,}" = "y" ]; then
+    echo "
+    
+    
+    testing 123
+    wsl_install=y
+    
+    "
+fi
     printf "
 
 
@@ -707,5 +715,5 @@ if [ "${wsl_install,,}" = "y" ]; then
 
 
     bash install-kernel.sh "$win_user" "$kernel_alias_no_timestamp" "$timestamp_id"
-fi
+
 

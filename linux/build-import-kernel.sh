@@ -552,7 +552,11 @@ Write-Host "path: \$pwd"
 #####                                                                   #####
 #####   copy without '#>>' to replace (delete/move) .wslconfig          #####
 
-if (\$IsLinux) {
+if (\$IsLinux -eq \$false) {
+
+    cd "\$env:USERPROFILE/k-cache"
+
+}
 
 #
 #   # delete
@@ -569,32 +573,9 @@ if (\$IsLinux) {
     # restart wsl
     if ("\$(\$args[0])" -ne ""){
         # pwsh -Command .\\wsl-restart.ps1;
-        Start-Process -FilePath powershell.exe -ArgumentList "-Command .\\wsl-restart.ps1"
-        # .\\wsl-restart.ps1;
+        # Start-Process -FilePath powershell.exe -ArgumentList "-Command .\\wsl-restart.ps1"
+        .\\wsl-restart.ps1;
     }
-
-} 
-else {
-
-    cd "\$env:USERPROFILE/k-cache"
-#
-#   # delete
-#>> del ..\\.wslconfig -Force -verbose;
-#
-#   # move file out of the way   
-    move ..\\.wslconfig ..\\.wslconfig.old -Force -verbose;
-    
-    # extract
-    tar -xvzf $package_full_name_id.tar.gz
-
-    # copy file
-    copy .wslconfig ..\\.wslconfig -verbose;
-    # restart wsl
-    if ("\$(\$args[0])" -ne '""'){
-         .\\wsl-restart.ps1;
-    }
-
-}
 
 #############################################################################
 

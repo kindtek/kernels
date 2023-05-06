@@ -623,16 +623,17 @@ cp -fv --backup=numbered ../../../dvlp/mnt/%HOME%/sample.wslconfig k-cache/.wslc
 
 echo "
 try {
-    # first check OS to use relevant powershell/wsl calls later
-    switch (Get-PSPlatform) {
-        'Win32NT' { 
-            New-Variable -Option Constant -Name win_os -Value \$True -ErrorAction SilentlyContinue
-            New-Variable -Option Constant -Name nix_os  -Value \$False -ErrorAction SilentlyContinue
-            New-Variable -Option Constant -Name mac_os  -Value \$False -ErrorAction SilentlyContinue
+    if (-Not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] 'Administrator')) {
+        if ([int](Get-CimInstance -Class Win32_OperatingSystem | Select-Object -ExpandProperty BuildNumber) -ge 6000) {
+            \$CommandLine = \"-File \`\"\" + \$MyInvocation.MyCommand.Path + \"\`\" \" + \$MyInvocation.UnboundArguments
+            Start-Process -FilePath PowerShell.exe -Verb Runas -WindowStyle \"Maximized\" -ArgumentList \$CommandLine
+            Exit
         }
     }
-} catch {}
-
+}
+catch {
+    # Start-Process -FilePath PowerShell.exe -ArgumentList \$CommandLine
+}
 #############################################################################
 # ________________ WSL KERNEL INSTALLATION INSTRUCTIONS ____________________#
 # --------------------- FOR CURRENT WINDOWS ACCOUNT ------------------------#
@@ -645,7 +646,7 @@ try {
 ####                                                                    #####
 #####   copy without '#>>' to replace (delete/move) .wslconfig          #####
 
-if (\$win_os) {
+if (\$IsWindows) {
 
 #
 #   # delete
@@ -663,7 +664,7 @@ if (\$win_os) {
     powershell.exe -Command .\\wsl-restart.ps1;
 
 }
-elseif (\$nix_os) {
+elseif (\$IsLinux) {
 
 #
 #   # delete
@@ -673,12 +674,31 @@ elseif (\$nix_os) {
     pwsh -Command move ..\\.wslconfig ..\\.wslconfig.old -Force -verbose;
     
     # extract
-    wsl exec tar -xvzf $package_full_name_id.tar.gz
+    wsl.exe exec tar -xvzf $package_full_name_id.tar.gz
 
     # copy file
     pwsh -Command copy .wslconfig ..\\.wslconfig -verbose;
     # restart wsl
     pwsh -Command .\\wsl-restart.ps1;
+
+} 
+else {
+	echo "attempting install in WSL in unknown environment"
+
+	cd \$HOME\k-cache
+#   # delete
+#>> powershell.exe -Command del ..\\.wslconfig -Force -verbose;
+#
+#   # move file out of the way   
+    powershell.exe -Command move ..\\.wslconfig ..\\.wslconfig.old -Force -verbose;
+    
+    # extract
+    wsl.exe exec tar -xvzf $package_full_name_id.tar.gz
+
+    # copy file
+    powershell.exe -Command copy .wslconfig ..\\.wslconfig -verbose;
+    # restart wsl
+    powershell.exe -Command .\\wsl-restart.ps1;
 
 }
 

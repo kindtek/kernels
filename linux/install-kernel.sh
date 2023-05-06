@@ -1,20 +1,46 @@
 #!/bin/bash
-win_user=${1:-'no-user-selectedlkadjfasdf'}
+win_user=${1}
 orig_pwd=$(pwd)
 
-while [ ! -d "/mnt/c/users/$win_user" ]; do
-    echo " 
+echo "
+default windows user: $win_user
 
 
-    install to which Windows home directory?
 
-        C:\\users\\__________ 
 
-        choose from:
+"
+while [ "$win_user" = "" ]; do
+            echo " 
+
+
+install to which Windows home directory?"
+    cd /mnt/c/users || exit
+    while [ ! -d "$win_user" ]; do
+echo "
+
+    choose from:
     " 
-    ls -da /mnt/c/users/*/ | tail -n +4 | sed -r -e 's/^\/mnt\/c\/users\/([ A-Za-z0-9]*)*\/+$/\t\1/g'
-    read -r -p "
-" win_user
+        ls -da /mnt/c/users/*/ | tail -n +4 | sed -r -e 's/^\/mnt\/c\/users\/([ A-Za-z0-9]*)*\/+$/\t\1/g'
+
+        read -r -p "
+    C:\\users\\" win_user
+    if [ ! -d "$win_user" ]; then
+        echo "
+
+        
+        
+        
+
+
+
+
+
+
+
+C:\\users\\$win_user is not a home directory"
+    fi
+    done
+    cd "$orig_pwd" || exit
 done
 
 win_k_cache="/mnt/c/users/$win_user/k-cache"
@@ -43,7 +69,7 @@ enter a kernel name to install:
             latest_kernel_install_file="$(ls -t1 wsl-kernel-install_* )"
             read -r -p "
 ($(echo "$latest_kernel_install_file" | sed -r -e "s/^wsl-kernel-install_(.*)_(.*)\.ps1$/\1_\2/g"))
-" selected_kernel
+ " selected_kernel
             if [ "${selected_kernel}" != "" ] && [ ! -f "wsl-kernel-install_$selected_kernel.ps1" ] && [ ! -f "$latest_kernel_install_file" ]; then
                 exit
             elif [ -f "wsl-kernel-install_$selected_kernel.ps1" ]; then
@@ -77,8 +103,10 @@ install $latest_kernel kernel into WSL or exit?"
 " install_latest
     if [ "$install_latest" != "" ]; then
         echo "
-build completed and no install requested.
-exiting..."
+        
+no kernel install requested. exiting ...
+
+"
         exit
     # else
     #     selected_kernel_install_file=$latest_kernel
@@ -102,7 +130,7 @@ enter a kernel name to install:
         latest_kernel="$(find . -maxdepth 1 -name 'wsl-kernel-install_*' 2>/dev/null | sed -r -e "s/^\.\/wsl-kernel-install_(.*)_(.*)\.ps1$/\1_\2/g" | head -n 1)"
         read -r -p "
 ($latest_kernel)
-" selected_kernel
+ " selected_kernel
         if [ "${selected_kernel}" != "" ] && [ ! -f "wsl-kernel-install_$selected_kernel.ps1" ] && [ ! -f "wsl-kernel-install_$latest_kernel.ps1" ]; then
             exit
         elif [ -f "wsl-kernel-install_$selected_kernel.ps1" ]; then
@@ -151,7 +179,7 @@ WSL ROLLBACK INSTRUCTIONS
 
 open a windows terminal to home directory (WIN + x, i) and copy/pasta:
 
-    ./k-cache/wsl-install-$old_kernel
+    ./k-cache/wsl-kernel-install-$old_kernel
     "
     else 
         echo "
@@ -165,8 +193,7 @@ open a windows terminal to home directory (WIN + x, i) and copy/pasta:
     move .wslconfig.old .wslconfig.new
     move .wslconfig .wslconfig.old
     move .wslconfig.new .wslconfig
-
-    "    
+"    
     fi
     echo "
 
@@ -176,7 +203,7 @@ WSL KERNEL INSTALL
 
 open a windows terminal to home directory (WIN + x, i) and copy/pasta:
 
-    ./k-cache/wsl-install-$new_kernel
+    ./k-cache/wsl-kernel-install-$new_kernel
 
 
 WSL REBOOT INSTRUCTIONS
@@ -187,11 +214,9 @@ open a windows terminal to home directory (WIN + x, i) and copy/pasta:
     ./k-cache/wsl-restart
 "
 # rm latest.tar.gz
-    ./wsl-restart
+    pwsh -File wsl-restart.ps1
 
 fi
 
 
 cd "$orig_pwd" || exit
-
-wsl.exe || pwsh -Command wsl

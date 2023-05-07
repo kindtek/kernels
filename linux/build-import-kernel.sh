@@ -507,8 +507,8 @@ cp -fv --backup=numbered  "$linux_build_dir/$kernel_source" "k-cache/$kernel_ali
 mkdir -p "$win_k_cache" 2>/dev/null
 # rm -fv "$win_k_cache/wsl-kernel-install.ps1"
 # rm -rfv "$win_k_cache/wsl-kernel-install_${kernel_alias_no_timestamp}*"
-sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\k-cache\\\\\\\\${kernel_alias}/g" ../../../dvlp/mnt/%HOME%/sample.wslconfig
-cp -fv --backup=numbered ../../../dvlp/mnt/%HOME%/sample.wslconfig k-cache/.wslconfig
+sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\k-cache\\\\\\\\${kernel_alias}/g" ../../../dvlp/mnt/%HOME%/head.wslconfig
+cp -fv --backup=numbered ../../../dvlp/mnt/%HOME%/head.wslconfig k-cache/.wslconfig
 
 
 tee "k-cache/$ps_wsl_install_kernel_id" >/dev/null <<EOF
@@ -568,6 +568,10 @@ if (\$IsLinux -eq \$false) {
     # extract
     tar -xvzf $package_full_name_id.tar.gz
 
+    # append tail.wslconfig to .wslconfig
+    if (Test-Path -Path tail.wslconfig -PathType Leaf) {
+        Get-Content tail.wslconfig -| Add-Content -Path .wslconfig
+    }
     # copy file
     copy .wslconfig ..\\.wslconfig -verbose;
     # restart wsl

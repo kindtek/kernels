@@ -37,9 +37,9 @@ if ($IsLinux) {
         Start-Process -FilePath wsl.exe -ArgumentList  '--shutdown'; Start-Process -FilePath wsl.exe -ArgumentList  '--exec echo "wsl restarted"';
         # powershell.exe -Command "wsl.exe --shutdown; wsl.exe --exec echo 'wsl restarted'"
         # bash -c systemctl restart systemd-shim
-        Write-Output "starting docker ..."
-        Start-Sleep -Seconds 5 # wait for 5 seconds to ensure that the service has stopped
-        Start-Process -FilePath cmd.exe -ArgumentList '/c net start com.docker.service' -NoNewWindow
+        # Write-Output "starting docker ..."
+        # Start-Sleep -Seconds 5 # wait for 5 seconds to ensure that the service has stopped
+        # Start-Process -FilePath cmd.exe -ArgumentList '/c net start com.docker.service' -NoNewWindow
     
         Write-Output "starting docker ..."
         Start-Service -Name com.docker.service

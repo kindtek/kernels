@@ -78,6 +78,18 @@ else {
 }
 
 
-Read-Host "
+
+
+Write-Host "
+
+
+
+
+
+
+
+
+
 (done)
-"
+" -NoNewline
+$BookPrice = Read-Host

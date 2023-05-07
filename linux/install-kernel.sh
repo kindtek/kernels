@@ -251,9 +251,8 @@ _______________________________________________________________________
         WSL ROLLBACK INSTRUCTIONS
 -----------------------------------------------------------------------
 
-open a windows terminal to home directory (WIN + x, i) and copy/pasta:
+from this directory copy/pasta:
 
-    cd k-cache
     ./wsl-kernel-install_${old_kernel}
     "
     else 
@@ -264,9 +263,8 @@ _______________________________________________________________________
         WSL ROLLBACK INSTRUCTIONS
 -------------------------------------------
 
-open a windows terminal to home directory (WIN + x, i) and copy/pasta:
+from this directory copy/pasta:
 
-    cd  k-cache
     move .wslconfig.old .wslconfig.new
     move .wslconfig .wslconfig.old
     move .wslconfig.new .wslconfig
@@ -277,9 +275,8 @@ _______________________________________________________________________
         WSL KERNEL INSTALL INSTRUCTIONS
 -----------------------------------------------------------------------
 
-open a windows terminal to home directory (WIN + x, i) and copy/pasta:
+from this directory copy/pasta:
 
-    cd  k-cache
     ./wsl-kernel-install_${new_kernel:-err}
 
 
@@ -287,9 +284,8 @@ _______________________________________________________________________
         WSL REBOOT INSTRUCTIONS
 -----------------------------------------------------------------------
 
-open a windows terminal to home directory (WIN + x, i) and copy/pasta:
+from this directory copy/pasta:
 
-    cd k-cache
     ./wsl-restart
 
 

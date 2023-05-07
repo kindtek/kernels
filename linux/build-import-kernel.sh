@@ -7,25 +7,8 @@ win_user=${4:-'user'}
 quick_wsl_install=${4:+1}
 timestamp_id=${5:-$DOCKER_BUILD_TIMESTAMP}
 export HOME=/r00t
-# interact=False
-# interact=${5:+True}
-# kernel_file_suffix=''
-# config_file_suffix=''
-# linux_kernel_version="5.15.90.1"
-# zfs_version="2.1.11"
 kernel_file_suffix="W"
-# config_file_suffix="_wsl"
 linux_build_dir=linux-build
-# if [ "$zfs" = "zfs" ];  then
-#     echo "zfs == True
-# LINENO: ${LINENO}"
-# elif ! (( $zfs )); then
-#     echo "zfs == False
-# LINENO: ${LINENO}"
-# else 
-#     echo "zfs === $zfs
-# LINENO: ${LINENO}"
-# fi
 
 if [ "$zfs" = "zfs" ];  then
     zfs_build_dir="zfs-build"
@@ -96,11 +79,6 @@ else
     linux_kernel_version=6.1
 
 fi
-# if [ "$zfs" = "zfs" ];  then
-# #     echo "zfs == True
-# # LINENO: ${LINENO}"
-#     # config_file_suffix+="-zfs"
-# fi
 
 package_full_name_id=Linux-$linux_kernel_version-$linux_kernel_type_tag-$timestamp_id
 

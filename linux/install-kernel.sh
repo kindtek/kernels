@@ -102,36 +102,11 @@ exiting ..."
     read -r -p "
 (install $latest_kernel)
 "
-# elif [ "${kernel_code}" = "" ]; then
-#     while [ ! -f "$selected_kernel_install_file" ]; do
-#         latest_kernel="$(find . -maxdepth 1 -name 'wsl-kernel-install_*' 2>/dev/null | sed -r -e "s/^\.\/wsl-kernel-install_(.*)_(.*)\.ps1$/\1_\2/g" | sort -r  | head -n 1)"
-#         latest_kernel_install_file="wsl-kernel-install_${latest_kernel}.ps1"
-#         if [ -f "$latest_kernel_install_file" ]; then
-#             echo "
-# kernels available to install:
-
-
-#         name_timestamp
-#         --------------------"
-#             find . -maxdepth 1 -name 'wsl-kernel-install_*' 2>/dev/null | sed -r -e "s/^\.\/wsl-kernel-install_(.*)_(.*)\.ps1$/\t\1_\2/g" | sort -r 
-#             echo "
-
-# enter a kernel name to install:
-#     "
-#             read -r -p "
-# ($latest_kernel)
-#     " selected_kernel
-#             if [ "${selected_kernel}" != "" ] && [ ! -f "wsl-kernel-install_$selected_kernel.ps1" ] && [ ! -f "$latest_kernel_install_file" ]; then
-#                 exit
-#             elif [ "$selected_kernel" != "" ] && [ -f "wsl-kernel-install_$selected_kernel.ps1" ]; then
-#                 selected_kernel_install_file="wsl-kernel-install_$selected_kernel.ps1"
-#                 echo "user picked ${selected_kernel} ..."
-#             elif [ "$selected_kernel" = "" ] && [ -f "$latest_kernel_install_file" ]; then
-#                 echo "user confirmed ${latest_kernel} ..."
-#                 selected_kernel_install_file="wsl-kernel-install_$latest_kernel.ps1"
-#             fi
-#         fi
-#     done 
+    if [ "$latest_kernel" != "" ]; then
+        echo "
+exiting ..."
+        exit
+    fi
 else
     # focus only on 2nd arg
     while [ ! -f "$selected_kernel_install_file" ]; do
@@ -196,6 +171,7 @@ fi
 if [ ! -f "$selected_kernel_install_file" ] || [ "$latest_kernel" = "" ]; then
     echo "could not find $selected_kernel_install_file
 exiting ..."
+    exit
 fi
 if [ -f "$selected_kernel_install_file" ]; then
     echo "
@@ -285,8 +261,7 @@ from this directory copy/pasta:
 
 
 "
-# rm latest.tar.gz
-    # pwsh -File wsl-restart.ps1
+
 fi
 
 

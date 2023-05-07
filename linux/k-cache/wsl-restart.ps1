@@ -1,6 +1,6 @@
 $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine")
 
-try {
+# try {
     # Self-elevate the privileges if required
     if (-Not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] 'Administrator')) {
         if ([int](Get-CimInstance -Class Win32_OperatingSystem | Select-Object -ExpandProperty BuildNumber) -ge 6000) {
@@ -9,8 +9,8 @@ try {
             Exit
         }
     }
-}
-catch {}
+# }
+# catch {}
 
 write-host "
 attempting to restart wsl ..."
@@ -42,7 +42,8 @@ if ($IsLinux) {
         Start-Process -FilePath cmd.exe -ArgumentList '/c net start com.docker.service' -NoNewWindow
     
         Write-Output "starting docker ..."
-        powershell.exe -Command cmd.exe /c net start com.docker.service
+        Start-Service -Name com.docker.service
+        # powershell.exe -Command cmd.exe /c net start com.docker.service
         # & net start com.docker.service
         Start-Process -FilePath wsl.exe -ArgumentList  '--exec echo "docker restarted"'
 

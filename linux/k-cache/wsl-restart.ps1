@@ -21,38 +21,40 @@ if ($IsLinux) {
     # & cmd.exe /c net stop com.docker.service
     # Start-Process -FilePath cmd.exe -ArgumentList '/c net stop com.docker.service' -NoNewWindow
 
-    pwsh Stop-Service -Name "com.docker.service" -Force
-    $process = pwsh Get-Process -Name "Docker Desktop" -ErrorAction SilentlyContinue
-    if ($process) {
-        pwsh Stop-Process -Id $process.Id -Force
-    }
-    else {
-        Write-Host "The process 'Docker Desktop' was not found."
-    }
-    Write-Output "restarting wsl ..."
-    pwsh Start-Process -FilePath wsl.exe -ArgumentList  '--shutdown'; Start-Process -FilePath wsl.exe -ArgumentList  '--exec echo "wsl restarted"';
-    # powershell.exe -Command "wsl.exe --shutdown; wsl.exe --exec echo 'wsl restarted'"
-    # bash -c systemctl restart systemd-shim
-    Write-Output "starting docker ..."
-    pwsh Start-Sleep -Seconds 5 # wait for 5 seconds to ensure that the service has stopped
-    pwsh Start-Process -FilePath cmd.exe -ArgumentList '/c net start com.docker.service' -NoNewWindow
- 
-    Write-Output "starting docker ..."
-    pwsh powershell.exe -Command cmd.exe /c net start com.docker.service
-    # & net start com.docker.service
-    pwsh Start-Process -FilePath wsl.exe -ArgumentList  '--exec echo "docker restarted"'
+    pwsh {    
+        Stop-Service -Name "com.docker.service" -Force
+        $process = Get-Process -Name "Docker Desktop" -ErrorAction SilentlyContinue
+        if ($process) {
+            Stop-Process -Id $process.Id -Force
+        }
+        else {
+            Write-Host "The process 'Docker Desktop' was not found."
+        }
+        Write-Output "restarting wsl ..."
+        Start-Process -FilePath wsl.exe -ArgumentList  '--shutdown'; Start-Process -FilePath wsl.exe -ArgumentList  '--exec echo "wsl restarted"';
+        # powershell.exe -Command "wsl.exe --shutdown; wsl.exe --exec echo 'wsl restarted'"
+        # bash -c systemctl restart systemd-shim
+        Write-Output "starting docker ..."
+        Start-Sleep -Seconds 5 # wait for 5 seconds to ensure that the service has stopped
+        Start-Process -FilePath cmd.exe -ArgumentList '/c net start com.docker.service' -NoNewWindow
+    
+        Write-Output "starting docker ..."
+        powershell.exe -Command cmd.exe /c net start com.docker.service
+        # & net start com.docker.service
+        Start-Process -FilePath wsl.exe -ArgumentList  '--exec echo "docker restarted"'
 
-    # Find the installation path of Docker Desktop
-    $dockerPath = pwsh Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*" `
-    | Where-Object { $_.DisplayName -eq "Docker Desktop" } `
-    | Select-Object -ExpandProperty InstallLocation
+        # Find the installation path of Docker Desktop
+        $dockerPath = Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*" `
+        | Where-Object { $_.DisplayName -eq "Docker Desktop" } `
+        | Select-Object -ExpandProperty InstallLocation
 
-    # Start Docker Desktop if it's installed
-    if ($dockerPath) {
-        & "$dockerPath\Docker Desktop.exe"
-    }
-    else {
-        Write-Error "Docker Desktop is not installed on this machine."
+        # Start Docker Desktop if it's installed
+        if ($dockerPath) {
+            & "$dockerPath\Docker Desktop.exe"
+        }
+        else {
+            Write-Error "Docker Desktop is not installed on this machine."
+        }
     }
 
 

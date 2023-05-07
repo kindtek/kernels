@@ -1,3 +1,5 @@
+$env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine")
+
 try {
     # Self-elevate the privileges if required
     if (-Not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] 'Administrator')) {
@@ -21,8 +23,9 @@ if ($IsLinux) {
     # & cmd.exe /c net stop com.docker.service
     # Start-Process -FilePath cmd.exe -ArgumentList '/c net stop com.docker.service' -NoNewWindow
 
-    pwsh {    
-        Stop-Service -Name "com.docker.service" -Force
+    # pwsh {    
+        # Stop-Service -Name "com.docker.service" -Force
+        Start-Process -FilePath cmd.exe -ArgumentList '/c net stop com.docker.service' -NoNewWindow
         $process = Get-Process -Name "Docker Desktop" -ErrorAction SilentlyContinue
         if ($process) {
             Stop-Process -Id $process.Id -Force
@@ -55,7 +58,7 @@ if ($IsLinux) {
         else {
             Write-Error "Docker Desktop is not installed on this machine."
         }
-    }
+    # }
 
 
 }

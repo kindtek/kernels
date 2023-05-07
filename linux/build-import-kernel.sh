@@ -1,11 +1,11 @@
 #!/bin/bash
-timestamp_id=$(date -d "today" +"%Y%m%d%H%M%S")
 user_config_flag=False
 kernel_type=$1
 config_source=$2
 zfs=$3
 win_user=${4:-'user'}
 quick_wsl_install=${4:+1}
+timestamp_id=${5:-$DOCKER_BUILD_TIMESTAMP}
 export HOME=/r00t
 # interact=False
 # interact=${5:+True}

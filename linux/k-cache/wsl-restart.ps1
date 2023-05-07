@@ -10,7 +10,7 @@ try {
 } catch {}
 
 write-host "
-attempting restart ..."
+attempting to restart wsl ..."
 
 
 if ($IsLinux) {

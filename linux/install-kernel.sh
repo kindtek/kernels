@@ -90,7 +90,7 @@ no kernel install requested. exiting ...
         selected_kernel_install_file="wsl-kernel-install_${selected_kernel}.ps1"
     fi 
 elif [ "${kernel_code}" != "" ] && [ "${timestamp_id}" != "" ]; then
-    latest_kernel="$(ls -txr1 wsl-kernel-install_${kernel_code}*_*${timestamp_id}*.ps1 | sed -r -e "s/^wsl-kernel-install_(.*)_(.*)\.ps1$/\1_\2/g"  | head -n 1)"
+    latest_kernel="$(ls -txr1 wsl-kernel-install_*${kernel_code}*_*${timestamp_id}*.ps1 | sed -r -e "s/^wsl-kernel-install_(.*)_(.*)\.ps1$/\1_\2/g"  | head -n 1)"
     latest_kernel_install_file="wsl-kernel-install_${latest_kernel}.ps1"
     if [ "$latest_kernel" = "" ]; then
         echo "there are no kernels available to install

@@ -18,7 +18,7 @@ recommendation:
     use WIN + x, a to open a *windows* terminal with *admin* priveleges
     to your home directory and copy/pasta this:
     
-        .\\k-cache\\wsl-restart
+        .\k-cache\wsl-restart
 
 "
     $confirm_reboot = read-host -Prompt "
@@ -67,7 +67,7 @@ restarting wsl ...
 starting docker ...
 "
     # Start-Service -Name com.docker.service
-    Start-Process -FilePath cmd.exe -ArgumentList '/c net stop com.docker.service' -NoNewWindow
+    Start-Process -FilePath cmd.exe -ArgumentList '/c net start com.docker.service' -NoNewWindow
     # powershell.exe -Command cmd.exe /c net start com.docker.service
     # & net start com.docker.service
     Start-Process -FilePath wsl.exe -ArgumentList  '--exec echo "docker restarted"'

@@ -570,7 +570,7 @@ if (\$IsLinux -eq \$false) {
 
     # append tail.wslconfig to .wslconfig
     if (Test-Path -Path tail.wslconfig -PathType Leaf) {
-        Get-Content tail.wslconfig -| Add-Content -Path .wslconfig
+        Get-Content tail.wslconfig | -Add-Content -Path .wslconfig
     }
     # copy file
     copy .wslconfig ..\\.wslconfig -verbose;

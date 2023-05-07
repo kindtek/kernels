@@ -145,9 +145,9 @@ else
         # only focus on single match if $kernel_code has matches
         
         if [ "${kernel_code}" != "" ]; then
-            latest_kernel="$(find . -maxdepth 1 -name "wsl-kernel-install_${kernel_code}*_*" 2>/dev/null | sed -r -e "s/^\.\/wsl-kernel-install_(.*)_(.*)\.ps1$/\1_\2/g" | sort -r  | head -n 1)"
+            latest_kernel="$(find . -maxdepth 1 -name "wsl-kernel-install_*${kernel_code}*_*" 2>/dev/null | sed -r -e "s/^\.\/wsl-kernel-install_(.*)_(.*)\.ps1$/\1_\2/g" | sort -r  | head -n 1)"
             latest_kernel_install_file="wsl-kernel-install_${latest_kernel}.ps1"
-            output_msg="kernels available to install matching ${kernel_code}*:"
+            output_msg="kernels available to install matching *${kernel_code}*:"
         else
             latest_kernel="$(find . -maxdepth 1 -name 'wsl-kernel-install_*' 2>/dev/null | sed -r -e "s/^\.\/wsl-kernel-install_(.*)_(.*)\.ps1$/\1_\2/g" | sort -r  | head -n 1)"
             latest_kernel_install_file="wsl-kernel-install_${latest_kernel}.ps1"

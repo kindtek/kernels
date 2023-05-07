@@ -68,16 +68,8 @@ if [ "${kernel_code}" = "latest" ]; then
 
 
 
-
-
-
-
-
-
-
-
-
 the most recently built kernel is: $latest_kernel
+
 
 
 
@@ -210,11 +202,8 @@ if [ -f "$selected_kernel_install_file" ]; then
 
 
 
-
-
-
     
-restart WSL when installation is complete?"
+restart WSL when kernel installation is complete?"
     read -r -p "
 (install $selected_kernel and restart WSL)
 " restart_wsl

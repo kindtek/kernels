@@ -253,7 +253,8 @@ _______________________________________________________________________
 
 open a windows terminal to home directory (WIN + x, i) and copy/pasta:
 
-    ./k-cache/wsl-kernel-install_${old_kernel}
+    cd k-cache
+    ./wsl-kernel-install_${old_kernel}
     "
     else 
         echo "
@@ -265,6 +266,7 @@ _______________________________________________________________________
 
 open a windows terminal to home directory (WIN + x, i) and copy/pasta:
 
+    cd  k-cache
     move .wslconfig.old .wslconfig.new
     move .wslconfig .wslconfig.old
     move .wslconfig.new .wslconfig
@@ -277,7 +279,8 @@ _______________________________________________________________________
 
 open a windows terminal to home directory (WIN + x, i) and copy/pasta:
 
-    ./k-cache/wsl-kernel-install_${new_kernel:-err}
+    cd  k-cache
+    ./wsl-kernel-install_${new_kernel:-err}
 
 
 _______________________________________________________________________
@@ -286,7 +289,8 @@ _______________________________________________________________________
 
 open a windows terminal to home directory (WIN + x, i) and copy/pasta:
 
-    ./k-cache/wsl-restart
+    cd k-cache
+    ./wsl-restart
 
 
 

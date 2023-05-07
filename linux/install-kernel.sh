@@ -1,5 +1,7 @@
 #!/bin/bash
 win_user=${1}
+kernel_code=${2}
+timestamp_id=${3}
 orig_pwd=$(pwd)
 
 echo "
@@ -49,9 +51,9 @@ done
 win_k_cache="/mnt/c/users/$win_user/k-cache"
 mkdir -p "$win_k_cache"
 cd "$win_k_cache" || exit
-# if [ -f "wsl-kernel-install_${2}*_${3}*.ps1" ]; then
-if [ "${2}" = "latest" ]; then
-    selected_kernel_install_file="$(ls -tx1 wsl-kernel-install_*.ps1 | sed -nr "s/^wsl-kernel-install_(.*)_(.*)\.ps1$/wsl-kernel-install_\1_\2/p" | head -n 1)"
+# if [ -f "wsl-kernel-install_${kernel_code}*_${3}*.ps1" ]; then
+if [ "${kernel_code}" = "latest" ]; then
+    selected_kernel_install_file="$(ls -tx1 wsl-kernel-install_*.ps1 | sed -nr "s/^wsl-kernel-install_(.*)_(.*)\.ps1$/wsl-kernel-install_\1_\2\.ps1/p" | head -n 1)"
     latest_kernel="$(ls -tx1 wsl-kernel-install_*.ps1 | sed -nr "s/^wsl-kernel-install_(.*)_(.*)\.ps1$/\1_\2/p" | head -n 1)"
     if [ "$latest_kernel" = "" ]; then
         echo "there are no kernels available to install
@@ -94,8 +96,8 @@ no kernel install requested. exiting ...
     # else
     #     selected_kernel_install_file=$latest_kernel
     fi 
-elif [ "${2}" != "" ] && [ "${3}" != "" ]; then
-    latest_kernel="$(ls -txr1 wsl-kernel-install_${2}*_*${3}*.ps1 | sed -r -e "s/^wsl-kernel-install_(.*)_(.*)\.ps1$/\1_\2/g"  | head -n 1)"
+elif [ "${kernel_code}" != "" ] && [ "${timestamp_id}" != "" ]; then
+    latest_kernel="$(ls -txr1 wsl-kernel-install_${kernel_code}*_*${timestamp_id}*.ps1 | sed -r -e "s/^wsl-kernel-install_(.*)_(.*)\.ps1$/\1_\2/g"  | head -n 1)"
     latest_kernel_install_file="wsl-kernel-install_${latest_kernel}.ps1"
     if [ "$latest_kernel" = "" ]; then
         echo "there are no kernels available to install
@@ -107,7 +109,7 @@ exiting ..."
     read -r -p "
 (install $latest_kernel)
 "
-# elif [ "${2}" = "" ]; then
+# elif [ "${kernel_code}" = "" ]; then
 #     while [ ! -f "$selected_kernel_install_file" ]; do
 #         latest_kernel="$(find . -maxdepth 1 -name 'wsl-kernel-install_*' 2>/dev/null | sed -r -e "s/^\.\/wsl-kernel-install_(.*)_(.*)\.ps1$/\1_\2/g" | sort -r  | head -n 1)"
 #         latest_kernel_install_file="wsl-kernel-install_${latest_kernel}.ps1"
@@ -140,12 +142,12 @@ exiting ..."
 else
     # focus only on 2nd arg
     while [ ! -f "$selected_kernel_install_file" ]; do
-        # only focus on single match if $2 has matches
+        # only focus on single match if $kernel_code has matches
         
-        if [ "${2}" != "" ]; then
-            latest_kernel="$(find . -maxdepth 1 -name "wsl-kernel-install_${2}*_*" 2>/dev/null | sed -r -e "s/^\.\/wsl-kernel-install_(.*)_(.*)\.ps1$/\1_\2/g" | sort -r  | head -n 1)"
+        if [ "${kernel_code}" != "" ]; then
+            latest_kernel="$(find . -maxdepth 1 -name "wsl-kernel-install_${kernel_code}*_*" 2>/dev/null | sed -r -e "s/^\.\/wsl-kernel-install_(.*)_(.*)\.ps1$/\1_\2/g" | sort -r  | head -n 1)"
             latest_kernel_install_file="wsl-kernel-install_${latest_kernel}.ps1"
-            output_msg="kernels available to install matching ${2}*:"
+            output_msg="kernels available to install matching ${kernel_code}*:"
         else
             latest_kernel="$(find . -maxdepth 1 -name 'wsl-kernel-install_*' 2>/dev/null | sed -r -e "s/^\.\/wsl-kernel-install_(.*)_(.*)\.ps1$/\1_\2/g" | sort -r  | head -n 1)"
             latest_kernel_install_file="wsl-kernel-install_${latest_kernel}.ps1"
@@ -176,19 +178,21 @@ enter a kernel name to install:
                 selected_kernel=$latest_kernel
                 selected_kernel_install_file=$latest_kernel_install_file
             fi
-        elif [ "${2}" != "" ]; then
+        elif [ "${kernel_code}" != "" ]; then
             echo "
 
-no kernels like ${2} found.
+no kernels like ${kernel_code} found.
 
 enter a different kernel code to search or exit?
             "
             read -r -p "
 (exit)
  " selected_kernel
+
             if [ "$selected_kernel" = "" ]; then
                 exit
             else
+                kernel_code="$selected_kernel"
                 selected_kernel_install_file="wsl-kernel-install_$selected_kernel.ps1"
             fi
         fi

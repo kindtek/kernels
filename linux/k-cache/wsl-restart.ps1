@@ -1,7 +1,7 @@
 $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine")
 
-# try {
-    # Self-elevate the privileges if required
+try {
+    # Self-elevate the privileges
     if (-Not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] 'Administrator')) {
         if ([int](Get-CimInstance -Class Win32_OperatingSystem | Select-Object -ExpandProperty BuildNumber) -ge 6000) {
             $CommandLine = "-File `"" + $MyInvocation.MyCommand.Path + "`" " + $MyInvocation.UnboundArguments
@@ -9,8 +9,26 @@ $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine")
             Exit
         }
     }
-# }
-# catch {}
+}
+catch {
+    write-host "
+Oooops... unable to gain access required to completely restart WSL
+
+recommendation:
+    use WIN + x, a to open a *windows* terminal with *admin* priveleges
+    to your home directory and copy/pasta this:
+    
+        .\\k-cache\\wsl-restart
+
+"
+    $confirm_reboot = read-host -Prompt "
+(reboot WSL anyways)
+" 
+    if ( "$confirm_reboot" -ne "" ) {
+        exit
+    }
+
+}
 Write-Host "
 
 "

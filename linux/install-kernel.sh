@@ -3,7 +3,7 @@ win_user=${1}
 orig_pwd=$(pwd)
 
 echo "
-default windows user: $win_user
+
 
 
 
@@ -51,8 +51,8 @@ mkdir -p "$win_k_cache"
 cd "$win_k_cache" || exit
 # if [ -f "wsl-kernel-install_${2}*_${3}*.ps1" ]; then
 if [ "${2}" = "latest" ]; then
-    selected_kernel_install_file="$(ls -tx1 wsl-kernel-install_${2}*_*.ps1 | sed -nr "s/^wsl-kernel-install_(.*)_(.*)\.ps1$/wsl-kernel-install_\1_\2/p" | head -n 1)"
-    latest_kernel="$(ls -tx1 wsl-kernel-install_${2}*_*.ps1 | sed -nr "s/^wsl-kernel-install_(.*)_(.*)\.ps1$/\1_\2/p" | head -n 1)"
+    selected_kernel_install_file="$(ls -tx1 wsl-kernel-install_*.ps1 | sed -nr "s/^wsl-kernel-install_(.*)_(.*)\.ps1$/wsl-kernel-install_\1_\2/p" | head -n 1)"
+    latest_kernel="$(ls -tx1 wsl-kernel-install_*.ps1 | sed -nr "s/^wsl-kernel-install_(.*)_(.*)\.ps1$/\1_\2/p" | head -n 1)"
     if [ "$latest_kernel" = "" ]; then
         echo "there are no kernels available to install
 " 

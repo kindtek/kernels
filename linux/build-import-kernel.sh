@@ -80,7 +80,7 @@ else
 
 fi
 
-package_full_name_id=Linux-$linux_kernel_version-$linux_kernel_type_tag-$timestamp_id
+package_full_name_id=Linux-$linux_kernel_version-${linux_kernel_type_tag}_${timestamp_id}
 
 if [ "$2" = "get-version" ]; then
     if [ "$zfs" = "zfs" ];  then

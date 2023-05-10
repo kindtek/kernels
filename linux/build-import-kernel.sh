@@ -28,7 +28,7 @@ if [ "$kernel_type" = "latest" ]; then
     linux_build_dir=linux-build-torvalds
     linux_repo=https://github.com/torvalds/linux.git
     linux_version_query="git -c versionsort.suffix=- ls-remote --refs --sort=version:refname --tags $linux_repo "
-    linux_kernel_version_tag=$($linux_version_query | tail --lines=1 | cut --delimiter='/' --fields=3) 
+    linux_kernel_version_tag=$($linux_version_query | grep "^v[0-9a-zA-Z.]*$"  | tail --lines=1 | cut --delimiter='/' --fields=3) 
     linux_kernel_type_tag="LATEST-WSL${linux_kernel_type_tag}"
     linux_kernel_version=${linux_kernel_version_tag#"v"}
     kernel_file_suffix+="L"
@@ -41,7 +41,7 @@ elif [ "$kernel_type" = "latest-rc" ]; then
     # config_file_suffix+="_rc"
     linux_repo=https://github.com/torvalds/linux.git
     linux_version_query="git ls-remote --refs --sort=version:refname --tags $linux_repo "
-    linux_kernel_version_tag=$($linux_version_query | tail --lines=1 | cut --delimiter='/' --fields=3) 
+    linux_kernel_version_tag=$($linux_version_query | grep "^v[0-9a-zA-Z\.]*\-rc.*$" | tail --lines=1 | cut --delimiter='/' --fields=3) 
     linux_kernel_type_tag="LATEST_RC-WSL${linux_kernel_type_tag}"
     linux_kernel_version=${linux_kernel_version_tag#"v"}
 elif [ "$kernel_type" = "stable" ]; then

@@ -274,7 +274,9 @@ orig_pwd=$(pwd)
 [ ! -d "/mnt/c/users" ] || cd "/mnt/c/users" || exit
 while [ ! -d "$win_user" ]; do
     if [ ! -d "/mnt/c/users" ]; then
-        echo "/mnt/c/users is not a directory - skipping prompt for home directory"
+        if [ ! -d "/mnt/c/users/$win_user" ]; then
+            echo "/mnt/c/users is not a directory - skipping prompt for home directory"
+        fi
         break;
     fi
     echo " 

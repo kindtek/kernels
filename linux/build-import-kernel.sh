@@ -246,7 +246,7 @@ echo "
         # config_source=$generic_config_source
         echo "config $config_source appears to be valid"
     else    
-        echo "config source is invalid (${config_source:-'blank'})
+        echo "config source is invalid (${config_source:-blank})
 choosing an alternative ..."
         # reliable but the least desirable .. keep looking
         if [ -r "config-wsl" ]; then 

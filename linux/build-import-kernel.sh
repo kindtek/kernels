@@ -223,41 +223,24 @@ choosing an alternative ..."
         echo "picked $config_source"
     fi
 
-padding="----------"
-printf "
+text="Linux Kernel Info"
+padding=60
+printf "\n%*s\n" $(((${#text}+padding)/2)) "$text"
 
+printf "==================================================================\n"
+printf "========================   Linux Kernel   ========================\n"
+printf "======------------------%s%s------------------======\n" "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}"
 
+printf "------------------------------------------------------------------\n"
+printf "====-------------------     Source Info    -------------------====\n"
+printf "------------------------------------------------------------------\n\n"
 
+printf "  %-*s: %s\n" 20 "CPU Architecture" "$cpu_arch"
+printf "  %-*s: %s\n" 20 "CPU Vendor" "$cpu_vendor"
+printf "  %-*s: %s\n" 20 "Configuration File" "$config_source"
 
+printf "\n==================================================================\n"
 
-
-
-
-
-
-
-
-
-==================================================================
-========================   Linux Kernel   ========================
-======------------------%s%s------------------======
-------------------------------------------------------------------
-====-------------------     Source Info    -------------------====
-------------------------------------------------------------------
-
-  CPU Architecture: 
-    $cpu_arch
-
-  CPU Vendor:  
-    $cpu_vendor
-
-  Configuration File:
-    $config_source
-
-
-==================================================================
-
-" "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}"
 orig_win_user=$win_user
 orig_pwd=$(pwd)
 [ ! -d "/mnt/c/users" ] || cd "/mnt/c/users" || exit
@@ -324,34 +307,26 @@ echo "
     "
 fi
 
-printf "
+printf "\n\n\n\n"
+printf "%*s\n" $(((${#title}+80)/2)) "$title"
+printf "%*s\n" $(((${#subtitle}+80)/2)) "$subtitle"
+printf "=%.0s" {1..80}
+printf "\n\n"
 
+printf "%-40s %-40s\n" \
+  $(printf "Kernel: %s" "$kernel_target_git") \
+  $(printf "Config: %s" "$config_target_git")
 
+printf "%-40s %-40s\n" \
+  $(printf "Kernel/Config/Installation/.tar.gz files:") \
+  ""
 
-==================================================================
-========================   Linux Kernel   ========================
-======------------------%s%s------------------======
-------------------------------------------------------------------
-====-------------------     Output Info    -------------------====
-------------------------------------------------------------------
+printf "%-40s %-40s\n" \
+  "$nix_k_cache" \
+  ""
 
-  Kernel:
-    $kernel_target_git
-
-  Config:
-    $config_target_git
-    
-  Kernel/Config/Installation/.tar.gz files:
-    $nix_k_cache
-    %s     
-
-==================================================================
-==================================================================
-==================================================================
-
-" "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}" "${win_k_cache:-'
-'}"
-
+printf "=%.0s" {1..80}
+printf "\n\n\n\n"
 [ "$win_user" != "" ] || echo "
 build kernel or exit?
 " && \
@@ -464,8 +439,8 @@ cp -fv --backup=numbered  "$linux_build_dir/$kernel_source" "kache/$kernel_alias
 mkdir -p "$win_k_cache" 2>/dev/null
 # rm -fv "$win_k_cache/wsl-kernel-install.ps1"
 # rm -rfv "$win_k_cache/wsl-kernel-install_${kernel_alias_no_timestamp}*"
-sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\kache\\\\\\\\${kernel_alias}/g" ../../../dvlp/mnt/%HOME%/head.wslconfig
-cp -fv --backup=numbered ../../../dvlp/mnt/%HOME%/head.wslconfig kache/.wslconfig
+sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\kache\\\\\\\\${kernel_alias}/g" ../../../dvlp/mnt/HOME%/head.wslconfig
+cp -fv --backup=numbered ../../../dvlp/mnt/HOME%/head.wslconfig kache/.wslconfig
 
 
 tee "kache/$ps_wsl_install_kernel_id" >/dev/null <<EOF

@@ -399,10 +399,10 @@ if [ "$zfs" = "zfs" ];  then
 # LINENO: ${LINENO}"
     if [ -d "$zfs_build_dir/.git" ]; then
         cd "$zfs_build_dir" || exit
-        if ! (( quick_wsl_install )); then 
-            git reset --hard
-            git clean -fxd
-        fi
+        # if ! (( quick_wsl_install )); then 
+        #     git reset --hard
+        #     git clean -fxd
+        # fi
         echo "checking out $zfs_version_tag ..."
         git checkout "$zfs_version_tag" --progress
         cd ..

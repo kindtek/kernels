@@ -75,9 +75,9 @@ $servs_start = @(
     powershell.exe -Command { Get-Service -Name docker* -ErrorAction SilentlyContinue }
 )
 
-$servs_kill | ForEach-Object { powershell.exe -Command "& {Stop-Service -Name "$($_)" -verbose}" }; $servs_start | ForEach-Object { powershell.exe -Command "& {Start-Service -Name "$($_)" -verbose}" }; powershell.exe -Command wsl.exe --exec echo 'docker and wsl were successfully restarted';
+$servs_kill | ForEach-Object { powershell.exe -Command "& {Stop-Service -Name "$($_)" -verbose}" }; $procs_kill |  ForEach-Object { powershell.exe -Command "& {Stop-Process -Force -PassThru -Id "$($_.Id)" -Verbose}" }; $servs_start | ForEach-Object { powershell.exe -Command "& {Start-Service -Name "$($_)" -verbose}" }; powershell.exe -Command wsl.exe --exec echo 'docker and wsl were successfully restarted';
 
-# $procs_kill |  ForEach-Object { powershell.exe -Command "& {Stop-Process -Force -PassThru -Id "$($_.Id)" -Verbose}" }; `
+
 # $servs_start | ForEach-Object {  powershell.exe -Command "& {Start-Service -Name "$($_)" -verbose}" }; `
 # $procs_start |  ForEach-Object { powershell.exe -Command "& {Start-Process -FilePath "$($_.Path)" -ArgumentList '-verbose -verb RunAsUser -NoNewWindow -PassThru'}" }; 
 

@@ -38,15 +38,14 @@ if [ "$kernel_type" = "latest" ]; then
 elif [ "$kernel_type" = "latest-rc" ]; then
     # zfs not supported atm
     # zfs=False; linux_kernel_type_tag=;
-    if [ "$zfs" = "zfs" ]; then
-        zfs_version=2.1.12
-        zfs_version_tag=zfs-$zfs_version-staging
-    fi
+    # if [ "$zfs" = "zfs" ]; then
+    #     zfs_version=2.1.12
+    #     zfs_version_tag=zfs-$zfs_version-staging
+    # fi
     linux_build_dir=linux-build-torvalds
     kernel_file_suffix+="R"
     # config_file_suffix+="_rc"
     linux_repo=https://github.com/torvalds/linux.git
-    linux_version_query="git ls-remote --refs --sort=version:refname --tags $linux_repo "
     linux_kernel_version_tag=$(git ls-remote --refs --sort=version:refname --tags $linux_repo | cut --delimiter='/' --fields=3 | grep '^v[0-9a-zA-Z\.]*-rc.*$' | tail --lines=1) 
     linux_kernel_type_tag="LATEST_RC-WSL${linux_kernel_type_tag}"
     linux_kernel_version=${linux_kernel_version_tag#"v"}
@@ -55,10 +54,10 @@ elif [ "$kernel_type" = "stable" ]; then
     # update: it did not work
     # zfs_version=2.1.11
     # zfs_version_tag=zfs-$zfs_version
-    if [ "$zfs" = "zfs" ]; then
-        zfs_version=2.1.12
-        zfs_version_tag=zfs-$zfs_version-staging
-    fi
+    # if [ "$zfs" = "zfs" ]; then
+    #     zfs_version=2.1.12
+    #     zfs_version_tag=zfs-$zfs_version-staging
+    # fi
     zfs=False; linux_kernel_type_tag=;
     linux_build_dir=linux-build-gregkh
     kernel_file_suffix+="S"

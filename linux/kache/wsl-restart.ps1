@@ -18,7 +18,7 @@ recommendation:
     use WIN + x, a to open a *windows* terminal with *admin* priveleges
     to your home directory and copy/pasta this:
     
-        .\k-cache\wsl-restart
+        .\kache\wsl-restart
 
 "
     $confirm_reboot = read-host -Prompt "

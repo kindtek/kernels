@@ -48,7 +48,7 @@ C:\\users\\$win_user is not a home directory"
     cd "$orig_pwd" || exit
 done
 
-win_k_cache="/mnt/c/users/$win_user/k-cache"
+win_k_cache="/mnt/c/users/$win_user/kache"
 mkdir -p "$win_k_cache"
 cd "$win_k_cache" || exit
 # if [ -f "wsl-kernel-install_${kernel_code}*_${3}*.ps1" ]; then

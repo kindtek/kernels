@@ -90,9 +90,9 @@ fi
         fi
         cd ..
     fi
-    if [ "${clean_target,,}" = "k-cache" ] || [ "${clean_target,,}" = "k" ] ; then
-        rm -rfv k-cache/*
-        rm -rfv k-cache/.*
+    if [ "${clean_target,,}" = "kache" ] || [ "${clean_target,,}" = "k" ] ; then
+        rm -rfv kache/*
+        rm -rfv kache/.*
     fi
     if [ "${clean_target,,}" = "" ] || [ "$1" != "" ]; then
         exit

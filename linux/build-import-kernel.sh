@@ -118,7 +118,7 @@ kernel_alias=${kernel_alias_no_timestamp}_${timestamp_id}
 config_alias=.config_${kernel_alias}
 config_alias_no_timestamp=.config_${kernel_alias_no_timestamp}
 git_save_path=$cpu_arch/$cpu_vendor/$linux_kernel_version_mask
-nix_k_cache=$HOME/k-cache
+nix_k_cache=$HOME/kache
 
 # check that the user supplied source exists if not try to pick the best .config file available
 # user choice is best if it exists
@@ -326,7 +326,7 @@ C:\\users\\$win_user is not a home directory"
     fi
 done
 
-win_k_cache=/mnt/c/users/$win_user/k-cache
+win_k_cache=/mnt/c/users/$win_user/kache
 kernel_source=arch/$cpu_arch/boot/bzImage
 kernel_target_git=$git_save_path/$kernel_alias_no_timestamp
 config_target_git=$git_save_path/$config_alias_no_timestamp
@@ -465,31 +465,31 @@ mkdir -pv "$git_save_path" 2>/dev/null
 # fi
 cp -fv --backup=numbered $linux_build_dir/"$kernel_source" "$kernel_target_git"
 
-# clear k-cache
-mkdir -pv k-cache 2>/dev/null
+# clear kache
+mkdir -pv kache 2>/dev/null
 # remove config
-rm -rfv k-cache/.config_*
+rm -rfv kache/.config_*
 # remove kernel
-rm -rfv k-cache/*_*
+rm -rfv kache/*_*
 # remove empty file tag
-rm -rfv k-cache/Linux-*
+rm -rfv kache/Linux-*
 # remove wsl install ps file
-rm -rfv k-cache/wsl-kernel-install_*
+rm -rfv kache/wsl-kernel-install_*
 # remove tarball
-rm -rfv k-cache/*.tar.gz
-cp -fv --backup=numbered  "$config_source" "k-cache/$config_alias"
-cp -fv --backup=numbered  "$linux_build_dir/$kernel_source" "k-cache/$kernel_alias"
+rm -rfv kache/*.tar.gz
+cp -fv --backup=numbered  "$config_source" "kache/$config_alias"
+cp -fv --backup=numbered  "$linux_build_dir/$kernel_source" "kache/$kernel_alias"
 
 # win
 # package a known working wslconfig file along with the kernel and config file
 mkdir -p "$win_k_cache" 2>/dev/null
 # rm -fv "$win_k_cache/wsl-kernel-install.ps1"
 # rm -rfv "$win_k_cache/wsl-kernel-install_${kernel_alias_no_timestamp}*"
-sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\k-cache\\\\\\\\${kernel_alias}/g" ../../../dvlp/mnt/%HOME%/head.wslconfig
-cp -fv --backup=numbered ../../../dvlp/mnt/%HOME%/head.wslconfig k-cache/.wslconfig
+sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\kache\\\\\\\\${kernel_alias}/g" ../../../dvlp/mnt/%HOME%/head.wslconfig
+cp -fv --backup=numbered ../../../dvlp/mnt/%HOME%/head.wslconfig kache/.wslconfig
 
 
-tee "k-cache/$ps_wsl_install_kernel_id" >/dev/null <<EOF
+tee "kache/$ps_wsl_install_kernel_id" >/dev/null <<EOF
 # if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]'Administrator')) {
 #     if ((Get-CimInstance -Class Win32_OperatingSystem | Select-Object -ExpandProperty BuildNumber) -ge 6000) {
 #         \$CommandLine = '-File "{0}" {1}' -f \$MyInvocation.MyCommand.Path, \$MyInvocation.UnboundArguments
@@ -507,7 +507,7 @@ Write-Host "path: \$pwd"
 
 #############################################################################
 #####   OPTION A  ###########################################################
-#####                   (works as long as files are in k-cache)         #####
+#####                   (works as long as files are in kache)         #####
 #############################################################################
 ####    copy/pasta this into any windows terminal (WIN + x, i):         #####
 ####                                                                    #####
@@ -515,8 +515,8 @@ Write-Host "path: \$pwd"
 ####    directory and run the script from option A                      #####                                              
 #                                                                       ##### 
 #
-# navigate to k-cache and execute option B script saved in this file
-#>> cd k-cache
+# navigate to kache and execute option B script saved in this file
+#>> cd kache
 #>> ./$ps_wsl_install_kernel_id
 
 
@@ -532,7 +532,7 @@ Write-Host "path: \$pwd"
 
 if (\$IsLinux -eq \$false) {
 
-    cd "\$env:USERPROFILE/k-cache"
+    cd "\$env:USERPROFILE/kache"
 
 }
 
@@ -563,34 +563,34 @@ if (\$IsLinux -eq \$false) {
 
 EOF
 
-# rm "k-cache/$tarball_filename"
-# tar -czvf "k-cache/$tarball_filename" -C k-cache .
-tar -czvf "$tarball_filename" -C k-cache .
-mv "$tarball_filename" "k-cache/$tarball_filename"
-# cp "k-cache/$tarball_filename" k-cache/latest.tar.gz
+# rm "kache/$tarball_filename"
+# tar -czvf "kache/$tarball_filename" -C kache .
+tar -czvf "$tarball_filename" -C kache .
+mv "$tarball_filename" "kache/$tarball_filename"
+# cp "kache/$tarball_filename" kache/latest.tar.gz
 # work on *nix first
 mkdir -pv "$nix_k_cache" 2>/dev/null
 
 if [ -w "$nix_k_cache" ]; then
-    # tar -czvf "k-cache/$tarball_filename" -C k-cache k-cache
-    cp -fv "k-cache/$tarball_filename" "$tarball_target_nix" 
+    # tar -czvf "kache/$tarball_filename" -C kache kache
+    cp -fv "kache/$tarball_filename" "$tarball_target_nix" 
 else
     echo "unable to save kernel package to Linux home directory"
 fi
 # now win
 mkdir -pv "$win_k_cache" 2>/dev/null
 if [ -w "$win_k_cache" ]; then
-    cp "k-cache/$ps_wsl_install_kernel_id" "$win_k_cache/$ps_wsl_install_kernel_id"
+    cp "kache/$ps_wsl_install_kernel_id" "$win_k_cache/$ps_wsl_install_kernel_id"
     if [ "$tarball_target_win" != "" ]; then
         # cp -fv --backup=numbered "$tarball_filename" "$tarball_target_win.bak"
-        cp -fv "k-cache/$tarball_filename" "$tarball_target_win"
+        cp -fv "kache/$tarball_filename" "$tarball_target_win"
     fi
 else
     echo "
 unable to save kernel package to Windows home directory"
 fi
 win_user_home=/mnt/c/users/$win_user
-wsl_kernel=${win_user_home}/k-cache/${kernel_alias}
+wsl_kernel=${win_user_home}/kache/${kernel_alias}
 wsl_config=${win_user_home}/.wslconfig
 
 echo "

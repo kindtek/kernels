@@ -3,9 +3,17 @@
 #         ./make-kernel username latest 
 #         ./make-kernel username stable "" path/to/config/file 
 
-
 $argString = $args -join " "
 $argArray = $argString.Split(" ")
+$win_user = ""
+if (!$IsLinux) {
+    # get the user home dir info
+    $win_user = ( get-item . ).parent
+
+} 
+# if it exists, prepend win_user info to front of array
+$argsArray = @( $win_user ) + $argsArray
+
 for ($i = 0; $i -lt $argArray.Length; $i += 1) {
     $paramValue = $argArray[$i]
     if ( "$paramValue" -eq "" ) {

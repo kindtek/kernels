@@ -15,7 +15,7 @@ if [ "$zfs" = "zfs" ];  then
     zfs_repo=https://github.com/openzfs/zfs.git
     zfs_version_query="git -c versionsort.suffix=- ls-remote --refs --sort=version:refname --tags $zfs_repo"
     zfs_version_filter="$zfs_version_query | tail --lines=1 | cut --delimiter='/' --fields=3"
-    zfs_version_tag="$($zfs_version_filter)"
+    zfs_version_tag=$("$zfs_version_filter")
     zfs_version=${zfs_version_tag#"zfs-"}
     linux_kernel_type_tag=$linux_kernel_type_tag-ZFS
     kernel_file_suffix+="Z"
@@ -30,7 +30,7 @@ if [ "$kernel_type" = "latest" ]; then
     linux_repo=https://github.com/torvalds/linux.git
     linux_version_query="git -c versionsort.suffix=- ls-remote --refs --sort=version:refname --tags $linux_repo "
     linux_version_filter="$linux_version_query | cut --delimiter='/' --fields=3 | grep '^v[0-9a-zA-Z\.]*$' | tail --lines=1"
-    linux_kernel_version_tag="$("$linux_version_filter")" 
+    linux_kernel_version_tag="$('$linux_version_filter')" 
     linux_kernel_type_tag="LATEST-WSL${linux_kernel_type_tag}"
     linux_kernel_version=${linux_kernel_version_tag#"v"}
     kernel_file_suffix+="L"

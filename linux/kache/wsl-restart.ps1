@@ -12,17 +12,30 @@ try {
 }
 catch {
     write-host "
-Oooops... unable to gain access required to completely restart WSL
+unable to gain access required to completely restart WSL
+manual restart may be required
+consider opening a WINDOWS terminal *WITH* ADMIN priveleges and try the below command
+.. or restart your computer
 
-recommendation:
-    use WIN + x, a to open a *windows* terminal with *admin* priveleges
-    to your home directory and copy/pasta this:
+
+pro tip: 
+to open an admin terminal to your home directory 
+
+    1) [WIN + x] 
+    2) [a]
+    3) [<-] 
+    4) [ENTER] 
+
+
+to restart WSL at any time copy/pasta this while in your home directory:
     
-        .\kache\wsl-restart
+    .\kache\wsl-restart
+
+
 
 "
     $confirm_reboot = read-host -Prompt "
-(reboot WSL anyways)
+(try to reboot WSL anyways)
 " 
     if ( "$confirm_reboot" -ne "" ) {
         exit
@@ -75,11 +88,53 @@ $servs_start = @(
     powershell.exe -Command { Get-Service -Name docker* -ErrorAction SilentlyContinue }
 )
 
-$servs_kill | ForEach-Object { powershell.exe -Command "& {Stop-Service -Name "$($_)" -verbose}" }; $procs_kill |  ForEach-Object { powershell.exe -Command "& {Stop-Process -Force -PassThru -Id "$($_.Id)" -Verbose}" }; $servs_start | ForEach-Object { powershell.exe -Command "& {Start-Service -Name "$($_)" -verbose}" }; powershell.exe -Command wsl.exe --exec echo 'docker and wsl were successfully restarted';
+Start-Process -FilePath powershell.exe -ArgumentList '-Command "write-host `"H3LL0 W0RLD my home directory is $HOME $USERPROFILE`";'
+
+
+Start-Process -FilePath powershell.exe -ArgumentList '-Command "&{
+    $procs_kill = @(
+        powershell.exe -Command { Get-Process docker* -ErrorAction SilentlyContinue | sort-object path -unique | ForEach-Object { $($_) } };  
+        powershell.exe -Command { Get-Process wsl* -ErrorAction SilentlyContinue | sort-object path -unique | ForEach-Object { $($_) } };
+    );
+    $procs_start = @(
+        powershell.exe -Command { Get-Process wsl* -ErrorAction SilentlyContinue | sort-object path -unique | ForEach-Object { $($_) } };
+        powershell.exe -Command { Get-Process docker* -ErrorAction SilentlyContinue | sort-object path -unique | ForEach-Object { $($_) } };
+    );
+    # arrange services in proper startup/shutdown sequence
+    # only add services that are running to kill queue
+    $servs_kill = @(
+        # queue docker to be killed first
+        # powershell.exe -Command \"& Get-Service -Name docker* -ErrorAction SilentlyContinue | Where-Object { $_.Status -ieq `\`"running`\`" } \";
+        powershell.exe -Command { Get-Service -Name docker* -ErrorAction SilentlyContinue };
+        # kill wsl second
+        powershell.exe -Command { Get-Service -Name wsl* -ErrorAction SilentlyContinue };
+        # powershell.exe -Command \"& Get-Service -Name wsl* -ErrorAction SilentlyContinue | Where-Object { $_.Status -ieq `\`"running`\`" } \";
+    );    $servs_kill | ForEach-Object {
+        powershell.exe -Command `"& Set-Service -Name $($_) -Status Stopped -Force -ErrorAction SilentlyContinue `" | Out-Null;        powershell.exe -Command `"& Set-Service -Name $($_) -Status Stopped -ErrorAction SilentlyContinue `";        powershell.exe -Command `"& Set-Service -Name $($_) -StartupType Automatic -Force -ErrorAction SilentlyContinue `" | Out-Null;        powershell.exe -Command `"& Set-Service -Name $($_) -StartupType Automatic -ErrorAction SilentlyContinue `" ;powershell.exe -Command `"& Stop-Service -Name $($_) -Verbose `"; 
+
+    };     $procs_kill | ForEach-Object {
+        powershell.exe -Command `"& Stop-Process -PassThru -Id $($_.Id) -ErrorAction SilentlyContinue  -Verbose `";
+    };    $servs_start = @(
+        # queue wsl to start first
+        powershell.exe -Command { Get-Service -Name wsl* -ErrorAction SilentlyContinue };
+        powershell.exe -Command { Get-Service -Name docker* -ErrorAction SilentlyContinue };
+    );    
+    $servs_start | ForEach-Object {
+            powershell.exe -Command \"& { Start-Service -Name $($_) -ErrorAction SilentlyContinue  -Verbose } \" 
+    };    
+    powershell.exe -Command wsl.exe --exec echo \"docker and wsl were successfully restarted\" ;  
+    powershell.exe -Command \"& { Start-Sleep -Seconds 8 } \" ;
+    $procs_start | ForEach-Object { 
+        powershell.exe -Command `"& Start-Process -FilePath \`\"$($_.Path)\`\" -Wait -ErrorAction SilentlyContinue -Verbose `" 
+    };
+    Read-Host 
+}"' -ErrorAction SilentlyContinue 
+
+
+
 
 
 # $servs_start | ForEach-Object {  powershell.exe -Command "& {Start-Service -Name "$($_)" -verbose}" }; `
-# $procs_start |  ForEach-Object { powershell.exe -Command "& {Start-Process -FilePath "$($_.Path)" -ArgumentList '-verbose -verb RunAsUser -NoNewWindow -PassThru'}" }; 
 
 # $servs_kill | ForEach-Object { [void]( (write-host "killing service: $($_.Name)") -or (powershell.exe -Command { "& {Stop-Service -Name $_ -verbose}" } ) ) };
 # $procs_kill |  ForEach-Object { [void]( (write-host "killing process: $($_.Name)") -or (powershell.exe -Command { "& {Stop-Process -Force -PassThru -Id $_.Id -Verbose}" } ) ) }; 

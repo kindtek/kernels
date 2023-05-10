@@ -300,14 +300,16 @@ printf "
 
 " "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}"
 orig_win_user=$win_user
-[ ! -d "/mnt/c/users" ] || echo " 
-
-
-save kernel build to which Windows home directory?"
 orig_pwd=$(pwd)
 [ ! -d "/mnt/c/users" ] || cd "/mnt/c/users" || exit
-[ ! -d "/mnt/c/users" ] || while [ ! -d "$win_user" ]; do
-    echo "
+while [ ! -d "$win_user" ]; do
+    if [ ! -d "/mnt/c/users" ]; then
+        break;
+    fi
+    echo " 
+
+
+save kernel build to which Windows home directory?
 
     choose from:
     " 

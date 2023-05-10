@@ -171,7 +171,7 @@ if [ ! -r "$git_save_path/$config_alias_no_timestamp" ]; then
         generic_config_source=https://raw.githubusercontent.com/microsoft/WSL2-Linux-Kernel/linux-msft-wsl-5.15.y/Microsoft/config-wsl
 echo "
 
-No saved .config files match this kernel version $linux_kernel_version_tag and $cpu_arch/$cpu_vendor in $git_save_path/$config_alias_no_timestamp"
+No saved .config files match this kernel version $linux_kernel_version_tag and $cpu_arch/$cpu_vendor"
         if [ ! -r "config-wsl" ]; then
             wget $generic_config_source
         fi
@@ -266,6 +266,7 @@ printf "
   Configuration File:
     $config_source
 
+
 ==================================================================
 
 " "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}"
@@ -313,17 +314,16 @@ C:\\users\\$win_user is not a home directory"
 done
 cd "$orig_pwd" || exit
 
-win_k_cache=/mnt/c/users/$win_user/kache
 kernel_source=arch/$cpu_arch/boot/bzImage
 kernel_target_git=$git_save_path/$kernel_alias_no_timestamp
 config_target_git=$git_save_path/$config_alias_no_timestamp
-# kernel_target_nix=$nix_k_cache/$kernel_alias
-# config_target_nix=$nix_k_cache/$config_alias
-# kernel_target_win=$win_k_cache/$kernel_alias
-# config_target_win=$win_k_cache/$config_alias
 tarball_target_nix=$nix_k_cache/$package_full_name_id.tar.gz
 tarball_target_win=$win_k_cache/$package_full_name_id.tar.gz
 tarball_filename=$package_full_name_id.tar.gz
+if [ "$win_user" = "" ]; then
+    win_k_cache=""
+    tarball_target_win=""
+fi
 
 if [ "$linux_kernel_version" = "" ]; then
 echo "
@@ -350,15 +350,19 @@ printf "
   Kernel:
     $kernel_target_git
 
-  Compressed Kernel/Config:
-    $tarball_target_nix
-    %s      
+  Config:
+    $config_target_git
+    
+  Kernel/Config/Installation/.tar.gz files:
+    $nix_k_cache
+    %s     
+
 ==================================================================
 ==================================================================
 ==================================================================
 
-" "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}" "$tarball_target_win
-"
+" "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}" "${win_k_cache:-\"
+\"}"
 
 [ "$win_user" != "" ] || echo "
 build kernel or exit?

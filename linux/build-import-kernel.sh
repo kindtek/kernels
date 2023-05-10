@@ -169,25 +169,12 @@ if [ "$config_source" != "" ] && [ -r "$config_source" ] && [ -s "$config_source
 else
 # try alternates if user config doesn't work 
     # download reliable .config
-echo "
-searching for a saved config file at $git_save_path/$config_alias_no_timestamp
-"
-    if [ ! -r "$git_save_path/$config_alias_no_timestamp" ]; then
+
+if [ ! -r "$git_save_path/$config_alias_no_timestamp" ]; then
         generic_config_source=https://raw.githubusercontent.com/microsoft/WSL2-Linux-Kernel/linux-msft-wsl-5.15.y/Microsoft/config-wsl
 echo "
 
-
-
-
-
-
-
-
-
-
-
-
-No saved .config files match this kernel version and platform"
+No saved .config files match this kernel version $linux_kernel_version_tag and $cpu_arch/$cpu_vendor in $git_save_path/$config_alias_no_timestamp"
         if [ ! -r "config-wsl" ]; then
             wget $generic_config_source
         fi

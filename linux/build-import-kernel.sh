@@ -106,8 +106,6 @@ fi
     echo "home: $HOME"
     echo "zfs version tag:$zfs_version_tag"
     echo "zfs version:$zfs_version"
-    echo "linux version query: $linux_version_query"
-    echo "linux version filter: $linux_version_filter"
     echo "linux version tag:$linux_kernel_version_tag"
     echo "linux version:$linux_kernel_version"
     echo "linux version type:$linux_kernel_type_tag"

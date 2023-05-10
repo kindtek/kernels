@@ -207,8 +207,7 @@ echo "
                 echo "attempting to download $config_source ...
                 "
                 wget "$config_source"
-                config_source=$( echo "$config_source" | sed -r -e "s/^.*\/([A-Za-z0-9-_/:]*)$/\1/g" )
-                # config_source=${pwd}/$( echo $config_source | sed -r -e 's/^([A-Za-z0-9-_/:])*\/([A-Za-z0-9-_/])+$/\2/g' )
+                config_source="$(pwd)/${config_source##*/}"
             else 
                 echo "not a url"
             fi

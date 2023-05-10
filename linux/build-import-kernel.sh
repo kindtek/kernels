@@ -273,7 +273,6 @@ printf "
 
 " "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}"
 orig_win_user=$win_user
-echo "win user; $win_user"
 orig_pwd=$(pwd)
 [ ! -d "/mnt/c/users" ] || cd "/mnt/c/users" || exit
 while [ ! -d "$win_user" ]; do

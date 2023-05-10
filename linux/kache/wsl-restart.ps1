@@ -95,28 +95,25 @@ Start-Process -FilePath powershell.exe -ArgumentList '-Command "&{
     $servs_start = @(
         # queue wsl to start first
         powershell.exe -Command { Get-Service -Name wsl* -ErrorAction SilentlyContinue };
-        Get-Service -Name wsl* -ErrorAction SilentlyContinue;
         powershell.exe -Command { Get-Service -Name docker* -ErrorAction SilentlyContinue };
-        Get-Service -Name docker* -ErrorAction SilentlyContinue;
     );
     $servs_start | ForEach-Object {
         powershell.exe -Command \"& { Start-Service -Name `\"$($_)`\" -ErrorAction SilentlyContinue  -Verbose } \";
     };
     $procs_start | ForEach-Object { 
-        powershell.exe -Command { Start-Process -FilePath \"$($_.Path)\" -ArgumentList \"-ErrorAction SilentlyContinue -Verbose\" };
+        powershell.exe -Command { Start-Process -FilePath \"$($_.Path)\" -ArgumentList \"-ErrorAction SilentlyContinue -Verbose -Wait\" };
     };  
     powershell.exe -Command wsl.exe --exec echo \"docker and WSL were successfully restarted\"; 
-}"' -wait -ErrorAction SilentlyContinue 
+}"' -ErrorAction SilentlyContinue 
 
 
 wsl.exe --exec echo "waiting for docker and WSL to fully come back online ...";
-# powershell.exe -Command \"&{ Start-Sleep -Seconds 8 }\";
 powershell.exe -Command { Start-Sleep -Seconds 8 };
 wsl.exe --exec echo "attempting to restart processes ...";
 
 powershell.exe -Command {
     $procs_start | ForEach-Object { 
-        Start-Process -FilePath "$($_.Path)" -ArgumentList "-Verbose" ;
+        Start-Process -FilePath "$($_.Path)" -ArgumentList "-Verbose -Wait" ;
     };
 };
 # powershell.exe -Command {

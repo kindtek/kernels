@@ -122,7 +122,6 @@ config_alias=.config_${kernel_alias}
 config_alias_no_timestamp=.config_${kernel_alias_no_timestamp}
 git_save_path=$cpu_arch/$cpu_vendor/$linux_kernel_version_mask
 nix_k_cache=$HOME/kache
-set -x
 
 # check that the user supplied source exists if not try to pick the best .config file available
 # user choice is best if it exists
@@ -164,7 +163,6 @@ if [ "$config_source" != "" ] && [ -r "$config_source" ] && [ -s "$config_source
     # download reliable .config
 elif [ ! -r "$git_save_path/$config_alias_no_timestamp" ]; then
         generic_config_source=https://raw.githubusercontent.com/microsoft/WSL2-Linux-Kernel/linux-msft-wsl-5.15.y/Microsoft/config-wsl
-    set +x
     echo "
 
 No saved .config files match this kernel version $linux_kernel_version_tag and $cpu_arch/$cpu_vendor"
@@ -570,9 +568,6 @@ if [ -w "$win_k_cache" ]; then
         # cp -fv --backup=numbered "$tarball_filename" "$tarball_target_win.bak"
         cp -fv "kache/$tarball_filename" "$tarball_target_win"
     fi
-else
-    echo "
-unable to save kernel package to Windows home directory"
 fi
 win_user_home=/mnt/c/users/$win_user
 wsl_kernel=${win_user_home}/kache/${kernel_alias}

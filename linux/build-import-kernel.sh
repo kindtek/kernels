@@ -1,7 +1,4 @@
 #!/bin/bash
-
-set -x
-user_config_flag=False
 kernel_type=$1
 config_source=$2
 zfs=$3

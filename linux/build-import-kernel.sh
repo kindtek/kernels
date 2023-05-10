@@ -206,8 +206,8 @@ echo "
                 echo "yes"
                 echo "attempting to download $config_source ...
                 "
-                wget "$config_source"
-                config_source="$(pwd)/${config_source##*/}"
+                wget -O .config "$config_source" && \
+                config_source=".config"
             else 
                 echo "not a url"
             fi

@@ -57,40 +57,14 @@ else {
 "    
     }
     else {
-        write-host -n " from within unlabeled environment
+        write-host -n " from within a new environment
 "    
     }
 }
-
-$procs_kill = @(
-    powershell.exe -Command { Get-Process docker* -ErrorAction SilentlyContinue | sort-object path -unique | ForEach-Object { $($_) } | Where-Object { $_.Path -imatch '^C:\\.*\.exe$' } }
-    powershell.exe -Command { Get-Process wsl* -ErrorAction SilentlyContinue | sort-object path -unique | ForEach-Object { $($_) } | Where-Object { $_.Path -imatch '^C:\\.*\.exe$' } } 
-)
 $procs_start = @(
-    powershell.exe -Command { Get-Process wsl* -ErrorAction SilentlyContinue | sort-object path -unique | ForEach-Object { $($_) } | Where-Object { $_.Path -imatch '^C:\\.*\.exe$' } }
-    powershell.exe -Command { Get-Process docker* -ErrorAction SilentlyContinue | sort-object path -unique | ForEach-Object { $($_) } |  Where-Object { $_.Path -imatch '^C:\\.*\.exe$' } } 
-)
-
-
-# arrange services in proper startup/shutdown sequence
-# only add services that are running to kill queue
-$servs_kill = @(
-    # kill docker first
-    powershell.exe -Command { Get-Service -Name docker* -ErrorAction SilentlyContinue | Where-Object { $_.Status -ieq 'running' } }
-    # kill wsl second
-    powershell.exe -Command { Get-Service -Name wsl* -ErrorAction SilentlyContinue | Where-Object { $_.Status -ieq 'running' } }
-)
-
-# add all related services to start queue (reverse order)
-$servs_start = @(
-    # start wsl first
-    powershell.exe -Command { Get-Service -Name wsl* -ErrorAction SilentlyContinue }
-    powershell.exe -Command { Get-Service -Name docker* -ErrorAction SilentlyContinue }
-)
-
-Start-Process -FilePath powershell.exe -ArgumentList '-Command "write-host `"H3LL0 W0RLD my home directory is $HOME $USERPROFILE`";'
-
-
+    # powershell.exe -Command { Get-Process wsl* -ErrorAction SilentlyContinue | sort-object path -unique | ForEach-Object { $($_) } };
+    powershell.exe -Command { Get-Process docker* -ErrorAction SilentlyContinue | sort-object path -unique | ForEach-Object { $($_) } };
+);
 Start-Process -FilePath powershell.exe -ArgumentList '-Command "&{
     $procs_kill = @(
         powershell.exe -Command { Get-Process docker* -ErrorAction SilentlyContinue | sort-object path -unique | ForEach-Object { $($_) } };  
@@ -109,35 +83,68 @@ Start-Process -FilePath powershell.exe -ArgumentList '-Command "&{
         # kill wsl second
         powershell.exe -Command { Get-Service -Name wsl* -ErrorAction SilentlyContinue };
         # powershell.exe -Command \"& Get-Service -Name wsl* -ErrorAction SilentlyContinue | Where-Object { $_.Status -ieq `\`"running`\`" } \";
-    );    $servs_kill | ForEach-Object {
-        powershell.exe -Command `"& Set-Service -Name $($_) -Status Stopped -Force -ErrorAction SilentlyContinue `" | Out-Null;        powershell.exe -Command `"& Set-Service -Name $($_) -Status Stopped -ErrorAction SilentlyContinue `";        powershell.exe -Command `"& Set-Service -Name $($_) -StartupType Automatic -Force -ErrorAction SilentlyContinue `" | Out-Null;        powershell.exe -Command `"& Set-Service -Name $($_) -StartupType Automatic -ErrorAction SilentlyContinue `" ;powershell.exe -Command `"& Stop-Service -Name $($_) -Verbose `"; 
-
-    };     $procs_kill | ForEach-Object {
+    );
+    $servs_kill | ForEach-Object {
+        powershell.exe -Command `"& Set-Service -Name $($_) -Status Stopped -Force -ErrorAction SilentlyContinue `" | Out-Null;powershell.exe -Command `"& Set-Service -Name $($_) -Status Stopped -ErrorAction SilentlyContinue `";powershell.exe -Command `"& Set-Service -Name $($_) -StartupType Automatic -Force -ErrorAction SilentlyContinue `" | Out-Null;powershell.exe -Command `"& Set-Service -Name $($_) -StartupType Automatic -ErrorAction SilentlyContinue `" ;powershell.exe -Command `"& Stop-Service -Name $($_) -Verbose `"; 
+    };
+    # powershell.exe -Command \"& { Start-Sleep -Seconds 8 } \" ;
+    $procs_kill | ForEach-Object {
         powershell.exe -Command `"& Stop-Process -PassThru -Id $($_.Id) -ErrorAction SilentlyContinue  -Verbose `";
-    };    $servs_start = @(
+    };
+    powershell.exe -Command { Start-Sleep -Seconds 8 };
+    $servs_start = @(
         # queue wsl to start first
         powershell.exe -Command { Get-Service -Name wsl* -ErrorAction SilentlyContinue };
+        Get-Service -Name wsl* -ErrorAction SilentlyContinue;
         powershell.exe -Command { Get-Service -Name docker* -ErrorAction SilentlyContinue };
-    );    
+        Get-Service -Name docker* -ErrorAction SilentlyContinue;
+    );
     $servs_start | ForEach-Object {
-            powershell.exe -Command \"& { Start-Service -Name $($_) -ErrorAction SilentlyContinue  -Verbose } \" 
-    };    
-    powershell.exe -Command wsl.exe --exec echo \"docker and wsl were successfully restarted\" ;  
-    powershell.exe -Command \"& { Start-Sleep -Seconds 8 } \" ;
-    $procs_start | ForEach-Object { 
-        powershell.exe -Command `"& Start-Process -FilePath \`\"$($_.Path)\`\" -Wait -ErrorAction SilentlyContinue -Verbose `" 
+        powershell.exe -Command \"& { Start-Service -Name `\"$($_)`\" -ErrorAction SilentlyContinue  -Verbose } \";
     };
-    Read-Host 
-}"' -ErrorAction SilentlyContinue 
+    $procs_start | ForEach-Object { 
+        powershell.exe -Command { Start-Process -FilePath \"$($_.Path)\" -ArgumentList \"-ErrorAction SilentlyContinue -Verbose\" };
+    };  
+    powershell.exe -Command wsl.exe --exec echo \"docker and WSL were successfully restarted\"; 
+}"' -wait -ErrorAction SilentlyContinue 
 
 
+wsl.exe --exec echo "waiting for docker and WSL to fully come back online ...";
+# powershell.exe -Command \"&{ Start-Sleep -Seconds 8 }\";
+powershell.exe -Command { Start-Sleep -Seconds 8 };
+wsl.exe --exec echo "attempting to restart processes ...";
 
-
-
+powershell.exe -Command {
+    $procs_start | ForEach-Object { 
+        Start-Process -FilePath "$($_.Path)" -ArgumentList "-Verbose" ;
+    };
+};
+# powershell.exe -Command {
+#     $procs_start | ForEach-Object { 
+#         powershell.exe -Command "& { 
+#             Start-Process -FilePath `"$($_.Path)`" -ArgumentList `"-ErrorAction SilentlyContinue -Verbose`"
+#         }";
+#     };
+# };
+# powershell.exe -Command '{
+#     $procs_start | ForEach-Object { 
+#         powershell.exe -Command \"& { 
+#             Start-Process -FilePath `\"$($_.Path)`\" -ArgumentList `\"-ErrorAction SilentlyContinue -Verbose`\"
+#         }\"
+#     };
+# }';
+# powershell.exe -Command {
+# $procs_start | ForEach-Object { 
+#     powershell.exe -Command \"& { 
+#         Start-Process -FilePath `\"$($_.Path)`\" -ArgumentList `\"-ErrorAction SilentlyContinue -Verbose`\"
+#     }\"
+# };
+# };
 # $servs_start | ForEach-Object {  powershell.exe -Command "& {Start-Service -Name "$($_)" -verbose}" }; `
 
 # $servs_kill | ForEach-Object { [void]( (write-host "killing service: $($_.Name)") -or (powershell.exe -Command { "& {Stop-Service -Name $_ -verbose}" } ) ) };
-# $procs_kill |  ForEach-Object { [void]( (write-host "killing process: $($_.Name)") -or (powershell.exe -Command { "& {Stop-Process -Force -PassThru -Id $_.Id -Verbose}" } ) ) }; 
+# $procs_kill |  F
+# forEach-Object { [void]( (write-host "killing process: $($_.Name)") -or (powershell.exe -Command { "& {Stop-Process -Force -PassThru -Id $_.Id -Verbose}" } ) ) }; 
 # $servs_start | ForEach-Object { [void]( (write-host "starting service: $($_.Name)") -or (powershell.exe -Command { "& {Start-Service -Name $_ -verbose}" } ) ) };
 # $procs_start |  ForEach-Object { [void]( (write-host "starting process: $($_.Name)") -or (powershell.exe -Command { "& {Start-Process -FilePath $_.Path -ArgumentList '-verbose -verb RunAsUser -NoNewWindow -PassThru'}" } )) }; 
 
@@ -157,6 +164,8 @@ Write-Host "
 
 
 "
-Write-Host "(done)
+if ($IsLinux) {
+    Write-Host "(done)
 " -NoNewline
-Read-Host
+    Read-Host
+}

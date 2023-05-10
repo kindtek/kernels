@@ -8,9 +8,12 @@ $argArray = $argString.Split(" ")
 $win_user = ""
 if (!$IsLinux) {
     # get the user home dir info
+    write-host "win user is $win_user"
     $win_user = ( get-item . ).parent
-
-} 
+}
+else {
+    write-host "could not find windows user"
+}
 # if it exists, prepend win_user info to front of array
 $argsArray = @( $win_user ) + $argsArray
 

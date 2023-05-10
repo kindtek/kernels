@@ -295,7 +295,9 @@ orig_win_user=$win_user
 
 
 save kernel build to which Windows home directory?"
-[ ! -d "/mnt/c/users" ] || while [ ! -d "/mnt/c/users/$win_user" ]; do
+orig_pwd=$(pwd)
+[ ! -d "/mnt/c/users" ] || cd "/mnt/c/users" || exit
+[ ! -d "/mnt/c/users" ] || while [ ! -d "$win_user" ]; do
     echo "
 
     choose from:
@@ -325,6 +327,7 @@ save kernel build to which Windows home directory?"
 C:\\users\\$win_user is not a home directory"
     fi
 done
+cd "$orig_pwd" || exit
 
 win_k_cache=/mnt/c/users/$win_user/kache
 kernel_source=arch/$cpu_arch/boot/bzImage

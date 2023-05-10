@@ -1,5 +1,6 @@
 #!/bin/bash
 win_user=${1}
+echo "win_user is: $1"
 kernel_code=${2}
 timestamp_id=${3}
 orig_pwd=$(pwd)
@@ -18,6 +19,9 @@ while [ "$win_user" = "" ]; do
 install to which Windows home directory?"
     cd /mnt/c/users || exit
     while [ ! -d "$win_user" ]; do
+        if [ "$win_user" != "" ]; then
+            echo "could not find C:\\users\\$win_user"
+        fi
 echo "
 
     choose from:
@@ -26,8 +30,8 @@ echo "
 
         read -r -p "
     C:\\users\\" win_user
-    if [ ! -d "$win_user" ]; then
-        echo "
+        if [ ! -d "$win_user" ]; then
+            echo "
 
         
         
@@ -43,7 +47,7 @@ echo "
 
 
 C:\\users\\$win_user is not a home directory"
-    fi
+        fi
     done
     cd "$orig_pwd" || exit
 done

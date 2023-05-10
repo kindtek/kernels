@@ -6,23 +6,16 @@
 $argString = $args -join " "
 $argArray = $argString.Split(" ")
 $win_user = ""
-if (!$IsLinux) {
+if (!$IsLinux ) {
     # get the user home dir info
-    write-host "win user is $win_user"
-    $win_user = ( get-item . ).parent
+    $win_user = $Env:USERNAME
+    write-host "win user is: `"$win_user`""
 }
 else {
     write-host "could not find windows user"
 }
 # if it exists, prepend win_user info to front of array
-$argsArray = @( $win_user ) + $argsArray
-
-for ($i = 0; $i -lt $argArray.Length; $i += 1) {
-    $paramValue = $argArray[$i]
-    if ( "$paramValue" -eq "" ) {
-        $argArray[$i] = "`"`""
-    }
-}
+$args = @( "$win_user" ) + $args
 
 $args -split ' ' | ForEach-Object {
     if ([string]::IsNullOrEmpty($_)) {

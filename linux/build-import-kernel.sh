@@ -223,24 +223,41 @@ choosing an alternative ..."
         echo "picked $config_source"
     fi
 
-text="Linux Kernel Info"
-padding=60
-printf "\n%*s\n" $(((${#text}+padding)/2)) "$text"
+padding="----------"
+printf "
 
-printf "==================================================================\n"
-printf "========================   Linux Kernel   ========================\n"
-printf "======------------------%s%s------------------======\n" "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}"
 
-printf "------------------------------------------------------------------\n"
-printf "====-------------------     Source Info    -------------------====\n"
-printf "------------------------------------------------------------------\n\n"
 
-printf "  %-*s: %s\n" 20 "CPU Architecture" "$cpu_arch"
-printf "  %-*s: %s\n" 20 "CPU Vendor" "$cpu_vendor"
-printf "  %-*s: %s\n" 20 "Configuration File" "$config_source"
 
-printf "\n==================================================================\n"
 
+
+
+
+
+
+
+
+
+==================================================================
+========================   Linux Kernel   ========================
+======------------------%s%s------------------======
+------------------------------------------------------------------
+====-------------------     Source Info    -------------------====
+------------------------------------------------------------------
+
+  CPU Architecture: 
+    $cpu_arch
+
+  CPU Vendor:  
+    $cpu_vendor
+
+  Configuration File:
+    $config_source
+
+
+==================================================================
+
+" "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}"
 orig_win_user=$win_user
 orig_pwd=$(pwd)
 [ ! -d "/mnt/c/users" ] || cd "/mnt/c/users" || exit
@@ -307,26 +324,35 @@ echo "
     "
 fi
 
-printf "\n\n\n\n"
-printf "%*s\n" $(((${#title}+80)/2)) "$title"
-printf "%*s\n" $(((${#subtitle}+80)/2)) "$subtitle"
-printf "=%.0s" {1..80}
-printf "\n\n"
 
-printf "%-40s %-40s\n" \
-  $(printf "Kernel: %s" "$kernel_target_git") \
-  $(printf "Config: %s" "$config_target_git")
+printf "
 
-printf "%-40s %-40s\n" \
-  $(printf "Kernel/Config/Installation/.tar.gz files:") \
-  ""
 
-printf "%-40s %-40s\n" \
-  "$nix_k_cache" \
-  ""
 
-printf "=%.0s" {1..80}
-printf "\n\n\n\n"
+==================================================================
+========================   Linux Kernel   ========================
+======------------------%s%s------------------======
+------------------------------------------------------------------
+====-------------------     Output Info    -------------------====
+------------------------------------------------------------------
+
+  Kernel:
+    $kernel_target_git
+
+  Config:
+    $config_target_git
+    
+  Kernel/Config/Installation/.tar.gz files:
+    $nix_k_cache
+    %s     
+
+==================================================================
+==================================================================
+==================================================================
+
+" "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}" "${win_k_cache:-\"
+\"}"
+
 [ "$win_user" != "" ] || echo "
 build kernel or exit?
 " && \

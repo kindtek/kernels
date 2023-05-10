@@ -1,4 +1,6 @@
 #!/bin/bash
+
+set -x
 user_config_flag=False
 kernel_type=$1
 config_source=$2
@@ -102,12 +104,7 @@ if [ "$2" = "get-package" ]; then
     echo -n "$package_full_name_id"
     exit
 fi
-    echo "home: $HOME"
-    echo "zfs version tag:$zfs_version_tag"
-    echo "zfs version:$zfs_version"
-    echo "linux version tag:$linux_kernel_version_tag"
-    echo "linux version:$linux_kernel_version"
-    echo "linux version type:$linux_kernel_type_tag"
+
 
 # deduce architecture of this machine
 cpu_vendor=$(grep -Pom 1 '^vendor_id\s*:\s*\K.*' /proc/cpuinfo)
@@ -125,6 +122,7 @@ config_alias=.config_${kernel_alias}
 config_alias_no_timestamp=.config_${kernel_alias_no_timestamp}
 git_save_path=$cpu_arch/$cpu_vendor/$linux_kernel_version_mask
 nix_k_cache=$HOME/kache
+set -x
 
 # check that the user supplied source exists if not try to pick the best .config file available
 # user choice is best if it exists
@@ -162,27 +160,25 @@ if [ "$config_source" != "" ] && [ -r "$config_source" ] && [ -s "$config_source
     
     
     "
-    user_config_flag=True
-else
 # try alternates if user config doesn't work 
     # download reliable .config
-
-if [ ! -r "$git_save_path/$config_alias_no_timestamp" ]; then
+elif [ ! -r "$git_save_path/$config_alias_no_timestamp" ]; then
         generic_config_source=https://raw.githubusercontent.com/microsoft/WSL2-Linux-Kernel/linux-msft-wsl-5.15.y/Microsoft/config-wsl
-echo "
+    set +x
+    echo "
 
 No saved .config files match this kernel version $linux_kernel_version_tag and $cpu_arch/$cpu_vendor"
-        if [ ! -r "config-wsl" ]; then
-            wget $generic_config_source
-        fi
-        if [ ! -r "config-wsl" ]; then
-            echo "Oooops. Failed to download generic .config file.
+    if [ ! -r "config-wsl" ]; then
+        wget $generic_config_source
+    fi
+    if [ ! -r "config-wsl" ]; then
+        echo "Oooops. Failed to download generic .config file.
 
 Exiting ...
 
 "
-            exit
-        fi
+        exit
+    fi
 echo "
 
 Press ENTER to continue and use the generic Microsoft .config downloaded from:
@@ -192,7 +188,7 @@ Press ENTER to continue and use the generic Microsoft .config downloaded from:
 
 Enter the url of a config file to use
 
-    Hint: to use a file on Github make sure to use a raw file url starting with https://raw.githubusercontent.com
+    pro tip: to use a file on Github make sure to use a raw file url starting with https://raw.githubusercontent.com
 "
 [ "$win_user" != "" ] || read -r -p "($generic_config_source)
 " config_source
@@ -208,8 +204,6 @@ echo "
             else 
                 echo "not a url"
             fi
-        else
-            echo "not a url"
         fi
     fi
     if [ -r "$config_source" ]; then 
@@ -233,7 +227,6 @@ choosing an alternative ..."
 
         echo "picked $config_source"
     fi
-fi
 
 padding="----------"
 printf "
@@ -361,8 +354,8 @@ printf "
 ==================================================================
 ==================================================================
 
-" "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}" "${win_k_cache:-\"
-\"}"
+" "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}" "${win_k_cache:-'
+'}"
 
 [ "$win_user" != "" ] || echo "
 build kernel or exit?

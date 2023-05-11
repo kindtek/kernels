@@ -465,8 +465,8 @@ cp -fv --backup=numbered  "$linux_build_dir/$kernel_source" "kache/$kernel_alias
 mkdir -p "$win_k_cache" 2>/dev/null
 # rm -fv "$win_k_cache/wsl-kernel-install.ps1"
 # rm -rfv "$win_k_cache/wsl-kernel-install_${kernel_alias_no_timestamp}*"
-sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\kache\\\\\\\\${kernel_alias}/g" ../../../dvlp/mnt/HOME%/head.wslconfig
-cp -fv --backup=numbered ../../../dvlp/mnt/HOME%/head.wslconfig kache/.wslconfig
+sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\kache\\\\\\\\${kernel_alias}/g" ../../../dvlp/mnt/HOME_WIN/head.wslconfig
+cp -fv --backup=numbered ../../../dvlp/mnt/HOME_WIN/head.wslconfig kache/.wslconfig
 
 
 tee "kache/$ps_wsl_install_kernel_id" >/dev/null <<EOF

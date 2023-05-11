@@ -5,7 +5,6 @@ zfs=$3
 win_user=${4}
 quick_wsl_install=${4:+1}
 timestamp_id=${5:-${DOCKER_BUILD_TIMESTAMP:-$(date -d "today" +"%Y%m%d%H%M%S")}}
-export HOME=/r00t
 kernel_file_suffix="W"
 linux_build_dir=linux-build
 

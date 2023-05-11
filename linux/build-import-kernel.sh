@@ -188,39 +188,39 @@ Enter the url of a config file to use
 " config_source
 echo "
 # checking if input is a url ..."
-        if [ "$config_source" != "" ]; then
-            if [[ "$config_source" =~ https?://.* ]]; then 
-                echo "yes"
-                echo "attempting to download $config_source ...
-                "
-                wget -O .config "$config_source" && \
-                config_source=".config"
-            else 
-                echo "not a url"
-            fi
+    if [ "$config_source" != "" ]; then
+        if [[ "$config_source" =~ https?://.* ]]; then 
+            echo "yes"
+            echo "attempting to download $config_source ...
+            "
+            wget -O .config "$config_source" && \
+            config_source=".config"
+        else 
+            echo "not a url"
         fi
     fi
-    if [ -r "$config_source" ]; then 
-        # config_source=$generic_config_source
-        echo "config $config_source appears to be valid"
-    else    
-        echo "config source is invalid (${config_source:-blank})
+fi
+if [ -r "$config_source" ]; then 
+    # config_source=$generic_config_source
+    echo "config $config_source appears to be valid"
+else    
+    echo "config source is invalid (${config_source:-blank})
 choosing an alternative ..."
-        # reliable but the least desirable .. keep looking
-        if [ -r "config-wsl" ]; then 
-            config_source=config-wsl
-        fi
-        # generic - slightly better
-        if [ -r "$cpu_arch/generic/$linux_kernel_version_mask/$config_alias" ]; then 
-            config_source=$cpu_arch/generic/$linux_kernel_version_mask/$config_alias
-        fi
-        # specific arch - best alternate 
-        if [ -r "$git_save_path/$config_alias_no_timestamp" ]; then
-            config_source=$git_save_path/$config_alias_no_timestamp
-        fi
-
-        echo "picked $config_source"
+    # reliable but the least desirable .. keep looking
+    if [ -r "config-wsl" ]; then 
+        config_source=config-wsl
     fi
+    # generic - slightly better
+    if [ -r "$cpu_arch/generic/$linux_kernel_version_mask/$config_alias" ]; then 
+        config_source=$cpu_arch/generic/$linux_kernel_version_mask/$config_alias
+    fi
+    # specific arch - best alternate 
+    if [ -r "$git_save_path/$config_alias_no_timestamp" ]; then
+        config_source=$git_save_path/$config_alias_no_timestamp
+    fi
+
+    echo "picked $config_source"
+fi
 
 padding="----------"
 printf "

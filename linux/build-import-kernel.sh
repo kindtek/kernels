@@ -445,7 +445,7 @@ mkdir -pv "$git_save_path" 2>/dev/null
 # fi
 cp -fv --backup=numbered $linux_build_dir/"$kernel_source" "$kernel_target_git"
 
-# clear kache
+# reset kache
 mkdir -pv kache 2>/dev/null
 # remove config
 rm -rfv kache/.config_*

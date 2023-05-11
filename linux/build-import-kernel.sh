@@ -350,8 +350,8 @@ printf "
 ==================================================================
 ==================================================================
 
-" "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}" "${win_k_cache:-\"
-\"}"
+" "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}" "${win_k_cache:-\\"
+\\"}"
 
 [ "$win_user" != "" ] || echo "
 build kernel or exit?

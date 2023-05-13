@@ -511,7 +511,7 @@ Write-Host "path: \$pwd"
 #####                                                                   #####
 #####   copy without '#>>' to replace (delete/move) .wslconfig          #####
 
-\$kernel_name=\""$kernel_alias"\"
+\$kernel_name="$kernel_alias"
 
 if (\$IsLinux -eq \$false) {
 

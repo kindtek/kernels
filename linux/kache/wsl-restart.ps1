@@ -104,7 +104,7 @@ Start-Process -FilePath powershell.exe -ArgumentList '-Command "&{
         powershell.exe -Command { Start-Process -FilePath \"$($_.Path)\" -ArgumentList \"-ErrorAction SilentlyContinue -Verbose -Wait\" };
     };  
     powershell.exe -Command wsl.exe --exec echo \"docker and WSL were successfully restarted\"; 
-}"' -ErrorAction SilentlyContinue 
+}"' -Wait -ErrorAction SilentlyContinue 
 
 
 wsl.exe --exec echo "waiting for docker and WSL to fully come back online ...";

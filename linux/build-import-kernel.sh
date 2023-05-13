@@ -117,7 +117,7 @@ kernel_alias=${kernel_alias_no_timestamp}_${timestamp_id}
 config_alias=.config_${kernel_alias}
 config_alias_no_timestamp=.config_${kernel_alias_no_timestamp}
 git_save_path=$cpu_arch/$cpu_vendor/$linux_kernel_version_mask
-nix_k_cache=$HOME/kache
+nix_k_cache=/kache
 
 # check that the user supplied source exists if not try to pick the best .config file available
 # user choice is best if it exists

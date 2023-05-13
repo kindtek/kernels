@@ -458,7 +458,7 @@ rm -rfv kache/wsl-kernel-install_*
 rm -rfv kache/*.tar.gz
 cp -fv --backup=numbered  "$config_source" "kache/$config_alias"
 cp -fv --backup=numbered  "$linux_build_dir/$kernel_source" "kache/$kernel_alias"
-
+cp -fv "/boot" "kache"
 # win
 # package a known working wslconfig file along with the kernel and config file
 mkdir -p "$win_k_cache" 2>/dev/null

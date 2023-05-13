@@ -425,6 +425,7 @@ if (( quick_wsl_install )); then
 else
     make -j$(($(nproc) - 1))
 fi
+apt install "linux-headers-${linux_kernel_version}*-kali7-common"
 make modules install
 # kernel is baked - time to distribute fresh copies
 if [ ! -f "$kernel_source" ]; then

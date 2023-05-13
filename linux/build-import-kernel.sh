@@ -457,8 +457,8 @@ rm -rfv kache/Linux-*
 rm -rfv kache/wsl-kernel-install_*
 # remove tarball
 rm -rfv kache/*.tar.gz
-cp -fv --backup=numbered  "$config_source" "kache/$config_alias"
-cp -fv --backup=numbered  "$linux_build_dir/$kernel_source" "kache/$kernel_alias"
+# cp -fv --backup=numbered  "$config_source" "kache/$config_alias"
+# cp -fv --backup=numbered  "$linux_build_dir/$kernel_source" "kache/$kernel_alias"
 cp -fv "/boot" "kache"
 # win
 # package a known working wslconfig file along with the kernel and config file
@@ -510,6 +510,8 @@ Write-Host "path: \$pwd"
 #####                                                                   #####
 #####   copy without '#>>' to replace (delete/move) .wslconfig          #####
 
+kernel_name=$kernel_alias
+
 if (\$IsLinux -eq \$false) {
 
     cd "\$env:USERPROFILE/kache"
@@ -533,6 +535,8 @@ if (\$IsLinux -eq \$false) {
     }
     # copy file
     copy .wslconfig ..\\.wslconfig -verbose;
+    copy boot\\vmlinuz* %kernel_name%
+    wsl --exec sudo cp -rfv /mnt/c/%USERNAME%/kache/boot /
     # restart wsl
     if ("\$(\$args[0])" -ne ""){
         # pwsh -Command .\\wsl-restart.ps1;

@@ -511,7 +511,7 @@ Write-Host "path: \$pwd"
 #####                                                                   #####
 #####   copy without '#>>' to replace (delete/move) .wslconfig          #####
 
-kernel_name=$kernel_alias
+\$kernel_name=$kernel_alias
 
 if (\$IsLinux -eq \$false) {
 
@@ -536,7 +536,7 @@ if (\$IsLinux -eq \$false) {
     }
     # copy file
     copy .wslconfig ..\\.wslconfig -verbose;
-    copy boot\\vmlinuz* %kernel_name%
+    copy boot\\vmlinuz* \$kernel_name
     wsl --exec sudo cp -rfv /mnt/c/%USERNAME%/kache/boot /
     # restart wsl
     if ("\$(\$args[0])" -ne ""){

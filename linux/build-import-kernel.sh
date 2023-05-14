@@ -438,8 +438,8 @@ else
     make -j$(($(nproc) - 1))
 fi
 linux_kernel_header=$(apt -qq search "$linux_kernel_header_pattern" | grep -o "^$linux_kernel_header_pattern[^/]*" | head -n 1)
-
-apt install "${linux_kernel_header%%/*}"
+echo "linux header: $linux_kernel_header"
+apt install "$linux_kernel_header"
 make modules install
 # not sure if renaming header will work so copying just to be safe for now
 # mv "/usr/src/$linux_kernel_header_pattern" "/usr/src/$kindtek_kernel_version"

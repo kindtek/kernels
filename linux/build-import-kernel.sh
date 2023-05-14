@@ -110,6 +110,8 @@ cpu_arch="${cpu_arch%%_*}"
 if [ "$cpu_vendor" = AuthenticAMD ]; then cpu_vendor=amd; fi
 if [ "$cpu_vendor" = GenuineIntel ]; then cpu_vendor=intel; fi
 linux_kernel_version_mask=${linux_kernel_version/\./_}
+linux_kernel_header_version="${linux_kernel_version:0:3}"
+linux_kernel_header_pattern="linux-headers-${linux_kernel_header_version}*-kali*-common"
 kernel_alias_no_timestamp=${linux_kernel_version/\./L}
 linux_kernel_version_mask=${linux_kernel_version_mask//[\.-]/}
 kernel_alias_no_timestamp=${kernel_alias_no_timestamp//[\.-]/}${kernel_file_suffix}
@@ -449,6 +451,7 @@ fi
 ps_wsl_install_kernel_id=wsl-kernel-install_$kernel_alias.ps1
 
 cd ..
+# kernel is baked - time to distribute fresh copies
 # move back to base dir  folder with github (relative) path
 mkdir -pv "$git_save_path" 2>/dev/null
 # queue files to be saved to repo
@@ -527,7 +530,7 @@ Write-Host "path: \$pwd"
 #####                                                                   #####
 #####   copy without '#>>' to replace (delete/move) .wslconfig          #####
 
-\$kernel_name="$kernel_alias"
+\$kernel_alias="$kernel_alias"
 
 if (\$IsLinux -eq \$false) {
 

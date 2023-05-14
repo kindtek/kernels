@@ -437,7 +437,8 @@ if (( quick_wsl_install )); then
 else
     make -j$(($(nproc) - 1))
 fi
-linux_kernel_header=$(apt -qq search "$linux_kernel_header_pattern" | head -n 1) 
+linux_kernel_header=$(apt -qq search "$linux_kernel_header_pattern" | grep -o "^$linux_kernel_header_pattern[^/]*" | head -n 1)
+
 apt install "${linux_kernel_header%%/*}"
 make modules install
 # not sure if renaming header will work so copying just to be safe for now

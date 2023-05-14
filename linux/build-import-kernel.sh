@@ -313,7 +313,7 @@ win_user_home=/mnt/c/users/$win_user
 win_k_cache=$win_user_home/kache
 wsl_kernel=$win_k_cache/$kernel_alias
 wsl_config=$win_user_home/.wslconfig
-kindtek_kernel_version="kindtek-kernel-$kernel_alias_no_timestamp-"
+kindtek_kernel_version="kindtek-kernel-$kernel_alias_no_timestamp"
 sed -i "s/[# ]*CONFIG_LOCALVERSION[ =].*/CONFIG_LOCALVERSION=\"\-${kindtek_kernel_version}\"/g" "$config_source"
 if [ "$win_user" = "" ]; then
     win_k_cache=""

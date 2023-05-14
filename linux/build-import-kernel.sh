@@ -425,7 +425,7 @@ cd ../$linux_build_dir || exit
 if [ "$zfs" = "zfs" ];  then
 #     echo "zfs == True
 # LINENO: ${LINENO}"
-    # sed -i 's/\#?\s?CONFIG_ZFS[0-9a-zA-Z=]+.*/CONFIG_ZFS=y/g' .config
+    # sed -i 's/\#?\s?CONFIG_ZFS[ =].*/CONFIG_ZFS=y/g' .config
     sed -i 's/\# CONFIG_ZFS is not set/CONFIG_ZFS=y/g' .config
 fi
 if (( quick_wsl_install )); then

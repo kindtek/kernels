@@ -530,13 +530,19 @@ Write-Host "path: \$pwd"
 #####                                                                   #####
 #####   copy without '#>>' to replace (delete/move) .wslconfig          #####
 
-\$kernel_alias="$kernel_alias"
+    \$kernel_alias="$kernel_alias"
 
-if (\$IsLinux -eq \$false) {
+    if (\$IsLinux -eq \$false) {
 
-    cd "\$env:USERPROFILE/kache"
+        cd "\$env:USERPROFILE/kache"
 
-}
+    }
+
+    \$win_user=\$env:USERNAME
+
+    if ("\$(\$args[0])" -ne ""){
+        \$win_user=\$args[0]
+    }
 
 #
 #   # delete
@@ -556,14 +562,27 @@ if (\$IsLinux -eq \$false) {
     # copy file
     copy .wslconfig ..\\.wslconfig -verbose;
     copy boot\\vmlinuz* \$kernel_alias
-    wsl.exe --exec sudo cp -rfv "/mnt/c/users/\$env:USERPROFILE/kache/boot" /
-    wsl.exe --exec sudo cp -rfv "/mnt/c/users/\$env:USERPROFILE/kache/src" /usr
     # restart wsl
-    if ("\$(\$args[0])" -ne ""){
-        # pwsh -Command .\\wsl-restart.ps1;
-        # Start-Process -FilePath powershell.exe -ArgumentList "-Command .\\wsl-restart.ps1"
-        .\\wsl-restart.ps1;
+    if ("\$(\$args[1])" -ne ""){
+        # restart wsl
+        if ("\$(\$args[1])" -eq "restart"){
+            # pwsh -Command .\\wsl-restart.ps1;
+            # Start-Process -FilePath powershell.exe -ArgumentList "-Command .\\wsl-restart.ps1"
+            .\\wsl-restart.ps1;
+        } else {
+            # install kernel to specific distro
+            wsl.exe -d "\$(\$args[1])" --exec sudo cp -rfv "/mnt/c/users/\$env:USERNAME/kache/boot" /
+            wsl.exe -d "\$(\$args[1])" --exec sudo cp -rfv "/mnt/c/users/\$env:USERNAME/kache/src" /usr
+        }
+        
+    } else {
+            # install kernel to default distro
+            wsl.exe --exec sudo cp -rfv "/mnt/c/users/\$env:USERNAME/kache/boot" /
+            wsl.exe --exec sudo cp -rfv "/mnt/c/users/\$env:USERNAME/kache/src" /usr
     }
+
+
+
 
 #############################################################################
 

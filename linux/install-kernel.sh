@@ -208,11 +208,11 @@ move .wslconfig .wslconfig.old
 move .wslconfig.new .wslconfig" 2>/dev/null | tee "wsl-kernel-rollback.ps1"
     fi
     if [ "$restart_wsl" = "" ]; then
-        echo "running:  $selected_kernel_install_file restart"
-        pwsh -file "$selected_kernel_install_file" restart
+        echo "running: $selected_kernel_install_file $win_user restart"
+        pwsh -file "$selected_kernel_install_file" "$win_user" restart
     else
-        echo "running:  $selected_kernel_install_file"
-        pwsh -file "$selected_kernel_install_file"
+        echo "running: $selected_kernel_install_file $win_user"
+        pwsh -file "$selected_kernel_install_file" "$win_user"
     fi
     # # installation happens here
     # cp -fv .wslconfig $wsl_config

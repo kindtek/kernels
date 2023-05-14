@@ -307,6 +307,10 @@ config_target_git=$git_save_path/$config_alias_no_timestamp
 tarball_target_nix=$nix_k_cache/$package_full_name_id.tar.gz
 tarball_target_win=$win_k_cache/$package_full_name_id.tar.gz
 tarball_filename=$package_full_name_id.tar.gz
+win_user_home=/mnt/c/users/$win_user
+win_k_cache=$win_user_home/kache
+wsl_kernel=$win_k_cache/$kernel_alias
+wsl_config=$win_user_home/.wslconfig
 if [ "$win_user" = "" ]; then
     win_k_cache=""
     tarball_target_win=""
@@ -572,9 +576,7 @@ if [ -w "$win_k_cache" ]; then
         cp -fv "kache/$tarball_filename" "$tarball_target_win"
     fi
 fi
-win_user_home=/mnt/c/users/$win_user
-wsl_kernel=${win_user_home}/kache/${kernel_alias}
-wsl_config=${win_user_home}/.wslconfig
+
 
 echo "
 

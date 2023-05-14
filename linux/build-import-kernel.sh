@@ -111,7 +111,7 @@ if [ "$cpu_vendor" = AuthenticAMD ]; then cpu_vendor=amd; fi
 if [ "$cpu_vendor" = GenuineIntel ]; then cpu_vendor=intel; fi
 linux_kernel_version_mask=${linux_kernel_version/\./_}
 linux_kernel_header_version="${linux_kernel_version:0:3}"
-linux_kernel_header_pattern="linux-headers-${linux_kernel_header_version}*-kali*-common"
+linux_kernel_header_pattern="linux-headers-${linux_kernel_header_version}*kali*common*"
 kernel_alias_no_timestamp=${linux_kernel_version/\./L}
 linux_kernel_version_mask=${linux_kernel_version_mask//[\.-]/}
 kernel_alias_no_timestamp=${kernel_alias_no_timestamp//[\.-]/}${kernel_file_suffix}
@@ -461,6 +461,8 @@ mkdir -pv "$git_save_path" 2>/dev/null
 cp -fv --backup=numbered $linux_build_dir/"$kernel_source" "$kernel_target_git"
 
 # reset kache
+rm -rfv kache/boot
+rm -rfv kache/src
 mkdir -pv kache/boot 2>/dev/null
 mkdir -pv kache/src 2>/dev/null
 
@@ -473,12 +475,11 @@ rm -rfv kache/Linux-*
 # remove more stuff
 rm -rfv kache/wsl-kernel-install_*
 rm -rfv kache/*.tar.gz
-rm -rfv kache/boot
-rm -rfv kache/src
+
 # copy relevant sources
 cp -r -fv "/boot/*$kindtek_kernel_version*" "kache"
 cp -r -fv "/usr/src/$linux_kernel_header_pattern" "kache/src"
-cp -r -fv "/usr/src/$kindtek_kernel_version" "kache/src"
+cp -r -fv "/usr/src/$kindtek_kernel_version*" "kache/src"
 
 # win
 # package a known working wslconfig file along with the kernel and config file

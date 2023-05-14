@@ -537,7 +537,7 @@ if (\$IsLinux -eq \$false) {
     # copy file
     copy .wslconfig ..\\.wslconfig -verbose;
     copy boot\\vmlinuz* \$kernel_name
-    wsl.exe --exec sudo cp -rfv /mnt/c/\$env:USERNAME/kache/boot /
+    wsl.exe --exec sudo cp -rfv "/mnt/c/$(\$env:USERNAME)/kache/boot" /
     # restart wsl
     if ("\$(\$args[0])" -ne ""){
         # pwsh -Command .\\wsl-restart.ps1;

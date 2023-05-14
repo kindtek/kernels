@@ -314,8 +314,7 @@ win_k_cache=$win_user_home/kache
 wsl_kernel=$win_k_cache/$kernel_alias
 wsl_config=$win_user_home/.wslconfig
 kindtek_kernel_version="kindtek-kernel-$kernel_alias_no_timestamp-"
-sed -i "s/#?\s?CONFIG_LOCALVERSION[ =].*/CONFIG_LOCALVERSION=${kindtek_kernel_version}/g" "$config_source"
-
+sed -i "s/[# ]*CONFIG_LOCALVERSION[ =].*/CONFIG_LOCALVERSION=\"\-${kindtek_kernel_version}\"/g" "$config_source"
 if [ "$win_user" = "" ]; then
     win_k_cache=""
     tarball_target_win=""
@@ -425,10 +424,13 @@ fi
 
 cd ../$linux_build_dir || exit
 if [ "$zfs" = "zfs" ];  then
+    # create config variable if it does not exist
+    if [ "$(grep '[# ]*CONFIG_ZFS[ =].*' .config)" = "" ]; then
+        echo "CONFIG_ZFS=y" | tee --append  .config >/dev/null
+    fi
 #     echo "zfs == True
 # LINENO: ${LINENO}"
-    # sed -i 's/\#?\s?CONFIG_ZFS[ =].*/CONFIG_ZFS=y/g' .config
-    sed -i 's/\# CONFIG_ZFS is not set/CONFIG_ZFS=y/g' .config
+    sed -i 's/\[# ]*CONFIG_ZFS[ =].*/CONFIG_ZFS=y/g' .config
 fi
 if (( quick_wsl_install )); then
     yes "" | make -j$(($(nproc) - 1))
@@ -479,7 +481,7 @@ rm -rfv kache/*.tar.gz
 # copy relevant sources
 cp -r -fv "/boot" "kache"
 # cp -r -fv "/boot/*$kindtek_kernel_version*" "kache"
-cp -r -fv "/usr/src" "kache/src"
+cp -r -fv "/usr/src" "kache"
 # cp -r -fv "/usr/src/$linux_kernel_header_pattern" "kache/src"
 # cp -r -fv "/usr/src/$kindtek_kernel_version*" "kache/src"
 

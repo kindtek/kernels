@@ -433,9 +433,13 @@ if (( quick_wsl_install )); then
 else
     make -j$(($(nproc) - 1))
 fi
-apt install "linux-headers-${linux_kernel_version}*-kali7-common"
+
+apt install "$linux_kernel_header_pattern"
 make modules install
-# kernel is baked - time to distribute fresh copies
+# not sure if renaming header will work so copying just to be safe for now
+# mv "/usr/src/$linux_kernel_header_pattern" "/usr/src/$kindtek_kernel_version"
+cp "/usr/src/$linux_kernel_header_pattern" "/usr/src/$kindtek_kernel_version"
+
 if [ ! -f "$kernel_source" ]; then
     echo "
     
@@ -454,20 +458,25 @@ mkdir -pv "$git_save_path" 2>/dev/null
 cp -fv --backup=numbered $linux_build_dir/"$kernel_source" "$kernel_target_git"
 
 # reset kache
-mkdir -pv kache 2>/dev/null
+mkdir -pv kache/boot 2>/dev/null
+mkdir -pv kache/src 2>/dev/null
+
 # remove config
 rm -rfv kache/.config_*
 # remove kernel
 rm -rfv kache/*_*
 # remove empty file tag
 rm -rfv kache/Linux-*
-# remove wsl install ps file
+# remove more stuff
 rm -rfv kache/wsl-kernel-install_*
-# remove tarball
 rm -rfv kache/*.tar.gz
-# cp -fv --backup=numbered  "$config_source" "kache/$config_alias"
-# cp -fv --backup=numbered  "$linux_build_dir/$kernel_source" "kache/$kernel_alias"
-cp -r -fv "/boot" "kache"
+rm -rfv kache/boot
+rm -rfv kache/src
+# copy relevant sources
+cp -r -fv "/boot/*$kindtek_kernel_version*" "kache"
+cp -r -fv "/usr/src/$linux_kernel_header_pattern" "kache/src"
+cp -r -fv "/usr/src/$kindtek_kernel_version" "kache/src"
+
 # win
 # package a known working wslconfig file along with the kernel and config file
 mkdir -p "$win_k_cache" 2>/dev/null
@@ -543,8 +552,9 @@ if (\$IsLinux -eq \$false) {
     }
     # copy file
     copy .wslconfig ..\\.wslconfig -verbose;
-    copy boot\\vmlinuz* \$kernel_name
-    wsl.exe --exec sudo cp -rfv "/mnt/c/$(\$env:USERNAME)/kache/boot" /
+    copy boot\\vmlinuz* \$kernel_alias
+    wsl.exe --exec sudo cp -rfv "/mnt/c/users/\$env:USERPROFILE/kache/boot" /
+    wsl.exe --exec sudo cp -rfv "/mnt/c/users/\$env:USERPROFILE/kache/src" /usr
     # restart wsl
     if ("\$(\$args[0])" -ne ""){
         # pwsh -Command .\\wsl-restart.ps1;

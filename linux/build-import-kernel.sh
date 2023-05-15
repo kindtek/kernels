@@ -620,6 +620,8 @@ if [ -w "$win_k_cache" ]; then
     else 
         echo "win tarball empty: $tarball_target_win"
     fi
+else 
+    echo "not saving to windows home directory"
 fi
 
 

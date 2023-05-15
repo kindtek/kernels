@@ -498,16 +498,7 @@ cp -fv --backup=numbered ../../../dvlp/mnt/HOME_WIN/head.wslconfig kache/.wslcon
 
 
 tee "kache/$ps_wsl_install_kernel_id" >/dev/null <<EOF
-# if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]'Administrator')) {
-#     if ((Get-CimInstance -Class Win32_OperatingSystem | Select-Object -ExpandProperty BuildNumber) -ge 6000) {
-#         \$CommandLine = '-File "{0}" {1}' -f \$MyInvocation.MyCommand.Path, \$MyInvocation.UnboundArguments
-#         Start-Process -FilePath powershell.exe -Verb Runas -WindowStyle Maximized -ArgumentList \$CommandLine
-#         Exit
-#     }
-# }
 
-
-Write-Host "path: \$pwd"
 #############################################################################
 # ________________ WSL KERNEL INSTALLATION INSTRUCTIONS ____________________#
 # --------------------- FOR CURRENT WINDOWS ACCOUNT ------------------------#

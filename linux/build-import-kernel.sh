@@ -457,6 +457,7 @@ yes 'y' | apt -y install "$linux_kernel_generic_header" 2>/dev/null
 # the following requires linux headers to be installed first in the wsl install script
 linux_kernel_kali_header_suffix="$(ls -txr1 /usr/src/${linux_kernel_kali_header} | sed -r -e "s/^\/usr\/src\/$linux_kernel_kali_header(.*)$/\1/g"  | head -n 1)"
 echo "linux_kernel_kali_header_suffix: $linux_kernel_kali_header_suffix"
+echo \'"$(ls -txr1 /usr/src/${linux_kernel_kali_header} | sed -r -e "s/^\/usr\/src\/$linux_kernel_kali_header(.*)$/\1/g"  | head -n 1)"\'
 echo "linux_kernel_kali_header##\*-: ${linux_kernel_kali_header##*-}"
 linux_kernel_kali=$($linux_kernel_kali_header | sed 's/\(.*\)-[^-]*$/\1/')
 cp -rf "/usr/src/${linux_kernel_kali}-common*" "/usr/src/${kindtek_kernel_version}-${linux_kernel_kali_header_suffix}-common"

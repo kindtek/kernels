@@ -495,8 +495,8 @@ rm -rf kache/boot/*.old
 # cp -r -fv "/boot/*$kindtek_kernel_version*" "kache"
 # cp -r -f "/usr/src" "kache"
 cp -rf "/usr/src/$linux_kernel_kindtek_header_pattern" "kache"
-cp -rf "/usr/src/linux-headers-$kindtek_kernel_version*" "kache"
-cp -rf "/usr/src/linux-headers-generic" "kache"
+cp -rf "/usr/src/$linux_kernel_kindtek_header" "kache"
+cp -rf "/usr/src/$linux_kernel_generic_header" "kache"
 # win
 # package a known working wslconfig file along with the kernel and config file
 mkdir -p "$win_k_cache" 2>/dev/null

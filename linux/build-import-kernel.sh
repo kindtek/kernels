@@ -471,8 +471,8 @@ linux_kernel_kali=${linux_kernel_kali_header%%-$linux_kernel_kali_header_type}
 cp -rfv "/usr/src/${linux_kernel_kali}-common" "/usr/src/${kindtek_kernel_version}-${kindtek_kernel_suffix}-common" | grep '/$' | tail -n 5
 cp -rfv "/usr/src/${linux_kernel_kali}-${linux_kernel_kali_header_type}" "/usr/src/${kindtek_kernel_version}-${kindtek_kernel_suffix}-${linux_kernel_kali_header_type}" | grep '/$' | tail -n 5
 orig_working_dir="$(pwd)"
-rm source
-rm build
+rm "/usr/lib/modules/${kindtek_kernel_version}-${kindtek_kernel_suffix}-common/source"
+rm "/usr/lib/modules/${kindtek_kernel_version}-${kindtek_kernel_suffix}-${linux_kernel_kali_header_type}/build"
 ln -sv "/usr/lib/modules/${kindtek_kernel_version}-${kindtek_kernel_suffix}-common" source && \
 ln -sv "/usr/lib/modules/${kindtek_kernel_version}-${kindtek_kernel_suffix}-${linux_kernel_kali_header_type}" build && \
 cd "$orig_working_dir" || exit

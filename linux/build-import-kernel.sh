@@ -465,7 +465,7 @@ cd ..
 mkdir -pv "$git_save_path" 2>/dev/null
 # queue files to be saved to repo
 # if (( $user_config_flag )); then
-    cp -fv --backup=numbered $linux_build_dir/.config "$config_target_git"
+cp -fv --backup=numbered $linux_build_dir/.config "$config_target_git"
 # fi
 cp -fv --backup=numbered $linux_build_dir/"$kernel_source" "$kernel_target_git"
 

@@ -442,9 +442,11 @@ echo "apt -qq search \"$linux_kernel_header_pattern\" 2>/dev/null | grep -o \"^$
 linux_kernel_header=$(apt -qq search "$linux_kernel_header_pattern" 2>/dev/null | grep -o "^$linux_kernel_header_pattern[^/]*" | head -n 1)
 echo "linux header: $linux_kernel_header"
 yes 'y' | apt -y install "$linux_kernel_header" 2>/dev/null
+yes 'y' | apt -y install "linux-headers-generic" 2>/dev/null
 # not sure if renaming header will work so copying just to be safe for now
 # mv "/usr/src/$linux_kernel_header_pattern" "/usr/src/$kindtek_kernel_version"
-cp "/usr/src/$linux_kernel_header_pattern" "/usr/src/$kindtek_kernel_version"
+cp -rf "/usr/src/$linux_kernel_header_pattern" "/usr/src/$kindtek_kernel_version"
+cp -rf "/usr/src/linux-headers-generic" "/usr/src/linux-headers-generic"
 
 make modules install
 

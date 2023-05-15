@@ -452,6 +452,9 @@ echo "linux generic header: $linux_kernel_generic_header"
 yes 'y' | apt -y install "$linux_kernel_kali_header" 2>/dev/null
 yes 'y' | apt -y install "$linux_kernel_generic_header" 2>/dev/null
 
+# reset kache
+rm -rfv kache/boot
+rm -rfv kache/src
 mkdir -pv kache/boot 2>/dev/null
 mkdir -pv kache/usr/src 2>/dev/null
 mkdir -pv kache/usr/lib/modules 2>/dev/null
@@ -495,10 +498,6 @@ mkdir -pv "$git_save_path" 2>/dev/null
 cp -fv --backup=numbered $linux_build_dir/.config "$config_target_git"
 # fi
 cp -fv --backup=numbered $linux_build_dir/"$kernel_source" "$kernel_target_git"
-
-# reset kache
-rm -rfv kache/boot
-rm -rfv kache/src
 
 
 # remove config

@@ -111,7 +111,7 @@ if [ "$cpu_vendor" = AuthenticAMD ]; then cpu_vendor=amd; fi
 if [ "$cpu_vendor" = GenuineIntel ]; then cpu_vendor=intel; fi
 linux_kernel_version_mask=${linux_kernel_version/\./_}
 linux_kernel_header_version="${linux_kernel_version:0:3}"
-linux_kernel_kindtek_header_pattern="linux-headers-${linux_kernel_header_version}*"
+linux_kernel_kali_header_pattern="linux-headers-${linux_kernel_header_version}*"
 kernel_alias_no_timestamp=${linux_kernel_version/\./L}
 linux_kernel_version_mask=${linux_kernel_version_mask//[\.-]/}
 kernel_alias_no_timestamp=${kernel_alias_no_timestamp//[\.-]/}${kernel_file_suffix}
@@ -443,21 +443,21 @@ else
     make -j$(($(nproc) - 1))
 fi
 
-echo "searching for headers matching $linux_kernel_kindtek_header_pattern"
-echo "apt -qq search \"$linux_kernel_kindtek_header_pattern\" 2>/dev/null | grep -o \"^$linux_kernel_kindtek_header_pattern[^/]*\" | head -n 1"
-linux_kernel_kindtek_header=$(apt -qq search "$linux_kernel_kindtek_header_pattern" 2>/dev/null | grep -o "^$linux_kernel_kindtek_header_pattern[^/]*" | head -n 1)
+echo "searching for headers matching $linux_kernel_kali_header_pattern"
+echo "apt -qq search \"$linux_kernel_kali_header_pattern\" 2>/dev/null | grep -o \"^$linux_kernel_kali_header_pattern[^/]*\" | head -n 1"
+linux_kernel_kali_header=$(apt -qq search "$linux_kernel_kali_header_pattern" 2>/dev/null | grep -o "^$linux_kernel_kali_header_pattern[^/]*" | head -n 1)
 linux_kernel_generic_header=$(apt-cache search linux-headers-generic | grep -o "^linux-headers-[a-zA-Z0-9]*[^ -]*" | head -n 1 )
-echo "linux kindtek header: $linux_kernel_kindtek_header"
+echo "linux kindtek header: $linux_kernel_kali_header"
 echo "linux generic header: $linux_kernel_generic_header"
-yes 'y' | apt -y install "$linux_kernel_kindtek_header" 2>/dev/null
+yes 'y' | apt -y install "$linux_kernel_kali_header" 2>/dev/null
 yes 'y' | apt -y install "$linux_kernel_generic_header" 2>/dev/null
 
 # not sure if renaming header will work so copying just to be safe for now
-# mv "/usr/src/$linux_kernel_kindtek_header_pattern" "/usr/src/$kindtek_kernel_version"
-linux_kernel_kindtek_header_suffix="$(ls -txr1 /usr/src/$linux_kernel_kindtek_header | sed -r -e "s/^\/usr\/src\/$linux_kernel_kindtek_header(.*)$/\1/g"  | head -n 1)"
-linux_kernel_kindtek=$($linux_kernel_kindtek_header | sed 's/\(.*\)-[^-]*$/\1/')
-cp -rf "/usr/src/${linux_kernel_kindtek}-common*" "/usr/src/${kindtek_kernel_version}-${linux_kernel_kindtek_header_suffix}-common"
-cp -rf "/usr/src/${linux_kernel_kindtek}-${linux_kernel_kindtek_header##*-}*" "/usr/src/${kindtek_kernel_version}-${linux_kernel_kindtek_header_suffix}-${linux_kernel_kindtek_header##*-}"
+# mv "/usr/src/$linux_kernel_kali_header_pattern" "/usr/src/$kindtek_kernel_version"
+linux_kernel_kali_header_suffix="$(ls -txr1 /usr/src/$linux_kernel_kali_header | sed -r -e "s/^\/usr\/src\/$linux_kernel_kali_header(.*)$/\1/g"  | head -n 1)"
+linux_kernel_kali=$($linux_kernel_kali_header | sed 's/\(.*\)-[^-]*$/\1/')
+cp -rf "/usr/src/${linux_kernel_kali}-common*" "/usr/src/${kindtek_kernel_version}-${linux_kernel_kali_header_suffix}-common"
+cp -rf "/usr/src/${linux_kernel_kali}-${linux_kernel_kali_header##*-}*" "/usr/src/${kindtek_kernel_version}-${linux_kernel_kali_header_suffix}-${linux_kernel_kali_header##*-}"
 
 make modules install
 
@@ -502,7 +502,7 @@ cp -rf "/boot" "kache"
 rm -rf kache/boot/*.old
 # cp -r -fv "/boot/*$kindtek_kernel_version*" "kache"
 # cp -r -f "/usr/src" "kache"
-# cp -rf /usr/src/${linux_kernel_kindtek_header_pattern}* "kache/usr/src"
+# cp -rf /usr/src/${linux_kernel_kali_header_pattern}* "kache/usr/src"
 cp -rf /usr/src/${kindtek_kernel_version}* "kache/usr/src"
 # cp -rf /usr/lib/modules/${linux_kernel_header_version}* "kache/usr/lib/modules"
 # win
@@ -589,7 +589,7 @@ tee "kache/$ps_wsl_install_kernel_id" >/dev/null <<EOF
             # install kernel to specific distro
             wsl.exe -d "\$(\$args[1])" --exec sudo cp -rfv "/mnt/c/users/\$env:USERNAME/kache/boot" /
             wsl.exe --exec sudo cp -rfv "/mnt/c/users/\$env:USERNAME/kache/usr" /
-            wsl.exe -d "\$(\$args[1])" --exec sudo yes 'y' | apt -y install "$linux_kernel_kindtek_header" 2>/dev/null
+            wsl.exe -d "\$(\$args[1])" --exec sudo yes 'y' | apt -y install "$linux_kernel_kali_header" 2>/dev/null
             wsl.exe -d "\$(\$args[1])" --exec sudo yes 'y' | apt -y install "$linux_kernel_generic_header" 2>/dev/null
         }
         
@@ -597,7 +597,7 @@ tee "kache/$ps_wsl_install_kernel_id" >/dev/null <<EOF
             # install kernel to default distro
             wsl.exe --exec sudo cp -rfv "/mnt/c/users/\$env:USERNAME/kache/boot" /
             wsl.exe --exec sudo cp -rfv "/mnt/c/users/\$env:USERNAME/kache/usr" /
-            wsl.exe -d "\$(\$args[1])" --exec sudo yes 'y' | apt -y install "$linux_kernel_kindtek_header" 2>/dev/null
+            wsl.exe -d "\$(\$args[1])" --exec sudo yes 'y' | apt -y install "$linux_kernel_kali_header" 2>/dev/null
             wsl.exe -d "\$(\$args[1])" --exec sudo yes 'y' | apt -y install "$linux_kernel_generic_header" 2>/dev/null
 
     }

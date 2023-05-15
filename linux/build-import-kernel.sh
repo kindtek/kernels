@@ -509,8 +509,11 @@ cp -rf "/boot" "kache"
 rm -rf kache/boot/*.old
 # cp -r -fv "/boot/*$kindtek_kernel_version*" "kache"
 # cp -r -f "/usr/src" "kache"
-# cp -rf /usr/src/${linux_kernel_kali_header_pattern}* "kache/usr/src"
+cp -rf /usr/src/${kindtek_kernel_version}-${kindtek_kernel_suffix}-common* "kache/usr/src"
 cp -rf /usr/src/${kindtek_kernel_version}-${kindtek_kernel_suffix}-${linux_kernel_kali_header_type}* "kache/usr/src"
+cd kache/usr/src || exit
+ln -s ${kindtek_kernel_version}-${kindtek_kernel_suffix}-common source
+ln -s ${kindtek_kernel_version}-${kindtek_kernel_suffix}-${linux_kernel_kali_header_type} build
 # cp -rf /usr/lib/modules/${linux_kernel_header_version}* "kache/usr/lib/modules"
 # win
 # package a known working wslconfig file along with the kernel and config file

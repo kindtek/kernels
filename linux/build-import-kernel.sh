@@ -454,9 +454,10 @@ yes 'y' | apt -y install "$linux_kernel_generic_header" 2>/dev/null
 
 # reset kache
 rm -rfv kache/boot
-rm -rfv kache/src
+rm -rfv kache/usr
 mkdir -pv kache/boot 2>/dev/null
 mkdir -pv kache/usr/src 2>/dev/null
+mkdir -pv kache/usr/include 2>/dev/null
 mkdir -pv kache/usr/lib/modules 2>/dev/null
 # not sure if renaming header will work so copying just to be safe for now
 # mv "/usr/src/$linux_kernel_kali_header_pattern" "/usr/src/$kindtek_kernel_version"

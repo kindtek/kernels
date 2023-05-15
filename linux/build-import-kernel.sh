@@ -460,7 +460,7 @@ linux_kernel_kali_header_type=${linux_kernel_kali_header##*-}
 echo "linux_kernel_kali_header_suffix: $linux_kernel_kali_header_suffix"
 echo "linux_kernel_kali_header_type: $linux_kernel_kali_header_type"
 # echo \'"$(ls -txr1 /usr/src/${linux_kernel_kali_header} | sed -r -e "s/^\/usr\/src\/$linux_kernel_kali_header(.*)$/\1/g"  | head -n 1)"\'
-linux_kernel_kali=$($linux_kernel_kali_header | sed 's/\(.*\)-[^-]*$/\1/')
+linux_kernel_kali=${linux_kernel_kali_header%%-*}
 cp -rf "/usr/src/${linux_kernel_kali}-common*" "/usr/src/${kindtek_kernel_version}-${linux_kernel_kali_header_suffix}-common"
 cp -rf "/usr/src/${linux_kernel_kali}-${linux_kernel_kali_header_suffix}*" "/usr/src/${kindtek_kernel_version}-${linux_kernel_kali_header_suffix}-${linux_kernel_kali_header_type}"
 

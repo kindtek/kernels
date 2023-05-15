@@ -475,6 +475,8 @@ ln -sv "/usr/lib/modules/${kindtek_kernel_version}-${kindtek_kernel_suffix}-${li
 cd "$orig_working_dir" || exit
 make headers_install
 make modules install
+find /usr/includes -type d -mmin -1 -exec cp -r {} kache/usr/includes \;
+
 
 if [ ! -f "$kernel_source" ]; then
     echo "

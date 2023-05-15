@@ -447,7 +447,7 @@ else
 fi
 # not sure if renaming header will work so copying just to be safe for now
 # mv "/usr/src/$linux_kernel_kindtek_header_pattern" "/usr/src/$kindtek_kernel_version"
-cp -rf "/usr/src/$linux_kernel_kindtek_header_pattern" "/usr/src/$kindtek_kernel_version"
+cp -rf "/usr/src/$linux_kernel_kindtek_header" "/usr/src/$kindtek_kernel_version"
 
 make modules install
 

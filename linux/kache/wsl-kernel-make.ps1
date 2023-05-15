@@ -9,7 +9,7 @@ $win_user = ""
 if (!$IsLinux ) {
     # get the user home dir info
     $win_user = $Env:USERNAME
-    write-host "win user is: `"$win_user`""
+    # write-host "win user is: `"$win_user`""
 }
 else {
     write-host "could not find windows user"

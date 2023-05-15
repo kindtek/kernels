@@ -111,7 +111,7 @@ if [ "$cpu_vendor" = AuthenticAMD ]; then cpu_vendor=amd; fi
 if [ "$cpu_vendor" = GenuineIntel ]; then cpu_vendor=intel; fi
 linux_kernel_version_mask=${linux_kernel_version/\./_}
 linux_kernel_header_version="${linux_kernel_version:0:3}"
-linux_kernel_header_pattern="linux-headers-${linux_kernel_header_version}*"
+linux_kernel_kindtek_header_pattern="linux-headers-${linux_kernel_header_version}*"
 kernel_alias_no_timestamp=${linux_kernel_version/\./L}
 linux_kernel_version_mask=${linux_kernel_version_mask//[\.-]/}
 kernel_alias_no_timestamp=${kernel_alias_no_timestamp//[\.-]/}${kernel_file_suffix}
@@ -437,15 +437,17 @@ if (( quick_wsl_install )); then
 else
     make -j$(($(nproc) - 1))
 fi
-echo "searching for headers matching $linux_kernel_header_pattern"
-echo "apt -qq search \"$linux_kernel_header_pattern\" 2>/dev/null | grep -o \"^$linux_kernel_header_pattern[^/]*\" | head -n 1"
-linux_kernel_header=$(apt -qq search "$linux_kernel_header_pattern" 2>/dev/null | grep -o "^$linux_kernel_header_pattern[^/]*" | head -n 1)
-echo "linux header: $linux_kernel_header"
-yes 'y' | apt -y install "$linux_kernel_header" 2>/dev/null
-yes 'y' | apt -y install "linux-headers-generic" 2>/dev/null
+echo "searching for headers matching $linux_kernel_kindtek_header_pattern"
+echo "apt -qq search \"$linux_kernel_kindtek_header_pattern\" 2>/dev/null | grep -o \"^$linux_kernel_kindtek_header_pattern[^/]*\" | head -n 1"
+linux_kernel_kindtek_header=$(apt -qq search "$linux_kernel_kindtek_header_pattern" 2>/dev/null | grep -o "^$linux_kernel_kindtek_header_pattern[^/]*" | head -n 1)
+linux_kernel_generic_header=$(apt-cache search linux-headers-generic | grep -o "^linux-headers-[a-zA-Z0-9][^ -]*" | head -n 1 )
+echo "linux kindtek header: $linux_kernel_kindtek_header"
+echo "linux generic header: $linux_kernel_generic_header"
+yes 'y' | apt -y install "$linux_kernel_kindtek_header" 2>/dev/null
+yes 'y' | apt -y install "$linux_kernel_generic_header" 2>/dev/null
 # not sure if renaming header will work so copying just to be safe for now
-# mv "/usr/src/$linux_kernel_header_pattern" "/usr/src/$kindtek_kernel_version"
-cp -rf "/usr/src/$linux_kernel_header_pattern" "/usr/src/$kindtek_kernel_version"
+# mv "/usr/src/$linux_kernel_kindtek_header_pattern" "/usr/src/$kindtek_kernel_version"
+cp -rf "/usr/src/$linux_kernel_kindtek_header_pattern" "/usr/src/$kindtek_kernel_version"
 
 make modules install
 
@@ -488,7 +490,7 @@ cp -r -fv "/boot" "kache"
 rm -rf kache/boot/*.old
 # cp -r -fv "/boot/*$kindtek_kernel_version*" "kache"
 # cp -r -f "/usr/src" "kache"
-cp -r -f "/usr/src/$linux_kernel_header_pattern" "kache"
+cp -r -f "/usr/src/$linux_kernel_kindtek_header_pattern" "kache"
 cp -r -f "/usr/src/linux-headers-$kindtek_kernel_version*" "kache"
 cp -r -f "/usr/src/linux-headers-generic" "kache"
 # win

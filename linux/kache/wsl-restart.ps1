@@ -84,6 +84,7 @@ Start-Process -FilePath powershell.exe -ArgumentList '-Command "&{
         powershell.exe -Command { Get-Service -Name wsl* -ErrorAction SilentlyContinue };
         # powershell.exe -Command \"& Get-Service -Name wsl* -ErrorAction SilentlyContinue | Where-Object { $_.Status -ieq `\`"running`\`" } \";
     );
+    wsl.exe --shutdown
     $servs_kill | ForEach-Object {
         powershell.exe -Command `"& Set-Service -Name $($_) -Status Stopped -Force -ErrorAction SilentlyContinue `" | Out-Null;powershell.exe -Command `"& Set-Service -Name $($_) -Status Stopped -ErrorAction SilentlyContinue `";powershell.exe -Command `"& Set-Service -Name $($_) -StartupType Automatic -Force -ErrorAction SilentlyContinue `" | Out-Null;powershell.exe -Command `"& Set-Service -Name $($_) -StartupType Automatic -ErrorAction SilentlyContinue `" ;powershell.exe -Command `"& Stop-Service -Name $($_) -Verbose `"; 
     };

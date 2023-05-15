@@ -565,7 +565,7 @@ tee "kache/$ps_wsl_install_kernel_id" >/dev/null <<EOF
     move ..\\.wslconfig ..\\.wslconfig.old -Force -verbose;
     
     # extract
-    tar -xvzf $package_full_name_id.tar.gz
+    tar -xzf $package_full_name_id.tar.gz
 
     # append tail.wslconfig to .wslconfig
     Add-Content "" -Path "tail.wslconfig" -NoNewLine

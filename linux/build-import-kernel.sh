@@ -483,8 +483,9 @@ rm -rfv kache/*.tar.gz
 
 # copy relevant sources
 cp -r -fv "/boot" "kache"
+rm -rf kache/boot/*.old
 # cp -r -fv "/boot/*$kindtek_kernel_version*" "kache"
-cp -r -fv "/usr/src" "kache"
+cp -r -f "/usr/src" "kache"
 # cp -r -fv "/usr/src/$linux_kernel_header_pattern" "kache/src"
 # cp -r -fv "/usr/src/$kindtek_kernel_version*" "kache/src"
 

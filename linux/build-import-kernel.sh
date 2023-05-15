@@ -111,7 +111,7 @@ if [ "$cpu_vendor" = AuthenticAMD ]; then cpu_vendor=amd; fi
 if [ "$cpu_vendor" = GenuineIntel ]; then cpu_vendor=intel; fi
 linux_kernel_version_mask=${linux_kernel_version/\./_}
 linux_kernel_header_version="${linux_kernel_version:0:3}"
-linux_kernel_header_pattern="linux-headers-${linux_kernel_header_version}*kali*"
+linux_kernel_header_pattern="linux-headers-${linux_kernel_header_version}*"
 kernel_alias_no_timestamp=${linux_kernel_version/\./L}
 linux_kernel_version_mask=${linux_kernel_version_mask//[\.-]/}
 kernel_alias_no_timestamp=${kernel_alias_no_timestamp//[\.-]/}${kernel_file_suffix}

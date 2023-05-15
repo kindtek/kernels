@@ -615,6 +615,8 @@ if [ -w "$win_k_cache" ]; then
     if [ "$tarball_target_win" != "" ]; then
         # cp -fv --backup=numbered "$tarball_filename" "$tarball_target_win.bak"
         cp -fv "kache/$tarball_filename" "$tarball_target_win"
+    else 
+        echo "win tarball empty: $tarball_target_win"
     fi
 fi
 

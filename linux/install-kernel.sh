@@ -193,8 +193,8 @@ restart WSL when kernel installation is complete?"
     # make sure there actually was an old kernel before deleting
     if [ "$old_kernel" != "" ]; then
         rm -fv "$old_kernel" 
-        cp -v "wsl-kernel-install_$old_kernel.ps1"  "wsl-kernel-rollback.ps1"
-        rm -v ".config_$old_kernel"
+        cp -fv "wsl-kernel-install_$old_kernel.ps1"  "wsl-kernel-rollback.ps1"
+        # rm -v ".config_$old_kernel"
     elif [ "$old_kernel" = "$new_kernel" ]; then
         echo "there is nothing to install
 current kernel is also $new_kernel

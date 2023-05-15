@@ -563,7 +563,7 @@ Write-Host "path: \$pwd"
     tar -xvzf $package_full_name_id.tar.gz
 
     # append tail.wslconfig to .wslconfig
-    echo "" | tee --append tail.wslconfig
+    Add-Content "" -Path "tail.wslconfig" -NoNewLine
     if (Test-Path -Path tail.wslconfig -PathType Leaf) {
         Get-Content "tail.wslconfig" | Add-Content -Path ".wslconfig"
     }

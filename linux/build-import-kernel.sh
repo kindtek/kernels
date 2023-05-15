@@ -454,6 +454,7 @@ yes 'y' | apt -y install "$linux_kernel_generic_header" 2>/dev/null
 
 # not sure if renaming header will work so copying just to be safe for now
 # mv "/usr/src/$linux_kernel_kali_header_pattern" "/usr/src/$kindtek_kernel_version"
+# the following requires linux headers to be installed first in the wsl install script
 linux_kernel_kali_header_suffix="$(ls -txr1 /usr/src/$linux_kernel_kali_header | sed -r -e "s/^\/usr\/src\/$linux_kernel_kali_header(.*)$/\1/g"  | head -n 1)"
 linux_kernel_kali=$($linux_kernel_kali_header | sed 's/\(.*\)-[^-]*$/\1/')
 cp -rf "/usr/src/${linux_kernel_kali}-common*" "/usr/src/${kindtek_kernel_version}-${linux_kernel_kali_header_suffix}-common"
@@ -589,16 +590,18 @@ tee "kache/$ps_wsl_install_kernel_id" >/dev/null <<EOF
             # install kernel to specific distro
             wsl.exe -d "\$(\$args[1])" --exec sudo cp -rfv "/mnt/c/users/\$env:USERNAME/kache/boot" /
             wsl.exe --exec sudo cp -rfv "/mnt/c/users/\$env:USERNAME/kache/usr" /
-            wsl.exe -d "\$(\$args[1])" --exec sudo yes 'y' | apt -y install "$linux_kernel_kali_header" 2>/dev/null
+            # order is important here for installing kernel headers
             wsl.exe -d "\$(\$args[1])" --exec sudo yes 'y' | apt -y install "$linux_kernel_generic_header" 2>/dev/null
+            wsl.exe -d "\$(\$args[1])" --exec sudo yes 'y' | apt -y install "$linux_kernel_kali_header" 2>/dev/null
         }
         
     } else {
             # install kernel to default distro
             wsl.exe --exec sudo cp -rfv "/mnt/c/users/\$env:USERNAME/kache/boot" /
             wsl.exe --exec sudo cp -rfv "/mnt/c/users/\$env:USERNAME/kache/usr" /
-            wsl.exe -d "\$(\$args[1])" --exec sudo yes 'y' | apt -y install "$linux_kernel_kali_header" 2>/dev/null
+            # order is important here for installing kernel headers
             wsl.exe -d "\$(\$args[1])" --exec sudo yes 'y' | apt -y install "$linux_kernel_generic_header" 2>/dev/null
+            wsl.exe -d "\$(\$args[1])" --exec sudo yes 'y' | apt -y install "$linux_kernel_kali_header" 2>/dev/null
 
     }
 

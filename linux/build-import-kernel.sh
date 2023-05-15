@@ -468,9 +468,9 @@ orig_working_dir="$(pwd)"
 cd "/usr/lib/modules/${linux_kernel_kali_header#linux-headers-}" || exit
 rm source
 rm build
-ln -s ${kindtek_kernel_version}-${kindtek_kernel_suffix}-common source && \
-ln -s ${kindtek_kernel_version}-${kindtek_kernel_suffix}-${linux_kernel_kali_header_type} build && \
-cd $orig_working_dir || exit
+ln -s "/usr/src/${kindtek_kernel_version}-${kindtek_kernel_suffix}-common" source && \
+ln -s "/usr/src/${kindtek_kernel_version}-${kindtek_kernel_suffix}-${linux_kernel_kali_header_type}" build && \
+cd "$orig_working_dir" || exit
 cp -rf "/usr/lib/modules/${linux_kernel_kali_header#linux-headers-}" kache/usr/lib/modules
 make headers_install
 make modules install

@@ -638,8 +638,8 @@ tee "kache/$ps_wsl_install_kernel_id" >/dev/null <<EOF
 
 EOF
 
-tar -czvf "$tarball_filename" -C kache .
-mv "$tarball_filename" "kache/$tarball_filename"
+tar -czvf "$tarball_filename" -C kache . | tail -n 5
+mv -fv "$tarball_filename" "kache/$tarball_filename" | tail -n 5
 # cp "kache/$tarball_filename" kache/latest.tar.gz
 # work on *nix first
 mkdir -pv "$nix_k_cache" 2>/dev/null
@@ -655,7 +655,7 @@ mkdir -pv "$win_k_cache" 2>/dev/null
 # if win_k_cache is writable and no timestamp was given in args
 if [ -w "$win_k_cache" ] && [ "$5" = "" ]; then
     echo "copying kernel to WSL install location"
-    cp "kache/$ps_wsl_install_kernel_id" "$win_k_cache/$ps_wsl_install_kernel_id"
+    cp -fv "kache/$ps_wsl_install_kernel_id" "$win_k_cache/$ps_wsl_install_kernel_id"
     if [ "$tarball_target_win" != "" ]; then
         echo "copying tarball to WSL kache"
         # cp -fv --backup=numbered "$tarball_filename" "$tarball_target_win.bak"

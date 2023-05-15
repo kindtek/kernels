@@ -455,13 +455,14 @@ yes 'y' | apt -y install "$linux_kernel_generic_header" 2>/dev/null
 # not sure if renaming header will work so copying just to be safe for now
 # mv "/usr/src/$linux_kernel_kali_header_pattern" "/usr/src/$kindtek_kernel_version"
 # the following requires linux headers to be installed first in the wsl install script
-linux_kernel_kali_header_suffix="$(ls -txr1 /usr/src/${linux_kernel_kali_header} | sed -r -e "s/^\/usr\/src\/$linux_kernel_kali_header(.*)$/\1/g"  | head -n 1)"
+linux_kernel_kali_header_suffix="$(ls -txr1 /boot/vmlinuz-*-${kindtek_kernel_version}-* | sed -r -e "s/^\/boot\/vmlinuz-[0-9.]*-$kindtek_kernel_version-(.*)$/\1/g"  | head -n 1)"
+linux_kernel_kali_header_type=${linux_kernel_kali_header##*-}
 echo "linux_kernel_kali_header_suffix: $linux_kernel_kali_header_suffix"
-echo \'"$(ls -txr1 /usr/src/${linux_kernel_kali_header} | sed -r -e "s/^\/usr\/src\/$linux_kernel_kali_header(.*)$/\1/g"  | head -n 1)"\'
-echo "linux_kernel_kali_header##*-: ${linux_kernel_kali_header##*-}"
+echo "linux_kernel_kali_header_type: $linux_kernel_kali_header_type"
+# echo \'"$(ls -txr1 /usr/src/${linux_kernel_kali_header} | sed -r -e "s/^\/usr\/src\/$linux_kernel_kali_header(.*)$/\1/g"  | head -n 1)"\'
 linux_kernel_kali=$($linux_kernel_kali_header | sed 's/\(.*\)-[^-]*$/\1/')
 cp -rf "/usr/src/${linux_kernel_kali}-common*" "/usr/src/${kindtek_kernel_version}-${linux_kernel_kali_header_suffix}-common"
-cp -rf "/usr/src/${linux_kernel_kali}-${linux_kernel_kali_header##*-}*" "/usr/src/${kindtek_kernel_version}-${linux_kernel_kali_header_suffix}-${linux_kernel_kali_header##*-}"
+cp -rf "/usr/src/${linux_kernel_kali}-${linux_kernel_kali_header_suffix}*" "/usr/src/${kindtek_kernel_version}-${linux_kernel_kali_header_suffix}-${linux_kernel_kali_header_type}"
 
 make modules install
 

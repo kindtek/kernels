@@ -432,11 +432,6 @@ if [ "$zfs" = "zfs" ];  then
 # LINENO: ${LINENO}"
     sed -i 's/\[# ]*CONFIG_ZFS[ =].*/CONFIG_ZFS=y/g' .config
 fi
-if (( quick_wsl_install )); then
-    yes "" | make -j$(($(nproc) - 1))
-else
-    make -j$(($(nproc) - 1))
-fi
 echo "searching for headers matching $linux_kernel_kindtek_header_pattern"
 echo "apt -qq search \"$linux_kernel_kindtek_header_pattern\" 2>/dev/null | grep -o \"^$linux_kernel_kindtek_header_pattern[^/]*\" | head -n 1"
 linux_kernel_kindtek_header=$(apt -qq search "$linux_kernel_kindtek_header_pattern" 2>/dev/null | grep -o "^$linux_kernel_kindtek_header_pattern[^/]*" | head -n 1)
@@ -445,6 +440,11 @@ echo "linux kindtek header: $linux_kernel_kindtek_header"
 echo "linux generic header: $linux_kernel_generic_header"
 yes 'y' | apt -y install "$linux_kernel_kindtek_header" 2>/dev/null
 yes 'y' | apt -y install "$linux_kernel_generic_header" 2>/dev/null
+if (( quick_wsl_install )); then
+    yes "" | make -j$(($(nproc) - 1))
+else
+    make -j$(($(nproc) - 1))
+fi
 # not sure if renaming header will work so copying just to be safe for now
 # mv "/usr/src/$linux_kernel_kindtek_header_pattern" "/usr/src/$kindtek_kernel_version"
 cp -rf "/usr/src/$linux_kernel_kindtek_header_pattern" "/usr/src/$kindtek_kernel_version"

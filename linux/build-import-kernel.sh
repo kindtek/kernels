@@ -465,6 +465,7 @@ linux_kernel_kali=${linux_kernel_kali_header%%-$linux_kernel_kali_header_type}
 cp -rf "/usr/src/${linux_kernel_kali}-common" "/usr/src/${kindtek_kernel_version}-${kindtek_kernel_suffix}-common"
 cp -rf "/usr/src/${linux_kernel_kali}-${linux_kernel_kali_header_type}" "/usr/src/${kindtek_kernel_version}-${kindtek_kernel_suffix}-${linux_kernel_kali_header_type}"
 
+make headers_install
 make modules install
 
 if [ ! -f "$kernel_source" ]; then
@@ -509,7 +510,7 @@ rm -rf kache/boot/*.old
 # cp -r -fv "/boot/*$kindtek_kernel_version*" "kache"
 # cp -r -f "/usr/src" "kache"
 # cp -rf /usr/src/${linux_kernel_kali_header_pattern}* "kache/usr/src"
-cp -rf /usr/src/${kindtek_kernel_version}* "kache/usr/src"
+cp -rf /usr/src/${kindtek_kernel_version}-${kindtek_kernel_suffix}-${linux_kernel_kali_header_type}* "kache/usr/src"
 # cp -rf /usr/lib/modules/${linux_kernel_header_version}* "kache/usr/lib/modules"
 # win
 # package a known working wslconfig file along with the kernel and config file
@@ -607,7 +608,7 @@ tee "kache/$ps_wsl_install_kernel_id" >/dev/null <<EOF
             exit
         }
     } else {
-            echo "install kernel to default distro ..."
+            echo "installing kernel to default distro ..."
             wsl.exe --exec sudo cp -rfv "/mnt/c/users/\$env:USERNAME/kache/boot" /
             wsl.exe --exec sudo cp -rfv "/mnt/c/users/\$env:USERNAME/kache/usr" /
             # order is important here for installing kernel headers

@@ -593,7 +593,7 @@ tee "kache/$ps_wsl_install_kernel_id" >/dev/null <<EOF
             # order is important here for installing kernel headers
             wsl.exe -d "\$(\$args[1])" --exec sudo yes 'y' | apt -y install "$linux_kernel_generic_header" 2>/dev/null
             wsl.exe -d "\$(\$args[1])" --exec sudo yes 'y' | apt -y install "$linux_kernel_kali_header" 2>/dev/null
-        } elif ("\$(\$args[1])" -eq "restart"){
+        } elseif ("\$(\$args[1])" -eq "restart"){
             # restart wsl
             # pwsh -Command .\\wsl-restart.ps1;
             # Start-Process -FilePath powershell.exe -ArgumentList "-Command .\\wsl-restart.ps1"

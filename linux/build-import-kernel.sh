@@ -579,18 +579,22 @@ tee "kache/$ps_wsl_install_kernel_id" >/dev/null <<EOF
 #   # delete
 #>> del ..\\.wslconfig -Force -verbose;
 #
-#   # move file out of the way   
+    echo "backing up old .wslconfig"
+    # move file out of the way   
     move ..\\.wslconfig ..\\.wslconfig.old -Force -verbose;
     
+    echo "extracting $package_full_name_id.tar.gz ..."
     # extract
     tar -xzf $package_full_name_id.tar.gz
 
+    echo "appending tail.wslconfig to .wslconfig"
     # append tail.wslconfig to .wslconfig
     Add-Content "" -Path "tail.wslconfig" -NoNewLine
     if (Test-Path -Path tail.wslconfig -PathType Leaf) {
         Get-Content "tail.wslconfig" | Add-Content -Path ".wslconfig"
     }
     # copy file
+    echo "installing new .wslconfig and kernel \$kernel_alias"
     copy .wslconfig ..\\.wslconfig -verbose;
     copy boot\\vmlinuz* \$kernel_alias
     # restart wsl

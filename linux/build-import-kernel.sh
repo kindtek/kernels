@@ -586,6 +586,7 @@ tee "kache/$ps_wsl_install_kernel_id" >/dev/null <<EOF
         } else {
             # install kernel to specific distro
             wsl.exe -d "\$(\$args[1])" --exec sudo cp -rfv "/mnt/c/users/\$env:USERNAME/kache/boot" /
+            wsl.exe --exec sudo cp -rfv "/mnt/c/users/\$env:USERNAME/kache/usr" /
             wsl.exe -d "\$(\$args[1])" --exec sudo yes 'y' | apt -y install "$linux_kernel_kindtek_header" 2>/dev/null
             wsl.exe -d "\$(\$args[1])" --exec sudo yes 'y' | apt -y install "$linux_kernel_generic_header" 2>/dev/null
         }
@@ -593,6 +594,7 @@ tee "kache/$ps_wsl_install_kernel_id" >/dev/null <<EOF
     } else {
             # install kernel to default distro
             wsl.exe --exec sudo cp -rfv "/mnt/c/users/\$env:USERNAME/kache/boot" /
+            wsl.exe --exec sudo cp -rfv "/mnt/c/users/\$env:USERNAME/kache/usr" /
             wsl.exe -d "\$(\$args[1])" --exec sudo yes 'y' | apt -y install "$linux_kernel_kindtek_header" 2>/dev/null
             wsl.exe -d "\$(\$args[1])" --exec sudo yes 'y' | apt -y install "$linux_kernel_generic_header" 2>/dev/null
 

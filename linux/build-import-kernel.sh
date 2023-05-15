@@ -460,7 +460,7 @@ fi
 ps_wsl_install_kernel_id=wsl-kernel-install_$kernel_alias.ps1
 
 cd ..
-# kernel is baked - time to distribute fresh copies
+# kernel is baked - time to distribute the goods
 # move back to base dir  folder with github (relative) path
 mkdir -pv "$git_save_path" 2>/dev/null
 # queue files to be saved to repo
@@ -478,7 +478,7 @@ mkdir -pv kache/src 2>/dev/null
 # remove config
 rm -rfv kache/.config_*
 # remove kernel
-rm -rfv kache/*_*
+rm -rfv kache/[A-Z0-9]*_*
 # remove empty file tag
 rm -rfv kache/Linux-*
 # remove install script

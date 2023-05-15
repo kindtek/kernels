@@ -1,10 +1,10 @@
 #!/bin/bash
-kernel_type=$1
-config_source=$2
-zfs=$3
-win_user=${4}
+kernel_type="$1"
+config_source="$2"
+zfs="$3"
+win_user="${4}"
 quick_wsl_install=${4:+1}
-timestamp_id=${5:-${DOCKER_BUILD_TIMESTAMP:-$(date -d "today" +"%Y%m%d%H%M%S")}}
+timestamp_id="${5:-${DOCKER_BUILD_TIMESTAMP:-$(date -d "today" +"%Y%m%d%H%M%S")}}"
 kernel_file_suffix="W"
 linux_build_dir=linux-build
 
@@ -315,9 +315,11 @@ wsl_kernel=$win_k_cache/$kernel_alias
 wsl_config=$win_user_home/.wslconfig
 kindtek_kernel_version="kindtek-kernel-$kernel_alias_no_timestamp"
 sed -i "s/[# ]*CONFIG_LOCALVERSION[ =].*/CONFIG_LOCALVERSION=\"\-${kindtek_kernel_version}\"/g" "$config_source"
-if [ "$win_user" = "" ]; then
-    win_k_cache=""
+# if win timestamp was manually set or win_user not set then clear win install paths
+if [ "${5}" != "" ] || [ "$win_user" = "" ]; then
     tarball_target_win=""
+    win_user_home=""
+    win_k_cache=""
 fi
 
 if [ "$linux_kernel_version" = "" ]; then
@@ -613,9 +615,12 @@ else
 fi
 # now win
 mkdir -pv "$win_k_cache" 2>/dev/null
-if [ -w "$win_k_cache" ]; then
+# if win_k_cache is writable and no timestamp was given in args
+if [ -w "$win_k_cache" ] && [ "$5" = "" ]; then
+    echo "copying kernel to WSL install location"
     cp "kache/$ps_wsl_install_kernel_id" "$win_k_cache/$ps_wsl_install_kernel_id"
     if [ "$tarball_target_win" != "" ]; then
+        echo "copying tarball to WSL kache"
         # cp -fv --backup=numbered "$tarball_filename" "$tarball_target_win.bak"
         cp -fv "kache/$tarball_filename" "$tarball_target_win"
     else 

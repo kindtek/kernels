@@ -489,7 +489,7 @@ cp -fv --backup=numbered $linux_build_dir/"$kernel_source" "$kernel_target_git"
 rm -rfv kache/boot
 rm -rfv kache/src
 mkdir -pv kache/boot 2>/dev/null
-mkdir -pv kache/src 2>/dev/null
+mkdir -pv kache/usr/src 2>/dev/null
 mkdir -pv kache/usr/lib/modules 2>/dev/null
 
 # remove config

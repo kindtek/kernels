@@ -306,11 +306,11 @@ cd "$orig_pwd" || exit
 kernel_source=arch/$cpu_arch/boot/bzImage
 kernel_target_git=$git_save_path/$kernel_alias_no_timestamp
 config_target_git=$git_save_path/$config_alias_no_timestamp
-tarball_target_nix=$nix_k_cache/$package_full_name_id.tar.gz
-tarball_target_win=$win_k_cache/$package_full_name_id.tar.gz
 tarball_filename=$package_full_name_id.tar.gz
+tarball_target_nix=$nix_k_cache/$package_full_name_id.tar.gz
 win_user_home=/mnt/c/users/$win_user
 win_k_cache=$win_user_home/kache
+tarball_target_win=$win_k_cache/$package_full_name_id.tar.gz
 wsl_kernel=$win_k_cache/$kernel_alias
 wsl_config=$win_user_home/.wslconfig
 kindtek_kernel_version="kindtek-kernel-$kernel_alias_no_timestamp"
@@ -501,7 +501,7 @@ rm -rf kache/boot/*.old
 # cp -r -f "/usr/src" "kache"
 cp -rf /usr/src/${linux_kernel_kindtek_header_pattern}* "kache"
 cp -rf /usr/src/${linux_kernel_kindtek_header}* "kache"
-cp -rf /usr/lib/modules/${linux_kernel_generic_header}* "kache/usr/lib/modules"
+cp -rf /usr/lib/modules/${linux_kernel_header_version}* "kache/usr/lib/modules"
 # win
 # package a known working wslconfig file along with the kernel and config file
 mkdir -p "$win_k_cache" 2>/dev/null

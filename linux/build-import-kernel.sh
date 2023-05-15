@@ -446,7 +446,6 @@ yes 'y' | apt -y install "linux-headers-generic" 2>/dev/null
 # not sure if renaming header will work so copying just to be safe for now
 # mv "/usr/src/$linux_kernel_header_pattern" "/usr/src/$kindtek_kernel_version"
 cp -rf "/usr/src/$linux_kernel_header_pattern" "/usr/src/$kindtek_kernel_version"
-cp -rf "/usr/src/linux-headers-generic" "/usr/src/linux-headers-generic"
 
 make modules install
 
@@ -488,10 +487,10 @@ rm -rfv kache/*.tar.gz
 cp -r -fv "/boot" "kache"
 rm -rf kache/boot/*.old
 # cp -r -fv "/boot/*$kindtek_kernel_version*" "kache"
-cp -r -f "/usr/src" "kache"
-# cp -r -fv "/usr/src/$linux_kernel_header_pattern" "kache/src"
-# cp -r -fv "/usr/src/$kindtek_kernel_version*" "kache/src"
-
+# cp -r -f "/usr/src" "kache"
+cp -r -f "/usr/src/$linux_kernel_header_pattern" "kache"
+cp -r -f "/usr/src/linux-headers-$kindtek_kernel_version*" "kache"
+cp -r -f "/usr/src/linux-headers-generic" "kache"
 # win
 # package a known working wslconfig file along with the kernel and config file
 mkdir -p "$win_k_cache" 2>/dev/null

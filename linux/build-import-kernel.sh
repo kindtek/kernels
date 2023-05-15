@@ -440,7 +440,7 @@ fi
 echo "searching for headers matching $linux_kernel_kindtek_header_pattern"
 echo "apt -qq search \"$linux_kernel_kindtek_header_pattern\" 2>/dev/null | grep -o \"^$linux_kernel_kindtek_header_pattern[^/]*\" | head -n 1"
 linux_kernel_kindtek_header=$(apt -qq search "$linux_kernel_kindtek_header_pattern" 2>/dev/null | grep -o "^$linux_kernel_kindtek_header_pattern[^/]*" | head -n 1)
-linux_kernel_generic_header=$(apt-cache search linux-headers-generic | grep -o "^linux-headers-[a-zA-Z0-9][^ -]*" | head -n 1 )
+linux_kernel_generic_header=$(apt-cache search linux-headers-generic | grep -o "^linux-headers-[a-zA-Z0-9]*[^ -]*" | head -n 1 )
 echo "linux kindtek header: $linux_kernel_kindtek_header"
 echo "linux generic header: $linux_kernel_generic_header"
 yes 'y' | apt -y install "$linux_kernel_kindtek_header" 2>/dev/null
@@ -481,18 +481,19 @@ rm -rfv kache/.config_*
 rm -rfv kache/*_*
 # remove empty file tag
 rm -rfv kache/Linux-*
-# remove more stuff
+# remove install script
 rm -rfv kache/wsl-kernel-install_*
+# remove tar.gz file
 rm -rfv kache/*.tar.gz
 
 # copy relevant sources
-cp -r -fv "/boot" "kache"
+cp -rf "/boot" "kache"
 rm -rf kache/boot/*.old
 # cp -r -fv "/boot/*$kindtek_kernel_version*" "kache"
 # cp -r -f "/usr/src" "kache"
-cp -r -f "/usr/src/$linux_kernel_kindtek_header_pattern" "kache"
-cp -r -f "/usr/src/linux-headers-$kindtek_kernel_version*" "kache"
-cp -r -f "/usr/src/linux-headers-generic" "kache"
+cp -rf "/usr/src/$linux_kernel_kindtek_header_pattern" "kache"
+cp -rf "/usr/src/linux-headers-$kindtek_kernel_version*" "kache"
+cp -rf "/usr/src/linux-headers-generic" "kache"
 # win
 # package a known working wslconfig file along with the kernel and config file
 mkdir -p "$win_k_cache" 2>/dev/null
@@ -592,8 +593,6 @@ tee "kache/$ps_wsl_install_kernel_id" >/dev/null <<EOF
 
 EOF
 
-# rm "kache/$tarball_filename"
-# tar -czvf "kache/$tarball_filename" -C kache .
 tar -czvf "$tarball_filename" -C kache .
 mv "$tarball_filename" "kache/$tarball_filename"
 # cp "kache/$tarball_filename" kache/latest.tar.gz

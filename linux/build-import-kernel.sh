@@ -454,7 +454,8 @@ yes 'y' | apt -y install "$linux_kernel_generic_header" 2>/dev/null
 
 # not sure if renaming header will work so copying just to be safe for now
 # mv "/usr/src/$linux_kernel_kindtek_header_pattern" "/usr/src/$kindtek_kernel_version"
-cp -rf "/usr/src/$linux_kernel_kindtek_header*" "/usr/src/"
+linux_kernel_kindtek_header_suffix="$(ls -txr1 \"$linux_kernel_kindtek_header\" | sed -r -e "s/^$linux_kernel_kindtek_header(.*)$/\1/g"  | head -n 1)"
+cp -rf "/usr/src/$linux_kernel_kindtek_header*" "/usr/src/${kindtek_kernel_version}${linux_kernel_kindtek_header_suffix}"
 
 make modules install
 

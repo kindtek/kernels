@@ -462,8 +462,8 @@ echo "kindtek_kernel_suffix: $kindtek_kernel_suffix"
 echo "linux_kernel_kali_header_type: $linux_kernel_kali_header_type"
 # echo \'"$(ls -txr1 /usr/src/${linux_kernel_kali_header} | sed -r -e "s/^\/usr\/src\/$linux_kernel_kali_header(.*)$/\1/g"  | head -n 1)"\'
 linux_kernel_kali=${linux_kernel_kali_header%%-$linux_kernel_kali_header_type}
-cp -rf "/usr/src/${linux_kernel_kali}-common" "/usr/src/${kindtek_kernel_version}-${kindtek_kernel_suffix}-common"
-cp -rf "/usr/src/${linux_kernel_kali}-${linux_kernel_kali_header_type}" "/usr/src/${kindtek_kernel_version}-${kindtek_kernel_suffix}-${linux_kernel_kali_header_type}"
+cp -rfv "/usr/src/${linux_kernel_kali}-common" "/usr/src/${kindtek_kernel_version}-${kindtek_kernel_suffix}-common" | grep '/$' | tail -n 5
+cp -rfv "/usr/src/${linux_kernel_kali}-${linux_kernel_kali_header_type}" "/usr/src/${kindtek_kernel_version}-${kindtek_kernel_suffix}-${linux_kernel_kali_header_type}" | grep '/$' | tail -n 5
 orig_working_dir="$(pwd)"
 rm source
 rm build

@@ -48,7 +48,8 @@ press ENTER to exit or choose something to clean
     if [ -d "$zfs_dir/.git" ]; then
         echo "      - [z]fs"
     fi
-        echo "      - [k]-cache"
+        echo "      - [k]ache"
+        echo "      - [r]eset kernels repo"
 echo "         
 "
 read -r -p "(exit)
@@ -93,6 +94,10 @@ fi
     if [ "${clean_target,,}" = "kache" ] || [ "${clean_target,,}" = "k" ] ; then
         rm -rfv kache/*
         rm -rfv kache/.*
+    fi
+    if [ "${clean_target,,}" = "reset" ] || [ "${clean_target,,}" = "r" ] ; then
+        git reset --hard
+        git clean -fxd
     fi
     if [ "${clean_target,,}" = "" ] || [ "$1" != "" ]; then
         exit

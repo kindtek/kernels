@@ -455,7 +455,7 @@ yes 'y' | apt -y install "$linux_kernel_generic_header" 2>/dev/null
 # not sure if renaming header will work so copying just to be safe for now
 # mv "/usr/src/$linux_kernel_kali_header_pattern" "/usr/src/$kindtek_kernel_version"
 # the following requires linux headers to be installed first in the wsl install script
-kindtek_kernel_suffix="$(ls -txr1 /boot/vmlinuz-*-${kindtek_kernel_version}-* | sed -r -e "s/^\/boot\/vmlinuz-[0-9.]*-$kindtek_kernel_version-(.*)$/\1/g"  | head -n 1)"
+kindtek_kernel_suffix="$(ls -tx1 /boot/vmlinuz-*-${kindtek_kernel_version}-* | sed -r -e "s/^\/boot\/vmlinuz-[0-9.]*-$kindtek_kernel_version-(.*)$/\1/g"  | head -n 1)"
 kindtek_kernel_suffix=${kindtek_kernel_suffix%%.old}
 linux_kernel_kali_header_type=${linux_kernel_kali_header##*-}
 echo "kindtek_kernel_suffix: $kindtek_kernel_suffix"

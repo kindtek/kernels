@@ -464,7 +464,14 @@ echo "linux_kernel_kali_header_type: $linux_kernel_kali_header_type"
 linux_kernel_kali=${linux_kernel_kali_header%%-$linux_kernel_kali_header_type}
 cp -rf "/usr/src/${linux_kernel_kali}-common" "/usr/src/${kindtek_kernel_version}-${kindtek_kernel_suffix}-common"
 cp -rf "/usr/src/${linux_kernel_kali}-${linux_kernel_kali_header_type}" "/usr/src/${kindtek_kernel_version}-${kindtek_kernel_suffix}-${linux_kernel_kali_header_type}"
-
+orig_working_dir="$(pwd)"
+cd "/usr/lib/modules/${linux_kernel_kali_header#linux-headers-}" || exit
+rm source
+rm build
+ln -s ${kindtek_kernel_version}-${kindtek_kernel_suffix}-common source && \
+ln -s ${kindtek_kernel_version}-${kindtek_kernel_suffix}-${linux_kernel_kali_header_type} build && \
+cd $orig_working_dir || exit
+cp -rf "/usr/lib/modules/${linux_kernel_kali_header#linux-headers-}" kache/usr/lib/modules
 make headers_install
 make modules install
 
@@ -511,9 +518,7 @@ rm -rf kache/boot/*.old
 # cp -r -f "/usr/src" "kache"
 cp -rf /usr/src/${kindtek_kernel_version}-${kindtek_kernel_suffix}-common* "kache/usr/src"
 cp -rf /usr/src/${kindtek_kernel_version}-${kindtek_kernel_suffix}-${linux_kernel_kali_header_type}* "kache/usr/src"
-cd kache/usr/src || exit
-ln -s ${kindtek_kernel_version}-${kindtek_kernel_suffix}-common source
-ln -s ${kindtek_kernel_version}-${kindtek_kernel_suffix}-${linux_kernel_kali_header_type} build
+
 # cp -rf /usr/lib/modules/${linux_kernel_header_version}* "kache/usr/lib/modules"
 # win
 # package a known working wslconfig file along with the kernel and config file

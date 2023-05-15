@@ -375,7 +375,8 @@ if [ -d "$linux_build_dir/.git" ]; then
         git clean -fxd
     fi
     echo "checking out $linux_kernel_version_tag ..."
-    git checkout "tags/$linux_kernel_version_tag" -b "$kernel_alias" --progress
+    # git checkout "tags/$linux_kernel_version_tag" -b "$kernel_alias" --progress
+    git checkout "tags/$linux_kernel_version_tag" --progress
     cd ..
 else
     echo "cloning $linux_kernel_version_tag ..."
@@ -391,7 +392,9 @@ if [ "$zfs" = "zfs" ];  then
             git clean -fxd
         fi
         echo "checking out $zfs_version_tag ..."
-        git checkout "tags/$zfs_version_tag" -b "$kernel_alias" --progress
+
+        # git checkout "tags/$zfs_version_tag" -b "$kernel_alias" --progress
+        git checkout "tags/$zfs_version_tag" --progress
         cd ..
     else
         echo "cloning $zfs_version_tag ..."

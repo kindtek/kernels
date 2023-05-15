@@ -584,7 +584,7 @@ tee "kache/$ps_wsl_install_kernel_id" >/dev/null <<EOF
     
     echo "extracting $package_full_name_id.tar.gz ..."
     # extract
-    tar -xzf $package_full_name_id.tar.gz
+    tar -xvzf $package_full_name_id.tar.gz -Wait -Tail 10
 
     echo "appending tail.wslconfig to .wslconfig"
     # append tail.wslconfig to .wslconfig

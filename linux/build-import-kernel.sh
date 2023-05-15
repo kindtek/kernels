@@ -465,13 +465,11 @@ linux_kernel_kali=${linux_kernel_kali_header%%-$linux_kernel_kali_header_type}
 cp -rf "/usr/src/${linux_kernel_kali}-common" "/usr/src/${kindtek_kernel_version}-${kindtek_kernel_suffix}-common"
 cp -rf "/usr/src/${linux_kernel_kali}-${linux_kernel_kali_header_type}" "/usr/src/${kindtek_kernel_version}-${kindtek_kernel_suffix}-${linux_kernel_kali_header_type}"
 orig_working_dir="$(pwd)"
-cd "/usr/lib/modules/${linux_kernel_kali_header#linux-headers-}" || exit
 rm source
 rm build
-ln -s "/usr/src/${kindtek_kernel_version}-${kindtek_kernel_suffix}-common" source && \
-ln -s "/usr/src/${kindtek_kernel_version}-${kindtek_kernel_suffix}-${linux_kernel_kali_header_type}" build && \
+ln -sv "/usr/lib/modules/${kindtek_kernel_version}-${kindtek_kernel_suffix}-common" source && \
+ln -sv "/usr/lib/modules/${kindtek_kernel_version}-${kindtek_kernel_suffix}-${linux_kernel_kali_header_type}" build && \
 cd "$orig_working_dir" || exit
-cp -rf "/usr/lib/modules/${linux_kernel_kali_header#linux-headers-}" kache/usr/lib/modules
 make headers_install
 make modules install
 

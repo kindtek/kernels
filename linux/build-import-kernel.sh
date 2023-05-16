@@ -520,7 +520,7 @@ mkdir -pv "/usr/lib/modules/${kindtek_kernel_version}${kindtek_kernel_suffix%-}"
 mkdir -pv "kache/usr/lib/modules/${kindtek_kernel_version}${kindtek_kernel_suffix%-}"
 
     
-ln -sv "/usr/src/${kindtek_kernel_version}-common/soruce" "/usr/lib/modules/${kindtek_kernel_version}/source" && \
+ln -sv "/usr/src/${kindtek_kernel_version}-common/source" "/usr/lib/modules/${kindtek_kernel_version}/source" && \
 ln -sv "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}/build" "/usr/lib/modules/${kindtek_kernel_version}${kindtek_kernel_suffix%-}/build" && \
 
 cd $linux_build_dir || exit

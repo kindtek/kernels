@@ -491,6 +491,7 @@ rm -rfv kache/*.tar.gz
 while [ ! -f "/boot/config-${make_kernel_version}-${kindtek_kernel_version}" ]; do
     sleep 1
 done
+# possibly also can get with: git rev-parse --verify --short HEAD
 kindtek_kernel_suffix="$(echo "$make_kernel_release" | sed -r -e "s/^(.*)$kindtek_kernel_version\-?(.*)*$/\2/g"  | head -n 1)"
 echo "kindtek_kernel_suffix: $kindtek_kernel_suffix"
 kindtek_kernel_suffix="${kindtek_kernel_suffix%%.old}"

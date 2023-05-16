@@ -384,7 +384,7 @@ if [ -d "$linux_build_dir/.git" ]; then
     fi
     echo "checking out $linux_kernel_version_tag - $linux_commit_checkout ..."
     # git checkout "tags/$linux_kernel_version_tag" -b "$kernel_alias" --progress
-    git fetch origin "$linux_commit_checkout" --progress
+    git fetch origin "$linux_commit_checkout" --progress --verbose
     cd ..
 else
     echo "cloning $linux_kernel_version_tag ..."
@@ -403,7 +403,7 @@ if [ "$zfs" = "zfs" ];  then
         echo "checking out $zfs_version_tag - $zfs_commit_checkout..."
 
         # git checkout "tags/$zfs_version_tag" -b "$kernel_alias" --progress
-        git fetch origin "$zfs_commit_checkout" --progress
+        git fetch origin "$zfs_commit_checkout" --progress --verbose
         cd ..
     else
         echo "cloning $zfs_version_tag ..."

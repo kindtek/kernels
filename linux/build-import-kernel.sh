@@ -497,14 +497,14 @@ kindtek_kernel_suffix="$(echo "$make_kernel_release" | sed -r -e "s/^(.*)$kindte
 echo "kindtek_kernel_suffix: $kindtek_kernel_suffix"
 kindtek_kernel_suffix="${kindtek_kernel_suffix%%.old}"
 echo "kindtek_kernel_suffix: $kindtek_kernel_suffix"
-kindtek_kernel_suffix="${kindtek_kernel_suffix:-$(echo -$kindtek_kernel_suffix)}"
+kindtek_kernel_suffix="${kindtek_kernel_suffix:-$(echo "-$kindtek_kernel_suffix")}"
 echo "kindtek_kernel_suffix: $kindtek_kernel_suffix"
 # kindtek_kernel_suffix="${kindtek_kernel_suffix//+/-}"
 linux_kernel_kali_header_type=${linux_kernel_kali_header##*-}
 echo "kindtek_kernel_suffix: $kindtek_kernel_suffix"
 echo "linux_kernel_kali_header_type: $linux_kernel_kali_header_type"
 # echo \'"$(ls -txr1 /usr/src/${linux_kernel_kali_header} | sed -r -e "s/^\/usr\/src\/$linux_kernel_kali_header(.*)$/\1/g"  | head -n 1)"\'
-linux_kernel_kali="${linux_kernel_kali_header%%-$linux_kernel_kali_header_type}"
+linux_kernel_kali="${linux_kernel_kali_header%%-"$linux_kernel_kali_header_type"}"
 linux_kernel_kali="${linux_kernel_kali#linux-headers-}"
 echo "linux_kernel_kali: $linux_kernel_kali"
 

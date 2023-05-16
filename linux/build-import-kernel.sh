@@ -583,24 +583,31 @@ ln -sv "/usr/src/${kindtek_kernel_version_suffix_type}" "/usr/lib/modules/${make
 # find /usr/include -type d -mmin -1 -exec cp -rf {} kache/usr/include \;
 
 ps_wsl_install_kernel_id="wsl-kernel-install_${kernel_alias}.ps1"
-
+echo "$ps_wsl_install_kernel_id"
 # kernel is baked - time to distribute the goods
 # move back to base dir  folder with github (relative) path
 mkdir -pv "$git_save_path" 2>/dev/null
 # queue files to be saved to repo
 cp -fv --backup=numbered "${linux_build_dir}/.config" "${config_target_git}"
 cp -fv --backup=numbered "${linux_build_dir}/${kernel_source}" "${kernel_target_git}"
+echo "$ps_wsl_install_kernel_id"
 
 
 # copy relevant sources and kache modules
 cp -rfv "/boot" "kache" | tail -n 5
 rm -rfv  kache/boot/*.old | tail -n 5
+echo "$ps_wsl_install_kernel_id"
+
 # cp -r -fv "/boot/*$kindtek_kernel_version*" "kache"
 # cp -r -f "/usr/src" "kache"
 kbuild_version="${linux_kernel_kali%%-*}"
 kbuild_version="${kbuild_version:0:3}"
+echo "$ps_wsl_install_kernel_id"
+
 cp -TRfv "/usr/src/${kindtek_kernel_version_suffix_}common/" "kache/usr/src/${kindtek_kernel_version_suffix_}common" | tail -n 20
 cp -TRfv "/usr/src/${kindtek_kernel_version_suffix_type}/" "kache/usr/src/${kindtek_kernel_version_suffix_type}" | tail -n 20
+echo "$ps_wsl_install_kernel_id"
+
 mkdir -pv "kache/usr/lib/linux-kbuild-${kbuild_version}"
 cp -TRfv "/usr/lib/linux-kbuild-${kbuild_version}/certs" "kache/usr/lib/linux-kbuild-${kbuild_version}/certs" | tail -n 20
 

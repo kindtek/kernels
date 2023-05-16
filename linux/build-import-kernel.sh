@@ -462,10 +462,10 @@ cd .. || exit
 # reset kache
 rm -rf kache/boot 
 rm -rf kache/usr 
-# mkdir -pv kache/boot 2>/dev/null
-# mkdir -pv kache/usr/src 2>/dev/null
-# mkdir -pv kache/usr/include 2>/dev/null
-# mkdir -pv kache/usr/lib/modules 2>/dev/null
+mkdir -pv kache/boot 2>/dev/null
+mkdir -pv kache/usr/src 2>/dev/null
+mkdir -pv kache/usr/include 2>/dev/null
+mkdir -pv kache/usr/lib/modules 2>/dev/null
 # remove config
 rm -rfv kache/.config_*
 # remove kernel

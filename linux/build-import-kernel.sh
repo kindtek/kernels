@@ -513,7 +513,7 @@ cd $linux_build_dir || exit
 make headers_install
 make modules install
 cd .. || exit
-find /usr/include -type d -mmin -1 -exec cp -rf {} kache/usr/include \;
+# find /usr/include -type d -mmin -1 -exec cp -rf {} kache/usr/include \;
 
 ps_wsl_install_kernel_id=wsl-kernel-install_$kernel_alias.ps1
 

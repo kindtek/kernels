@@ -655,9 +655,6 @@ tee "kache/$ps_wsl_install_kernel_id" >/dev/null <<EOF
 #   # delete
 #>> del ..\\.wslconfig -Force -verbose;
 #
-    echo "backing up old .wslconfig"
-    # move file out of the way   
-    move ..\\.wslconfig ..\\.wslconfig.old -Force -verbose;
     
     echo "extracting $package_full_name_id.tar.gz ..."
     # extract
@@ -669,11 +666,18 @@ tee "kache/$ps_wsl_install_kernel_id" >/dev/null <<EOF
     if (Test-Path -Path tail.wslconfig -PathType Leaf) {
         Get-Content "tail.wslconfig" | Add-Content -Path ".wslconfig"
     }
-    # copy file
+
+    # backup old wslconfig
+    echo "backing up old .wslconfig"
+    # move file out of the way   
+    move ..\\.wslconfig ..\\.wslconfig.old -Force -verbose;
+
+    # copy wslconfig to home dir
     echo "installing new .wslconfig and kernel \$kernel_alias"
     copy .wslconfig ..\\.wslconfig -verbose;
     copy boot\\vmlinuz-${kindtek_kernel_version}${kindtek_kernel_suffix} \$kernel_alias -verbose
-    # restart wsl
+
+    # restart wsl (and install kernel/modules)
     if ("\$(\$args[1])" -ne ""){
         if ("\$(\$args[1])" -ne "restart"){
             echo "installing kernel to \$(\$args[1]) distro ..."

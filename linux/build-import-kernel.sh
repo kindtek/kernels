@@ -496,8 +496,8 @@ linux_kernel_kali="${linux_kernel_kali#linux-headers-}"
 echo "linux_kernel_kali: $linux_kernel_kali"
 rm -fv "/usr/src/${linux_kernel_generic_header}/scripts"
 rm -fv "/usr/src/${linux_kernel_kali_header}/tools" 
-mkdir -fv "/usr/src/${linux_kernel_generic_header}/scripts"
-mkdir -fv "/usr/src/${linux_kernel_kali_header}/tools" 
+mkdir -pv "/usr/src/${linux_kernel_generic_header}/scripts"
+mkdir -pv "/usr/src/${linux_kernel_kali_header}/tools" 
 cp -TRfv "$linux_build_dir/scripts/" "/usr/src/${kindtek_kernel_version}-common/scripts"
 cp -TRfv "$linux_build_dir/tools/" "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}/tools" | tail -n 100
 cp -TRfv "/usr/src/${linux_kernel_generic_header}/" "/usr/src/${kindtek_kernel_version}-common" | tail -n 100
@@ -519,7 +519,7 @@ mkdir -pv "/usr/lib/modules/${linux_kernel_kali}-${linux_kernel_kali_header_type
 mkdir -pv "/usr/lib/modules/${kindtek_kernel_version}${kindtek_kernel_suffix%-}"
 mkdir -pv "kache/usr/lib/modules/${kindtek_kernel_version}${kindtek_kernel_suffix%-}"
 
-    
+
 ln -sv "/usr/src/${kindtek_kernel_version}-common/source" "/usr/lib/modules/${kindtek_kernel_version}" && \
 ln -sv "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}/build" "/usr/lib/modules/${kindtek_kernel_version}${kindtek_kernel_suffix%-}" && \
 

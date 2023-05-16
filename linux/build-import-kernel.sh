@@ -455,10 +455,10 @@ yes 'y' | apt -y install "$linux_kernel_generic_header" 2>/dev/null
 # reset kache
 rm -rfv kache/boot | grep '/$' | tail -n 5
 rm -rfv kache/usr | grep '/$' | tail -n 5
-mkdir -pv kache/boot 2>/dev/null
-mkdir -pv kache/usr/src 2>/dev/null
-mkdir -pv kache/usr/include 2>/dev/null
-mkdir -pv kache/usr/lib/modules 2>/dev/null
+mkdir -pfv kache/boot 2>/dev/null
+mkdir -pfv kache/usr/src 2>/dev/null
+mkdir -pfv kache/usr/include 2>/dev/null
+mkdir -pfv kache/usr/lib/modules 2>/dev/null
 # not sure if renaming header will work so copying just to be safe for now
 # mv "/usr/src/$linux_kernel_kali_header_pattern" "/usr/src/$kindtek_kernel_version"
 # the following requires linux headers to be installed first in the wsl install script
@@ -475,8 +475,8 @@ echo "linux_kernel_kali_header_type: $linux_kernel_kali_header_type"
 linux_kernel_kali="${linux_kernel_kali_header%%-$linux_kernel_kali_header_type}"
 linux_kernel_kali="${linux_kernel_kali#linux-headers-}"
 echo "linux_kernel_kali: $linux_kernel_kali"
-mkdir -pv "kache/usr/src/${kindtek_kernel_version}-common"
-mkdir -pv "kache/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}"
+mkdir -pfv "kache/usr/src/${kindtek_kernel_version}-common"
+mkdir -pfv "kache/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}"
 cp -rfv "/usr/src/${linux_kernel_generic_header}" "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}common" | grep '^.*/\s*$' | tail -n 5
 cp -rfv "/usr/src/${kindtek_kernel_version}-common" "kache/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}common" | grep '^.*/\s*$' | tail -n 5
 cp -rfv "/usr/src/${linux_kernel_kali_header}" "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}" | grep '^.*/\s*$' | tail -n 5

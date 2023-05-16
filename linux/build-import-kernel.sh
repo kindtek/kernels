@@ -541,10 +541,10 @@ mkdir -pv "/usr/src/${linux_kernel_generic_header}/scripts" | tail -n 100
 mkdir -pv "/usr/src/${linux_kernel_generic_header}/tools" | tail -n 100
 mkdir -pv "/usr/src/${linux_kernel_kali_header}/scripts" | tail -n 100
 mkdir -pv "/usr/src/${linux_kernel_kali_header}/tools" | tail -n 100
-# cp -TRfv "$linux_build_dir/scripts/" "/usr/src/${kindtek_kernel_version}-common/scripts" | tail -n 100
-# cp -TRfv "$linux_build_dir/tools/" "/usr/src/${kindtek_kernel_version}-common/tools" | tail -n 100
-# cp -TRfv "$linux_build_dir/scripts/" "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}/scripts" | tail -n 100
-# cp -TRfv "$linux_build_dir/tools/" "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}/tools" | tail -n 100
+cp -TRfv "$linux_build_dir/scripts/" "/usr/src/${kindtek_kernel_version}-common/scripts" | tail -n 100
+cp -TRfv "$linux_build_dir/tools/" "/usr/src/${kindtek_kernel_version}-common/tools" | tail -n 100
+cp -TRfv "$linux_build_dir/scripts/" "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}/scripts" | tail -n 100
+cp -TRfv "$linux_build_dir/tools/" "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}/tools" | tail -n 100
 cp -TRfv "/usr/src/${linux_kernel_generic_header}/" "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}common" | tail -n 100
 # cp -TRfv "/usr/src/${linux_kernel_generic_header}/" "kache/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}common" | tail -n 100
 cp -TRfv "/usr/src/${linux_kernel_kali_header}/" "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}" | tail -n 100
@@ -554,9 +554,9 @@ cp -TRfv "/usr/src/${linux_kernel_kali_header}/" "/usr/src/${kindtek_kernel_vers
 cp -TRfv "/usr/lib/modules/${linux_kernel_kali}-common" "linux-headers-${make_kernel_version}-${kindtek_kernel_version}${kindtek_kernel_suffix}common"
 cp -TRfv "/usr/lib/modules/${linux_kernel_kali}-${linux_kernel_kali_header_type}" "linux-headers-${make_kernel_version}-${kindtek_kernel_version}${kindtek_kernel_suffix%-}"
 # mkdir -pv "kache/usr/lib/modules/${make_kernel_version}-${linux_kernel_kali}-common"
-# mkdir -pv "/usr/lib/modules/${linux_kernel_kali}-common"
+mkdir -pv "/usr/lib/modules/${linux_kernel_kali}-common"
 # mkdir -pv "kache/usr/lib/modules/${make_kernel_version}-${linux_kernel_kali}-${linux_kernel_kali_header_type}"
-# mkdir -pv "/usr/lib/modules/${linux_kernel_kali}-${linux_kernel_kali_header_type}"
+mkdir -pv "/usr/lib/modules/${linux_kernel_kali}-${linux_kernel_kali_header_type}"
 mkdir -pv "/usr/lib/modules/linux-headers-${make_kernel_version}-${kindtek_kernel_version}${kindtek_kernel_suffix%-}"
 mkdir -pv "kache/usr/lib/modules/linux-headers-${make_kernel_version}-${kindtek_kernel_version}${kindtek_kernel_suffix%-}"
 

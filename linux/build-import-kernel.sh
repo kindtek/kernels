@@ -522,8 +522,8 @@ mkdir -pv "kache/usr/lib/modules/linux-headers-${make_kernel_version}-${kindtek_
 
 rm -fv "/usr/lib/modules/linux-headers-${make_kernel_version}-${kindtek_kernel_version}${kindtek_kernel_suffix%-}/source"
 rm -fv "/usr/lib/modules/linux-headers-${make_kernel_version}-${kindtek_kernel_version}${kindtek_kernel_suffix%-}/build"
-ln -sv "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}common/source" "/usr/lib/modules/linux-headers-${make_kernel_version}-${kindtek_kernel_version}${kindtek_kernel_suffix%-}" && \
-ln -sv "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}/build" "/usr/lib/modules/linux-headers-${make_kernel_version}-${kindtek_kernel_version}${kindtek_kernel_suffix%-}" && \
+ln -sv "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}common" "/usr/lib/modules/linux-headers-${make_kernel_version}-${kindtek_kernel_version}${kindtek_kernel_suffix%-}/source" && \
+ln -sv "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}" "/usr/lib/modules/linux-headers-${make_kernel_version}-${kindtek_kernel_version}${kindtek_kernel_suffix%-}/build" && \
 
 cd $linux_build_dir || exit
 make headers_install

@@ -9,20 +9,20 @@ kernel_file_suffix="W"
 linux_build_dir=linux-build
 
 if [ "$zfs" = "zfs" ];  then
-set -x
+# set -x
     zfs_build_dir="zfs-build"
     zfs_repo=https://github.com/openzfs/zfs.git
     zfs_version_tag=$(git -c versionsort.suffix=- ls-remote --refs --sort=version:refname --tags $zfs_repo | tail --lines=1 | cut --delimiter='/' --fields=3)
     zfs_version=${zfs_version_tag#"zfs-"}
     linux_kernel_type_tag=$linux_kernel_type_tag-ZFS
     kernel_file_suffix+="Z"
-set +x
+# set +x
 fi
 if [ "$kernel_type" = "" ]; then
     kernel_type="stable"
 fi
 if [ "$kernel_type" = "latest" ]; then
-set -x
+# set -x
     # zfs not supported atm
     # zfs=False; linux_kernel_type_tag=;
     if [ "$zfs" = "zfs" ]; then
@@ -35,10 +35,10 @@ set -x
     linux_kernel_type_tag="LATEST-WSL${linux_kernel_type_tag}"
     linux_kernel_version=${linux_kernel_version_tag#"v"}
     kernel_file_suffix+="L"
-set +x
+# set +x
     # config_file_suffix+="_latest"
 elif [ "$kernel_type" = "latest-rc" ]; then
-set -x
+# set -x
     # zfs not supported atm
     # zfs=False; linux_kernel_type_tag=;
     # if [ "$zfs" = "zfs" ]; then
@@ -52,9 +52,9 @@ set -x
     linux_kernel_version_tag=$(git ls-remote --refs --sort=version:refname --tags $linux_repo | cut --delimiter='/' --fields=3 | grep '^v[0-9a-zA-Z\.]*-rc.*$' | tail --lines=1) 
     linux_kernel_type_tag="LATEST_RC-WSL${linux_kernel_type_tag}"
     linux_kernel_version=${linux_kernel_version_tag#"v"}
-set +x
+# set +x
 elif [ "$kernel_type" = "stable" ]; then
-set -x
+# set -x
     # latest tag doesn't work properly with zfs so manually update for zfs version possibly compatible with 6.2.9+
     # update: it did not work
     # zfs_version=2.1.11
@@ -72,10 +72,10 @@ set -x
     linux_kernel_version_tag=$(git -c versionsort.suffix=- ls-remote --refs --sort=version:refname --tags $linux_repo | tail --lines=1 | cut --delimiter='/' --fields=3)
     linux_kernel_type_tag="STABLE-WSL${linux_kernel_type_tag}"
     linux_kernel_version=${linux_kernel_version_tag#"v"}
-set +x
+# set +x
 # elif [ "$kernel_type"="basic" ]; then
 else 
-set -x
+# set -x
     # (BASIC)
     # latest tag doesn't work properly with zfs so manually update for zfs version compatible with 5.5.3+
     zfs_version=2.1.11
@@ -91,7 +91,7 @@ set -x
     # manually set version due to known bug that breaks 5.15 build with werror: pointer may be used after 'realloc' [-Werror=use-after-free] https://gcc.gnu.org/bugzilla/show_bug.cgi?id=104069
     linux_kernel_version_tag=linux-msft-wsl-6.1.y
     linux_kernel_version=6.1
-set +x
+# set +x
 fi
 
 package_full_name_id=Linux-$linux_kernel_version-${linux_kernel_type_tag}_${timestamp_id}

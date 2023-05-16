@@ -504,7 +504,7 @@ echo "kindtek_kernel_suffix: $kindtek_kernel_suffix"
 kindtek_kernel_suffix="${kindtek_kernel_suffix:-$(echo "-$kindtek_kernel_suffix")}"
 if [[ $kindtek_kernel_suffix == *dirty ]]; then
     # keep trailing dash consistent
-    kindtek_kernel_suffix="$kindtek_kernel_suffix-"
+    kindtek_kernel_suffix="-$kindtek_kernel_suffix-"
 elif [[ "$kindtek_kernel_suffix" == g* ]]; then
     # keep trailing dash consistent
     kindtek_kernel_suffix="-$kindtek_kernel_suffix-"

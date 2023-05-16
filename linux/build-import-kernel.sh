@@ -451,10 +451,10 @@ if [ "$zfs" = "zfs" ];  then
 fi
 if (( quick_wsl_install )); then
     yes "" | make -j$(($(nproc) - 1))
-    yes "" | make deb-pkg
+    # yes "" | make deb-pkg
 else
     make -j$(($(nproc) - 1))
-    make deb-pkg
+    # make deb-pkg
 fi
 
 

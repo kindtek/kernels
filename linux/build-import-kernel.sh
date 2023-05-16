@@ -370,6 +370,11 @@ read -r -p "(build)
 if [ "$build" != "" ]; then
     exit
 fi
+# reset repo when not quick_wsl_install
+if ! (( quick_wsl_install )); then
+    git reset --hard
+    git clean -fxd
+fi
 if [ -d "$linux_build_dir/.git" ]; then
     cd "$linux_build_dir" || exit
     if ! (( quick_wsl_install )); then

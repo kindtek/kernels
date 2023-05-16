@@ -452,9 +452,10 @@ echo "linux generic header: $linux_kernel_generic_header"
 yes 'y' | apt -y install "$linux_kernel_kali_header" 2>/dev/null
 yes 'y' | apt -y install "$linux_kernel_generic_header" 2>/dev/null
 
+cd .. || exit
 # reset kache
-rm -rfv kache/boot | grep '/$' | tail -n 5
-rm -rfv kache/usr | grep '/$' | tail -n 5
+rm -rf kache/boot 
+rm -rf kache/usr 
 mkdir -pv kache/boot 2>/dev/null
 mkdir -pv kache/usr/src 2>/dev/null
 mkdir -pv kache/usr/include 2>/dev/null
@@ -488,10 +489,10 @@ linux_kernel_kali="${linux_kernel_kali#linux-headers-}"
 echo "linux_kernel_kali: $linux_kernel_kali"
 mkdir -pv "kache/usr/src/${kindtek_kernel_version}-common"
 mkdir -pv "kache/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}"
-cp -rfv "/usr/src/${linux_kernel_generic_header}" "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}common" | grep '^.*/\s*$' | tail -n 5
-cp -rfv "/usr/src/${kindtek_kernel_version}-common" "kache/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}common" | grep '^.*/\s*$' | tail -n 5
-cp -rfv "/usr/src/${linux_kernel_kali_header}" "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}" | grep '^.*/\s*$' | tail -n 5
-cp -rfv "/usr/src/${kindtek_kernel_version}-${linux_kernel_kali_header_type}" "kache/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}" | grep '^.*/\s*$' | tail -n 5
+cp -rf "/usr/src/${linux_kernel_generic_header}" "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}common" 
+cp -rf "/usr/src/${kindtek_kernel_version}-common" "kache/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}common" 
+cp -rf "/usr/src/${linux_kernel_kali_header}" "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}" 
+cp -rf "/usr/src/${kindtek_kernel_version}-${linux_kernel_kali_header_type}" "kache/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}" 
 rm -fv "/usr/lib/modules/${linux_kernel_kali}-common/source"
 rm -fv "/usr/lib/modules/${linux_kernel_kali}-common/build"
 rm -fv "/usr/lib/modules/${linux_kernel_kali}-${linux_kernel_kali_header_type}/build"
@@ -503,9 +504,12 @@ mkdir -pv "/usr/lib/modules/${linux_kernel_kali}-${linux_kernel_kali_header_type
     
 ln -sv "/usr/src/${kindtek_kernel_version}-common" "/usr/lib/modules/${linux_kernel_kali}-common/source" && \
 ln -sv "/usr/src/${kindtek_kernel_version}-${linux_kernel_kali_header_type}" "/usr/lib/modules/${linux_kernel_kali}-${linux_kernel_kali_header_type}/build" && \
+
+cd $linux_build_dir || exit
 make headers_install
 make modules install
-find /usr/include -type d -mmin -1 -exec cp -rfv {} kache/usr/include \; | grep '/\s*$' | tail -n 5;
+cd .. || exit
+find /usr/include -type d -mmin -1 -exec cp -rf {} kache/usr/include \;
 
 
 if [ ! -f "$kernel_source" ]; then
@@ -516,7 +520,7 @@ exit
 fi
 ps_wsl_install_kernel_id=wsl-kernel-install_$kernel_alias.ps1
 
-cd ..
+
 # kernel is baked - time to distribute the goods
 # move back to base dir  folder with github (relative) path
 mkdir -pv "$git_save_path" 2>/dev/null

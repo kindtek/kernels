@@ -384,11 +384,11 @@ if [ -d "$linux_build_dir/.git" ]; then
     fi
     echo "fetching origin at $linux_kernel_version_tag - $linux_commit_checkout ..."
     # git checkout "tags/$linux_kernel_version_tag" -b "$kernel_alias" --progress
-    git fetch origin "$linux_commit_checkout" --depth=2 --progress --verbose
+    git fetch origin "$linux_commit_checkout" --depth=1 --progress --verbose
     cd ..
 else
     echo "cloning $linux_kernel_version_tag ..."
-    git clone $linux_repo --single-branch --branch "$linux_commit_checkout" --depth=2 --progress -- $linux_build_dir
+    git clone $linux_repo --single-branch --branch "$linux_commit_checkout" --depth=1 --progress -- $linux_build_dir
 fi
 cd "$linux_build_dir" || exit
 git commit -m "fetched $kernel_alias" -b "$kernel_alias"

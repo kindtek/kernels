@@ -390,7 +390,7 @@ else
     echo "cloning $linux_kernel_version_tag ..."
     git clone $linux_repo --single-branch --branch "$linux_commit_checkout" --depth=1 --progress -- $linux_build_dir
 fi
-git checkout -b "$kindtek_kernel_version" "$linux_repo" "$linux_commit_checkout"
+git checkout -b "$kindtek_kernel_version" "$linux_commit_checkout"
 zfs_commit_checkout="$(git rev-parse --short "$(git ls-remote "$zfs_repo" --tags "$zfs_version_tag" --short | grep -o '^[a-zA-Z0-9]*')")"
 if [ "$zfs" = "zfs" ];  then
 #     echo "zfs == True
@@ -410,7 +410,7 @@ if [ "$zfs" = "zfs" ];  then
         echo "cloning $zfs_version_tag ..."
         git clone "$zfs_repo" --single-branch --branch "$zfs_commit_checkout" --progress -- "$zfs_build_dir" 
     fi
-    git checkout -b "$kindtek_kernel_version" "$zfs_repo" "$zfs_commit_checkout" 
+    git checkout -b "$kindtek_kernel_version" "$zfs_commit_checkout" 
 fi
 
 

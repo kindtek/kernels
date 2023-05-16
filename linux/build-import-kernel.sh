@@ -370,31 +370,22 @@ read -r -p "(build)
 if [ "$build" != "" ]; then
     exit
 fi
-# reset repo when not quick_wsl_install
-if ! (( quick_wsl_install )); then
-    git reset --hard
-    git clean -fxd
-fi
-linux_commit_checkout="$(git ls-remote "$linux_repo" --tags "$linux_kernel_version_tag" --short | grep -o '^[a-zA-Z0-9]*')"
+
 if [ -d "$linux_build_dir/.git" ]; then
     cd "$linux_build_dir" || exit
     if ! (( quick_wsl_install )); then
         git reset --hard
         git clean -fxd
     fi
-    echo "fetching origin at $linux_kernel_version_tag - $linux_commit_checkout ..."
+    echo "checking out $linux_kernel_version_tag ..."
     # git checkout "tags/$linux_kernel_version_tag" -b "$kernel_alias" --progress
-    git fetch origin "$linux_commit_checkout" --depth=1 --progress --verbose
+    git checkout "tags/$linux_kernel_version_tag" --progress
     cd ..
 else
     echo "cloning $linux_kernel_version_tag ..."
-    git clone $linux_repo --single-branch --branch "$linux_commit_checkout" --depth=1 --progress -- $linux_build_dir
+    git clone $linux_repo --single-branch --branch "$linux_kernel_version_tag" --depth=1 --progress -- $linux_build_dir
 fi
-cd "$linux_build_dir" || exit
-git checkout --detach
-cd .. || exit
 
-zfs_commit_checkout="$(git ls-remote "$zfs_repo" --tags "$zfs_version_tag" --short | grep -o '^[a-zA-Z0-9]*')"
 if [ "$zfs" = "zfs" ];  then
 #     echo "zfs == True
 # LINENO: ${LINENO}"
@@ -404,18 +395,15 @@ if [ "$zfs" = "zfs" ];  then
             git reset --hard
             git clean -fxd
         fi
-        echo "fetching origin at $zfs_version_tag - $zfs_commit_checkout..."
+        echo "checking out $zfs_version_tag ..."
 
         # git checkout "tags/$zfs_version_tag" -b "$kernel_alias" --progress
-        git fetch origin "$zfs_commit_checkout" --progress --verbose
+        git checkout "tags/$zfs_version_tag" --progress
         cd ..
     else
         echo "cloning $zfs_version_tag ..."
-        git clone "$zfs_repo" --single-branch --branch "$zfs_commit_checkout" --progress -- "$zfs_build_dir" 
+        git clone "$zfs_repo" --single-branch --branch "$zfs_version_tag" --progress -- "$zfs_build_dir" 
     fi
-    cd "$zfs_build_dir" || exit
-    git checkout --detach
-    cd .. || exit
 fi
 
 

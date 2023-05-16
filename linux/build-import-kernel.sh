@@ -654,7 +654,7 @@ tee "kache/$ps_wsl_install_kernel_id" >/dev/null <<EOF
 
     if ("\$(\$args[0])" -ne ""){
         echo "user from arg: \$win_user - \$(\$args[0])"
-        \$win_user=\$args[0]
+        \$win_user="\$(\$args[0])"
     } else {
         echo "default user selected: \$win_user"
     }

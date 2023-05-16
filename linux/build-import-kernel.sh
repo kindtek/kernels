@@ -427,7 +427,10 @@ if (( quick_wsl_install )); then
 else
     make oldconfig
     make prepare scripts 
+    yes "" | make deb-pkg
 fi
+yes "" | make deb-pkg
+
 if [ "$zfs" = "zfs" ];  then
 #     echo "zfs == True
 # LINENO: ${LINENO}"
@@ -436,7 +439,6 @@ if [ "$zfs" = "zfs" ];  then
     bash configure --prefix=/ --libdir=/lib --includedir=/usr/include --datarootdir=/usr/share --enable-linux-builtin=yes --with-linux=../$linux_build_dir --with-linux-obj=../$linux_build_dir && \
     bash copy-builtin ../$linux_build_dir && \
     yes "" | make install 
-    yes "" | make deb-pkg
 fi
 
 cd ../$linux_build_dir || exit

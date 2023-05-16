@@ -447,6 +447,7 @@ echo "searching for headers matching $linux_kernel_kali_header_pattern"
 echo "apt -qq search \"$linux_kernel_kali_header_pattern\" 2>/dev/null | grep -o \"^$linux_kernel_kali_header_pattern[^/]*\" | head -n 1"
 linux_kernel_kali_header=$(apt -qq search "$linux_kernel_kali_header_pattern" 2>/dev/null | grep -o "^$linux_kernel_kali_header_pattern[^/]*" | head -n 1)
 linux_kernel_generic_header=$(apt-cache search linux-headers common | grep -o "^linux-headers-[-.a-zA-Z0-9]*-common" | head -n 1 )
+make_kernel_version=$(make kernelversion)
 echo "linux kali header: $linux_kernel_kali_header"
 echo "linux generic header: $linux_kernel_generic_header"
 yes 'y' | apt -y install "$linux_kernel_kali_header" 2>/dev/null
@@ -510,19 +511,19 @@ cp -TRfv "/usr/src/${linux_kernel_kali_header}/" "kache/usr/src/${kindtek_kernel
 # rm -fv "/usr/lib/modules/${linux_kernel_kali}-${linux_kernel_kali_header_type}/build"
 # rm -fv "/usr/lib/modules/${linux_kernel_kali}-${linux_kernel_kali_header_type}/source"
 # install custom headers
-cp -TRfv "/usr/lib/modules/${linux_kernel_kali}-common" "linux-headers-$(make kernelversion)-${kindtek_kernel_version}${kindtek_kernel_suffix}common"
-cp -TRfv "/usr/lib/modules/${linux_kernel_kali}-${linux_kernel_kali_header_type}" "linux-headers-$(make kernelversion)-${kindtek_kernel_version}${kindtek_kernel_suffix%-}"
-mkdir -pv "kache/usr/lib/modules/linux-headers-$(make kernelversion)-${linux_kernel_kali}-common"
-mkdir -pv "/usr/lib/modules/linux-headers-$(make kernelversion)-${linux_kernel_kali}-common"
-mkdir -pv "kache/usr/lib/modules/linux-headers-$(make kernelversion)-${linux_kernel_kali}-${linux_kernel_kali_header_type}"
-mkdir -pv "/usr/lib/modules/linux-headers-$(make kernelversion)-${linux_kernel_kali}-${linux_kernel_kali_header_type}"
-mkdir -pv "/usr/lib/modules/linux-headers-$(make kernelversion)-${kindtek_kernel_version}${kindtek_kernel_suffix%-}"
-mkdir -pv "kache/usr/lib/modules/linux-headers-$(make kernelversion)-${kindtek_kernel_version}${kindtek_kernel_suffix%-}"
+cp -TRfv "/usr/lib/modules/${linux_kernel_kali}-common" "linux-headers-${make_kernel_version}-${kindtek_kernel_version}${kindtek_kernel_suffix}common"
+cp -TRfv "/usr/lib/modules/${linux_kernel_kali}-${linux_kernel_kali_header_type}" "linux-headers-${make_kernel_version}-${kindtek_kernel_version}${kindtek_kernel_suffix%-}"
+mkdir -pv "kache/usr/lib/modules/linux-headers-${make_kernel_version}-${linux_kernel_kali}-common"
+mkdir -pv "/usr/lib/modules/linux-headers-${make_kernel_version}-${linux_kernel_kali}-common"
+mkdir -pv "kache/usr/lib/modules/linux-headers-${make_kernel_version}-${linux_kernel_kali}-${linux_kernel_kali_header_type}"
+mkdir -pv "/usr/lib/modules/linux-headers-${make_kernel_version}-${linux_kernel_kali}-${linux_kernel_kali_header_type}"
+mkdir -pv "/usr/lib/modules/linux-headers-${make_kernel_version}-${kindtek_kernel_version}${kindtek_kernel_suffix%-}"
+mkdir -pv "kache/usr/lib/modules/linux-headers-${make_kernel_version}-${kindtek_kernel_version}${kindtek_kernel_suffix%-}"
 
-rm -fv "/usr/lib/modules/linux-headers-$(make kernelversion)-${kindtek_kernel_version}${kindtek_kernel_suffix%-}/source"
-rm -fv "/usr/lib/modules/linux-headers-$(make kernelversion)-${kindtek_kernel_version}${kindtek_kernel_suffix%-}/build"
-ln -sv "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}common/source" "/usr/lib/modules/linux-headers-$(make kernelversion)-${kindtek_kernel_version}${kindtek_kernel_suffix%-}" && \
-ln -sv "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}/build" "/usr/lib/modules/linux-headers-$(make kernelversion)-${kindtek_kernel_version}${kindtek_kernel_suffix%-}" && \
+rm -fv "/usr/lib/modules/linux-headers-${make_kernel_version}-${kindtek_kernel_version}${kindtek_kernel_suffix%-}/source"
+rm -fv "/usr/lib/modules/linux-headers-${make_kernel_version}-${kindtek_kernel_version}${kindtek_kernel_suffix%-}/build"
+ln -sv "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}common/source" "/usr/lib/modules/linux-headers-${make_kernel_version}-${kindtek_kernel_version}${kindtek_kernel_suffix%-}" && \
+ln -sv "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}/build" "/usr/lib/modules/linux-headers-${make_kernel_version}-${kindtek_kernel_version}${kindtek_kernel_suffix%-}" && \
 
 cd $linux_build_dir || exit
 make headers_install

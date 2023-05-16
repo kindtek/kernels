@@ -462,7 +462,7 @@ mkdir -pv kache/usr/lib/modules 2>/dev/null
 # not sure if renaming header will work so copying just to be safe for now
 # mv "/usr/src/$linux_kernel_kali_header_pattern" "/usr/src/$kindtek_kernel_version"
 # the following requires linux headers to be installed first in the wsl install script
-kindtek_kernel_suffix="$(ls -tx1 /boot/vmlinuz-*-${kindtek_kernel_version}* | sed -r -e "s/^\/boot\/vmlinuz-[0-9.]*-$kindtek_kernel_version-(.*)$/\1/g"  | head -n 1)"
+kindtek_kernel_suffix="$(ls -tx1 /boot/vmlinuz-*-${kindtek_kernel_version}* | sed -r -e "s/^\/boot\/vmlinuz-[0-9.]*(-rc[0-9]*)?-$kindtek_kernel_version-(.*)$/\2/g"  | head -n 1)"
 echo "kindtek_kernel_suffix: $kindtek_kernel_suffix"
 kindtek_kernel_suffix="${kindtek_kernel_suffix%%.old}"
 echo "kindtek_kernel_suffix: $kindtek_kernel_suffix"

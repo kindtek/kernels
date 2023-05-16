@@ -685,7 +685,7 @@ tee "kache/$ps_wsl_install_kernel_id" >/dev/null <<EOF
         wsl.exe -d "\$(\$args[1])" --exec sudo cp -rf "/mnt/c/users/\$env:USERNAME/kache/boot/\$kernel_version" / 
         echo "installing kernel modules to \$(\$args[1]) distro ..."
         wsl.exe -d "\$(\$args[1])" --exec sudo cp -rf "/mnt/c/users/\$env:USERNAME/kache/usr/src/\$kernel_version" / 
-        # order is important here for installing kernel headers
+        # order is important here for installing kernel headers bc we may rely on it being installed first chronologically later
         wsl.exe -d "\$(\$args[1])" --exec sudo yes 'y' | apt -y install "$linux_kernel_generic_header" 2>/dev/null
         wsl.exe -d "\$(\$args[1])" --exec sudo yes 'y' | apt -y install "$linux_kernel_kali_header" 2>/dev/null
         if ("\$(\$args[2])" -eq "restart"){
@@ -699,7 +699,7 @@ tee "kache/$ps_wsl_install_kernel_id" >/dev/null <<EOF
         wsl.exe --exec sudo cp -rf "/mnt/c/users/\$env:USERNAME/kache/boot/\$kernel_version" / 
         echo "installing kernel modules to default distro ..."
         wsl.exe --exec sudo cp -rf "/mnt/c/users/\$env:USERNAME/kache/usr/src/\$kernel_version" /
-        # order is important here for installing kernel headers
+        # order is important here for installing kernel headers bc we may rely on it being installed first chronologically later
         wsl.exe --exec sudo yes 'y' | apt -y install "$linux_kernel_generic_header" 2>/dev/null
         wsl.exe --exec sudo yes 'y' | apt -y install "$linux_kernel_kali_header" 2>/dev/null
         if ("\$(\$args[1])" -eq "restart"){                        

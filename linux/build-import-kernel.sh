@@ -495,16 +495,7 @@ echo "linux_kernel_kali_header_type: $linux_kernel_kali_header_type"
 linux_kernel_kali="${linux_kernel_kali_header%%-$linux_kernel_kali_header_type}"
 linux_kernel_kali="${linux_kernel_kali#linux-headers-}"
 echo "linux_kernel_kali: $linux_kernel_kali"
-rm -rfv "/usr/src/${linux_kernel_generic_header}/scripts"
-rm -rfv "/usr/src/${linux_kernel_kali_header}/tools" 
-mkdir -pv "/usr/src/${linux_kernel_generic_header}/scripts"
-mkdir -pv "/usr/src/${linux_kernel_kali_header}/tools" 
-cp -TRfv "$linux_build_dir/scripts/" "/usr/src/${kindtek_kernel_version}-common/scripts"
-cp -TRfv "$linux_build_dir/tools/" "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}/tools" | tail -n 100
-cp -TRfv "/usr/src/${linux_kernel_generic_header}/" "/usr/src/${kindtek_kernel_version}-common" | tail -n 100
-cp -TRfv "/usr/src/${linux_kernel_generic_header}/" "kache/usr/src/${kindtek_kernel_version}-common" | tail -n 100
-cp -TRfv "/usr/src/${linux_kernel_kali_header}/" "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}" | tail -n 100
-cp -TRfv "/usr/src/${linux_kernel_kali_header}/" "kache/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}" | tail -n 100
+
 # # remove/replace old symlink
 # rm -fv "/usr/lib/modules/${linux_kernel_kali}-common/source" 
 # rm -fv "/usr/lib/modules/${linux_kernel_kali}-common/build"
@@ -532,6 +523,17 @@ make modules install
 # make modules install
 cd .. || exit
 # find /usr/include -type d -mmin -1 -exec cp -rf {} kache/usr/include \;
+
+rm -rfv "/usr/src/${linux_kernel_generic_header}/scripts"
+rm -rfv "/usr/src/${linux_kernel_kali_header}/tools" 
+mkdir -pv "/usr/src/${linux_kernel_generic_header}/scripts"
+mkdir -pv "/usr/src/${linux_kernel_kali_header}/tools" 
+cp -TRfv "$linux_build_dir/scripts/" "/usr/src/${kindtek_kernel_version}-common/scripts"
+cp -TRfv "$linux_build_dir/tools/" "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}/tools" | tail -n 100
+cp -TRfv "/usr/src/${linux_kernel_generic_header}/" "/usr/src/${kindtek_kernel_version}-common" | tail -n 100
+cp -TRfv "/usr/src/${linux_kernel_generic_header}/" "kache/usr/src/${kindtek_kernel_version}-common" | tail -n 100
+cp -TRfv "/usr/src/${linux_kernel_kali_header}/" "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}" | tail -n 100
+cp -TRfv "/usr/src/${linux_kernel_kali_header}/" "kache/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}" | tail -n 100
 
 ps_wsl_install_kernel_id=wsl-kernel-install_$kernel_alias.ps1
 

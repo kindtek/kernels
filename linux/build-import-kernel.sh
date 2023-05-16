@@ -501,7 +501,7 @@ kindtek_kernel_suffix="${kindtek_kernel_suffix:-$(echo "-$kindtek_kernel_suffix"
 if [[ $kindtek_kernel_suffix == *dirty ]]; then
     # keep trailing dash consistent
     kindtek_kernel_suffix="$kindtek_kernel_suffix-"
-elif [ "$kindtek_kernel_suffix" = "g$(git rev-parse --verify --short HEAD)" ]; then
+elif [[ "$kindtek_kernel_suffix" == "g$(git rev-parse --verify --short HEAD)*" ]]; then
     # keep trailing dash consistent
     kindtek_kernel_suffix="-$kindtek_kernel_suffix-"
 fi

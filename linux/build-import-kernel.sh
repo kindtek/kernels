@@ -391,7 +391,7 @@ else
     git clone $linux_repo --single-branch --branch "$linux_commit_checkout" --depth=1 --progress -- $linux_build_dir
 fi
 cd "$linux_build_dir" || exit
-git checkout--detach "$linux_commit_checkout"
+git checkout --detach "$linux_commit_checkout"
 cd .. || exit
 
 zfs_commit_checkout="$(git ls-remote "$zfs_repo" --tags "$zfs_version_tag" --short | grep -o '^[a-zA-Z0-9]*')"

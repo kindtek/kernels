@@ -453,8 +453,8 @@ yes 'y' | apt -y install "$linux_kernel_kali_header" 2>/dev/null
 yes 'y' | apt -y install "$linux_kernel_generic_header" 2>/dev/null
 
 # reset kache
-rm -rfv kache/boot
-rm -rfv kache/usr
+rm -rfv kache/boot | grep '/$' | tail -n 5
+rm -rfv kache/usr | grep '/$' | tail -n 5
 mkdir -pv kache/boot 2>/dev/null
 mkdir -pv kache/usr/src 2>/dev/null
 mkdir -pv kache/usr/include 2>/dev/null

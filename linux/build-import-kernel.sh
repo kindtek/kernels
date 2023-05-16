@@ -498,6 +498,10 @@ echo "kindtek_kernel_suffix: $kindtek_kernel_suffix"
 kindtek_kernel_suffix="${kindtek_kernel_suffix%%.old}"
 echo "kindtek_kernel_suffix: $kindtek_kernel_suffix"
 kindtek_kernel_suffix="${kindtek_kernel_suffix:-$(echo "-$kindtek_kernel_suffix")}"
+if [[ $kindtek_kernel_suffix == *dirty ]]; then
+    # keep trailing dash consistent
+    kindtek_kernel_suffix="$kindtek_kernel_suffix-"
+fi
 echo "kindtek_kernel_suffix: $kindtek_kernel_suffix"
 # kindtek_kernel_suffix="${kindtek_kernel_suffix//+/-}"
 linux_kernel_kali_header_type=${linux_kernel_kali_header##*-}

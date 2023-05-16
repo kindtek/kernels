@@ -585,7 +585,7 @@ ps_wsl_install_kernel_id="wsl-kernel-install_${kernel_alias}.ps1"
 mkdir -pv "$git_save_path" 2>/dev/null
 # queue files to be saved to repo
 cp -fv --backup=numbered $linux_build_dir/.config "${config_target_git}"
-cp -fv --backup=numbered $linux_build_dir/"${kernel_source}" "${kernel_target_git}"
+cp -fv --backup=numbered "$linux_build_dir/${kernel_source}" "${kernel_target_git}"
 
 
 # copy relevant sources and kache modules
@@ -608,7 +608,7 @@ mkdir -pv "${win_k_cache}" 2>/dev/null
 sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\kache\\\\\\\\${kernel_alias}/g" ../../../dvlp/mnt/HOME_WIN/head.wslconfig
 cp -fv --backup=numbered ../../../dvlp/mnt/HOME_WIN/head.wslconfig kache/.wslconfig
 
-
+echo "ps_wsl_install_kernel_id: ${ps_wsl_install_kernel_id}"
 tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
 
 #############################################################################

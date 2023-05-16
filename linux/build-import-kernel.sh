@@ -517,7 +517,7 @@ echo "linux_kernel_kali: $linux_kernel_kali"
 cd $linux_build_dir || exit
 make headers_install
 make modules install
-# bash configure --includedir=../kache/usr/include --datarootdir=../kache/usr/share
+# bash configure --includedir=../kache/usr/include --datarootdir=../kache/usr/share --headers_install=/usr/include
 # make modules install
 cd .. || exit
 # install scripts and tools to usr/src first

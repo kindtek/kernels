@@ -594,7 +594,7 @@ rm -rfv  kache/boot/*.old | tail -n 5
 # cp -r -f "/usr/src" "kache"
 cp -TRfv "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}common/" "kache/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}common" | tail -n 20
 cp -TRfv "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}/" "kache/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}" | tail -n 20
-cp -Rfv "/usr/lib/k-build*/c*" "kache" | tail -n 20
+cp -TRfv "/usr/lib/linux-k-build-${linux_kernel_kali%%-*}/certs" "kache/usr/lib/linux-k-build-${linux_kernel_kali%%-*}/certs" | tail -n 20
 
 # cp -rf /usr/lib/modules/${linux_kernel_header_version}* "kache/usr/lib/modules"
 # win

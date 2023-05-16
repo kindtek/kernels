@@ -562,7 +562,7 @@ cp -TRfv "/usr/src/${linux_kernel_kali_header}/" "/usr/src/${kindtek_kernel_vers
 # cp -TRfv "/usr/src/${linux_kernel_kali_header}/" "kache/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}" | tail -n 100
 
 mkdir -pv "/usr/lib/modules/${linux_kernel_kali}-common"
-mkdir -pv "/usr/lib/modules/{make_kernel_version}-${kindtek_kernel_version}${kindtek_kernel_suffix}common"
+mkdir -pv "/usr/lib/modules/${make_kernel_version}-${kindtek_kernel_version}${kindtek_kernel_suffix}common"
 # install custom headers to usr/lib/modules
 cp -TRfv "/usr/lib/modules/${linux_kernel_kali}-common" "${make_kernel_version}-${kindtek_kernel_version}${kindtek_kernel_suffix}common"
 cp -TRfv "/usr/lib/modules/${linux_kernel_kali}-${linux_kernel_kali_header_type}" "${make_kernel_version}-${kindtek_kernel_version}${kindtek_kernel_suffix%-}"

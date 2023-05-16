@@ -475,8 +475,8 @@ echo "linux_kernel_kali_header_type: $linux_kernel_kali_header_type"
 linux_kernel_kali="${linux_kernel_kali_header%%-$linux_kernel_kali_header_type}"
 linux_kernel_kali="${linux_kernel_kali#linux-headers-}"
 echo "linux_kernel_kali: $linux_kernel_kali"
-cp -rfv "/usr/src/${kindtek_kernel_version}-common" "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}common" | grep '/$' | tail -n 5
-cp -rfv "/usr/src/${kindtek_kernel_version}-${linux_kernel_kali_header_type}" "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}" | grep '/$' | tail -n 5
+cp -rfv "/usr/src/${kindtek_kernel_version}-common" "kache/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}common" | grep '/$' | tail -n 5
+cp -rfv "/usr/src/${kindtek_kernel_version}-${linux_kernel_kali_header_type}" "kache/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}" | grep '/$' | tail -n 5
 orig_working_dir="$(pwd)"
 rm "/usr/lib/modules/${linux_kernel_kali}common/source"
 rm "/usr/lib/modules/${linux_kernel_kali}${linux_kernel_kali_header_type}/build"

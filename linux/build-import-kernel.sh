@@ -732,7 +732,7 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
 EOF
 
 echo "saving to compressed tarball ..."
-tar --exclude='*.~*' -czvf "${tarball_filename}" -C kache . | tail -n 5
+tar -czvf "${tarball_filename}" -C kache . | tail -n 5
 mv -fv "${tarball_filename}" "kache/${tarball_filename}" | tail -n 5
 # cp "kache/$tarball_filename" kache/latest.tar.gz
 # work on *nix first

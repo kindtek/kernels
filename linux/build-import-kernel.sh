@@ -395,6 +395,8 @@ git status --porcelain | grep '^??' | cut -c4- >> .gitignore && \
 sleep 5 && \
 git add ".gitnore" 
 git commit -m "fetched $kernel_alias" 
+git add ".gitnore" 
+git commit -m "fetched $kernel_alias" 
 git checkout -b "$kernel_alias" .
 cd .. || exit
 
@@ -420,6 +422,8 @@ if [ "$zfs" = "zfs" ];  then
     cd "$zfs_build_dir" || exit
     git status --porcelain | grep '^??' | cut -c4- >> .gitignore && \
     sleep 5 && \
+    git add ".gitnore"
+    git commit -m "fetched $kernel_alias" 
     git add ".gitnore"
     git commit -m "fetched $kernel_alias" 
     git checkout -b "$kernel_alias" .

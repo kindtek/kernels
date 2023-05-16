@@ -482,6 +482,8 @@ rm "/usr/lib/modules/${linux_kernel_kali}-common/source"
 rm "/usr/lib/modules/${linux_kernel_kali}-common/build"
 rm "/usr/lib/modules/${linux_kernel_kali}-${linux_kernel_kali_header_type}/build"
 rm "/usr/lib/modules/${linux_kernel_kali}-${linux_kernel_kali_header_type}/source"
+mkdir "kache/usr/lib/modules/${linux_kernel_kali}-common"
+mkdir "kache/usr/lib/modules/${linux_kernel_kali}-${linux_kernel_kali_header_type}"
 ln -sv "/usr/lib/modules/${linux_kernel_kali}-common" "kache/usr/lib/modules/${linux_kernel_kali}-common/source" && \
 ln -sv "/usr/lib/modules/${linux_kernel_kali}-${linux_kernel_kali_header_type}" "kache/usr/lib/modules/${linux_kernel_kali}-${linux_kernel_kali_header_type}/build" && \
 cd "$orig_working_dir" || exit

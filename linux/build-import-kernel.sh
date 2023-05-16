@@ -520,7 +520,7 @@ make modules install
 # bash configure --includedir=../kache/usr/include --datarootdir=../kache/usr/share
 # make modules install
 cd .. || exit
-# install scripts and tools first
+# install scripts and tools to usr/src first
 rm -rfv "/usr/src/${linux_kernel_generic_header}/scripts" | tail -n 100
 rm -rfv "/usr/src/${linux_kernel_generic_header}/tools" | tail -n 100
 rm -rfv "/usr/src/${linux_kernel_kali_header}/scripts" | tail -n 100
@@ -551,7 +551,7 @@ cp -TRfv "/usr/src/${linux_kernel_generic_header}/" "/usr/src/${kindtek_kernel_v
 cp -TRfv "/usr/src/${linux_kernel_kali_header}/" "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}" | tail -n 100
 # cp -TRfv "/usr/src/${linux_kernel_kali_header}/" "kache/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}" | tail -n 100
 
-# install custom headers
+# install custom headers to usr/lib/modules
 cp -TRfv "/usr/lib/modules/${linux_kernel_kali}-common" "linux-headers-${make_kernel_version}-${kindtek_kernel_version}${kindtek_kernel_suffix}common"
 cp -TRfv "/usr/lib/modules/${linux_kernel_kali}-${linux_kernel_kali_header_type}" "linux-headers-${make_kernel_version}-${kindtek_kernel_version}${kindtek_kernel_suffix%-}"
 # mkdir -pv "kache/usr/lib/modules/${make_kernel_version}-${linux_kernel_kali}-common"
@@ -573,13 +573,11 @@ ps_wsl_install_kernel_id=wsl-kernel-install_$kernel_alias.ps1
 # move back to base dir  folder with github (relative) path
 mkdir -pv "$git_save_path" 2>/dev/null
 # queue files to be saved to repo
-# if (( $user_config_flag )); then
 cp -fv --backup=numbered $linux_build_dir/.config "$config_target_git"
-# fi
 cp -fv --backup=numbered $linux_build_dir/"$kernel_source" "$kernel_target_git"
 
 
-# copy relevant sources
+# copy relevant sources and kache modules
 cp -rfv "/boot" "kache" | tail -n 5
 rm -rfv  kache/boot/*.old | tail -n 5
 # cp -r -fv "/boot/*$kindtek_kernel_version*" "kache"
@@ -588,7 +586,6 @@ cp -TRfv "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}common/" "ka
 cp -TRfv "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}/" "kache/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}" | tail -n 20
 cp -TRfv "/usr/lib/linux-k-build-${linux_kernel_kali%%-*}/certs" "kache/usr/lib/linux-k-build-${linux_kernel_kali%%-*}/certs" | tail -n 20
 
-# cp -rf /usr/lib/modules/${linux_kernel_header_version}* "kache/usr/lib/modules"
 # win
 # package a known working wslconfig file along with the kernel and config file
 mkdir -pv "$win_k_cache" 2>/dev/null

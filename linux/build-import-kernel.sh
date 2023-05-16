@@ -682,12 +682,12 @@ tee "kache/$ps_wsl_install_kernel_id" >/dev/null <<EOF
     if ("\$(\$args[1])" -ne ""){
         
         echo "installing kernel to \$(\$args[1]) distro ..."
-        pwsh -Command wsl.exe -d "\$(\$args[1])" --exec sudo cp -rfv "/mnt/c/users/\$env:USERNAME/kache/boot/\$kernel_version" / | tail -n 5
+        wsl.exe -d "\$(\$args[1])" --exec sudo cp -rfv "/mnt/c/users/\$env:USERNAME/kache/boot/\$kernel_version" / | tail -n 5
         echo "installing kernel modules to \$(\$args[1]) distro ..."
-        pwsh -Command wsl.exe --exec sudo cp -rfv "/mnt/c/users/\$env:USERNAME/kache/usr/src/\$kernel_version" / | tail -n 5
+        wsl.exe --exec sudo cp -rfv "/mnt/c/users/\$env:USERNAME/kache/usr/src/\$kernel_version" / | tail -n 5
         # order is important here for installing kernel headers
-        pwsh -Command wsl.exe -d "\$(\$args[1])" --exec sudo yes 'y' | apt -y install "$linux_kernel_generic_header" 2>/dev/null
-        pwsh -Command wsl.exe -d "\$(\$args[1])" --exec sudo yes 'y' | apt -y install "$linux_kernel_kali_header" 2>/dev/null
+        wsl.exe -d "\$(\$args[1])" --exec sudo yes 'y' | apt -y install "$linux_kernel_generic_header" 2>/dev/null
+        wsl.exe -d "\$(\$args[1])" --exec sudo yes 'y' | apt -y install "$linux_kernel_kali_header" 2>/dev/null
         if ("\$(\$args[1])" -eq "restart"){
             # restart wsl
             # pwsh -Command .\\wsl-restart.ps1;
@@ -703,12 +703,12 @@ tee "kache/$ps_wsl_install_kernel_id" >/dev/null <<EOF
         }
     } else {
             echo "installing kernel to default distro ..."
-            pwsh -Command wsl.exe --exec sudo cp -rfv "/mnt/c/users/\$env:USERNAME/kache/boot/\$kernel_version" / | tail -n 5
+            wsl.exe --exec sudo cp -rfv "/mnt/c/users/\$env:USERNAME/kache/boot/\$kernel_version" / | tail -n 5
             echo "installing kernel modules to default distro ..."
-            pwsh -Command wsl.exe --exec sudo cp -rfv "/mnt/c/users/\$env:USERNAME/kache/usr/src/\$kernel_version" / | tail -n 5
+            wsl.exe --exec sudo cp -rfv "/mnt/c/users/\$env:USERNAME/kache/usr/src/\$kernel_version" / | tail -n 5
             # order is important here for installing kernel headers
-            pwsh -Command wsl.exe -d "\$(\$args[1])" --exec sudo yes 'y' | apt -y install "$linux_kernel_generic_header" 2>/dev/null
-            pwsh -Command wsl.exe -d "\$(\$args[1])" --exec sudo yes 'y' | apt -y install "$linux_kernel_kali_header" 2>/dev/null
+            wsl.exe -d "\$(\$args[1])" --exec sudo yes 'y' | apt -y install "$linux_kernel_generic_header" 2>/dev/null
+            wsl.exe -d "\$(\$args[1])" --exec sudo yes 'y' | apt -y install "$linux_kernel_kali_header" 2>/dev/null
             exit
     }
 

@@ -466,7 +466,7 @@ kindtek_kernel_suffix="$(ls -tx1 /boot/vmlinuz-*-${kindtek_kernel_version}* | se
 echo "kindtek_kernel_suffix: $kindtek_kernel_suffix"
 kindtek_kernel_suffix="${kindtek_kernel_suffix%%.old}"
 echo "kindtek_kernel_suffix: $kindtek_kernel_suffix"
-kindtek_kernel_suffix="${kindtek_kernel_suffix:\"-$kindtek_kernel_suffix\"}"
+kindtek_kernel_suffix="${kindtek_kernel_suffix:-$(echo \"-$kindtek_kernel_suffix\")}"
 echo "kindtek_kernel_suffix: $kindtek_kernel_suffix"
 linux_kernel_kali_header_type=${linux_kernel_kali_header##*-}
 echo "kindtek_kernel_suffix: $kindtek_kernel_suffix"

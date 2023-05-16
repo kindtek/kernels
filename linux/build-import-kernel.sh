@@ -666,7 +666,7 @@ tee "kache/$ps_wsl_install_kernel_id" >/dev/null <<EOF
     # copy file
     echo "installing new .wslconfig and kernel \$kernel_alias"
     copy .wslconfig ..\\.wslconfig -verbose;
-    copy boot\\vmlinuz* \$kernel_alias -verbose
+    copy boot\\vmlinuz-${kindtek_kernel_version}${kindtek_kernel_suffix} \$kernel_alias -verbose
     # restart wsl
     if ("\$(\$args[1])" -ne ""){
         if ("\$(\$args[1])" -ne "restart"){

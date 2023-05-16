@@ -455,10 +455,10 @@ yes 'y' | apt -y install "$linux_kernel_generic_header" 2>/dev/null
 # reset kache
 rm -rfv kache/boot | grep '/$' | tail -n 5
 rm -rfv kache/usr | grep '/$' | tail -n 5
-mkdir -pfv kache/boot 2>/dev/null
-mkdir -pfv kache/usr/src 2>/dev/null
-mkdir -pfv kache/usr/include 2>/dev/null
-mkdir -pfv kache/usr/lib/modules 2>/dev/null
+mkdir -pv kache/boot 2>/dev/null
+mkdir -pv kache/usr/src 2>/dev/null
+mkdir -pv kache/usr/include 2>/dev/null
+mkdir -pv kache/usr/lib/modules 2>/dev/null
 # remove config
 rm -rfv kache/.config_*
 # remove kernel
@@ -486,8 +486,8 @@ echo "linux_kernel_kali_header_type: $linux_kernel_kali_header_type"
 linux_kernel_kali="${linux_kernel_kali_header%%-$linux_kernel_kali_header_type}"
 linux_kernel_kali="${linux_kernel_kali#linux-headers-}"
 echo "linux_kernel_kali: $linux_kernel_kali"
-mkdir -pfv "kache/usr/src/${kindtek_kernel_version}-common"
-mkdir -pfv "kache/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}"
+mkdir -pv "kache/usr/src/${kindtek_kernel_version}-common"
+mkdir -pv "kache/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}"
 cp -rfv "/usr/src/${linux_kernel_generic_header}" "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}common" | grep '^.*/\s*$' | tail -n 5
 cp -rfv "/usr/src/${kindtek_kernel_version}-common" "kache/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}common" | grep '^.*/\s*$' | tail -n 5
 cp -rfv "/usr/src/${linux_kernel_kali_header}" "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}" | grep '^.*/\s*$' | tail -n 5
@@ -538,7 +538,7 @@ cp -rfv /usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel
 # cp -rf /usr/lib/modules/${linux_kernel_header_version}* "kache/usr/lib/modules"
 # win
 # package a known working wslconfig file along with the kernel and config file
-mkdir -p "$win_k_cache" 2>/dev/null
+mkdir -pv "$win_k_cache" 2>/dev/null
 # rm -fv "$win_k_cache/wsl-kernel-install.ps1"
 # rm -rfv "$win_k_cache/wsl-kernel-install_${kernel_alias_no_timestamp}*"
 sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\kache\\\\\\\\${kernel_alias}/g" ../../../dvlp/mnt/HOME_WIN/head.wslconfig

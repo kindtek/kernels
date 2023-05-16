@@ -382,7 +382,7 @@ if [ -d "$linux_build_dir/.git" ]; then
         git reset --hard
         git clean -fxd
     fi
-    echo "checking out $linux_kernel_version_tag - $linux_commit_checkout ..."
+    echo "fetching origin at $linux_kernel_version_tag - $linux_commit_checkout ..."
     # git checkout "tags/$linux_kernel_version_tag" -b "$kernel_alias" --progress
     git fetch origin "$linux_commit_checkout"  --depth=1 --progress --verbose
     cd ..
@@ -400,7 +400,7 @@ if [ "$zfs" = "zfs" ];  then
             git reset --hard
             git clean -fxd
         fi
-        echo "checking out $zfs_version_tag - $zfs_commit_checkout..."
+        echo "fetching origin at $zfs_version_tag - $zfs_commit_checkout..."
 
         # git checkout "tags/$zfs_version_tag" -b "$kernel_alias" --progress
         git fetch origin "$zfs_commit_checkout"  --depth=1 --progress --verbose

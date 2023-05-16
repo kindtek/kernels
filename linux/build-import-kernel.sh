@@ -453,6 +453,7 @@ echo "apt -qq search \"$linux_kernel_kali_header_pattern\" 2>/dev/null | grep -o
 linux_kernel_kali_header=$(apt -qq search "$linux_kernel_kali_header_pattern" 2>/dev/null | grep -o "^$linux_kernel_kali_header_pattern[^/]*" | head -n 1)
 linux_kernel_generic_header=$(apt-cache search linux-headers common | grep -o "^linux-headers-[-.a-zA-Z0-9]*-common" | head -n 1 )
 make_kernel_version=$(make kernelversion)
+make_kernel_release=$(make kernelrelease)
 echo "linux kali header: $linux_kernel_kali_header"
 echo "linux generic header: $linux_kernel_generic_header"
 yes 'y' | apt -y install "$linux_kernel_kali_header" 2>/dev/null
@@ -490,7 +491,7 @@ rm -rfv kache/*.tar.gz
 while [ ! -f "/boot/config-${make_kernel_version}-${kindtek_kernel_version}" ]; do
     sleep 1
 done
-kindtek_kernel_suffix="$(ls -tx1 "/boot/config-${make_kernel_version}-${kindtek_kernel_version}" | sed -r -e "s/^(.*)$kindtek_kernel_version\-?(.*)*$/\2/g"  | head -n 1)"
+kindtek_kernel_suffix="$(echo "$make_kernel_release" | sed -r -e "s/^(.*)$kindtek_kernel_version\-?(.*)*$/\2/g"  | head -n 1)"
 echo "kindtek_kernel_suffix: $kindtek_kernel_suffix"
 kindtek_kernel_suffix="${kindtek_kernel_suffix%%.old}"
 echo "kindtek_kernel_suffix: $kindtek_kernel_suffix"

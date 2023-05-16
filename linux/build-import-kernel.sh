@@ -513,8 +513,8 @@ ln -sv "/usr/src/${kindtek_kernel_version}-${linux_kernel_kali_header_type}" "/u
 cd $linux_build_dir || exit
 make headers_install
 make modules install
-bash configure --includedir=../kache/usr/include --datarootdir=../kache/usr/share
-make modules install
+# bash configure --includedir=../kache/usr/include --datarootdir=../kache/usr/share
+# make modules install
 cd .. || exit
 # find /usr/include -type d -mmin -1 -exec cp -rf {} kache/usr/include \;
 

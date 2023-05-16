@@ -463,19 +463,19 @@ mkdir -pv kache/usr/lib/modules 2>/dev/null
 # mv "/usr/src/$linux_kernel_kali_header_pattern" "/usr/src/$kindtek_kernel_version"
 # the following requires linux headers to be installed first in the wsl install script
 kindtek_kernel_suffix="$(ls -tx1 /boot/vmlinuz-*-${kindtek_kernel_version}-* | sed -r -e "s/^\/boot\/vmlinuz-[0-9.]*-$kindtek_kernel_version-(.*)$/\1/g"  | head -n 1)"
-kindtek_kernel_suffix=${kindtek_kernel_suffix%%.old}
+kindtek_kernel_suffix="-${kindtek_kernel_suffix%%.old}"
 linux_kernel_kali_header_type=${linux_kernel_kali_header##*-}
 echo "kindtek_kernel_suffix: $kindtek_kernel_suffix"
 echo "linux_kernel_kali_header_type: $linux_kernel_kali_header_type"
 # echo \'"$(ls -txr1 /usr/src/${linux_kernel_kali_header} | sed -r -e "s/^\/usr\/src\/$linux_kernel_kali_header(.*)$/\1/g"  | head -n 1)"\'
 linux_kernel_kali=${linux_kernel_kali_header%%-$linux_kernel_kali_header_type}
-cp -rfv "/usr/src/${linux_kernel_kali}-common" "/usr/src/${kindtek_kernel_version}-${kindtek_kernel_suffix}-common" | grep '/$' | tail -n 5
-cp -rfv "/usr/src/${linux_kernel_kali}-${linux_kernel_kali_header_type}" "/usr/src/${kindtek_kernel_version}-${kindtek_kernel_suffix}-${linux_kernel_kali_header_type}" | grep '/$' | tail -n 5
+cp -rfv "/usr/src/${linux_kernel_kali}-common" "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}common" | grep '/$' | tail -n 5
+cp -rfv "/usr/src/${linux_kernel_kali}-${linux_kernel_kali_header_type}" "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}" | grep '/$' | tail -n 5
 orig_working_dir="$(pwd)"
-rm "/usr/lib/modules/${kindtek_kernel_version}-${kindtek_kernel_suffix}-common/source"
-rm "/usr/lib/modules/${kindtek_kernel_version}-${kindtek_kernel_suffix}-${linux_kernel_kali_header_type}/build"
-ln -sv "/usr/lib/modules/${kindtek_kernel_version}-${kindtek_kernel_suffix}-common" source && \
-ln -sv "/usr/lib/modules/${kindtek_kernel_version}-${kindtek_kernel_suffix}-${linux_kernel_kali_header_type}" build && \
+rm "/usr/lib/modules/${kindtek_kernel_version}${kindtek_kernel_suffix}common/source"
+rm "/usr/lib/modules/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}/build"
+ln -sv "/usr/lib/modules/${kindtek_kernel_version}${kindtek_kernel_suffix}common" source && \
+ln -sv "/usr/lib/modules/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}" build && \
 cd "$orig_working_dir" || exit
 make headers_install
 make modules install
@@ -604,7 +604,7 @@ tee "kache/$ps_wsl_install_kernel_id" >/dev/null <<EOF
             echo "installing kernel to \$(\$args[1]) distro ..."
             wsl.exe -d "\$(\$args[1])" --exec sudo cp -rfv "/mnt/c/users/\$env:USERNAME/kache/boot" / | tail -n 5
             echo "installing kernel modules to \$(\$args[1]) distro ..."
-            wsl.exe --exec sudo cp -rfv "/mnt/c/users/\$env:USERNAME/kache/usr/src/${kindtek_kernel_version}-${kindtek_kernel_suffix}-*" / | tail -n 5
+            wsl.exe --exec sudo cp -rfv "/mnt/c/users/\$env:USERNAME/kache/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}-*" / | tail -n 5
             # order is important here for installing kernel headers
             wsl.exe -d "\$(\$args[1])" --exec sudo yes 'y' | apt -y install "$linux_kernel_generic_header" 2>/dev/null
             wsl.exe -d "\$(\$args[1])" --exec sudo yes 'y' | apt -y install "$linux_kernel_kali_header" 2>/dev/null
@@ -625,7 +625,7 @@ tee "kache/$ps_wsl_install_kernel_id" >/dev/null <<EOF
             echo "installing kernel to default distro ..."
             wsl.exe --exec sudo cp -rfv "/mnt/c/users/\$env:USERNAME/kache/boot" / | tail -n 5
             echo "installing kernel modules to default distro ..."
-            wsl.exe --exec sudo cp -rfv "/mnt/c/users/\$env:USERNAME/kache/usr/src/${kindtek_kernel_version}-${kindtek_kernel_suffix}-*" / | tail -n 5
+            wsl.exe --exec sudo cp -rfv "/mnt/c/users/\$env:USERNAME/kache/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}-*" / | tail -n 5
             # order is important here for installing kernel headers
             wsl.exe -d "\$(\$args[1])" --exec sudo yes 'y' | apt -y install "$linux_kernel_generic_header" 2>/dev/null
             wsl.exe -d "\$(\$args[1])" --exec sudo yes 'y' | apt -y install "$linux_kernel_kali_header" 2>/dev/null

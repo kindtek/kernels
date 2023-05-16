@@ -613,7 +613,7 @@ sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\kac
 cp -fv --backup=numbered ../../../dvlp/mnt/HOME_WIN/head.wslconfig kache/.wslconfig
 
 echo "ps_wsl_install_kernel_id: ${ps_wsl_install_kernel_id}"
-tee "kache/wsl-kernel-install_${kernel_alias}.ps1" >/dev/null <<EOF
+tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
 
 #############################################################################
 # ________________ WSL KERNEL INSTALLATION INSTRUCTIONS ____________________#
@@ -632,7 +632,7 @@ tee "kache/wsl-kernel-install_${kernel_alias}.ps1" >/dev/null <<EOF
 #
 # navigate to kache and execute option B script saved in this file
 #>> cd kache
-#>> ./${ps_wsl_install_kernel_id:-kache/wsl-kernel-install_${kernel_alias}}.ps1
+#>> ./${ps_wsl_install_kernel_id}
 
 
 ####-------------------------    OR    ----------------------------------#### 
@@ -749,7 +749,7 @@ mkdir -pv "${win_k_cache}" 2>/dev/null
 # if {win_k_cache} is writable and no timestamp was given in args
 if [ -w "${win_k_cache}" ] && [ "$5" = "" ]; then
     echo "copying kernel to WSL install location"
-    cp -fv "kache/${ps_wsl_install_kernel_id:-kache/wsl-kernel-install_${kernel_alias}}.ps1" "${win_k_cache}/${ps_wsl_install_kernel_id:-kache/wsl-kernel-install_${kernel_alias}}.ps1"
+    cp -fv "kache/${ps_wsl_install_kernel_id}" "${win_k_cache}/${ps_wsl_install_kernel_id}"
     if [ "${tarball_target_win}" != "" ]; then
         echo "copying tarball to WSL kache"
         # cp -fv --backup=numbered "$tarball_filename" "$tarball_target_win.bak"

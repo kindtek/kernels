@@ -459,6 +459,17 @@ mkdir -pfv kache/boot 2>/dev/null
 mkdir -pfv kache/usr/src 2>/dev/null
 mkdir -pfv kache/usr/include 2>/dev/null
 mkdir -pfv kache/usr/lib/modules 2>/dev/null
+# remove config
+rm -rfv kache/.config_*
+# remove kernel
+# match optional A-Z0-9, optional "rc", A-Z0-9_*
+rm -rfv kache/[A-Z0-9]*[-rc]*[A-Z0-9]_*
+# remove empty file tag
+rm -rfv kache/Linux-*
+# remove install script
+rm -rfv kache/wsl-kernel-install_*
+# remove tar.gz file
+rm -rfv kache/*.tar.gz
 # not sure if renaming header will work so copying just to be safe for now
 # mv "/usr/src/$linux_kernel_kali_header_pattern" "/usr/src/$kindtek_kernel_version"
 # the following requires linux headers to be installed first in the wsl install script
@@ -515,18 +526,6 @@ cp -fv --backup=numbered $linux_build_dir/.config "$config_target_git"
 # fi
 cp -fv --backup=numbered $linux_build_dir/"$kernel_source" "$kernel_target_git"
 
-
-# remove config
-rm -rfv kache/.config_*
-# remove kernel
-# match optional A-Z0-9, optional "rc", A-Z0-9_*
-rm -rfv kache/[A-Z0-9]*[-rc]*[A-Z0-9]_*
-# remove empty file tag
-rm -rfv kache/Linux-*
-# remove install script
-rm -rfv kache/wsl-kernel-install_*
-# remove tar.gz file
-rm -rfv kache/*.tar.gz
 
 # copy relevant sources
 cp -rfv "/boot" "kache" | tail -n 5

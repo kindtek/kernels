@@ -492,9 +492,9 @@ rm -rfv kache/*.tar.gz
 # not sure if renaming header will work so copying just to be safe for now
 # mv "/usr/src/$linux_kernel_kali_header_pattern" "/usr/src/$kindtek_kernel_version"
 # the following requires linux headers to be installed first in the wsl install script
-while [ ! -f "/boot/config-${make_kernel_version}-${kindtek_kernel_version}" ]; do
-    sleep 1
-done
+# while [ ! -f "/boot/config-${make_kernel_version}-${kindtek_kernel_version}" ]; do
+#     sleep 1
+# done
 # possibly also can get with: git rev-parse --verify --short HEAD
 kindtek_kernel_suffix="$(echo "$make_kernel_release" | sed -r -e "s/^(.*)$kindtek_kernel_version\-?(.*)*$/\2/g"  | head -n 1)"
 echo "kindtek_kernel_suffix: $kindtek_kernel_suffix"

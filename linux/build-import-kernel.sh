@@ -394,7 +394,7 @@ cd "$linux_build_dir" || exit
 git status --porcelain | grep '^??' | cut -c4- >> .gitignore
 git add ".gitignore"
 git commit -m "fetched $kernel_alias" 
-git checkout -b "$kernel_alias" .
+git checkout -b "$kernel_alias" 
 cd .. || exit
 
 zfs_commit_checkout="$(git ls-remote "$zfs_repo" --tags "$zfs_version_tag" --short | grep -o '^[a-zA-Z0-9]*')"
@@ -420,7 +420,7 @@ if [ "$zfs" = "zfs" ];  then
     git status --porcelain | grep '^??' | cut -c4- >> .gitignore 
     git add ".gitignore"
     git commit -m "fetched $kernel_alias" 
-    git checkout -b "$kernel_alias" .
+    git checkout -b "$kernel_alias" 
     cd .. || exit
 fi
 

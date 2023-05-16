@@ -494,8 +494,8 @@ echo "linux_kernel_kali_header_type: $linux_kernel_kali_header_type"
 linux_kernel_kali="${linux_kernel_kali_header%%-$linux_kernel_kali_header_type}"
 linux_kernel_kali="${linux_kernel_kali#linux-headers-}"
 echo "linux_kernel_kali: $linux_kernel_kali"
-rm -fv "/usr/lib/modules/${linux_kernel_generic_header}/scripts"
-rm -fv "/usr/lib/modules/${linux_kernel_kali_header}/tools" 
+rm -fv "/usr/src/${linux_kernel_generic_header}/scripts"
+rm -fv "/usr/src/${linux_kernel_kali_header}/tools" 
 cp -TRfv "$linux_build_dir/scripts/" "/usr/src/${kindtek_kernel_version}-common/scripts"
 cp -TRfv "$linux_build_dir/tools/" "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}/tools" | tail -n 100
 cp -TRfv "/usr/src/${linux_kernel_generic_header}/" "/usr/src/${kindtek_kernel_version}-common" | tail -n 100

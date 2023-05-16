@@ -521,6 +521,14 @@ echo "linux_kernel_kali: $linux_kernel_kali"
 # rm -fv "/usr/lib/modules/${linux_kernel_kali}-common/build"
 # rm -fv "/usr/lib/modules/${linux_kernel_kali}-${linux_kernel_kali_header_type}/build"
 # rm -fv "/usr/lib/modules/${linux_kernel_kali}-${linux_kernel_kali_header_type}/source"
+
+cd $linux_build_dir || exit
+make headers_install
+make modules install
+# bash configure --includedir=../kache/usr/include --datarootdir=../kache/usr/share
+# make modules install
+cd .. || exit
+
 # install custom headers
 cp -TRfv "/usr/lib/modules/${linux_kernel_kali}-common" "linux-headers-${make_kernel_version}-${kindtek_kernel_version}${kindtek_kernel_suffix}common"
 cp -TRfv "/usr/lib/modules/${linux_kernel_kali}-${linux_kernel_kali_header_type}" "linux-headers-${make_kernel_version}-${kindtek_kernel_version}${kindtek_kernel_suffix%-}"
@@ -535,13 +543,6 @@ rm -fv "/usr/lib/modules/linux-headers-${make_kernel_version}-${kindtek_kernel_v
 rm -fv "/usr/lib/modules/linux-headers-${make_kernel_version}-${kindtek_kernel_version}${kindtek_kernel_suffix%-}/build"
 ln -sv "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}common" "/usr/lib/modules/linux-headers-${make_kernel_version}-${kindtek_kernel_version}${kindtek_kernel_suffix%-}/source" && \
 ln -sv "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}" "/usr/lib/modules/linux-headers-${make_kernel_version}-${kindtek_kernel_version}${kindtek_kernel_suffix%-}/build" && \
-
-cd $linux_build_dir || exit
-make headers_install
-make modules install
-# bash configure --includedir=../kache/usr/include --datarootdir=../kache/usr/share
-# make modules install
-cd .. || exit
 # find /usr/include -type d -mmin -1 -exec cp -rf {} kache/usr/include \;
 
 rm -rfv "/usr/src/${linux_kernel_generic_header}/scripts" | tail -n 100

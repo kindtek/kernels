@@ -391,7 +391,7 @@ else
     git clone $linux_repo --single-branch --branch "$linux_commit_checkout" --depth=1 --progress -- $linux_build_dir
 fi
 cd "$linux_build_dir" || exit
-git checkout -b "$kernel_alias" --detached "$linux_commit_checkout"
+git checkout -b "$kernel_alias" --detach "$linux_commit_checkout"
 cd .. || exit
 
 zfs_commit_checkout="$(git ls-remote "$zfs_repo" --tags "$zfs_version_tag" --short | grep -o '^[a-zA-Z0-9]*')"
@@ -414,7 +414,7 @@ if [ "$zfs" = "zfs" ];  then
         git clone "$zfs_repo" --single-branch --branch "$zfs_commit_checkout" --progress -- "$zfs_build_dir" 
     fi
     cd "$zfs_build_dir" || exit
-    git checkout -b "$kernel_alias" --detached "$zfs_commit_checkout" 
+    git checkout -b "$kernel_alias" --detach "$zfs_commit_checkout" 
     cd .. || exit
 fi
 

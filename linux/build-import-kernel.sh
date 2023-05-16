@@ -451,6 +451,12 @@ echo "linux kali header: $linux_kernel_kali_header"
 echo "linux generic header: $linux_kernel_generic_header"
 yes 'y' | apt -y install "$linux_kernel_kali_header" 2>/dev/null
 yes 'y' | apt -y install "$linux_kernel_generic_header" 2>/dev/null
+if [ ! -f "$kernel_source" ]; then
+    echo "
+    
+Ooops. The kernel did not build. Exiting ..."
+exit
+fi
 
 cd .. || exit
 # reset kache
@@ -511,15 +517,7 @@ make modules install
 cd .. || exit
 find /usr/include -type d -mmin -1 -exec cp -rf {} kache/usr/include \;
 
-
-if [ ! -f "$kernel_source" ]; then
-    echo "
-    
-Ooops. The kernel did not build. Exiting ..."
-exit
-fi
 ps_wsl_install_kernel_id=wsl-kernel-install_$kernel_alias.ps1
-
 
 # kernel is baked - time to distribute the goods
 # move back to base dir  folder with github (relative) path

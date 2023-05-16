@@ -520,7 +520,7 @@ linux_kernel_kali="${linux_kernel_kali#linux-headers-}"
 echo "linux_kernel_kali: ${linux_kernel_kali}"
 kindtek_kernel_version_suffix="${kindtek_kernel_version}${kindtek_kernel_suffix%-}"
 kindtek_kernel_version_suffix_="${kindtek_kernel_version}${kindtek_kernel_suffix}"
-kindtek_kernel_version_suffix_type=${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}
+kindtek_kernel_version_suffix_type="${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}"
 
 # # remove/replace old symlink
 # rm -fv "/usr/lib/modules/${linux_kernel_kali}-common/source" 
@@ -588,8 +588,8 @@ ps_wsl_install_kernel_id="wsl-kernel-install_${kernel_alias}.ps1"
 # move back to base dir  folder with github (relative) path
 mkdir -pv "$git_save_path" 2>/dev/null
 # queue files to be saved to repo
-cp -fv --backup=numbered $linux_build_dir/.config "${config_target_git}"
-cp -fv --backup=numbered "$linux_build_dir/${kernel_source}" "${kernel_target_git}"
+cp -fv --backup=numbered "${linux_build_dir}/.config" "${config_target_git}"
+cp -fv --backup=numbered "${linux_build_dir}/${kernel_source}" "${kernel_target_git}"
 
 
 # copy relevant sources and kache modules
@@ -597,8 +597,8 @@ cp -rfv "/boot" "kache" | tail -n 5
 rm -rfv  kache/boot/*.old | tail -n 5
 # cp -r -fv "/boot/*$kindtek_kernel_version*" "kache"
 # cp -r -f "/usr/src" "kache"
-kbuild_version=${linux_kernel_kali%%-*}
-kbuild_version=${kbuild_version:0:3}
+kbuild_version="${linux_kernel_kali%%-*}"
+kbuild_version="${kbuild_version:0:3}"
 cp -TRfv "/usr/src/${kindtek_kernel_version_suffix_}common/" "kache/usr/src/${kindtek_kernel_version_suffix_}common" | tail -n 20
 cp -TRfv "/usr/src/${kindtek_kernel_version_suffix_type}/" "kache/usr/src/${kindtek_kernel_version_suffix_type}" | tail -n 20
 mkdir -pv "kache/usr/lib/linux-kbuild-${kbuild_version}"

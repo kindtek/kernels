@@ -465,6 +465,7 @@ rm -rf kache/usr
 mkdir -pv kache/boot 2>/dev/null
 mkdir -pv kache/usr/src 2>/dev/null
 mkdir -pv kache/usr/include 2>/dev/null
+mkdir -pv kache/usr/share 2>/dev/null
 mkdir -pv kache/usr/lib/modules 2>/dev/null
 # remove config
 rm -rfv kache/.config_*
@@ -511,6 +512,8 @@ ln -sv "/usr/src/${kindtek_kernel_version}-${linux_kernel_kali_header_type}" "/u
 
 cd $linux_build_dir || exit
 make headers_install
+make modules install
+bash configure --includedir=../kache/usr/include --datarootdir=../kache/usr/share
 make modules install
 cd .. || exit
 # find /usr/include -type d -mmin -1 -exec cp -rf {} kache/usr/include \;

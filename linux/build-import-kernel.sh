@@ -551,8 +551,8 @@ cp -TRfv "$linux_build_dir/scripts/" "/usr/src/${kindtek_kernel_version}-common/
 cp -TRfv "$linux_build_dir/tools/" "/usr/src/${kindtek_kernel_version}-common/tools" | tail -n 100
 # cp -TRfv "$linux_build_dir/scripts/" "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}/scripts" | tail -n 100
 # cp -TRfv "$linux_build_dir/tools/" "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}/tools" | tail -n 100
-ln -sv "/usr/src/${kindtek_kernel_version}-common/tools" "/usr/lib/modules/linux-headers-${make_kernel_version}-${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}/tools" && \
-ln -sv "/usr/src/${kindtek_kernel_version}-common/scripts" "/usr/lib/modules/linux-headers-${make_kernel_version}-${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}/scripts" && \
+ln -sv "/usr/src/${kindtek_kernel_version}-common/tools" "/usr/lib/modules/linux-headers-${make_kernel_version}-${kindtek_kernel_version}${kindtek_kernel_suffix%-}/tools" && \
+ln -sv "/usr/src/${kindtek_kernel_version}-common/scripts" "/usr/lib/modules/linux-headers-${make_kernel_version}-${kindtek_kernel_version}${kindtek_kernel_suffix%-}/scripts" && \
 
 cp -TRfv "/usr/src/${linux_kernel_generic_header}/" "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}common" | tail -n 100
 # cp -TRfv "/usr/src/${linux_kernel_generic_header}/" "kache/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}common" | tail -n 100
@@ -592,8 +592,8 @@ cp -rfv "/boot" "kache" | tail -n 5
 rm -rfv  kache/boot/*.old | tail -n 5
 # cp -r -fv "/boot/*$kindtek_kernel_version*" "kache"
 # cp -r -f "/usr/src" "kache"
-cp -TRfv "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}common/" "kache/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}common" | tail -n 5
-cp -TRfv "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}/" "kache/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}" | tail -n 5
+cp -TRfv "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}common/" "kache/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}common" | tail -n 20
+cp -TRfv "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}/" "kache/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}" | tail -n 20
 
 # cp -rf /usr/lib/modules/${linux_kernel_header_version}* "kache/usr/lib/modules"
 # win

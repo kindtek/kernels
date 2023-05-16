@@ -690,8 +690,8 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
         echo "installing kernel to \$(\$args[1]) distro ..."
         wsl.exe -d "\$(\$args[1])" --exec sudo cp -TRf "/mnt/c/users/\$win_user/kache/boot/\$kernel_version/" "/boot/vmlinuz_${make_kernel_release}${kindtek_kernel_version}${kindtek_kernel_suffix%-}"; 
         echo "installing kernel modules to \$(\$args[1]) distro ..."
-        wsl.exe -d "\$(\$args[1])" --exec sudo cp -TRf "/mnt/c/users/\$win_user/kache/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix%-}common/" "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}common";
-        wsl.exe -d "\$(\$args[1])" --exec sudo cp -TRf "/mnt/c/users/\$win_user/kache/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix%-}${linux_kernel_kali_header_type}/" "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}";
+        wsl.exe -d "\$(\$args[1])" --exec sudo cp -TRf "/mnt/c/users/\$win_user/kache/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}common/" "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}common";
+        wsl.exe -d "\$(\$args[1])" --exec sudo cp -TRf "/mnt/c/users/\$win_user/kache/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}/" "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}";
         # order is important here for installing kernel headers bc we may rely on it being installed first chronologically later
         wsl.exe -d "\$(\$args[1])" --exec sudo yes 'y' | apt-get -y install "${linux_kernel_generic_header}*" 2>/dev/null;
         wsl.exe -d "\$(\$args[1])" --exec sudo yes 'y' | apt-get -y install "${linux_kernel_kali_header}*" 2>/dev/null;
@@ -705,8 +705,8 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
         echo "installing kernel to default distro ..."
         wsl.exe --exec sudo cp -TRf "/mnt/c/users/\$win_user/kache/boot/\$kernel_version/" "/boot/vmlinuz_${make_kernel_release}${kindtek_kernel_version}${kindtek_kernel_suffix%-}"; 
         echo "installing kernel modules to \$(\$args[1]) distro ..."
-        wsl.exe --exec sudo cp -TRf "/mnt/c/users/\$win_user/kache/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix%-}common/" "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}common";
-        wsl.exe --exec sudo cp -TRf "/mnt/c/users/\$win_user/kache/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix%-}${linux_kernel_kali_header_type}/" "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}";
+        wsl.exe --exec sudo cp -TRf "/mnt/c/users/\$win_user/kache/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}common/" "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}common";
+        wsl.exe --exec sudo cp -TRf "/mnt/c/users/\$win_user/kache/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}/" "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}";
         # order is important here for installing kernel headers bc we may rely on it being installed first chronologically later
         wsl.exe --exec sudo yes 'y' | apt-get -y install "${linux_kernel_generic_header}*" 2>/dev/null;
         wsl.exe --exec sudo yes 'y' | apt-get -y install "${linux_kernel_kali_header}*" 2>/dev/null;

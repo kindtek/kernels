@@ -452,6 +452,7 @@ if (( quick_wsl_install )); then
     yes "" | make -j$(($(nproc) - 1))
 else
     make -j$(($(nproc) - 1))
+    yes "" | make deb-pkg
 fi
 
 echo "searching for headers matching $linux_kernel_kali_header_pattern"

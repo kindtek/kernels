@@ -524,7 +524,7 @@ echo "linux_kernel_kali: $linux_kernel_kali"
 cd $linux_build_dir || exit
 make headers_install
 make modules install
-bash configure --headers_install=/usr/include INSTALL_MOD_PATH=/usr/lib/modules
+bash configure INSTALL_MOD_PATH=/usr/lib/modules
 make modules install
 cd .. || exit
 # install scripts and tools to usr/src first

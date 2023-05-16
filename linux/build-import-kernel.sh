@@ -547,8 +547,8 @@ cp -TRfv "$linux_build_dir/scripts/" "/usr/src/${kindtek_kernel_version}${kindte
 cp -TRfv "$linux_build_dir/tools/" "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}common/tools" | tail -n 100
 # cp -TRfv "$linux_build_dir/scripts/" "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}/scripts" | tail -n 100
 # cp -TRfv "$linux_build_dir/tools/" "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}/tools" | tail -n 100
-ln -sv "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}common/tools" "/usr/lib/modules/linux-headers-${make_kernel_version}-${kindtek_kernel_version}${kindtek_kernel_suffix%-}/tools" && \
-ln -sv "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}common/scripts" "/usr/lib/modules/linux-headers-${make_kernel_version}-${kindtek_kernel_version}${kindtek_kernel_suffix%-}/scripts" && \
+ln -sv "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}common/tools" "/usr/lib/modules/${make_kernel_version}-${kindtek_kernel_version}${kindtek_kernel_suffix%-}/tools" && \
+ln -sv "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}common/scripts" "/usr/lib/modules/${make_kernel_version}-${kindtek_kernel_version}${kindtek_kernel_suffix%-}/scripts" && \
 
 cp -TRfv "/usr/src/${linux_kernel_generic_header}/" "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}common" | tail -n 100
 # cp -TRfv "/usr/src/${linux_kernel_generic_header}/" "kache/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}common" | tail -n 100
@@ -556,19 +556,19 @@ cp -TRfv "/usr/src/${linux_kernel_kali_header}/" "/usr/src/${kindtek_kernel_vers
 # cp -TRfv "/usr/src/${linux_kernel_kali_header}/" "kache/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}" | tail -n 100
 
 # install custom headers to usr/lib/modules
-cp -TRfv "/usr/lib/modules/${linux_kernel_kali}-common" "linux-headers-${make_kernel_version}-${kindtek_kernel_version}${kindtek_kernel_suffix}common"
-cp -TRfv "/usr/lib/modules/${linux_kernel_kali}-${linux_kernel_kali_header_type}" "linux-headers-${make_kernel_version}-${kindtek_kernel_version}${kindtek_kernel_suffix%-}"
+cp -TRfv "/usr/lib/modules/${linux_kernel_kali}-common" "${make_kernel_version}-${kindtek_kernel_version}${kindtek_kernel_suffix}common"
+cp -TRfv "/usr/lib/modules/${linux_kernel_kali}-${linux_kernel_kali_header_type}" "${make_kernel_version}-${kindtek_kernel_version}${kindtek_kernel_suffix%-}"
 # mkdir -pv "kache/usr/lib/modules/${make_kernel_version}-${linux_kernel_kali}-common"
 mkdir -pv "/usr/lib/modules/${linux_kernel_kali}-common"
 # mkdir -pv "kache/usr/lib/modules/${make_kernel_version}-${linux_kernel_kali}-${linux_kernel_kali_header_type}"
 mkdir -pv "/usr/lib/modules/${linux_kernel_kali}-${linux_kernel_kali_header_type}"
-mkdir -pv "/usr/lib/modules/linux-headers-${make_kernel_version}-${kindtek_kernel_version}${kindtek_kernel_suffix%-}"
-mkdir -pv "kache/usr/lib/modules/linux-headers-${make_kernel_version}-${kindtek_kernel_version}${kindtek_kernel_suffix%-}"
+mkdir -pv "/usr/lib/modules/${make_kernel_version}-${kindtek_kernel_version}${kindtek_kernel_suffix%-}"
+mkdir -pv "kache/usr/lib/modules/${make_kernel_version}-${kindtek_kernel_version}${kindtek_kernel_suffix%-}"
 
-rm -fv "/usr/lib/modules/linux-headers-${make_kernel_version}-${kindtek_kernel_version}${kindtek_kernel_suffix%-}/source"
-rm -fv "/usr/lib/modules/linux-headers-${make_kernel_version}-${kindtek_kernel_version}${kindtek_kernel_suffix%-}/build"
-ln -sv "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}common" "/usr/lib/modules/linux-headers-${make_kernel_version}-${kindtek_kernel_version}${kindtek_kernel_suffix%-}/source" && \
-ln -sv "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}" "/usr/lib/modules/linux-headers-${make_kernel_version}-${kindtek_kernel_version}${kindtek_kernel_suffix%-}/build" && \
+rm -fv "/usr/lib/modules/${make_kernel_version}-${kindtek_kernel_version}${kindtek_kernel_suffix%-}/source"
+rm -fv "/usr/lib/modules/${make_kernel_version}-${kindtek_kernel_version}${kindtek_kernel_suffix%-}/build"
+ln -sv "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}common" "/usr/lib/modules/${make_kernel_version}-${kindtek_kernel_version}${kindtek_kernel_suffix%-}/source" && \
+ln -sv "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}" "/usr/lib/modules/${make_kernel_version}-${kindtek_kernel_version}${kindtek_kernel_suffix%-}/build" && \
 # find /usr/include -type d -mmin -1 -exec cp -rf {} kache/usr/include \;
 
 ps_wsl_install_kernel_id=wsl-kernel-install_$kernel_alias.ps1

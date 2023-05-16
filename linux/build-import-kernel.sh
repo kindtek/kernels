@@ -593,6 +593,7 @@ kbuild_version=${linux_kernel_kali%%-*}
 kbuild_version=${kbuild_version:0:3}
 cp -TRfv "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}common/" "kache/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}common" | tail -n 20
 cp -TRfv "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}/" "kache/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}" | tail -n 20
+mkdir -pv "kache/usr/lib/linux-kbuild-${kbuild_version}"
 cp -TRfv "/usr/lib/linux-kbuild-${kbuild_version}/certs" "kache/usr/lib/linux-kbuild-${kbuild_version}/certs" | tail -n 20
 
 # win

@@ -460,7 +460,7 @@ fi
 
 echo "searching for headers matching $linux_kernel_kali_header_pattern"
 echo "apt -qq search \"$linux_kernel_kali_header_pattern\" 2>/dev/null | grep -o \"^$linux_kernel_kali_header_pattern[^/]*\" | head -n 1"
-linux_kernel_kali_header=$(apt -qq search "$linux_kernel_kali_header_pattern" 2>/dev/null | grep -o "^$linux_kernel_kali_header_pattern[^/]*" | head -n 1)
+linux_kernel_kali_header=$(apt -qq search "${linux_kernel_kali_header_pattern}" 2>/dev/null | grep -o "^${linux_kernel_kali_header_pattern}[^/]*" | head -n 1)
 linux_kernel_generic_header=$(apt-cache search linux-headers common | grep -o "^linux-headers-[-.a-zA-Z0-9]*-common" | head -n 1 )
 make_kernel_version=$(make kernelversion)
 make_kernel_release=$(make kernelrelease)
@@ -512,12 +512,12 @@ fi
 echo "kindtek_kernel_suffix: $kindtek_kernel_suffix"
 # kindtek_kernel_suffix="${kindtek_kernel_suffix//+/-}"
 linux_kernel_kali_header_type=${linux_kernel_kali_header##*-}
-echo "kindtek_kernel_suffix: $kindtek_kernel_suffix"
-echo "linux_kernel_kali_header_type: $linux_kernel_kali_header_type"
+echo "kindtek_kernel_suffix: ${kindtek_kernel_suffix}"
+echo "linux_kernel_kali_header_type: ${linux_kernel_kali_header_type}"
 # echo \'"$(ls -txr1 /usr/src/${linux_kernel_kali_header} | sed -r -e "s/^\/usr\/src\/$linux_kernel_kali_header(.*)$/\1/g"  | head -n 1)"\'
-linux_kernel_kali="${linux_kernel_kali_header%%-"$linux_kernel_kali_header_type"}"
+linux_kernel_kali="${linux_kernel_kali_header%%-"${linux_kernel_kali_header_type}"}"
 linux_kernel_kali="${linux_kernel_kali#linux-headers-}"
-echo "linux_kernel_kali: $linux_kernel_kali"
+echo "linux_kernel_kali: ${linux_kernel_kali}"
 
 # # remove/replace old symlink
 # rm -fv "/usr/lib/modules/${linux_kernel_kali}-common/source" 
@@ -578,14 +578,14 @@ ln -sv "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}common" "/usr/
 ln -sv "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}" "/usr/lib/modules/${make_kernel_version}-${kindtek_kernel_version}${kindtek_kernel_suffix%-}/build" && \
 # find /usr/include -type d -mmin -1 -exec cp -rf {} kache/usr/include \;
 
-ps_wsl_install_kernel_id="wsl-kernel-install_$kernel_alias.ps1"
+ps_wsl_install_kernel_id="wsl-kernel-install_${kernel_alias}.ps1"
 
 # kernel is baked - time to distribute the goods
 # move back to base dir  folder with github (relative) path
 mkdir -pv "$git_save_path" 2>/dev/null
 # queue files to be saved to repo
-cp -fv --backup=numbered $linux_build_dir/.config "$config_target_git"
-cp -fv --backup=numbered $linux_build_dir/"$kernel_source" "$kernel_target_git"
+cp -fv --backup=numbered $linux_build_dir/.config "${config_target_git}"
+cp -fv --backup=numbered $linux_build_dir/"${kernel_source}" "${kernel_target_git}"
 
 
 # copy relevant sources and kache modules
@@ -602,14 +602,14 @@ cp -TRfv "/usr/lib/linux-kbuild-${kbuild_version}/certs" "kache/usr/lib/linux-kb
 
 # win
 # package a known working wslconfig file along with the kernel and config file
-mkdir -pv "$win_k_cache" 2>/dev/null
+mkdir -pv "${win_k_cache}" 2>/dev/null
 # rm -fv "$win_k_cache/wsl-kernel-install.ps1"
 # rm -rfv "$win_k_cache/wsl-kernel-install_${kernel_alias_no_timestamp}*"
 sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\kache\\\\\\\\${kernel_alias}/g" ../../../dvlp/mnt/HOME_WIN/head.wslconfig
 cp -fv --backup=numbered ../../../dvlp/mnt/HOME_WIN/head.wslconfig kache/.wslconfig
 
 
-tee "kache/$ps_wsl_install_kernel_id" >/dev/null <<EOF
+tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
 
 #############################################################################
 # ________________ WSL KERNEL INSTALLATION INSTRUCTIONS ____________________#
@@ -727,30 +727,30 @@ tee "kache/$ps_wsl_install_kernel_id" >/dev/null <<EOF
 EOF
 
 echo "saving to compressed tarball ..."
-tar --exclude='*.~*' -czvf "$tarball_filename" -C kache . | tail -n 5
-mv -fv "$tarball_filename" "kache/$tarball_filename" | tail -n 5
+tar --exclude='*.~*' -czvf "${tarball_filename}" -C kache . | tail -n 5
+mv -fv "${tarball_filename}" "kache/${tarball_filename}" | tail -n 5
 # cp "kache/$tarball_filename" kache/latest.tar.gz
 # work on *nix first
 mkdir -pv "$nix_k_cache" 2>/dev/null
 
 if [ -w "$nix_k_cache" ]; then
     # tar -czvf "kache/$tarball_filename" -C kache kache
-    cp -fv "kache/$tarball_filename" "$tarball_target_nix" 
+    cp -fv "kache/${tarball_filename}" "${tarball_target_nix}" 
 else
     echo "unable to save kernel package to Linux home directory"
 fi
 # now win
-mkdir -pv "$win_k_cache" 2>/dev/null
-# if win_k_cache is writable and no timestamp was given in args
-if [ -w "$win_k_cache" ] && [ "$5" = "" ]; then
+mkdir -pv "${win_k_cache}" 2>/dev/null
+# if {win_k_cache} is writable and no timestamp was given in args
+if [ -w "${win_k_cache}" ] && [ "$5" = "" ]; then
     echo "copying kernel to WSL install location"
-    cp -fv "kache/$ps_wsl_install_kernel_id" "$win_k_cache/$ps_wsl_install_kernel_id"
-    if [ "$tarball_target_win" != "" ]; then
+    cp -fv "kache/${ps_wsl_install_kernel_id}" "${win_k_cache}/${ps_wsl_install_kernel_id}"
+    if [ "${tarball_target_win}" != "" ]; then
         echo "copying tarball to WSL kache"
         # cp -fv --backup=numbered "$tarball_filename" "$tarball_target_win.bak"
-        cp -fv "kache/$tarball_filename" "$tarball_target_win"
+        cp -fv "kache/${tarball_filename}" "${tarball_target_win}"
     else 
-        echo "win tarball empty: $tarball_target_win"
+        echo "win tarball empty: ${tarball_target_win}"
     fi
 else 
     echo "not saving to windows home directory"
@@ -764,7 +764,7 @@ KERNEL BUILD COMPLETE
 "
 
 
-[ "$win_k_cache" = "" ] && printf "
+[ "${win_k_cache}" = "" ] && printf "
 
 
 
@@ -776,13 +776,13 @@ KERNEL BUILD COMPLETE
 ------------------------------------------------------------------
 
   Kernel:
-    $kernel_target_git
+    ${kernel_target_git}
 
   Config:
-    $config_target_git
+    ${config_target_git}
     
   Kernel/Config/Installation/.tar.gz files:
-    $nix_k_cache
+    ${nix_k_cache}
     %s     
 
 ==================================================================

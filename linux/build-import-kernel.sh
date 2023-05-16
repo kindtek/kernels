@@ -436,6 +436,7 @@ if [ "$zfs" = "zfs" ];  then
     bash configure --prefix=/ --libdir=/lib --includedir=/usr/include --datarootdir=/usr/share --enable-linux-builtin=yes --with-linux=../$linux_build_dir --with-linux-obj=../$linux_build_dir && \
     bash copy-builtin ../$linux_build_dir && \
     yes "" | make install 
+    yes "" | make deb-pkg
 fi
 
 cd ../$linux_build_dir || exit
@@ -452,7 +453,6 @@ if (( quick_wsl_install )); then
     yes "" | make -j$(($(nproc) - 1))
 else
     make -j$(($(nproc) - 1))
-    yes "" | make deb-pkg
 fi
 
 echo "searching for headers matching $linux_kernel_kali_header_pattern"

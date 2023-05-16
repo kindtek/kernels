@@ -638,6 +638,7 @@ tee "kache/$ps_wsl_install_kernel_id" >/dev/null <<EOF
 #####   copy without '#>>' to replace (delete/move) .wslconfig          #####
 
     \$kernel_alias="$kernel_alias"
+    \$kernel_version="${kindtek_kernel_version}${kindtek_kernel_suffix%-}"
 
     if (\$IsLinux -eq \$false) {
 
@@ -675,15 +676,15 @@ tee "kache/$ps_wsl_install_kernel_id" >/dev/null <<EOF
     # copy wslconfig to home dir
     echo "installing new .wslconfig and kernel \$kernel_alias"
     copy .wslconfig ..\\.wslconfig -verbose;
-    copy boot\\vmlinuz-${kindtek_kernel_version}${kindtek_kernel_suffix} \$kernel_alias -verbose
+    copy boot\\vmlinuz-\$kernel_version \$kernel_alias -verbose
 
     # restart wsl (and install kernel/modules)
     if ("\$(\$args[1])" -ne ""){
         if ("\$(\$args[1])" -ne "restart"){
             echo "installing kernel to \$(\$args[1]) distro ..."
-            wsl.exe -d "\$(\$args[1])" --exec sudo cp -rfv "/mnt/c/users/\$env:USERNAME/kache/boot/${kindtek_kernel_version}${kindtek_kernel_suffix%-}" / | tail -n 5
+            wsl.exe -d "\$(\$args[1])" --exec sudo cp -rfv "/mnt/c/users/\$env:USERNAME/kache/boot/\$kernel_version" / | tail -n 5
             echo "installing kernel modules to \$(\$args[1]) distro ..."
-            wsl.exe --exec sudo cp -rfv "/mnt/c/users/\$env:USERNAME/kache/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix%-}*" / | tail -n 5
+            wsl.exe --exec sudo cp -rfv "/mnt/c/users/\$env:USERNAME/kache/usr/src/\$kernel_version" / | tail -n 5
             # order is important here for installing kernel headers
             wsl.exe -d "\$(\$args[1])" --exec sudo yes 'y' | apt -y install "$linux_kernel_generic_header" 2>/dev/null
             wsl.exe -d "\$(\$args[1])" --exec sudo yes 'y' | apt -y install "$linux_kernel_kali_header" 2>/dev/null
@@ -704,7 +705,7 @@ tee "kache/$ps_wsl_install_kernel_id" >/dev/null <<EOF
             echo "installing kernel to default distro ..."
             wsl.exe --exec sudo cp -rfv "/mnt/c/users/\$env:USERNAME/kache/boot/${kindtek_kernel_version}${kindtek_kernel_suffix%-}" / | tail -n 5
             echo "installing kernel modules to default distro ..."
-            wsl.exe --exec sudo cp -rfv "/mnt/c/users/\$env:USERNAME/kache/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix%-}*" / | tail -n 5
+            wsl.exe --exec sudo cp -rfv "/mnt/c/users/\$env:USERNAME/kache/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix%-}" / | tail -n 5
             # order is important here for installing kernel headers
             wsl.exe -d "\$(\$args[1])" --exec sudo yes 'y' | apt -y install "$linux_kernel_generic_header" 2>/dev/null
             wsl.exe -d "\$(\$args[1])" --exec sudo yes 'y' | apt -y install "$linux_kernel_kali_header" 2>/dev/null

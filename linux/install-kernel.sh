@@ -271,6 +271,6 @@ fi
 
 cd "$orig_pwd" || exit
 
-read -r -p "
-(exit)
-"
+# read -r -p "
+# (exit)
+# "

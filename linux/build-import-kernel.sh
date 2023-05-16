@@ -514,10 +514,8 @@ mkdir -pv "/usr/lib/modules/${kindtek_kernel_version}${kindtek_kernel_suffix}"
 mkdir -pv "kache/usr/lib/modules/${kindtek_kernel_version}${kindtek_kernel_suffix}"
 
     
-ln -sv "/usr/src/${kindtek_kernel_version}-common" "/usr/lib/modules/${linux_kernel_kali}-common/source" && \
-ln -sv "/usr/src/${kindtek_kernel_version}-${linux_kernel_kali_header_type}" "/usr/lib/modules/${linux_kernel_kali}-${linux_kernel_kali_header_type}/build" && \
-ln -sv "/usr/src/${kindtek_kernel_version}" "/usr/lib/modules/${linux_kernel_kali}-common/source" && \
-ln -sv "/usr/src/${kindtek_kernel_version}" "/usr/lib/modules/${linux_kernel_kali}-${linux_kernel_kali_header_type}/build" && \
+ln -sv "/usr/src/${kindtek_kernel_version}-common" "/usr/lib/modules/${kindtek_kernel_version}/source" && \
+ln -sv "/usr/src/${kindtek_kernel_version}-${linux_kernel_kali_header_type}" "/usr/lib/modules/${kindtek_kernel_version}/build" && \
 
 cd $linux_build_dir || exit
 make headers_install

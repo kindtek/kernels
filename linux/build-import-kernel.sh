@@ -375,6 +375,7 @@ if ! (( quick_wsl_install )); then
     git reset --hard
     git clean -fxd
 fi
+linux_commit_checkout=$(git ls-remote "$linux_repo" --tags "$linux_kernel_version_tag"  | grep -o '^[a-zA-Z0-9]*')
 if [ -d "$linux_build_dir/.git" ]; then
     cd "$linux_build_dir" || exit
     if ! (( quick_wsl_install )); then
@@ -383,12 +384,13 @@ if [ -d "$linux_build_dir/.git" ]; then
     fi
     echo "checking out $linux_kernel_version_tag ..."
     # git checkout "tags/$linux_kernel_version_tag" -b "$kernel_alias" --progress
-    git checkout "tags/$linux_kernel_version_tag" --progress
+    git checkout "tags/$linux_commit_checkout" --progress
     cd ..
 else
     echo "cloning $linux_kernel_version_tag ..."
-    git clone $linux_repo --single-branch --branch "$linux_kernel_version_tag" --depth=1 --progress -- $linux_build_dir
+    git clone $linux_repo --single-branch --branch "$linux_commit_checkout" --depth=1 --progress -- $linux_build_dir
 fi
+zfs_commit_checkout="$(git ls-remote "$zfs_repo" --tags "$zfs_version_tag"  | grep -o '^[a-zA-Z0-9]*')"
 if [ "$zfs" = "zfs" ];  then
 #     echo "zfs == True
 # LINENO: ${LINENO}"
@@ -401,11 +403,11 @@ if [ "$zfs" = "zfs" ];  then
         echo "checking out $zfs_version_tag ..."
 
         # git checkout "tags/$zfs_version_tag" -b "$kernel_alias" --progress
-        git checkout "tags/$zfs_version_tag" --progress
+        git checkout "tags/$zfs_commit_checkout" --progress
         cd ..
     else
         echo "cloning $zfs_version_tag ..."
-        git clone "$zfs_repo" --single-branch --branch "$zfs_version_tag" --progress -- "$zfs_build_dir" 
+        git clone "$zfs_repo" --single-branch --branch "$zfs_commit_checkout" --progress -- "$zfs_build_dir" 
     fi
 fi
 

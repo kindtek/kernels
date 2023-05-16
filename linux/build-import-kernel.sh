@@ -395,7 +395,7 @@ git commit -m "fetched $kernel_alias"
 git checkout -b "$kernel_alias"
 cd .. || exit
 
-zfs_commit_checkout="$(git rev-parse --short git ls-remote "$zfs_repo" --tags "$zfs_version_tag" --short | grep -o '^[a-zA-Z0-9]*')"
+zfs_commit_checkout="$(git ls-remote "$zfs_repo" --tags "$zfs_version_tag" --short | grep -o '^[a-zA-Z0-9]*')"
 if [ "$zfs" = "zfs" ];  then
 #     echo "zfs == True
 # LINENO: ${LINENO}"

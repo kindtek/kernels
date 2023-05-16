@@ -519,7 +519,7 @@ cp -fv --backup=numbered $linux_build_dir/"$kernel_source" "$kernel_target_git"
 rm -rfv kache/.config_*
 # remove kernel
 # match optional A-Z0-9, optional "rc", A-Z0-9_*
-rm -rfv kache/[A-Z0-9]*(rc)*[A-Z0-9]_*
+rm -rfv kache/[A-Z0-9]*[rc]*[A-Z0-9]_*
 # remove empty file tag
 rm -rfv kache/Linux-*
 # remove install script

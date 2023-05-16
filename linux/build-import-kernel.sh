@@ -524,8 +524,8 @@ echo "linux_kernel_kali: $linux_kernel_kali"
 cd $linux_build_dir || exit
 make headers_install
 make modules install
-# bash configure --includedir=../kache/usr/include --datarootdir=../kache/usr/share --headers_install=/usr/include
-# make modules install
+bash configure --headers_install=/usr/include --install_mod_path=/usr/lib/modules
+make modules install
 cd .. || exit
 # install scripts and tools to usr/src first
 rm -rfv "/usr/src/${linux_kernel_generic_header}/scripts" | tail -n 100
@@ -682,9 +682,9 @@ tee "kache/$ps_wsl_install_kernel_id" >/dev/null <<EOF
     if ("\$(\$args[1])" -ne "" -and "\$(\$args[1])" -ne "restart" ){
         
         echo "installing kernel to \$(\$args[1]) distro ..."
-        wsl.exe -d "\$(\$args[1])" --exec sudo cp -TRf "/mnt/c/users/\$env:USERNAME/kache/boot/\$kernel_version/" "/boot/\$kernel_version"; 
+        wsl.exe -d "\$(\$args[1])" --exec sudo cp -TRf "/mnt/c/users/\$win_user/kache/boot/\$kernel_version/" "/boot/\$kernel_version"; 
         echo "installing kernel modules to \$(\$args[1]) distro ..."
-        wsl.exe -d "\$(\$args[1])" --exec sudo cp -TRf "/mnt/c/users/\$env:USERNAME/kache/usr/src/\$kernel_version/" "/usr/src/\$kernel_version";
+        wsl.exe -d "\$(\$args[1])" --exec sudo cp -TRf "/mnt/c/users/\$win_user/kache/usr/src/\$kernel_version/" "/usr/src/\$kernel_version";
         # order is important here for installing kernel headers bc we may rely on it being installed first chronologically later
         wsl.exe -d "\$(\$args[1])" --exec sudo yes 'y' | apt-get -y install "$linux_kernel_generic_header*" 2>/dev/null;
         wsl.exe -d "\$(\$args[1])" --exec sudo yes 'y' | apt-get -y install "$linux_kernel_kali_header*" 2>/dev/null;
@@ -696,9 +696,9 @@ tee "kache/$ps_wsl_install_kernel_id" >/dev/null <<EOF
         }
     } else {
         echo "installing kernel to default distro ..."
-        wsl.exe --exec sudo cp -TRf "/mnt/c/users/\$env:USERNAME/kache/boot/\$kernel_version/" "/boot/\$kernel_version";
+        wsl.exe --exec sudo cp -TRf "/mnt/c/users/\$win_user/kache/boot/\$kernel_version/" "/boot/\$kernel_version";
         echo "installing kernel modules to default distro ..."
-        wsl.exe --exec sudo cp -TRf "/mnt/c/users/\$env:USERNAME/kache/usr/src/\$kernel_version/" "/usr/src/\$kernel_version";
+        wsl.exe --exec sudo cp -TRf "/mnt/c/users/\$win_user/kache/usr/src/\$kernel_version/" "/usr/src/\$kernel_version";
         # order is important here for installing kernel headers bc we may rely on it being installed first chronologically later
         wsl.exe --exec sudo yes 'y' | apt-get -y install "$linux_kernel_generic_header*" 2>/dev/null;
         wsl.exe --exec sudo yes 'y' | apt-get -y install "$linux_kernel_kali_header*" 2>/dev/null;

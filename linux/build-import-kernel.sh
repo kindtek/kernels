@@ -479,7 +479,6 @@ cp -rfv "/usr/src/${linux_kernel_generic_header}" "/usr/src/${kindtek_kernel_ver
 cp -rfv "/usr/src/${kindtek_kernel_version}-common" "kache/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}common" | grep '^.*/\s*$' | tail -n 5
 cp -rfv "/usr/src/${linux_kernel_kali_header}" "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}" | grep '^.*/\s*$' | tail -n 5
 cp -rfv "/usr/src/${kindtek_kernel_version}-${linux_kernel_kali_header_type}" "kache/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}" | grep '^.*/\s*$' | tail -n 5
-orig_working_dir="$(pwd)"
 rm -fv "/usr/lib/modules/${linux_kernel_kali}-common/source"
 rm -fv "/usr/lib/modules/${linux_kernel_kali}-common/build"
 rm -fv "/usr/lib/modules/${linux_kernel_kali}-${linux_kernel_kali_header_type}/build"
@@ -491,7 +490,6 @@ mkdir -pv "/usr/lib/modules/${linux_kernel_kali}-${linux_kernel_kali_header_type
     
 ln -sv "/usr/src/${kindtek_kernel_version}-common" "/usr/lib/modules/${linux_kernel_kali}-common/source" && \
 ln -sv "/usr/src/${kindtek_kernel_version}-${linux_kernel_kali_header_type}" "/usr/lib/modules/${linux_kernel_kali}-${linux_kernel_kali_header_type}/build" && \
-cd "$orig_working_dir" || exit
 make headers_install
 make modules install
 find /usr/include -type d -mmin -1 -exec cp -rfv {} kache/usr/include \; | grep '/\s*$' | tail -n 5;

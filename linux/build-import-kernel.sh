@@ -446,7 +446,7 @@ fi
 echo "searching for headers matching $linux_kernel_kali_header_pattern"
 echo "apt -qq search \"$linux_kernel_kali_header_pattern\" 2>/dev/null | grep -o \"^$linux_kernel_kali_header_pattern[^/]*\" | head -n 1"
 linux_kernel_kali_header=$(apt -qq search "$linux_kernel_kali_header_pattern" 2>/dev/null | grep -o "^$linux_kernel_kali_header_pattern[^/]*" | head -n 1)
-linux_kernel_generic_header=$(apt-cache search linux-headers-generic | grep -o "^linux-headers-[a-zA-Z0-9]*[\-rc]*[a-zA-Z0-9]*[ -]*$" | head -n 1 )
+linux_kernel_generic_header=$(apt-cache search linux-headers-generic | grep -o "^linux-headers-[\-a-zA-Z0-9]*[^ -]*" | head -n 1 )
 echo "linux kali header: $linux_kernel_kali_header"
 echo "linux generic header: $linux_kernel_generic_header"
 yes 'y' | apt -y install "$linux_kernel_kali_header" 2>/dev/null

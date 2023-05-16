@@ -271,6 +271,7 @@ fi
 
 cd "$orig_pwd" || exit
 
+# good for debugging - bad for noninteractive
 # read -r -p "
 # (exit)
 # "

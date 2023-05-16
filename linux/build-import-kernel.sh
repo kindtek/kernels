@@ -427,9 +427,7 @@ if (( quick_wsl_install )); then
 else
     make oldconfig
     make prepare scripts 
-    yes "" | make deb-pkg
 fi
-yes "" | make deb-pkg
 
 if [ "$zfs" = "zfs" ];  then
 #     echo "zfs == True
@@ -453,9 +451,12 @@ if [ "$zfs" = "zfs" ];  then
 fi
 if (( quick_wsl_install )); then
     yes "" | make -j$(($(nproc) - 1))
+    yes "" | make deb-pkg
 else
     make -j$(($(nproc) - 1))
+    make deb-pkg
 fi
+
 
 echo "searching for headers matching $linux_kernel_kali_header_pattern"
 echo "apt -qq search \"$linux_kernel_kali_header_pattern\" 2>/dev/null | grep -o \"^$linux_kernel_kali_header_pattern[^/]*\" | head -n 1"

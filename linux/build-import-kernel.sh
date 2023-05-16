@@ -578,7 +578,7 @@ ln -sv "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}common" "/usr/
 ln -sv "/usr/src/${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}" "/usr/lib/modules/${make_kernel_version}-${kindtek_kernel_version}${kindtek_kernel_suffix%-}/build" && \
 # find /usr/include -type d -mmin -1 -exec cp -rf {} kache/usr/include \;
 
-ps_wsl_install_kernel_id=wsl-kernel-install_$kernel_alias.ps1
+ps_wsl_install_kernel_id="wsl-kernel-install_$kernel_alias.ps1"
 
 # kernel is baked - time to distribute the goods
 # move back to base dir  folder with github (relative) path
@@ -628,7 +628,7 @@ tee "kache/$ps_wsl_install_kernel_id" >/dev/null <<EOF
 #
 # navigate to kache and execute option B script saved in this file
 #>> cd kache
-#>> ./$ps_wsl_install_kernel_id
+#>> ./${ps_wsl_install_kernel_id}
 
 
 ####-------------------------    OR    ----------------------------------#### 
@@ -641,7 +641,7 @@ tee "kache/$ps_wsl_install_kernel_id" >/dev/null <<EOF
 #####                                                                   #####
 #####   copy without '#>>' to replace (delete/move) .wslconfig          #####
 
-    \$kernel_alias="$kernel_alias"
+    \$kernel_alias="${kernel_alias}"
     \$kernel_version="${kindtek_kernel_version}${kindtek_kernel_suffix%-}"
 
     if (\$IsLinux -eq \$false) {
@@ -664,9 +664,9 @@ tee "kache/$ps_wsl_install_kernel_id" >/dev/null <<EOF
 #>> del ..\\.wslconfig -Force -verbose;
 #
     
-    echo "extracting $package_full_name_id.tar.gz ..."
+    echo "extracting ${package_full_name_id}.tar.gz ..."
     # extract
-    tar -xzf $package_full_name_id.tar.gz
+    tar -xzf "${package_full_name_id}.tar.gz"
 
     echo "appending tail.wslconfig to .wslconfig"
     # append tail.wslconfig to .wslconfig
@@ -693,8 +693,8 @@ tee "kache/$ps_wsl_install_kernel_id" >/dev/null <<EOF
         echo "installing kernel modules to \$(\$args[1]) distro ..."
         wsl.exe -d "\$(\$args[1])" --exec sudo cp -TRf "/mnt/c/users/\$win_user/kache/usr/src/\$kernel_version/" "/usr/src/\$kernel_version";
         # order is important here for installing kernel headers bc we may rely on it being installed first chronologically later
-        wsl.exe -d "\$(\$args[1])" --exec sudo yes 'y' | apt-get -y install "$linux_kernel_generic_header*" 2>/dev/null;
-        wsl.exe -d "\$(\$args[1])" --exec sudo yes 'y' | apt-get -y install "$linux_kernel_kali_header*" 2>/dev/null;
+        wsl.exe -d "\$(\$args[1])" --exec sudo yes 'y' | apt-get -y install "${linux_kernel_generic_header}*" 2>/dev/null;
+        wsl.exe -d "\$(\$args[1])" --exec sudo yes 'y' | apt-get -y install "${linux_kernel_kali_header}*" 2>/dev/null;
         if ("\$(\$args[2])" -eq "restart"){
             # pwsh -Command .\\wsl-restart.ps1;
             # Start-Process -FilePath powershell.exe -ArgumentList "-Command .\\wsl-restart.ps1";
@@ -707,8 +707,8 @@ tee "kache/$ps_wsl_install_kernel_id" >/dev/null <<EOF
         echo "installing kernel modules to default distro ..."
         wsl.exe --exec sudo cp -TRf "/mnt/c/users/\$win_user/kache/usr/src/\$kernel_version/" "/usr/src/\$kernel_version";
         # order is important here for installing kernel headers bc we may rely on it being installed first chronologically later
-        wsl.exe --exec sudo yes 'y' | apt-get -y install "$linux_kernel_generic_header*" 2>/dev/null;
-        wsl.exe --exec sudo yes 'y' | apt-get -y install "$linux_kernel_kali_header*" 2>/dev/null;
+        wsl.exe --exec sudo yes 'y' | apt-get -y install "${linux_kernel_generic_header}*" 2>/dev/null;
+        wsl.exe --exec sudo yes 'y' | apt-get -y install "${linux_kernel_kali_header}*" 2>/dev/null;
         if ("\$(\$args[1])" -eq "restart"){                        
             # restart wsl
             # pwsh -Command .\\wsl-restart.ps1;

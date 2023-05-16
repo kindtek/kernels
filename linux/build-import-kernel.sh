@@ -676,7 +676,7 @@ tee "kache/$ps_wsl_install_kernel_id" >/dev/null <<EOF
     # copy wslconfig to home dir
     echo "installing new .wslconfig and kernel \$kernel_alias"
     copy .wslconfig ..\\.wslconfig -verbose;
-    copy boot\\vmlinuz-\$kernel_version \$kernel_alias -verbose
+    copy boot\\vmlinuz-*-\$kernel_version \$kernel_alias -verbose
 
     # restart wsl (and install kernel/modules)
     if ("\$(\$args[1])" -ne ""){

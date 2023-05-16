@@ -49,7 +49,7 @@ elif [ "$kernel_type" = "latest-rc" ]; then
     kernel_file_suffix+="R"
     # config_file_suffix+="_rc"
     linux_repo=https://github.com/torvalds/linux.git
-    linux_kernel_version_tag=$(git ls-remote --refs --sort=version:refname --tags $linux_repo | cut --delimiter='/' --fields=3 | grep '^v[0-9a-zA-Z\.]*-rc.*$' | tail --lines=1) 
+    linux_kernel_version_tag=$(git ls-remote --refs --sort=version:refname --tags $linux_repo | cut --delimiter='/' --fields=3 | grep '^v[0-9a-zA-Z\.]*$' | tail --lines=1) 
     linux_kernel_type_tag="LATEST_RC-WSL${linux_kernel_type_tag}"
     linux_kernel_version=${linux_kernel_version_tag#"v"}
 # set +x
@@ -69,7 +69,7 @@ elif [ "$kernel_type" = "stable" ]; then
     # config_file_suffix+="_stable"
     linux_repo=https://github.com/gregkh/linux.git
     # linux_version_query="git ls-remote --refs --sort=version:refname --tags $linux_repo "
-    linux_kernel_version_tag=$(git -c versionsort.suffix=- ls-remote --refs --sort=version:refname --tags $linux_repo | tail --lines=1 | cut --delimiter='/' --fields=3)
+    linux_kernel_version_tag=$(git -c versionsort.suffix=- ls-remote --refs --sort=version:refname --tags $linux_repo | cut --delimiter='/' --fields=3  | tail --lines=1)
     linux_kernel_type_tag="STABLE-WSL${linux_kernel_type_tag}"
     linux_kernel_version=${linux_kernel_version_tag#"v"}
 # set +x
@@ -84,7 +84,7 @@ else
     # config_file_suffix+="_basic"
     linux_build_dir=linux-build-msft
     linux_repo=https://github.com/microsoft/WSL2-Linux-Kernel.git
-    linux_kernel_version_tag=$(git -c versionsort.suffix=+ ls-remote --refs --sort=version:refname --tags $linux_repo  | tail --lines=1 | cut --delimiter='/' --fields=3) 
+    linux_kernel_version_tag=$(git -c versionsort.suffix=+ ls-remote --refs --sort=version:refname --tags $linux_repo | cut --delimiter='/' --fields=3 | grep '^linux-msft-wsl-[0-9a-zA-Z\.]*$' | tail --lines=1 ) 
     linux_kernel_type_tag="BASIC-WSL${linux_kernel_type_tag}"
     linux_kernel_version=${linux_kernel_version_tag#"linux-msft-wsl"}
     linux_kernel_version=${linux_kernel_version_tag%".y"}

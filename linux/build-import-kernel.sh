@@ -464,12 +464,12 @@ echo "linux kali header: $linux_kernel_kali_header"
 echo "linux generic header: $linux_kernel_generic_header"
 yes 'y' | apt -y install "$linux_kernel_kali_header" 2>/dev/null
 yes 'y' | apt -y install "$linux_kernel_generic_header" 2>/dev/null
-if [ ! -f "$kernel_source" ]; then
-    echo "
+# if [ ! -f "$kernel_source" ]; then
+#     echo "
     
-Ooops. The kernel did not build. Exiting ..."
-exit
-fi
+# Ooops. The kernel did not build. Exiting ..."
+# exit
+# fi
 
 cd .. || exit
 # reset kache

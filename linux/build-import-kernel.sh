@@ -390,7 +390,11 @@ else
     echo "cloning $linux_kernel_version_tag ..."
     git clone $linux_repo --single-branch --branch "$linux_commit_checkout" --depth=2 --progress -- $linux_build_dir
 fi
+cd "$linux_build_dir" || exit
+git commit -m "fetched $kernel_alias"
 git checkout
+cd .. || exit
+
 zfs_commit_checkout="$(git rev-parse --short git ls-remote "$zfs_repo" --tags "$zfs_version_tag" --short | grep -o '^[a-zA-Z0-9]*')"
 if [ "$zfs" = "zfs" ];  then
 #     echo "zfs == True
@@ -410,7 +414,10 @@ if [ "$zfs" = "zfs" ];  then
         echo "cloning $zfs_version_tag ..."
         git clone "$zfs_repo" --single-branch --branch "$zfs_commit_checkout" --progress -- "$zfs_build_dir" 
     fi
+    cd "$zfs_build_dir" || exit
+    git commit -m "fetched $kernel_alias"
     git checkout
+    cd .. || exit
 fi
 
 

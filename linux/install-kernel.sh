@@ -105,8 +105,8 @@ exiting ..."
     selected_kernel=$latest_kernel 
     read -r -p "
 (install $latest_kernel)
-"
-    if [ "$latest_kernel" != "" ]; then
+" install_latest
+    if [ "$install_latest" != "" ]; then
         echo "
 exiting ..."
         exit

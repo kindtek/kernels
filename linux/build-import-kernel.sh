@@ -518,10 +518,8 @@ echo "linux_kernel_kali_header_type: ${linux_kernel_kali_header_type}"
 linux_kernel_kali="${linux_kernel_kali_header%%-"${linux_kernel_kali_header_type}"}"
 linux_kernel_kali="${linux_kernel_kali#linux-headers-}"
 echo "linux_kernel_kali: ${linux_kernel_kali}"
-kindtek_kernel_version_suffix="${make_kernel_release}${kindtek_kernel_version}${kindtek_kernel_suffix%-}"
-kindtek_kernel_version_suffix_="${make_kernel_release}${kindtek_kernel_version}${kindtek_kernel_suffix}"
-kindtek_kernel_version_suffix_type="${make_kernel_release}${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}"
-kindtek_kernel_version_suffix_common="${make_kernel_release}${kindtek_kernel_version}${kindtek_kernel_suffix}common"
+make_kernel_release_type="${make_kernel_release}-${linux_kernel_kali_header_type}"
+make_kernel_release_common="${make_kernel_release}-common"
 # # remove/replace old symlink
 # rm -fv "/usr/lib/modules/${linux_kernel_kali}-common/source" 
 # rm -fv "/usr/lib/modules/${linux_kernel_kali}-common/build"
@@ -540,47 +538,47 @@ cd .. || exit
 # rm -rfv "/usr/src/${linux_kernel_generic_header}/tools" | tail -n 100
 # rm -rfv "/usr/src/${linux_kernel_kali_header}/scripts" | tail -n 100
 # rm -rfv "/usr/src/${linux_kernel_kali_header}/tools" | tail -n 100
-# rm -rfv "/usr/src/${kindtek_kernel_version_suffix_common}/scripts" | tail -n 100
-# rm -rfv "/usr/src/${kindtek_kernel_version_suffix_common}/tools" | tail -n 100
-# rm -rfv "/usr/src/${kindtek_kernel_version_suffix_type}/scripts" | tail -n 100
-# rm -rfv "/usr/src/${kindtek_kernel_version_suffix_type}/tools" | tail -n 100
-# rm -rfv "/usr/src/${kindtek_kernel_version_suffix_common}/scripts" | tail -n 100
-# rm -rfv "/usr/src/${kindtek_kernel_version_suffix_common}/tools" | tail -n 100
+# rm -rfv "/usr/src/${make_kernel_release_common}/scripts" | tail -n 100
+# rm -rfv "/usr/src/${make_kernel_release_common}/tools" | tail -n 100
+# rm -rfv "/usr/src/${make_kernel_release_type}/scripts" | tail -n 100
+# rm -rfv "/usr/src/${make_kernel_release_type}/tools" | tail -n 100
+# rm -rfv "/usr/src/${make_kernel_release_common}/scripts" | tail -n 100
+# rm -rfv "/usr/src/${make_kernel_release_common}/tools" | tail -n 100
 # mkdir -pv "/usr/src/${linux_kernel_generic_header}/scripts"
 # mkdir -pv "/usr/src/${linux_kernel_generic_header}/tools" 
 # mkdir -pv "/usr/src/${linux_kernel_kali_header}/scripts"
 # mkdir -pv "/usr/src/${linux_kernel_kali_header}/tools"
-# mkdir -pv "/usr/src/${kindtek_kernel_version_suffix_type}/scripts"
-# mkdir -pv "/usr/src/${kindtek_kernel_version_suffix_type}/tools" 
-# mkdir -pv "/usr/src/${kindtek_kernel_version_suffix_common}/scripts"
-# mkdir -pv "/usr/src/${kindtek_kernel_version_suffix_common}/tools" 
-# cp -TRfv "$linux_build_dir/scripts/" "/usr/src/${kindtek_kernel_version_suffix_common}/scripts" | tail -n 100
-# cp -TRfv "$linux_build_dir/tools/" "/usr/src/${kindtek_kernel_version_suffix_common}/tools" | tail -n 100
-# # cp -TRfv "$linux_build_dir/scripts/" "/usr/src/${kindtek_kernel_version_suffix_type}/scripts" | tail -n 100
-# # cp -TRfv "$linux_build_dir/tools/" "/usr/src/${kindtek_kernel_version_suffix_type}/tools" | tail -n 100
-# ln -sv "/usr/src/${kindtek_kernel_version_suffix_common}/tools" "/usr/lib/modules/${make_kernel_version}-${kindtek_kernel_version_suffix}/tools" && \
-# ln -sv "/usr/src/${kindtek_kernel_version_suffix_common}/scripts" "/usr/lib/modules/${make_kernel_version}-${kindtek_kernel_version_suffix}/scripts" && \
+# mkdir -pv "/usr/src/${make_kernel_release_type}/scripts"
+# mkdir -pv "/usr/src/${make_kernel_release_type}/tools" 
+# mkdir -pv "/usr/src/${make_kernel_release_common}/scripts"
+# mkdir -pv "/usr/src/${make_kernel_release_common}/tools" 
+# cp -TRfv "$linux_build_dir/scripts/" "/usr/src/${make_kernel_release_common}/scripts" | tail -n 100
+# cp -TRfv "$linux_build_dir/tools/" "/usr/src/${make_kernel_release_common}/tools" | tail -n 100
+# # cp -TRfv "$linux_build_dir/scripts/" "/usr/src/${make_kernel_release_type}/scripts" | tail -n 100
+# # cp -TRfv "$linux_build_dir/tools/" "/usr/src/${make_kernel_release_type}/tools" | tail -n 100
+# ln -sv "/usr/src/${make_kernel_release_common}/tools" "/usr/lib/modules/${make_kernel_version}-${make_kernel_release}/tools" && \
+# ln -sv "/usr/src/${make_kernel_release_common}/scripts" "/usr/lib/modules/${make_kernel_version}-${make_kernel_release}/scripts" && \
 
-# cp -TRfv "/usr/src/${linux_kernel_generic_header}/" "/usr/src/${kindtek_kernel_version_suffix_common}" | tail -n 100
-# # cp -TRfv "/usr/src/${linux_kernel_generic_header}/" "kache/usr/src/${kindtek_kernel_version_suffix_common}" | tail -n 100
-# cp -TRfv "/usr/src/${linux_kernel_kali_header}/" "/usr/src/${kindtek_kernel_version_suffix_type}" | tail -n 100
-# # cp -TRfv "/usr/src/${linux_kernel_kali_header}/" "kache/usr/src/${kindtek_kernel_version_suffix_type}" | tail -n 100
+# cp -TRfv "/usr/src/${linux_kernel_generic_header}/" "/usr/src/${make_kernel_release_common}" | tail -n 100
+# # cp -TRfv "/usr/src/${linux_kernel_generic_header}/" "kache/usr/src/${make_kernel_release_common}" | tail -n 100
+# cp -TRfv "/usr/src/${linux_kernel_kali_header}/" "/usr/src/${make_kernel_release_type}" | tail -n 100
+# # cp -TRfv "/usr/src/${linux_kernel_kali_header}/" "kache/usr/src/${make_kernel_release_type}" | tail -n 100
 
 # mkdir -pv "/usr/lib/modules/${linux_kernel_kali}-common"
-# mkdir -pv "/usr/lib/modules/${make_kernel_version}-${kindtek_kernel_version_suffix_common}"
+# mkdir -pv "/usr/lib/modules/${make_kernel_version}-${make_kernel_release_common}"
 # # install custom headers to usr/lib/modules
-# cp -TRfv "/usr/lib/modules/${linux_kernel_kali}-common" "${make_kernel_version}-${kindtek_kernel_version_suffix_common}"
-# cp -TRfv "/usr/lib/modules/${linux_kernel_kali}-${linux_kernel_kali_header_type}" "${make_kernel_version}-${kindtek_kernel_version_suffix}"
+# cp -TRfv "/usr/lib/modules/${linux_kernel_kali}-common" "${make_kernel_version}-${make_kernel_release_common}"
+# cp -TRfv "/usr/lib/modules/${linux_kernel_kali}-${linux_kernel_kali_header_type}" "${make_kernel_version}-${make_kernel_release}"
 # # mkdir -pv "kache/usr/lib/modules/${make_kernel_version}-${linux_kernel_kali}-common"
 # # mkdir -pv "kache/usr/lib/modules/${make_kernel_version}-${linux_kernel_kali}-${linux_kernel_kali_header_type}"
 # # mkdir -pv "/usr/lib/modules/${linux_kernel_kali}-${linux_kernel_kali_header_type}"
-# # mkdir -pv "/usr/lib/modules/${make_kernel_version}-${kindtek_kernel_version_suffix}"
-# mkdir -pv "kache/usr/lib/modules/${make_kernel_version}-${kindtek_kernel_version_suffix}"
+# # mkdir -pv "/usr/lib/modules/${make_kernel_version}-${make_kernel_release}"
+# mkdir -pv "kache/usr/lib/modules/${make_kernel_version}-${make_kernel_release}"
 
-# rm -fv "/usr/lib/modules/${make_kernel_version}-${kindtek_kernel_version_suffix}/source"
-# rm -fv "/usr/lib/modules/${make_kernel_version}-${kindtek_kernel_version_suffix}/build"
-# ln -sv "/usr/src/${kindtek_kernel_version_suffix_common}" "/usr/lib/modules/${make_kernel_version}-${kindtek_kernel_version_suffix}/source"
-# ln -sv "/usr/src/${kindtek_kernel_version_suffix_type}" "/usr/lib/modules/${make_kernel_version}-${kindtek_kernel_version_suffix}/build"
+# rm -fv "/usr/lib/modules/${make_kernel_version}-${make_kernel_release}/source"
+# rm -fv "/usr/lib/modules/${make_kernel_version}-${make_kernel_release}/build"
+# ln -sv "/usr/src/${make_kernel_release_common}" "/usr/lib/modules/${make_kernel_version}-${make_kernel_release}/source"
+# ln -sv "/usr/src/${make_kernel_release_type}" "/usr/lib/modules/${make_kernel_version}-${make_kernel_release}/build"
 # # find /usr/include -type d -mmin -1 -exec cp -rf {} kache/usr/include \;
 
 ps_wsl_install_kernel_id="wsl-kernel-install_${kernel_alias}.ps1"
@@ -600,8 +598,8 @@ rm -rfv  kache/boot/*.old | tail -n 5
 # kbuild_version="${linux_kernel_kali%%-*}"
 # kbuild_version="${kbuild_version:0:3}"
 
-# cp -TRfv "/usr/src/${kindtek_kernel_version_suffix_common}/" "kache/usr/src/${kindtek_kernel_version_suffix_common}" | tail -n 20
-# cp -TRfv "/usr/src/${kindtek_kernel_version_suffix_type}/" "kache/usr/src/${kindtek_kernel_version_suffix_type}" | tail -n 20
+# cp -TRfv "/usr/src/${make_kernel_release_common}/" "kache/usr/src/${make_kernel_release_common}" | tail -n 20
+# cp -TRfv "/usr/src/${make_kernel_release_type}/" "kache/usr/src/${make_kernel_release_type}" | tail -n 20
 
 # mkdir -pv "kache/usr/lib/linux-kbuild-${kbuild_version}"
 # cp -TRfv "/usr/lib/linux-kbuild-${kbuild_version}/certs" "kache/usr/lib/linux-kbuild-${kbuild_version}/certs" | tail -n 20
@@ -643,7 +641,7 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
 #####   copy without '#>>' to replace (delete/move) .wslconfig          #####
 
     \$kernel_alias="${kernel_alias}"
-    \$kernel_version="${kindtek_kernel_version_suffix}"
+    \$kernel_version="${make_kernel_release}"
 
     if (\$IsLinux -eq \$false) {
 
@@ -689,10 +687,10 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
     if ("\$(\$args[1])" -ne "" -and "\$(\$args[1])" -ne "restart" ){
         
         echo "installing kernel to \$(\$args[1]) distro ..."
-        wsl.exe -d "\$(\$args[1])" --exec sudo cp -TRf "/mnt/c/users/\$win_user/kache/boot/\$kernel_version/" "/boot/vmlinuz_${kindtek_kernel_version_suffix}"; 
+        wsl.exe -d "\$(\$args[1])" --exec sudo cp -TRf "/mnt/c/users/\$win_user/kache/boot/\$kernel_version/" "/boot/vmlinuz_${make_kernel_release}"; 
         echo "installing kernel modules to \$(\$args[1]) distro ..."
-        wsl.exe -d "\$(\$args[1])" --exec sudo cp -TRf "/mnt/c/users/\$win_user/kache/usr/lib/modules/${kindtek_kernel_version_suffix_common}/" "/usr/lib/modules/${kindtek_kernel_version_suffix_common}";
-        wsl.exe -d "\$(\$args[1])" --exec sudo cp -TRf "/mnt/c/users/\$win_user/kache/usr/lib/modules/${kindtek_kernel_version_suffix_type}/" "/usr/lib/modules/${kindtek_kernel_version_suffix_type}";
+        wsl.exe -d "\$(\$args[1])" --exec sudo cp -TRf "/mnt/c/users/\$win_user/kache/usr/lib/modules/${make_kernel_release_common}/" "/usr/lib/modules/${make_kernel_release_common}";
+        wsl.exe -d "\$(\$args[1])" --exec sudo cp -TRf "/mnt/c/users/\$win_user/kache/usr/lib/modules/${make_kernel_release_type}/" "/usr/lib/modules/${make_kernel_release_type}";
         # order is important here for installing kernel headers bc we may rely on it being installed first chronologically later
         wsl.exe -d "\$(\$args[1])" --exec sudo yes 'y' | apt-get -y install "${linux_kernel_generic_header}*" 2>/dev/null;
         wsl.exe -d "\$(\$args[1])" --exec sudo yes 'y' | apt-get -y install "${linux_kernel_kali_header}*" 2>/dev/null;
@@ -704,10 +702,10 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
         }
     } else {
         echo "installing kernel to default distro ..."
-        wsl.exe --exec sudo cp -TRf "/mnt/c/users/\$win_user/kache/boot/vmlinuz_${kindtek_kernel_version_suffix}/" "/boot/vmlinuz_${kindtek_kernel_version_suffix}"; 
+        wsl.exe --exec sudo cp -TRf "/mnt/c/users/\$win_user/kache/boot/vmlinuz_${make_kernel_release}/" "/boot/vmlinuz_${make_kernel_release}"; 
         echo "installing kernel modules to \$(\$args[1]) distro ..."
-        wsl.exe --exec sudo cp -TRf "/mnt/c/users/\$win_user/kache/usr/lib/modules/${kindtek_kernel_version_suffix_common}/" "/usr/lib/modules/${kindtek_kernel_version_suffix_common}";
-        wsl.exe --exec sudo cp -TRf "/mnt/c/users/\$win_user/kache/usr/lib/modules/${kindtek_kernel_version_suffix_type}/" "/usr/lib/modules/${kindtek_kernel_version_suffix_type}";
+        wsl.exe --exec sudo cp -TRf "/mnt/c/users/\$win_user/kache/usr/lib/modules/${make_kernel_release_common}/" "/usr/lib/modules/${make_kernel_release_common}";
+        wsl.exe --exec sudo cp -TRf "/mnt/c/users/\$win_user/kache/usr/lib/modules/${make_kernel_release_type}/" "/usr/lib/modules/${make_kernel_release_type}";
         # order is important here for installing kernel headers bc we may rely on it being installed first chronologically later
         wsl.exe --exec sudo yes 'y' | apt-get -y install "${linux_kernel_generic_header}*" 2>/dev/null;
         wsl.exe --exec sudo yes 'y' | apt-get -y install "${linux_kernel_kali_header}*" 2>/dev/null;

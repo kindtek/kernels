@@ -532,7 +532,7 @@ cd $linux_build_dir || exit
 make headers_install
 # make modules install
 make modules install INSTALL_MOD_PATH=/usr/lib/modules
-make modules install INSTALL_MOD_PATH=kache/usr/lib/modules
+make modules install INSTALL_MOD_PATH=../kache/usr/lib/modules
 cd .. || exit
 
 # # install scripts and tools to usr/src first

@@ -518,10 +518,10 @@ echo "linux_kernel_kali_header_type: ${linux_kernel_kali_header_type}"
 linux_kernel_kali="${linux_kernel_kali_header%%-"${linux_kernel_kali_header_type}"}"
 linux_kernel_kali="${linux_kernel_kali#linux-headers-}"
 echo "linux_kernel_kali: ${linux_kernel_kali}"
-kindtek_kernel_version_suffix="${kindtek_kernel_version}${kindtek_kernel_suffix%-}"
-kindtek_kernel_version_suffix_="${kindtek_kernel_version}${kindtek_kernel_suffix}"
-kindtek_kernel_version_suffix_type="${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}"
-kindtek_kernel_version_suffix_common="kindtek_kernel_version_suffix_common"
+kindtek_kernel_version_suffix="${make_kernel_release}${kindtek_kernel_version}${kindtek_kernel_suffix%-}"
+kindtek_kernel_version_suffix_="${make_kernel_release}${kindtek_kernel_version}${kindtek_kernel_suffix}"
+kindtek_kernel_version_suffix_type="${make_kernel_release}${kindtek_kernel_version}${kindtek_kernel_suffix}${linux_kernel_kali_header_type}"
+kindtek_kernel_version_suffix_common="${make_kernel_release}${kindtek_kernel_version}${kindtek_kernel_suffix}common"
 # # remove/replace old symlink
 # rm -fv "/usr/lib/modules/${linux_kernel_kali}-common/source" 
 # rm -fv "/usr/lib/modules/${linux_kernel_kali}-common/build"
@@ -689,9 +689,9 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
     if ("\$(\$args[1])" -ne "" -and "\$(\$args[1])" -ne "restart" ){
         
         echo "installing kernel to \$(\$args[1]) distro ..."
-        wsl.exe -d "\$(\$args[1])" --exec sudo cp -TRf "/mnt/c/users/\$win_user/kache/boot/\$kernel_version/" "/boot/vmlinuz_${make_kernel_release}${kindtek_kernel_version_suffix}"; 
+        wsl.exe -d "\$(\$args[1])" --exec sudo cp -TRf "/mnt/c/users/\$win_user/kache/boot/\$kernel_version/" "/boot/vmlinuz_${kindtek_kernel_version_suffix}"; 
         echo "installing kernel modules to \$(\$args[1]) distro ..."
-        wsl.exe -d "\$(\$args[1])" --exec sudo cp -TRf "/mnt/c/users/\$win_user/kache/usr/usr/lib/modules/${kindtek_kernel_version_suffix_common}/" "/usr/usr/lib/modules/${kindtek_kernel_version_suffix_common}";
+        wsl.exe -d "\$(\$args[1])" --exec sudo cp -TRf "/mnt/c/users/\$win_user/kache/usr/lib/modules/${kindtek_kernel_version_suffix_common}/" "/usr/lib/modules/${kindtek_kernel_version_suffix_common}";
         wsl.exe -d "\$(\$args[1])" --exec sudo cp -TRf "/mnt/c/users/\$win_user/kache/usr/lib/modules/${kindtek_kernel_version_suffix_type}/" "/usr/lib/modules/${kindtek_kernel_version_suffix_type}";
         # order is important here for installing kernel headers bc we may rely on it being installed first chronologically later
         wsl.exe -d "\$(\$args[1])" --exec sudo yes 'y' | apt-get -y install "${linux_kernel_generic_header}*" 2>/dev/null;
@@ -704,9 +704,9 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
         }
     } else {
         echo "installing kernel to default distro ..."
-        wsl.exe --exec sudo cp -TRf "/mnt/c/users/\$win_user/kache/boot/vmlinuz_${make_kernel_release}${kindtek_kernel_version_suffix}/" "/boot/vmlinuz_${make_kernel_release}${kindtek_kernel_version_suffix}"; 
+        wsl.exe --exec sudo cp -TRf "/mnt/c/users/\$win_user/kache/boot/vmlinuz_${kindtek_kernel_version_suffix}/" "/boot/vmlinuz_${kindtek_kernel_version_suffix}"; 
         echo "installing kernel modules to \$(\$args[1]) distro ..."
-        wsl.exe --exec sudo cp -TRf "/mnt/c/users/\$win_user/kache/usr/usr/lib/modules/${kindtek_kernel_version_suffix_common}/" "/usr/usr/lib/modules/${kindtek_kernel_version_suffix_common}";
+        wsl.exe --exec sudo cp -TRf "/mnt/c/users/\$win_user/kache/usr/lib/modules/${kindtek_kernel_version_suffix_common}/" "/usr/lib/modules/${kindtek_kernel_version_suffix_common}";
         wsl.exe --exec sudo cp -TRf "/mnt/c/users/\$win_user/kache/usr/lib/modules/${kindtek_kernel_version_suffix_type}/" "/usr/lib/modules/${kindtek_kernel_version_suffix_type}";
         # order is important here for installing kernel headers bc we may rely on it being installed first chronologically later
         wsl.exe --exec sudo yes 'y' | apt-get -y install "${linux_kernel_generic_header}*" 2>/dev/null;

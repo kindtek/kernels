@@ -527,10 +527,9 @@ make_kernel_release_common="${make_kernel_release}-common"
 # rm -fv "/usr/lib/modules/${linux_kernel_kali}-${linux_kernel_kali_header_type}/source"
 
 cd $linux_build_dir || exit
-make headers_install
-# make modules install
 make modules install INSTALL_MOD_PATH=/usr/lib/modules
 make modules install INSTALL_MOD_PATH=../kache/usr/lib/modules
+make headers_install
 cd .. || exit
 
 # # install scripts and tools to usr/src first

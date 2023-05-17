@@ -578,8 +578,8 @@ mkdir -pv "kache/usr/lib/modules/${make_kernel_version}-${kindtek_kernel_version
 
 rm -fv "/usr/lib/modules/${make_kernel_version}-${kindtek_kernel_version_suffix}/source"
 rm -fv "/usr/lib/modules/${make_kernel_version}-${kindtek_kernel_version_suffix}/build"
-ln -sv "/usr/src/${kindtek_kernel_version_suffix_}common" "/usr/lib/modules/${make_kernel_version}-${kindtek_kernel_version_suffix}/source" && \
-ln -sv "/usr/src/${kindtek_kernel_version_suffix_type}" "/usr/lib/modules/${make_kernel_version}-${kindtek_kernel_version_suffix}/build" && \
+ln -sv "/usr/src/${kindtek_kernel_version_suffix_}common" "/usr/lib/modules/${make_kernel_version}-${kindtek_kernel_version_suffix}/source"
+ln -sv "/usr/src/${kindtek_kernel_version_suffix_type}" "/usr/lib/modules/${make_kernel_version}-${kindtek_kernel_version_suffix}/build"
 # find /usr/include -type d -mmin -1 -exec cp -rf {} kache/usr/include \;
 
 ps_wsl_install_kernel_id="wsl-kernel-install_${kernel_alias}.ps1"

@@ -592,7 +592,7 @@ cp -fv --backup=numbered "${linux_build_dir}/${kernel_source}" "${kernel_target_
 cp -rfv "/boot" "kache" | tail -n 5
 rm -rfv  kache/boot/*.old | tail -n 5
 
-# # cp -r -fv "/boot/*$kindtek_kernel_version*" "kache"
+cp -r -fv "/boot/*${make_kernel_release}*" "kache"
 # # cp -r -f "/usr/src" "kache"
 # kbuild_version="${linux_kernel_kali%%-*}"
 # kbuild_version="${kbuild_version:0:3}"
@@ -680,7 +680,7 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
     # copy wslconfig to home dir
     echo "installing new .wslconfig and kernel \$kernel_alias"
     copy .wslconfig ..\\.wslconfig -verbose;
-    copy boot\\vmlinuz-*-\$kernel_version \$kernel_alias -verbose
+    copy boot\\vmlinuz-\$kernel_version \$kernel_alias -verbose
 
     # restart wsl (and install kernel/modules)
     if ("\$(\$args[1])" -ne "" -and "\$(\$args[1])" -ne "restart" ){

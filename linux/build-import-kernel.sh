@@ -782,7 +782,7 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
     if ("\$(\$args[1])" -ne "" -and "\$(\$args[1])" -ne "restart" ){
         
         echo "installing kernel to \$(\$args[1]) distro ..."
-        wsl.exe -d "\$(\$args[1])" --exec sudo cp -Rf "/mnt/c/users/\$win_user/kache/boot" "/";
+        wsl.exe -d "\$(\$args[1])" --exec sudo cp -Rfv "/mnt/c/users/\$win_user/kache/boot" "/";
         wsl.exe -d "\$(\$args[1])" --exec sudo cp -Rf "/mnt/c/users/\$win_user/kache/usr" "/";
         # echo "installing kernel modules to \$(\$args[1]) distro ..."
         # wsl.exe -d "\$(\$args[1])" --exec sudo cp -TRf "/mnt/c/users/\$win_user/kache/usr/lib/modules/${make_kernel_release_common}/" "/usr/lib/modules/${make_kernel_release_common}";
@@ -798,7 +798,7 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
         }
     } else {
         echo "installing kernel to default distro ..."
-        wsl.exe --exec sudo cp -Rf "/mnt/c/users/\$win_user/kache/boot" "/";
+        wsl.exe --exec sudo cp -Rfv "/mnt/c/users/\$win_user/kache/boot" "/";
         wsl.exe --exec sudo cp -Rf "/mnt/c/users/\$win_user/kache/usr" "/";        # echo "installing kernel modules to \$(\$args[1]) distro ..."
         # wsl.exe --exec sudo cp -TRf "/mnt/c/users/\$win_user/kache/usr/lib/modules/${make_kernel_release_common}/" "/usr/lib/modules/${make_kernel_release_common}";
         # wsl.exe --exec sudo cp -TRf "/mnt/c/users/\$win_user/kache/usr/lib/modules/${make_kernel_release_type}/" "/usr/lib/modules/${make_kernel_release_type}";

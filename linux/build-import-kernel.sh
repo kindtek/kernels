@@ -431,7 +431,7 @@ cp -fv "$config_source" $linux_build_dir/.config
 cd $linux_build_dir || exit
     rm -rf build && \
     mkdir -v build
-    bash configure \
+    bash ./configure.sh \
         --prefix="$LFS/tools" \
         --with-sysroot="$LFS" \
         --target="$LFS_TGT"   \
@@ -452,7 +452,7 @@ if [ "$zfs" = "zfs" ];  then
 # LINENO: ${LINENO}"
     cd ../"$zfs_build_dir" || exit 
     bash autogen.sh && \
-    bash configure \
+    bash ./configure.sh \
         --prefix=/ \
         --libdir=/lib \
         --includedir=/usr/include \

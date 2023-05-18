@@ -501,10 +501,7 @@ cd .. || exit
 rm -rf kache/boot 
 rm -rf kache/usr 
 mkdir -pv kache/boot 2>/dev/null
-mkdir -pv kache/usr/src 2>/dev/null
-mkdir -pv kache/usr/include 2>/dev/null
-mkdir -pv kache/usr/share 2>/dev/null
-mkdir -pv kache/usr/lib/modules 2>/dev/null
+mkdir -pv kache/usr 2>/dev/null
 # remove config
 rm -rfv kache/.config_*
 # remove kernel
@@ -739,7 +736,7 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
 #####   copy without '#>>' to replace (delete/move) .wslconfig          #####
 
     \$kernel_alias="${kernel_alias}"
-    \$kernel_version="${make_kernel_release}"
+    \$kernel_release="${make_kernel_release}"
 
     if (\$IsLinux -eq \$false) {
 
@@ -779,13 +776,14 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
     # copy wslconfig to home dir
     echo "installing new .wslconfig and kernel \$kernel_alias"
     copy .wslconfig ..\\.wslconfig -verbose;
-    copy boot\\vmlinuz-\$kernel_version \$kernel_alias -verbose
+    copy boot\\vmlinuz-\$kernel_release \$kernel_alias -verbose
 
     # restart wsl (and install kernel/modules)
     if ("\$(\$args[1])" -ne "" -and "\$(\$args[1])" -ne "restart" ){
         
         # echo "installing kernel to \$(\$args[1]) distro ..."
-        # wsl.exe -d "\$(\$args[1])" --exec sudo cp -TRf "/mnt/c/users/\$win_user/kache/boot/\$kernel_version/" "/boot/vmlinuz_${make_kernel_release}"; 
+        # wsl.exe -d "\$(\$args[1])" --exec sudo cp -Rf "/mnt/c/users/\$win_user/kache/boot" "/";
+        # wsl.exe -d "\$(\$args[1])" --exec sudo cp -Rf "/mnt/c/users/\$win_user/kache/usr" "/";
         # echo "installing kernel modules to \$(\$args[1]) distro ..."
         # wsl.exe -d "\$(\$args[1])" --exec sudo cp -TRf "/mnt/c/users/\$win_user/kache/usr/lib/modules/${make_kernel_release_common}/" "/usr/lib/modules/${make_kernel_release_common}";
         # wsl.exe -d "\$(\$args[1])" --exec sudo cp -TRf "/mnt/c/users/\$win_user/kache/usr/lib/modules/${make_kernel_release_type}/" "/usr/lib/modules/${make_kernel_release_type}";

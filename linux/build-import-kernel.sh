@@ -109,6 +109,7 @@ if [ "$2" = "get-package" ]; then
     echo -n "$package_full_name_id"
     exit
 fi
+
 # deduce architecture of this machine and shorten to amd/intel or print whatever was found
 cpu_vendor="$(echo "$(grep -Pom 1 '^vendor_id\s*:\s*\K.*' /proc/cpuinfo | grep -Eio 'intel|amd' || grep -Pom 1 '^vendor_id\s*:\s*\K.*' /proc/cpuinfo)" | tr '[:upper:]' '[:lower:]')"
 # cpu_vendor="$(grep -Pom 1 '^vendor_id\s*:\s*\K.*' /proc/cpuinfo | tr '[:upper:]' '[:lower:]' | grep -Eio --color=never 'intel|amd' || grep -Pom 1 '^vendor_id\s*:\s*\K.*' /proc/cpuinfo --color=never)"
@@ -411,11 +412,32 @@ if [ "$zfs" = "zfs" ];  then
     fi
 fi
 
+set +h
+umask 022
+LFS="$(pwd)/$linux_build_dir"
+LC_ALL=POSIX
+PATH_ORIG=$PATH
+PATH=/usr/bin
+if [ ! -L /bin ]; then PATH=/bin:$PATH; fi
+PATH=$LFS/tools/bin:$PATH
+CONFIG_SITE=$LFS/usr/share/config.site
+export LFS LC_ALL LFS_TGT PATH CONFIG_SITE
+[ ! -e /etc/bash.bashrc ] || mv -v /etc/bash.bashrc /etc/bash.bashrc.NOUSE
 
 # replace kernel source .config with the config generated from a custom config
 cp -fv "$config_source" $linux_build_dir/.config
 
+
 cd $linux_build_dir || exit
+    mkdir -v build && \
+    cd       build || exit
+    bash ../configure \
+        --prefix="$LFS/tools" \
+        --with-sysroot="$LFS" \
+        --target="$LFS_TGT"   \
+        --disable-nls       \
+        --enable-gprofng=no \
+        --disable-werror
 if (( quick_wsl_install )); then
     # prompt bypass
     yes "" | make oldconfig
@@ -425,12 +447,30 @@ else
     make prepare scripts 
 fi
 
+case $(uname -m) in
+  x86_64)
+    sed -e '/m64=/s/lib64/lib/' \
+        -i.orig gcc/config/i386/t-linux64
+ ;;
+esac
+make_kernel_version=$(make kernelversion)
+make_kernel_release=$(make kernelrelease)
+LFS_TGT=$make_kernel_release
+
+
 if [ "$zfs" = "zfs" ];  then
 #     echo "zfs == True
 # LINENO: ${LINENO}"
-    cd ../"$zfs_build_dir" || exit 
+    cd ../../"$zfs_build_dir" || exit 
     bash autogen.sh && \
-    bash configure --prefix=/ --libdir=/lib --includedir=/usr/include --datarootdir=/usr/share --enable-linux-builtin=yes --with-linux=../$linux_build_dir --with-linux-obj=../$linux_build_dir && \
+    bash configure \
+        --prefix=/ \
+        --libdir=/lib \
+        --includedir=/usr/include \
+        --datarootdir=/usr/share \
+        --enable-linux-builtin=yes \
+        --with-linux=../$linux_build_dir \
+    --with-linux-obj=../$linux_build_dir && \
     bash copy-builtin ../$linux_build_dir && \
     yes "" | make install 
 fi
@@ -453,24 +493,6 @@ else
     # make deb-pkg
 fi
 
-
-echo "searching for headers matching $linux_kernel_kali_header_pattern"
-echo "apt -qq search \"$linux_kernel_kali_header_pattern\" 2>/dev/null | grep -o \"^$linux_kernel_kali_header_pattern[^/]*\" | head -n 1"
-linux_kernel_kali_header=$(apt -qq search "${linux_kernel_kali_header_pattern}" 2>/dev/null | grep -o "^${linux_kernel_kali_header_pattern}[^/]*" | head -n 1)
-linux_kernel_generic_header=$(apt-cache search linux-headers common | grep -o "^linux-headers-[-.a-zA-Z0-9]*-common" | head -n 1 )
-make_kernel_version=$(make kernelversion)
-make_kernel_release=$(make kernelrelease)
-echo "linux kali header: $linux_kernel_kali_header"
-echo "linux generic header: $linux_kernel_generic_header"
-yes 'y' | apt -y install "$linux_kernel_kali_header" 2>/dev/null
-yes 'y' | apt -y install "$linux_kernel_generic_header" 2>/dev/null
-# if [ ! -f "$kernel_source" ]; then
-#     echo "
-    
-# Ooops. The kernel did not build. Exiting ..."
-# exit
-# fi
-
 cd .. || exit
 # reset kache
 rm -rf kache/boot 
@@ -491,6 +513,73 @@ rm -rfv kache/Linux-*
 rm -rfv kache/wsl-kernel-install_*
 # remove tar.gz file
 rm -rfv kache/*.tar.gz
+
+cd $linux_build_dir || exit
+cp -iv arch/x86/boot/bzImage "/boot/vmlinuz-$make_kernel_release"
+cp -iv arch/x86/boot/bzImage "../kache/boot/vmlinuz-$make_kernel_release"
+cp -iv System.map "/boot/System.map-$make_kernel_version"
+cp -iv System.map "../kache/boot/System.map-$make_kernel_version"
+cp -iv .config "/boot/config-$make_kernel_version"
+cp -iv .config "../kache/boot/config-$make_kernel_version"
+cd .. || exit
+
+cat > /etc/inittab << "EOF"
+# Begin /etc/inittab
+
+id:3:initdefault:
+
+si::sysinit:/etc/rc.d/init.d/rc S
+
+l0:0:wait:/etc/rc.d/init.d/rc 0
+l1:S1:wait:/etc/rc.d/init.d/rc 1
+l2:2:wait:/etc/rc.d/init.d/rc 2
+l3:3:wait:/etc/rc.d/init.d/rc 3
+l4:4:wait:/etc/rc.d/init.d/rc 4
+l5:5:wait:/etc/rc.d/init.d/rc 5
+l6:6:wait:/etc/rc.d/init.d/rc 6
+
+ca:12345:ctrlaltdel:/sbin/shutdown -t1 -a -r now
+
+su:S06:once:/sbin/sulogin
+s1:1:respawn:/sbin/sulogin
+
+1:2345:respawn:/sbin/agetty --noclear tty1 9600
+2:2345:respawn:/sbin/agetty tty2 9600
+3:2345:respawn:/sbin/agetty tty3 9600
+4:2345:respawn:/sbin/agetty tty4 9600
+5:2345:respawn:/sbin/agetty tty5 9600
+6:2345:respawn:/sbin/agetty tty6 9600
+
+# End /etc/inittab
+EOF
+cat > /etc/sysconfig/clock << "EOF"
+# Begin /etc/sysconfig/clock
+
+UTC=1
+
+# Set this to any options you might need to give to hwclock,
+# such as machine hardware clock type for Alphas.
+CLOCKPARAMS=
+
+# End /etc/sysconfig/clock
+EOF
+
+echo "searching for headers matching $linux_kernel_kali_header_pattern"
+echo "apt -qq search \"$linux_kernel_kali_header_pattern\" 2>/dev/null | grep -o \"^$linux_kernel_kali_header_pattern[^/]*\" | head -n 1"
+linux_kernel_kali_header=$(apt -qq search "${linux_kernel_kali_header_pattern}" 2>/dev/null | grep -o "^${linux_kernel_kali_header_pattern}[^/]*" | head -n 1)
+linux_kernel_generic_header=$(apt-cache search linux-headers common | grep -o "^linux-headers-[-.a-zA-Z0-9]*-common" | head -n 1 )
+echo "linux kali header: $linux_kernel_kali_header"
+echo "linux generic header: $linux_kernel_generic_header"
+yes 'y' | apt -y install "$linux_kernel_kali_header" 2>/dev/null
+yes 'y' | apt -y install "$linux_kernel_generic_header" 2>/dev/null
+# if [ ! -f "$kernel_source" ]; then
+#     echo "
+    
+# Ooops. The kernel did not build. Exiting ..."
+# exit
+# fi
+
+
 
 # can also get partial suffix with: git rev-parse --verify --short HEAD
 kindtek_kernel_suffix="$(echo "$make_kernel_release" | sed -r -e "s/^(.*)$kindtek_kernel_version\-?(.*)*$/\2/g"  | head -n 1)"
@@ -530,6 +619,15 @@ make headers_install INSTALL_HDR_PATH=../kache/usr
 make modules_install INSTALL_MOD_PATH=../kache/usr
 cd .. || exit
 
+install -v -m755 -d /etc/modprobe.d
+cat > /etc/modprobe.d/usb.conf << "EOF"
+# Begin /etc/modprobe.d/usb.conf
+
+install ohci_hcd /sbin/modprobe ehci_hcd ; /sbin/modprobe -i ohci_hcd ; true
+install uhci_hcd /sbin/modprobe ehci_hcd ; /sbin/modprobe -i uhci_hcd ; true
+
+# End /etc/modprobe.d/usb.conf
+EOF
 # # install scripts and tools to usr/src first
 # rm -rfv "/usr/src/${linux_kernel_generic_header}/scripts" | tail -n 100
 # rm -rfv "/usr/src/${linux_kernel_generic_header}/tools" | tail -n 100
@@ -586,11 +684,11 @@ mkdir -pv "$git_save_path" 2>/dev/null
 cp -fv --backup=numbered "${linux_build_dir}/.config" "${config_target_git}"
 cp -fv --backup=numbered "${linux_build_dir}/${kernel_source}" "${kernel_target_git}"
 
-# copy relevant sources and kache modules
-cp -rfv "/boot" "kache" | tail -n 5
-rm -rfv  kache/boot/*.old | tail -n 5
+# # copy relevant sources and kache modules
+# cp -rfv "/boot" "kache" | tail -n 5
+# rm -rfv  kache/boot/*.old | tail -n 5
 
-cp -rfv "/boot/*${make_kernel_release}*" "kache"
+# cp -rfv "/boot/*${make_kernel_release}*" "kache" || echo "/boot/*${make_kernel_release}* NOT FOUND" && ls -al "/boot/*${make_kernel_release}*"
 # # cp -r -f "/usr/src" "kache"
 # kbuild_version="${linux_kernel_kali%%-*}"
 # kbuild_version="${kbuild_version:0:3}"
@@ -814,3 +912,7 @@ kernel:
 ==================================================================
 
 " "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}"
+
+# restore path and /etc/bash.bashrc
+PATH=$PATH_ORIG
+[ -e /etc/bash.bashrc.NOUSE ] || mv -v /etc/bash.bashrc.NOUSE /etc/bash.bashrc

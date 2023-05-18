@@ -523,8 +523,11 @@ make_kernel_release_common="${make_kernel_release}-common"
 # rm -fv "/usr/lib/modules/${linux_kernel_kali}-${linux_kernel_kali_header_type}/source"
 
 cd $linux_build_dir || exit
-make headers_install INSTALL_HDR_PATH=../kache/usr/src
-make modules_install INSTALL_MOD_PATH=../kache/usr/lib/modules
+find usr/include -type f ! -name '*.h' -delete
+make headers_install
+make modules_install
+make headers_install INSTALL_HDR_PATH=../kache/usr
+make modules_install INSTALL_MOD_PATH=../kache/usr
 cd .. || exit
 
 # # install scripts and tools to usr/src first
@@ -587,7 +590,7 @@ cp -fv --backup=numbered "${linux_build_dir}/${kernel_source}" "${kernel_target_
 cp -rfv "/boot" "kache" | tail -n 5
 rm -rfv  kache/boot/*.old | tail -n 5
 
-cp -r -fv "/boot/*${make_kernel_release}*" "kache"
+cp -rfv "/boot/*${make_kernel_release}*" "kache"
 # # cp -r -f "/usr/src" "kache"
 # kbuild_version="${linux_kernel_kali%%-*}"
 # kbuild_version="${kbuild_version:0:3}"

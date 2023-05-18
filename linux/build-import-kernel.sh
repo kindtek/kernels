@@ -447,15 +447,15 @@ else
     make prepare scripts 
 fi
 
-case $(uname -m) in
+make_kernel_version=$(make kernelversion)
+make_kernel_release=$(make kernelrelease)
+LFS_TGT=$make_kernel_release
+case "$(echo $make_kernel_release)" in
   x86_64)
     sed -e '/m64=/s/lib64/lib/' \
         -i.orig gcc/config/i386/t-linux64
  ;;
 esac
-make_kernel_version=$(make kernelversion)
-make_kernel_release=$(make kernelrelease)
-LFS_TGT=$make_kernel_release
 
 
 if [ "$zfs" = "zfs" ];  then

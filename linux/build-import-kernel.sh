@@ -116,8 +116,6 @@ cpu_vendor="$(echo "$(grep -Pom 1 '^vendor_id\s*:\s*\K.*' /proc/cpuinfo | grep -
 cpu_arch="$(uname -m | grep -o '^[^_]*')"
 # shorten common vendor names
 linux_kernel_version_mask=${linux_kernel_version/\./_}
-linux_kernel_header_version="${linux_kernel_version:0:3}"
-linux_kernel_kali_header_pattern="linux-headers-${linux_kernel_header_version}*"
 kernel_alias_no_timestamp=${linux_kernel_version/\./L}
 linux_kernel_version_mask=${linux_kernel_version_mask//[\.-]/}
 kernel_alias_no_timestamp=${kernel_alias_no_timestamp//[\.-]/}${kernel_file_suffix}
@@ -580,53 +578,6 @@ CLOCKPARAMS=
 # End /etc/sysconfig/clock
 EOF
 
-# echo "searching for headers matching $linux_kernel_kali_header_pattern"
-# echo "apt -qq search \"$linux_kernel_kali_header_pattern\" 2>/dev/null | grep -o \"^$linux_kernel_kali_header_pattern[^/]*\" | head -n 1"
-# linux_kernel_kali_header=$(apt -qq search "${linux_kernel_kali_header_pattern}" 2>/dev/null | grep -o "^${linux_kernel_kali_header_pattern}[^/]*" | head -n 1)
-# linux_kernel_generic_header=$(apt-cache search linux-headers common | grep -o "^linux-headers-[-.a-zA-Z0-9]*-common" | head -n 1 )
-# echo "linux kali header: $linux_kernel_kali_header"
-# echo "linux generic header: $linux_kernel_generic_header"
-# yes 'y' | apt -y install "$linux_kernel_kali_header" 2>/dev/null
-# yes 'y' | apt -y install "$linux_kernel_generic_header" 2>/dev/null
-# if [ ! -f "$kernel_source" ]; then
-#     echo "
-    
-# Ooops. The kernel did not build. Exiting ..."
-# exit
-# fi
-
-
-
-# can also get partial suffix with: git rev-parse --verify --short HEAD
-# kindtek_kernel_suffix="$(echo "$make_kernel_release" | sed -r -e "s/^(.*)$kindtek_kernel_version\-?(.*)*$/\2/g"  | head -n 1)"
-# echo "kindtek_kernel_suffix: $kindtek_kernel_suffix"
-# kindtek_kernel_suffix="${kindtek_kernel_suffix%%.old}"
-# echo "kindtek_kernel_suffix: $kindtek_kernel_suffix"
-# kindtek_kernel_suffix="${kindtek_kernel_suffix:-$(echo "-$kindtek_kernel_suffix")}"
-# if [[ $kindtek_kernel_suffix == *dirty ]]; then
-#     # keep trailing dash consistent
-#     kindtek_kernel_suffix="-$kindtek_kernel_suffix-"
-# elif [[ "$kindtek_kernel_suffix" == g* ]]; then
-#     # keep trailing dash consistent
-#     kindtek_kernel_suffix="-$kindtek_kernel_suffix-"
-# fi
-# echo "kindtek_kernel_suffix: $kindtek_kernel_suffix"
-# # kindtek_kernel_suffix="${kindtek_kernel_suffix//+/-}"
-# # linux_kernel_kali_header_type=${linux_kernel_kali_header##*-}
-# echo "kindtek_kernel_suffix: ${kindtek_kernel_suffix}"
-# echo "linux_kernel_kali_header_type: ${linux_kernel_kali_header_type}"
-# # echo \'"$(ls -txr1 /usr/src/${linux_kernel_kali_header} | sed -r -e "s/^\/usr\/src\/$linux_kernel_kali_header(.*)$/\1/g"  | head -n 1)"\'
-# linux_kernel_kali="${linux_kernel_kali_header%%-"${linux_kernel_kali_header_type}"}"
-# linux_kernel_kali="${linux_kernel_kali#linux-headers-}"
-# echo "linux_kernel_kali: ${linux_kernel_kali}"
-# make_kernel_release_type="${make_kernel_release}-${linux_kernel_kali_header_type}"
-# make_kernel_release_common="${make_kernel_release}-common"
-# # remove/replace old symlink
-# rm -fv "/usr/lib/modules/${linux_kernel_kali}-common/source" 
-# rm -fv "/usr/lib/modules/${linux_kernel_kali}-common/build"
-# rm -fv "/usr/lib/modules/${linux_kernel_kali}-${linux_kernel_kali_header_type}/build"
-# rm -fv "/usr/lib/modules/${linux_kernel_kali}-${linux_kernel_kali_header_type}/source"
-
 cd $linux_build_dir || exit
 find usr/include -type f ! -name '*.h' -delete
 make headers_install
@@ -645,54 +596,6 @@ install uhci_hcd /sbin/modprobe ehci_hcd ; /sbin/modprobe -i uhci_hcd ; true
 # End /etc/modprobe.d/usb.conf
 EOF
 
-# # install scripts and tools to usr/src first
-# rm -rfv "/usr/src/${linux_kernel_generic_header}/scripts" | tail -n 100
-# rm -rfv "/usr/src/${linux_kernel_generic_header}/tools" | tail -n 100
-# rm -rfv "/usr/src/${linux_kernel_kali_header}/scripts" | tail -n 100
-# rm -rfv "/usr/src/${linux_kernel_kali_header}/tools" | tail -n 100
-# rm -rfv "/usr/src/${make_kernel_release_common}/scripts" | tail -n 100
-# rm -rfv "/usr/src/${make_kernel_release_common}/tools" | tail -n 100
-# rm -rfv "/usr/src/${make_kernel_release_type}/scripts" | tail -n 100
-# rm -rfv "/usr/src/${make_kernel_release_type}/tools" | tail -n 100
-# rm -rfv "/usr/src/${make_kernel_release_common}/scripts" | tail -n 100
-# rm -rfv "/usr/src/${make_kernel_release_common}/tools" | tail -n 100
-# mkdir -pv "/usr/src/${linux_kernel_generic_header}/scripts"
-# mkdir -pv "/usr/src/${linux_kernel_generic_header}/tools" 
-# mkdir -pv "/usr/src/${linux_kernel_kali_header}/scripts"
-# mkdir -pv "/usr/src/${linux_kernel_kali_header}/tools"
-# mkdir -pv "/usr/src/${make_kernel_release_type}/scripts"
-# mkdir -pv "/usr/src/${make_kernel_release_type}/tools" 
-# mkdir -pv "/usr/src/${make_kernel_release_common}/scripts"
-# mkdir -pv "/usr/src/${make_kernel_release_common}/tools" 
-# cp -TRfv "$linux_build_dir/scripts/" "/usr/src/${make_kernel_release_common}/scripts" | tail -n 100
-# cp -TRfv "$linux_build_dir/tools/" "/usr/src/${make_kernel_release_common}/tools" | tail -n 100
-# # cp -TRfv "$linux_build_dir/scripts/" "/usr/src/${make_kernel_release_type}/scripts" | tail -n 100
-# # cp -TRfv "$linux_build_dir/tools/" "/usr/src/${make_kernel_release_type}/tools" | tail -n 100
-# ln -sv "/usr/src/${make_kernel_release_common}/tools" "/usr/lib/modules/${make_kernel_version}-${make_kernel_release}/tools" && \
-# ln -sv "/usr/src/${make_kernel_release_common}/scripts" "/usr/lib/modules/${make_kernel_version}-${make_kernel_release}/scripts" && \
-
-# cp -TRfv "/usr/src/${linux_kernel_generic_header}/" "/usr/src/${make_kernel_release_common}" | tail -n 100
-# # cp -TRfv "/usr/src/${linux_kernel_generic_header}/" "kache/usr/src/${make_kernel_release_common}" | tail -n 100
-# cp -TRfv "/usr/src/${linux_kernel_kali_header}/" "/usr/src/${make_kernel_release_type}" | tail -n 100
-# # cp -TRfv "/usr/src/${linux_kernel_kali_header}/" "kache/usr/src/${make_kernel_release_type}" | tail -n 100
-
-# mkdir -pv "/usr/lib/modules/${linux_kernel_kali}-common"
-# mkdir -pv "/usr/lib/modules/${make_kernel_version}-${make_kernel_release_common}"
-# # install custom headers to usr/lib/modules
-# cp -TRfv "/usr/lib/modules/${linux_kernel_kali}-common" "${make_kernel_version}-${make_kernel_release_common}"
-# cp -TRfv "/usr/lib/modules/${linux_kernel_kali}-${linux_kernel_kali_header_type}" "${make_kernel_version}-${make_kernel_release}"
-# # mkdir -pv "kache/usr/lib/modules/${make_kernel_version}-${linux_kernel_kali}-common"
-# # mkdir -pv "kache/usr/lib/modules/${make_kernel_version}-${linux_kernel_kali}-${linux_kernel_kali_header_type}"
-# # mkdir -pv "/usr/lib/modules/${linux_kernel_kali}-${linux_kernel_kali_header_type}"
-# # mkdir -pv "/usr/lib/modules/${make_kernel_version}-${make_kernel_release}"
-# mkdir -pv "kache/usr/lib/modules/${make_kernel_version}-${make_kernel_release}"
-
-# rm -fv "/usr/lib/modules/${make_kernel_version}-${make_kernel_release}/source"
-# rm -fv "/usr/lib/modules/${make_kernel_version}-${make_kernel_release}/build"
-# ln -sv "/usr/src/${make_kernel_release_common}" "/usr/lib/modules/${make_kernel_version}-${make_kernel_release}/source"
-# ln -sv "/usr/src/${make_kernel_release_type}" "/usr/lib/modules/${make_kernel_version}-${make_kernel_release}/build"
-# # find /usr/include -type d -mmin -1 -exec cp -rf {} kache/usr/include \;
-
 ps_wsl_install_kernel_id="wsl-kernel-install_${kernel_alias}.ps1"
 # kernel is baked - time to distribute the goods
 # move back to base dir  folder with github (relative) path
@@ -700,24 +603,6 @@ mkdir -pv "$git_save_path" 2>/dev/null
 # queue files to be saved to repo
 cp -fv --backup=numbered "${linux_build_dir}/.config" "${config_target_git}"
 cp -fv --backup=numbered "${linux_build_dir}/${kernel_source}" "${kernel_target_git}"
-
-# # copy relevant sources and kache modules
-# cp -rfv "/boot" "kache" | tail -n 5
-# rm -rfv  kache/boot/*.old | tail -n 5
-
-# cp -rfv "/boot/*${make_kernel_release}*" "kache" || echo "/boot/*${make_kernel_release}* NOT FOUND" && ls -al "/boot/*${make_kernel_release}*"
-# # cp -r -f "/usr/src" "kache"
-# kbuild_version="${linux_kernel_kali%%-*}"
-# kbuild_version="${kbuild_version:0:3}"
-
-# cp -TRfv "/usr/src/${make_kernel_release_common}/" "kache/usr/src/${make_kernel_release_common}" | tail -n 20
-# cp -TRfv "/usr/src/${make_kernel_release_type}/" "kache/usr/src/${make_kernel_release_type}" | tail -n 20
-
-# mkdir -pv "kache/usr/lib/linux-kbuild-${kbuild_version}"
-# cp -TRfv "/usr/lib/linux-kbuild-${kbuild_version}/certs" "kache/usr/lib/linux-kbuild-${kbuild_version}/certs" | tail -n 20
-
-# win
-# package a known working wslconfig file along with the kernel and config file
 
 echo "ps_wsl_install_kernel_id: $ps_wsl_install_kernel_id"
 tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF

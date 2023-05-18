@@ -781,9 +781,9 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
     # restart wsl (and install kernel/modules)
     if ("\$(\$args[1])" -ne "" -and "\$(\$args[1])" -ne "restart" ){
         
-        # echo "installing kernel to \$(\$args[1]) distro ..."
-        # wsl.exe -d "\$(\$args[1])" --exec sudo cp -Rf "/mnt/c/users/\$win_user/kache/boot" "/";
-        # wsl.exe -d "\$(\$args[1])" --exec sudo cp -Rf "/mnt/c/users/\$win_user/kache/usr" "/";
+        echo "installing kernel to \$(\$args[1]) distro ..."
+        wsl.exe -d "\$(\$args[1])" --exec sudo cp -Rf "/mnt/c/users/\$win_user/kache/boot" "/";
+        wsl.exe -d "\$(\$args[1])" --exec sudo cp -Rf "/mnt/c/users/\$win_user/kache/usr" "/";
         # echo "installing kernel modules to \$(\$args[1]) distro ..."
         # wsl.exe -d "\$(\$args[1])" --exec sudo cp -TRf "/mnt/c/users/\$win_user/kache/usr/lib/modules/${make_kernel_release_common}/" "/usr/lib/modules/${make_kernel_release_common}";
         # wsl.exe -d "\$(\$args[1])" --exec sudo cp -TRf "/mnt/c/users/\$win_user/kache/usr/lib/modules/${make_kernel_release_type}/" "/usr/lib/modules/${make_kernel_release_type}";
@@ -797,9 +797,9 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
             exit
         }
     } else {
-        # echo "installing kernel to default distro ..."
-        # wsl.exe --exec sudo cp -TRf "/mnt/c/users/\$win_user/kache/boot/vmlinuz_${make_kernel_release}/" "/boot/vmlinuz_${make_kernel_release}"; 
-        # echo "installing kernel modules to \$(\$args[1]) distro ..."
+        echo "installing kernel to default distro ..."
+        wsl.exe --exec sudo cp -Rf "/mnt/c/users/\$win_user/kache/boot" "/";
+        wsl.exe --exec sudo cp -Rf "/mnt/c/users/\$win_user/kache/usr" "/";        # echo "installing kernel modules to \$(\$args[1]) distro ..."
         # wsl.exe --exec sudo cp -TRf "/mnt/c/users/\$win_user/kache/usr/lib/modules/${make_kernel_release_common}/" "/usr/lib/modules/${make_kernel_release_common}";
         # wsl.exe --exec sudo cp -TRf "/mnt/c/users/\$win_user/kache/usr/lib/modules/${make_kernel_release_type}/" "/usr/lib/modules/${make_kernel_release_type}";
         # # order is important here for installing kernel headers bc we may rely on it being installed first chronologically later

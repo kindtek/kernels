@@ -627,7 +627,7 @@ install uhci_hcd /sbin/modprobe ehci_hcd ; /sbin/modprobe -i uhci_hcd ; true
 # End /etc/modprobe.d/usb.conf
 EOF
 
-dkms autoinstall
+bash dkms autoinstall
 # # install scripts and tools to usr/src first
 # rm -rfv "/usr/src/${linux_kernel_generic_header}/scripts" | tail -n 100
 # rm -rfv "/usr/src/${linux_kernel_generic_header}/tools" | tail -n 100
@@ -782,7 +782,8 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
     if ("\$(\$args[1])" -ne "" -and "\$(\$args[1])" -ne "restart" ){
         
         echo "installing kernel to \$(\$args[1]) distro ..."
-        wsl.exe --exec sudo dkms autoinstall -d "\$(\$args[1])";
+        wsl.exe --cd "/mnt/c/users/\$win_user/kache" -d "\$(\$args[1])" --exec sudo cp -fv "${package_full_name_id}.tar.gz" /;
+        wsl.exe -d "\$(\$args[1])" --exec sudo dkms autoinstall;
         wsl.exe --cd / -d "\$(\$args[1])" --exec sudo tar -xzvf "${package_full_name_id}.tar.gz";
         if ("\$(\$args[2])" -eq "restart"){
             # pwsh -Command .\\wsl-restart.ps1;

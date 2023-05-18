@@ -518,12 +518,12 @@ rm -rfv kache/wsl-kernel-install_*
 rm -rfv kache/*.tar.gz
 
 cd $linux_build_dir || exit
-cp -iv arch/x86/boot/bzImage "/boot/vmlinuz-$make_kernel_release"
-cp -iv arch/x86/boot/bzImage "../kache/boot/vmlinuz-$make_kernel_release"
-cp -iv System.map "/boot/System.map-$make_kernel_version"
-cp -iv System.map "../kache/boot/System.map-$make_kernel_version"
-cp -iv .config "/boot/config-$make_kernel_version"
-cp -iv .config "../kache/boot/config-$make_kernel_version"
+cp -fv arch/x86/boot/bzImage "/boot/vmlinuz-$make_kernel_release"
+cp -fv arch/x86/boot/bzImage "../kache/boot/vmlinuz-$make_kernel_release"
+cp -fv System.map "/boot/System.map-$make_kernel_version"
+cp -fv System.map "../kache/boot/System.map-$make_kernel_version"
+cp -fv .config "/boot/config-$make_kernel_version"
+cp -fv .config "../kache/boot/config-$make_kernel_version"
 cd .. || exit
 
 cat > /etc/inittab << "EOF"

@@ -431,6 +431,7 @@ cp -fv "$config_source" $linux_build_dir/.config
 cd $linux_build_dir || exit
     rm -rf build && \
     mkdir -v build
+    bash autoreconf --force --verbose -- install
     bash configure \
         --prefix="$LFS/tools" \
         --with-sysroot="$LFS" \
@@ -451,6 +452,7 @@ if [ "$zfs" = "zfs" ];  then
 #     echo "zfs == True
 # LINENO: ${LINENO}"
     cd ../"$zfs_build_dir" || exit 
+    bash autoreconf --force --verbose -- install
     bash autogen.sh && \
     bash configure \
         --prefix=/ \

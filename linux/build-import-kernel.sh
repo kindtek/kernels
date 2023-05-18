@@ -431,7 +431,7 @@ cp -fv "$config_source" $linux_build_dir/.config
 cd $linux_build_dir || exit
     rm -rf build && \
     mkdir -v build
-    bash ../configure \
+    bash configure \
         --prefix="$LFS/tools" \
         --with-sysroot="$LFS" \
         --target="$LFS_TGT"   \

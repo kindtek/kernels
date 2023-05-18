@@ -388,10 +388,12 @@ sudo apt-get -y remove virtualbox
 sudo apt-get -y remove --auto-remove virtualbox
 sudo apt-get -y purge virtualbox
 sudo apt-get -y purge --auto-remove virtualbox
+sudo apt-get autoremove --purge "*virtual*box*"
+sudo apt-get autoremove --purge "*dkms*"
 sudo apt-get -y /var/lib/dkms
 sudo apt-get -y autoremove --purge
-sudo apt-get -y install dkms
-sudo apt-get -y install virtualbox;
+sudo apt-get -y install --install-suggests dkms
+sudo apt-get -y install --install-suggests virtualbox;
 
 if [ -d "$linux_build_dir/.git" ]; then
     cd "$linux_build_dir" || exit

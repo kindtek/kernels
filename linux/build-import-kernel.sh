@@ -429,6 +429,7 @@ cp -fv "$config_source" $linux_build_dir/.config
 
 
 cd $linux_build_dir || exit
+    rm -rf build && \
     mkdir -v build && \
     cd       build || exit
     bash ../configure \

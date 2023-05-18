@@ -783,7 +783,7 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
         
         echo "installing kernel to \$(\$args[1]) distro ..."
         wsl.exe --cd /mnt/c/users/\$win_user/kache -d "\$(\$args[1])" --exec sudo cp -fv "${package_full_name_id}.tar.gz" /;
-        wsl.exe --cd / -d "\$(\$args[1])" --exec sudo tar -xzf "${package_full_name_id}.tar.gz";
+        wsl.exe --cd / -d "\$(\$args[1])" --exec sudo tar -xzvf "${package_full_name_id}.tar.gz";
         if ("\$(\$args[2])" -eq "restart"){
             # pwsh -Command .\\wsl-restart.ps1;
             # Start-Process -FilePath powershell.exe -ArgumentList "-Command .\\wsl-restart.ps1";
@@ -793,7 +793,7 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
     } else {
         echo "installing kernel to default distro ..."
         wsl.exe --cd /mnt/c/users/\$win_user/kache --exec sudo cp -fv "${package_full_name_id}.tar.gz" /;
-        wsl.exe --cd / --exec sudo tar -xzf "${package_full_name_id}.tar.gz";
+        wsl.exe --cd / --exec sudo tar -xzvf "${package_full_name_id}.tar.gz";
         if ("\$(\$args[1])" -eq "restart"){                        
             # restart wsl
             # pwsh -Command .\\wsl-restart.ps1;

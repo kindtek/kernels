@@ -627,7 +627,6 @@ install uhci_hcd /sbin/modprobe ehci_hcd ; /sbin/modprobe -i uhci_hcd ; true
 # End /etc/modprobe.d/usb.conf
 EOF
 
-bash dkms autoinstall
 # # install scripts and tools to usr/src first
 # rm -rfv "/usr/src/${linux_kernel_generic_header}/scripts" | tail -n 100
 # rm -rfv "/usr/src/${linux_kernel_generic_header}/tools" | tail -n 100
@@ -848,7 +847,10 @@ else
     echo "not saving to windows home directory"
 fi
 
-
+# restore path and /etc/bash.bashrc
+PATH=$PATH_ORIG
+bash dkms autoinstall
+[ -e /etc/bash.bashrc.NOUSE ] || mv -v /etc/bash.bashrc.NOUSE /etc/bash.bashrc
 echo "
 
 KERNEL BUILD COMPLETE
@@ -905,6 +907,3 @@ kernel:
 
 " "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}"
 
-# restore path and /etc/bash.bashrc
-PATH=$PATH_ORIG
-[ -e /etc/bash.bashrc.NOUSE ] || mv -v /etc/bash.bashrc.NOUSE /etc/bash.bashrc

@@ -430,8 +430,7 @@ cp -fv "$config_source" $linux_build_dir/.config
 
 cd $linux_build_dir || exit
     rm -rf build && \
-    mkdir -v build && \
-    cd       build || exit
+    mkdir -v build
     bash ../configure \
         --prefix="$LFS/tools" \
         --with-sysroot="$LFS" \
@@ -447,9 +446,6 @@ else
     make oldconfig
     make prepare scripts 
 fi
-
-
-cd ..
 
 if [ "$zfs" = "zfs" ];  then
 #     echo "zfs == True

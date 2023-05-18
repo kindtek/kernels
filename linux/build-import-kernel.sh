@@ -524,7 +524,7 @@ make_kernel_release_common="${make_kernel_release}-common"
 
 cd $linux_build_dir || exit
 make headers_install INSTALL_HDR_PATH=../kache/usr/src
-make modules install INSTALL_MOD_PATH=../kache/usr/lib/modules
+make modules_install INSTALL_MOD_PATH=../kache/usr/lib/modules
 cd .. || exit
 
 # # install scripts and tools to usr/src first

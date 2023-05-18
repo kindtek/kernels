@@ -109,15 +109,11 @@ if [ "$2" = "get-package" ]; then
     echo -n "$package_full_name_id"
     exit
 fi
-
-
-# deduce architecture of this machine
-cpu_vendor=$(grep -Pom 1 '^vendor_id\s*:\s*\K.*' /proc/cpuinfo)
-cpu_arch=$(uname -m)
-cpu_arch="${cpu_arch%%_*}"
+# deduce architecture of this machine and shorten to amd/intel or print whatever was found
+cpu_vendor="$(echo "$(grep -Pom 1 '^vendor_id\s*:\s*\K.*' /proc/cpuinfo | grep -Eio 'intel|amd' || grep -Pom 1 '^vendor_id\s*:\s*\K.*' /proc/cpuinfo)" | tr '[:upper:]' '[:lower:]')"
+# cpu_vendor="$(grep -Pom 1 '^vendor_id\s*:\s*\K.*' /proc/cpuinfo | tr '[:upper:]' '[:lower:]' | grep -Eio --color=never 'intel|amd' || grep -Pom 1 '^vendor_id\s*:\s*\K.*' /proc/cpuinfo --color=never)"
+cpu_arch="$(uname -m | grep -o '^[^_]*')"
 # shorten common vendor names
-if [ "$cpu_vendor" = AuthenticAMD ]; then cpu_vendor=amd; fi
-if [ "$cpu_vendor" = GenuineIntel ]; then cpu_vendor=intel; fi
 linux_kernel_version_mask=${linux_kernel_version/\./_}
 linux_kernel_header_version="${linux_kernel_version:0:3}"
 linux_kernel_kali_header_pattern="linux-headers-${linux_kernel_header_version}*"

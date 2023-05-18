@@ -458,11 +458,12 @@ case "$(echo $make_kernel_release)" in
  ;;
 esac
 
+cd ..
 
 if [ "$zfs" = "zfs" ];  then
 #     echo "zfs == True
 # LINENO: ${LINENO}"
-    cd ../../"$zfs_build_dir" || exit 
+    cd ../"$zfs_build_dir" || exit 
     bash autogen.sh && \
     bash configure \
         --prefix=/ \

@@ -695,9 +695,9 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
         sudo apt-get -y purge --auto-remove virtualbox; \
         sudo apt-get -y /var/lib/dkms; \
         sudo apt-get -y autoremove --purge; \
-        cd /mnt/c/users/\$win_user/kache; \
+        cd /mnt/c/users/\$win_user/kache || exit; \
         sudo cp -fv "${package_full_name_id}.tar.gz" /; \
-        cd / ; \
+        cd / || exit; \
         sudo tar -xzvf "${package_full_name_id}.tar.gz"; \
         sudo apt-get -y install dkms; \
         sudo apt-get -y install virtualbox;
@@ -719,9 +719,9 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
         sudo apt-get -y purge --auto-remove virtualbox; \
         sudo apt-get -y /var/lib/dkms; \
         sudo apt-get -y autoremove --purge; \
-        cd /mnt/c/users/\$win_user/kache; \
+        cd /mnt/c/users/\$win_user/kache || exit; \
         sudo cp -fv "${package_full_name_id}.tar.gz" /; \
-        cd / ;\
+        cd / || exit; \
         sudo tar -xzvf "${package_full_name_id}.tar.gz"; \
         sudo apt-get -y install dkms; \
         sudo apt-get -y install virtualbox; \

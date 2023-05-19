@@ -698,7 +698,7 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
         cd /mnt/c/users/\$win_user/kache || exit; \
         sudo cp -fv "${package_full_name_id}.tar.gz" /; \
         cd / || exit; \
-        sudo tar -xzvf "${package_full_name_id}.tar.gz"; \
+        sudo tar -xzvf "${package_full_name_id}.tar.gz;"; \
         sudo apt-get -y install dkms; \
         sudo apt-get -y install virtualbox;
         if ("\$(\$args[2])" -eq "restart"){

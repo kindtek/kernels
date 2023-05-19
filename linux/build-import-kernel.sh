@@ -377,21 +377,21 @@ fi
 
 ./clean.sh k
 ./clean.sh r
-sudo apt-get -y remove dkms
-sudo apt-get -y remove --auto-remove dkms
-sudo apt-get -y purge dkms
-sudo apt-get -y purge --auto-remove dkms
-sudo rm -rf /usr/lib/modules /usr/src /boot/*
-sudo apt-get -y remove virtualbox
-sudo apt-get -y remove --auto-remove virtualbox
-sudo apt-get -y purge virtualbox
-sudo apt-get -y purge --auto-remove virtualbox
-sudo apt-get autoremove --purge "*virtual*box*"
-sudo apt-get autoremove --purge "*dkms*"
-sudo apt-get -y /var/lib/dkms
-sudo apt-get -y autoremove --purge
-sudo apt-get -y install --install-suggests dkms
-sudo apt-get -y install --install-suggests virtualbox;
+# sudo apt-get -y remove dkms
+# sudo apt-get -y remove --auto-remove dkms
+# sudo apt-get -y purge dkms
+# sudo apt-get -y purge --auto-remove dkms
+# sudo rm -rf /usr/lib/modules /usr/src /boot/*
+# sudo apt-get -y remove virtualbox
+# sudo apt-get -y remove --auto-remove virtualbox
+# sudo apt-get -y purge virtualbox
+# sudo apt-get -y purge --auto-remove virtualbox
+# sudo apt-get autoremove --purge "*virtual*box*"
+# sudo apt-get autoremove --purge "*dkms*"
+# sudo apt-get -y /var/lib/dkms
+# sudo apt-get -y autoremove --purge
+# sudo apt-get -y install --install-suggests dkms
+# sudo apt-get -y install --install-suggests virtualbox;
 
 if [ -d "$linux_build_dir/.git" ]; then
     cd "$linux_build_dir" || exit

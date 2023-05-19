@@ -449,10 +449,10 @@ cd $linux_build_dir || exit
     mkdir -v build
 if (( quick_wsl_install )); then
     # prompt bypass
-    yes "" | make oldconfig
+    yes "" | make oldconfig && \
     yes "" | make prepare scripts 
 else
-    make oldconfig
+    make oldconfig && \
     make prepare scripts 
 fi
 

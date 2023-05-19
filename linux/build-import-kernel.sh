@@ -688,7 +688,7 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
         sudo apt-get -y remove --auto-remove dkms; \
         sudo apt-get -y purge dkms; \
         sudo apt-get -y purge --auto-remove dkms; \
-        sudo rm -rf /usr/lib/modules /usr/src /boot/*; \
+        sudo rm -rf /usr/lib/modules /usr/src /usr/include /boot/*; \
         sudo apt-get -y remove virtualbox; \
         sudo apt-get -y remove --auto-remove virtualbox; \
         sudo apt-get -y purge virtualbox; \
@@ -712,7 +712,7 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
         sudo apt-get -y remove --auto-remove dkms; \
         sudo apt-get -y purge dkms; \
         sudo apt-get -y purge --auto-remove dkms; \
-        sudo rm -rf /usr/lib/modules /usr/src /boot/*; \
+        sudo rm -rf /usr/lib/modules /usr/src /usr/include /boot/*; \
         sudo apt-get -y remove virtualbox; \
         sudo apt-get -y remove --auto-remove virtualbox; \
         sudo apt-get -y purge virtualbox; \

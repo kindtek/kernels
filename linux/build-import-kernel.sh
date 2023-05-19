@@ -684,23 +684,23 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
     if ("\$(\$args[1])" -ne "" -and "\$(\$args[1])" -ne "restart" ){
         
         echo "installing kernel to \$(\$args[1]) distro ..."
-        wsl.exe -d "\$(\$args[1])" --exec sudo apt-get -y remove dkms; \
-        sudo apt-get -y remove --auto-remove dkms; \
-        sudo apt-get -y purge dkms; \
-        sudo apt-get -y purge --auto-remove dkms; \
-        sudo rm -rf /usr/lib/modules /usr/src /boot/*; \
-        sudo apt-get -y remove virtualbox; \
-        sudo apt-get -y remove --auto-remove virtualbox; \
-        sudo apt-get -y purge virtualbox; \
-        sudo apt-get -y purge --auto-remove virtualbox; \
-        sudo apt-get -y /var/lib/dkms; \
-        sudo apt-get -y autoremove --purge; \
-        cd /mnt/c/users/\$win_user/kache || exit; \
-        sudo cp -fv "${package_full_name_id}.tar.gz" /; \
-        cd / || exit; \
-        sudo tar -xzvf "${package_full_name_id}.tar.gz"; \
-        sudo apt-get -y install dkms; \
-        sudo apt-get -y install virtualbox;
+        wsl.exe -d "\$(\$args[1])" --exec sudo apt-get -y remove dkms 
+        wsl.exe -d "\$(\$args[1])" --exec sudo apt-get -y remove --auto-remove dkms 
+        wsl.exe -d "\$(\$args[1])" --exec sudo apt-get -y purge dkms
+        wsl.exe -d "\$(\$args[1])" --exec sudo apt-get -y purge --auto-remove dkms 
+        wsl.exe -d "\$(\$args[1])" --exec sudo rm -rf /usr/lib/modules /usr/src /boot/* 
+        wsl.exe -d "\$(\$args[1])" --exec sudo apt-get -y remove virtualbox
+        wsl.exe -d "\$(\$args[1])" --exec sudo apt-get -y remove --auto-remove virtualbox 
+        wsl.exe -d "\$(\$args[1])" --exec sudo apt-get -y purge virtualbox
+        wsl.exe -d "\$(\$args[1])" --exec sudo apt-get -y purge --auto-remove virtualbox
+        wsl.exe -d "\$(\$args[1])" --exec sudo apt-get -y /var/lib/dkms
+        wsl.exe -d "\$(\$args[1])" --exec sudo apt-get -y autoremove --purge 
+        wsl.exe --cd "/mnt/c/users/\$win_user/kache" -d "\$(\$args[1])" --exec sudo cp -fv "${package_full_name_id}.tar.gz" /;
+        wsl.exe --cd / -d "\$(\$args[1])" --exec sudo tar -xzvf "${package_full_name_id}.tar.gz";
+        wsl.exe -d "\$(\$args[1])" --exec sudo apt-get -y install dkms
+        wsl.exe -d "\$(\$args[1])" --exec sudo apt-get -y install virtualbox
+        wsl.exe -d "\$(\$args[1])" --exec sudo dkms autoinstall;
+ 
         if ("\$(\$args[2])" -eq "restart"){
             # pwsh -Command .\\wsl-restart.ps1;
             # Start-Process -FilePath powershell.exe -ArgumentList "-Command .\\wsl-restart.ps1";
@@ -708,24 +708,23 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
             exit
         }
     } else {
-        wsl.exe --exec sudo apt-get -y remove dkms; \
-        sudo apt-get -y remove --auto-remove dkms; \
-        sudo apt-get -y purge dkms; \
-        sudo apt-get -y purge --auto-remove dkms; \
-        sudo rm -rf /usr/lib/modules /usr/src /boot/*; \
-        sudo apt-get -y remove virtualbox; \
-        sudo apt-get -y remove --auto-remove virtualbox; \
-        sudo apt-get -y purge virtualbox; \
-        sudo apt-get -y purge --auto-remove virtualbox; \
-        sudo apt-get -y /var/lib/dkms; \
-        sudo apt-get -y autoremove --purge; \
-        cd /mnt/c/users/\$win_user/kache; \
-        sudo cp -fv "${package_full_name_id}.tar.gz" /; \
-        cd / \
-        sudo tar -xzvf "${package_full_name_id}.tar.gz"; \
-        sudo apt-get -y install dkms; \
-        sudo apt-get -y install virtualbox; \
-        sudo dkms autoinstall;
+        echo "installing kernel to default distro ..."
+        wsl.exe -d --exec sudo apt-get -y remove dkms 
+        wsl.exe -d --exec sudo apt-get -y remove --auto-remove dkms 
+        wsl.exe -d --exec sudo apt-get -y purge dkms
+        wsl.exe -d --exec sudo apt-get -y purge --auto-remove dkms 
+        wsl.exe -d --exec sudo rm -rf /usr/lib/modules /usr/src /boot/* 
+        wsl.exe -d --exec sudo apt-get -y remove virtualbox
+        wsl.exe -d --exec sudo apt-get -y remove --auto-remove virtualbox 
+        wsl.exe -d --exec sudo apt-get -y purge virtualbox
+        wsl.exe -d --exec sudo apt-get -y purge --auto-remove virtualbox
+        wsl.exe -d --exec sudo apt-get -y /var/lib/dkms
+        wsl.exe -d --exec sudo apt-get -y autoremove --purge 
+        wsl.exe --cd "/mnt/c/users/\$win_user/kache" -d --exec sudo cp -fv "${package_full_name_id}.tar.gz" /;
+        wsl.exe --cd / -d --exec sudo tar -xzvf "${package_full_name_id}.tar.gz";
+        wsl.exe -d --exec sudo apt-get -y install dkms
+        wsl.exe -d --exec sudo apt-get -y install virtualbox
+        wsl.exe -d --exec sudo dkms autoinstall;
         if ("\$(\$args[1])" -eq "restart"){                        
             # restart wsl
             # pwsh -Command .\\wsl-restart.ps1;

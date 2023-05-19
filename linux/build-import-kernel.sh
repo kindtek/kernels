@@ -447,14 +447,6 @@ cp -fv "$config_source" $linux_build_dir/.config
 cd $linux_build_dir || exit
     rm -rf build && \
     mkdir -v build
-    bash autoreconf --force --verbose -- install
-    bash configure \
-        --prefix="$LFS/tools" \
-        --with-sysroot="$LFS" \
-        --target="$LFS_TGT"   \
-        --disable-nls       \
-        --enable-gprofng=no \
-        --disable-werror
 if (( quick_wsl_install )); then
     # prompt bypass
     yes "" | make oldconfig
@@ -464,6 +456,14 @@ else
     make prepare scripts 
 fi
 
+bash autoreconf --force --verbose -- install
+bash configure \
+    --prefix="$LFS/tools" \
+    --with-sysroot="$LFS" \
+    --target="$LFS_TGT"   \
+    --disable-nls       \
+    --enable-gprofng=no \
+    --disable-werror
 if [ "$zfs" = "zfs" ];  then
 #     echo "zfs == True
 # LINENO: ${LINENO}"

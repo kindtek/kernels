@@ -13,23 +13,22 @@ try {
 catch {
     write-host "
 unable to gain access required to completely restart WSL
-manual restart may be required
-consider opening a WINDOWS terminal *WITH* ADMIN priveleges and try the below command
+manual WSL restart may be required
 .. or restart your computer
 
 
-pro tip: 
-to open an admin terminal to your home directory 
+to manually restart WSL only:
 
-    1) [WIN + x] 
-    2) [a]
-    3) [<-] 
-    4) [ENTER] 
+1)  open a windows shell *WITH* ADMIN privileges
+        
+        shortcut: 
+            - [WIN + X] then [a]    (opens admin window)
+            - [<-] then [ENTER]     (confirm elevated access privileges)
 
 
-to restart WSL at any time copy/pasta this while in your home directory:
+2)  copypasta this:
     
-    .\kache\wsl-restart
+    .\wsl-restart
 
 
 

@@ -431,6 +431,8 @@ fi
 set +h
 umask 022
 LFS="$(pwd)/$linux_build_dir"
+echo "LFS:
+$LFS"
 LC_ALL=POSIX
 PATH_ORIG=$PATH
 PATH=/usr/bin
@@ -438,6 +440,8 @@ if [ ! -L /bin ]; then PATH=/bin:$PATH; fi
 PATH=$LFS/tools/bin:$PATH
 CONFIG_SITE=$LFS/usr/share/config.site
 export LFS LC_ALL LFS_TGT PATH CONFIG_SITE
+echo "PATH: 
+$PATH"
 [ ! -e /etc/bash.bashrc ] || mv -v /etc/bash.bashrc /etc/bash.bashrc.NOUSE
 
 # replace kernel source .config with the config generated from a custom config

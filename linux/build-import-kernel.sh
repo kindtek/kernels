@@ -785,6 +785,12 @@ if [ -w "${win_k_cache}" ] && [ "$5" = "" ]; then
     fi
 else 
     echo "not saving to windows home directory"
+    if [ -w "${win_k_cache}" ]; then
+        echo "$win_k_cache not writeable"
+    elif [ "$5" = "" ]; then
+        echo "timestamp not given
+        \$5=$5"
+    fi
 fi
 
 # restore path and /etc/bash.bashrc

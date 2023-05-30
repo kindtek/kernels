@@ -790,6 +790,8 @@ else
     elif [ "$5" = "" ]; then
         echo "timestamp not given
         \$5=$5"
+    else
+        echo "not sure why"
     fi
 fi
 

@@ -570,6 +570,7 @@ s1:1:respawn:/sbin/sulogin
 
 # End /etc/inittab
 EOF
+mkdir -pv /etc/sysconfig
 cat > /etc/sysconfig/clock << "EOF"
 # Begin /etc/sysconfig/clock
 

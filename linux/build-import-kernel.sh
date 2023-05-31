@@ -798,7 +798,7 @@ fi
 # restore path and /etc/bash.bashrc
 PATH=$PATH_ORIG
 bash dkms autoinstall
-[ -e /etc/bash.bashrc.NOUSE ] || mv -v /etc/bash.bashrc.NOUSE /etc/bash.bashrc
+[ -e "/etc/bash.bashrc.NOUSE" ] && mv -v /etc/bash.bashrc.NOUSE /etc/bash.bashrc
 echo "
 
 KERNEL BUILD COMPLETE

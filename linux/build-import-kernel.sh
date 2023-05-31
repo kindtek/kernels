@@ -684,7 +684,7 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
 
     # install wsl-restart script
     echo "installing wsl-restart script"
-    move wsl-restart.ps1 ..\\.wsl-restart.ps1 -Force -verbose;
+    move wsl-restart.ps1 ..\\wsl-restart.ps1 -Force -verbose;
 
     # copy wslconfig to home dir
     echo "installing new .wslconfig and kernel \$kernel_alias"

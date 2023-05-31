@@ -590,7 +590,7 @@ make headers_install
 make modules_install
 make headers_install INSTALL_HDR_PATH=../kache/usr
 make modules_install INSTALL_MOD_PATH=../kache/usr
-ln -s "/lib/modules/$make_kernel_release" "/lib/modules/$make_kernel_release-g$(git describe --first-parent --abbrev=12 --long --dirty --always)"
+ln -sfv "/lib/modules/$make_kernel_release" "/lib/modules/${make_kernel_release%%-g$(git describe --first-parent --abbrev=12 --long --dirty --always)}"
 cd .. || exit
 
 install -v -m755 -d /etc/modprobe.d

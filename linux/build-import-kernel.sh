@@ -405,7 +405,7 @@ if [ -d "$linux_build_dir/.git" ]; then
     cd ..
 else
     echo "cloning $linux_kernel_version_tag ..."
-    git clone $linux_repo --single-branch --branch "$linux_kernel_version_tag" --depth=1 --progress -- $linux_build_dir
+    git clone $linux_repo --single-branch --branch "$linux_kernel_version_tag" --depth=1 --progress -- "$linux_build_dir"
 fi
 
 if [ "$zfs" = "zfs" ];  then
@@ -442,7 +442,7 @@ CONFIG_SITE=$LFS/usr/share/config.site
 export LFS LC_ALL LFS_TGT PATH CONFIG_SITE
 echo "PATH: 
 $PATH"
-[ ! -e /etc/bash.bashrc ] || mv -v /etc/bash.bashrc /etc/bash.bashrc.NOUSE
+[ ! -e "/etc/bash.bashrc" ] || mv -v "/etc/bash.bashrc" "/etc/bash.bashrc.NOUSE"
 
 # replace kernel source .config with the config generated from a custom config
 cp -fv "$config_source" $linux_build_dir/.config
@@ -504,8 +504,9 @@ else
     # make deb-pkg
 fi
 
-make_kernel_version=$(make kernelversion)
+make_kernel_version="$(make kernelversion)"
 make_kernel_release=$(make kernelrelease)
+make_kernel_release_suffix="-g$(git describe --first-parent --abbrev=12 --long --dirty --always)"
 LFS_TGT=$make_kernel_release
 case "$(echo $make_kernel_release)" in
   x86_64)
@@ -589,6 +590,7 @@ make headers_install
 make modules_install
 make headers_install INSTALL_HDR_PATH=../kache/usr
 make modules_install INSTALL_MOD_PATH=../kache/usr
+ln -s "/lib/modules/$make_kernel_release" "/lib/modules/$make_kernel_release-g$(git describe --first-parent --abbrev=12 --long --dirty --always)"
 cd .. || exit
 
 install -v -m755 -d /etc/modprobe.d

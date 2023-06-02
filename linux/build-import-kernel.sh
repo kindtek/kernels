@@ -125,6 +125,9 @@ config_alias_no_timestamp=.config_${kernel_alias_no_timestamp}
 git_save_path=$cpu_arch/$cpu_vendor/$linux_kernel_version_mask
 nix_k_cache=/kache
 
+./clean.sh k
+./clean.sh r
+
 # check that the user supplied source exists if not try to pick the best .config file available
 # user choice is best if it exists
 if [ "$config_source" != "" ] && [ -r "$config_source" ] && [ -s "$config_source" ]; then
@@ -379,8 +382,6 @@ if [ "$build" != "" ]; then
     exit
 fi
 
-./clean.sh k
-./clean.sh r
 # sudo apt-get -y remove dkms
 # sudo apt-get -y remove --auto-remove dkms
 # sudo apt-get -y purge dkms

@@ -103,6 +103,7 @@ Start-Process -FilePath powershell.exe -ArgumentList '-Command "&{
     $procs_start | ForEach-Object { 
         powershell.exe -Command { Start-Process -FilePath \"$($_.Path)\" -ArgumentList \"-ErrorAction SilentlyContinue -Verbose -Wait\" };
     };  
+    powershell.exe -Command \"& { Start-Service -Name `\"com.docker.service`\" -ErrorAction SilentlyContinue  -Verbose } \";
     powershell.exe -Command wsl.exe --exec echo \"docker and WSL were successfully restarted\"; 
 }"' -Wait -ErrorAction SilentlyContinue 
 

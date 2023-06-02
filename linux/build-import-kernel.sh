@@ -397,7 +397,8 @@ fi
 # sudo apt-get -y autoremove --purge
 # sudo apt-get -y install --install-suggests dkms
 # sudo apt-get -y install --install-suggests virtualbox;
-
+git config --global http.postBuffer 1048576000
+git config --global https.postBuffer 1048576000
 if [ -d "$linux_build_dir/.git" ]; then
     cd "$linux_build_dir" || exit
     if ! (( quick_wsl_install )); then

@@ -163,11 +163,11 @@ if [ "$config_source" != "" ] && [ -r "$config_source" ] && [ -s "$config_source
     "
 # try alternates if user config doesn't work 
     # download reliable .config
-elif [ ! -r "$git_save_path/$config_alias_no_timestamp" ]; then
+elif [ ! -r "$git_save_path/$config_alias_no_timestamp" ] || [ "$config_source" != "" ]; then
         generic_config_source=https://raw.githubusercontent.com/microsoft/WSL2-Linux-Kernel/linux-msft-wsl-5.15.y/Microsoft/config-wsl
-    echo "
+#     echo "
 
-No saved .config files match this kernel version $linux_kernel_version_tag and $cpu_arch/$cpu_vendor"
+# No saved .config files match this kernel version $linux_kernel_version_tag and $cpu_arch/$cpu_vendor"
     if [ ! -r "config-wsl" ]; then
         wget $generic_config_source
     fi
@@ -190,7 +190,11 @@ Enter the url of a config file to use
 
     pro tip: to use a file on Github make sure to use a raw file url starting with https://raw.githubusercontent.com
 "
-[ "$win_user" != "" ] || [[ "$config_source" =~ https?://.* ]] || read -r -p "($generic_config_source)
+default_config_source=$generic_config_source
+if [[ "$config_source" =~ https?://.* ]]; then
+    default_config_source="$config_source"
+fi
+[ "$win_user" != "" ] || [[ "$config_source" =~ https?://.* ]] || read -r -p "($default_config_source)
 " config_source
 echo "
 # checking if input is a url ..."

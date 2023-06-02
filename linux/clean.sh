@@ -99,8 +99,8 @@ fi
         sudo rm -rfv kache/.*
     fi
     if [ "${clean_target,,}" = "reset" ] || [ "${clean_target,,}" = "r" ] ; then
-        sudo chown -R "$(id -un):$(id -Gn | grep -o --color=never '^\w*\b')" linux-*
-        sudo chown -R "$(id -un):$(id -Gn | grep -o --color=never '^\w*\b')" zfs-*
+        sudo chown -R "$(id -un):$(id -Gn | grep -o --color=never '^\w*\b')" linux-* 2>&1
+        sudo chown -R "$(id -un):$(id -Gn | grep -o --color=never '^\w*\b')" zfs-* 2>&1
         git reset --hard
         git clean -fxd
     fi

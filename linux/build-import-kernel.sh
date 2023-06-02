@@ -461,14 +461,20 @@ cd $linux_build_dir || exit
     mkdir -v build
 if (( quick_wsl_install )); then
     # prompt bypass
+    echo "starting make oldconfig ..." && \
     yes "" | make oldconfig && \
+    echo "starting make prepare scripts ..." && \
     yes "" | make prepare scripts 
 else
+    echo "starting make oldconfig ..." && \
     make oldconfig && \
+    echo "starting make prepare scripts ..." && \
     make prepare scripts 
 fi
 
+echo "starting autoreconf ..." && \
 bash autoreconf --force --verbose -- install
+echo "starting configure ..." && \
 bash configure \
     --prefix="$LFS/tools" \
     --with-sysroot="$LFS" \
@@ -504,6 +510,7 @@ if [ "$zfs" = "zfs" ];  then
 # LINENO: ${LINENO}"
     sed -i 's/\[# ]*CONFIG_ZFS[ =].*/CONFIG_ZFS=y/g' .config
 fi
+echo "starting make ..."
 if (( quick_wsl_install )); then
     yes "" | make -j$(($(nproc) - 1))
     # yes "" | make deb-pkg

@@ -540,11 +540,11 @@ rm -rfv kache/wsl-kernel-install_*
 rm -rfv kache/*.tar.gz
 
 cd $linux_build_dir || exit
-cp -fv arch/x86/boot/bzImage "/boot/vmlinuz-$make_kernel_release"
+sudo cp -fv arch/x86/boot/bzImage "/boot/vmlinuz-$make_kernel_release"
 cp -fv arch/x86/boot/bzImage "../kache/boot/vmlinuz-$make_kernel_release"
-cp -fv System.map "/boot/System.map-$make_kernel_version"
+sudo cp -fv System.map "/boot/System.map-$make_kernel_version"
 cp -fv System.map "../kache/boot/System.map-$make_kernel_version"
-cp -fv .config "/boot/config-$make_kernel_version"
+sudo cp -fv .config "/boot/config-$make_kernel_version"
 cp -fv .config "../kache/boot/config-$make_kernel_version"
 cd .. || exit
 
@@ -577,7 +577,7 @@ s1:1:respawn:/sbin/sulogin
 
 # End /etc/inittab
 EOF
-mkdir -pv /etc/sysconfig
+sudo mkdir -pv /etc/sysconfig
 cat > /etc/sysconfig/clock << "EOF"
 # Begin /etc/sysconfig/clock
 
@@ -592,14 +592,14 @@ EOF
 
 cd $linux_build_dir || exit
 find usr/include -type f ! -name '*.h' -delete
-make headers_install
-make modules_install
+sudo make headers_install
+sudo make modules_install
 make headers_install INSTALL_HDR_PATH=../kache/usr
 make modules_install INSTALL_MOD_PATH=../kache/usr
-ln -sfv "/lib/modules/$make_kernel_release" "/lib/modules/${make_kernel_release%%-g$(git describe --first-parent --abbrev=12 --long --dirty --always)}"
+sudo ln -sfv "/lib/modules/$make_kernel_release" "/lib/modules/${make_kernel_release%%-g$(git describe --first-parent --abbrev=12 --long --dirty --always)}"
 cd .. || exit
 
-install -v -m755 -d /etc/modprobe.d
+sudo install -v -m755 -d /etc/modprobe.d
 cat > /etc/modprobe.d/usb.conf << "EOF"
 # Begin /etc/modprobe.d/usb.conf
 
@@ -805,8 +805,8 @@ fi
 
 # restore path and /etc/bash.bashrc
 PATH=$PATH_ORIG
-bash dkms autoinstall --modprobe-on-install --kernelsourcedir "$LFS"
-[ -e "/etc/bash.bashrc.NOUSE" ] && mv -v "/etc/bash.bashrc.NOUSE" "/etc/bash.bashrc"
+sudo bash dkms autoinstall --modprobe-on-install --kernelsourcedir "$LFS"
+[ -e "/etc/bash.bashrc.NOUSE" ] && sudo mv -v "/etc/bash.bashrc.NOUSE" "/etc/bash.bashrc"
 echo "
 
 KERNEL BUILD COMPLETE

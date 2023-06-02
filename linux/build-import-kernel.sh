@@ -447,7 +447,7 @@ CONFIG_SITE=$LFS/usr/share/config.site
 export LFS LC_ALL LFS_TGT PATH CONFIG_SITE
 echo "PATH: 
 $PATH"
-[ ! -e "/etc/bash.bashrc" ] || mv -v "/etc/bash.bashrc" "/etc/bash.bashrc.NOUSE"
+[ ! -e "/etc/bash.bashrc" ] || sudo mv -v "/etc/bash.bashrc" "/etc/bash.bashrc.NOUSE"
 
 # replace kernel source .config with the config generated from a custom config
 cp -fv "$config_source" $linux_build_dir/.config

@@ -3,7 +3,7 @@ basic_dir="linux-build-msft"
 latest_dir="linux-build-torvalds"
 stable_dir="linux-build-gregkh"
 zfs_dir="zfs-build"
-
+orig_pwd=$(pwd)
 
 if [ "$1" != "" ]; then
     clean_target=""
@@ -103,7 +103,7 @@ fi
         sudo git clean -fxd
         cd .. || exit
         sudo chown -R "$(id -un):$(id -Gn | grep -o --color=never '^\w*\b')" .
-        cd linux || exit
+        cd "$orig_pwd" || exit
     fi
     if [ "${clean_target,,}" = "" ] || [ "$1" != "" ]; then
         exit

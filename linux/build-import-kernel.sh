@@ -127,8 +127,7 @@ nix_k_cache=/kache
 
 # check that the user supplied source exists if not try to pick the best .config file available
 # user choice is best if it exists
-# if [ "$config_source" != "" ] && [ -r "$config_source" ] && [ -s "$config_source" ]; then
-if [ "$config_source" != "" ] && [ -r "$config_source" ]; then
+if [ "$config_source" != "" ] && [ -r "$config_source" ] && [ -s "$config_source" ]; then
     echo "config: $config_source
     
     
@@ -191,7 +190,7 @@ Enter the url of a config file to use
 
     pro tip: to use a file on Github make sure to use a raw file url starting with https://raw.githubusercontent.com
 "
-[ "$win_user" != "" ] || read -r -p "($generic_config_source)
+[ "$win_user" != "" ] || [[ "$config_source" =~ https?://.* ]] || read -r -p "($generic_config_source)
 " config_source
 echo "
 # checking if input is a url ..."

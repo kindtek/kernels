@@ -127,7 +127,8 @@ nix_k_cache=/kache
 
 # check that the user supplied source exists if not try to pick the best .config file available
 # user choice is best if it exists
-if [ "$config_source" != "" ] && [ -r "$config_source" ] && [ -s "$config_source" ]; then
+# if [ "$config_source" != "" ] && [ -r "$config_source" ] && [ -s "$config_source" ]; then
+if [ "$config_source" != "" ] && [ -r "$config_source" ]; then
     echo "config: $config_source
     
     

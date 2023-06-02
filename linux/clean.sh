@@ -61,43 +61,49 @@ fi
     if [ "${clean_target,,}" = "basic" ] || [ "${clean_target,,}" = "b" ]; then
         cd $basic_dir || ( echo "change to directory $basic_dir failed" && exit )
         if [ -d ".git" ]; then
-            git reset --hard
-            git clean -fxd
+            sudo git reset --hard
+            sudo git clean -fxd
         fi
-        cd ..
+        sudo chown -R "$(id -un):$(id -Gn | grep -o --color=never '^\w*\b')" .
     fi
     if [ "${clean_target,,}" = "stable" ] || [ "${clean_target,,}" = "s" ]; then
         cd $stable_dir || ( echo "change to directory $stable_dir failed" && exit )
         if [ -d ".git" ]; then
-            git reset --hard
-            git clean -fxd
+            sudo git reset --hard
+            sudo git clean -fxd
         fi
+        sudo chown -R "$(id -un):$(id -Gn | grep -o --color=never '^\w*\b')" .
         cd ..
     fi
     if [ "${clean_target,,}" = "latest" ] || [ "${clean_target,,}" = "l" ] || \
        [ "${clean_target,,}" = "latest-rc" ]; then
         cd $latest_dir || ( echo "change to directory $latest_dir failed" && exit )
         if [ -d ".git" ]; then
-            git reset --hard
-            git clean -fxd
+            sudo git reset --hard
+            sudo git clean -fxd
         fi
+        sudo chown -R "$(id -un):$(id -Gn | grep -o --color=never '^\w*\b')" .
         cd ..
     fi
     if [ "${clean_target,,}" = "zfs" ] || [ "${clean_target,,}" = "z" ]; then
         cd $zfs_dir || ( echo "change to directory $zfs_dir failed" && exit )
         if [ -d ".git" ]; then
-            git reset --hard
-            git clean -fxd
+            sudo git reset --hard
+            sudo git clean -fxd
         fi
+        sudo chown -R "$(id -un):$(id -Gn | grep -o --color=never '^\w*\b')" .
         cd ..
     fi
     if [ "${clean_target,,}" = "kache" ] || [ "${clean_target,,}" = "k" ] ; then
-        rm -rfv kache/*
-        rm -rfv kache/.*
+        sudo rm -rfv kache/*
+        sudo rm -rfv kache/.*
     fi
     if [ "${clean_target,,}" = "reset" ] || [ "${clean_target,,}" = "r" ] ; then
-        git reset --hard
-        git clean -fxd
+        sudo git reset --hard
+        sudo git clean -fxd
+        cd .. || exit
+        sudo chown -R "$(id -un):$(id -Gn | grep -o --color=never '^\w*\b')" .
+        cd linux || exit
     fi
     if [ "${clean_target,,}" = "" ] || [ "$1" != "" ]; then
         exit

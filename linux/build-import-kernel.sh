@@ -402,9 +402,10 @@ git config --global https.postBuffer 1048576000
 if [ -d "$linux_build_dir/.git" ]; then
     cd "$linux_build_dir" || exit
     if ! (( quick_wsl_install )); then
-        git reset --hard
-        git clean -fxd
+        sudo git reset --hard
+        sudo git clean -fxd
     fi
+    sudo chown -R "$(id -un):$(id -Gn | grep -o --color=never '^\w*\b')" .
     echo "checking out $linux_kernel_version_tag ..."
     # git checkout "tags/$linux_kernel_version_tag" -b "$kernel_alias" --progress
     git checkout "tags/$linux_kernel_version_tag" --progress
@@ -420,9 +421,10 @@ if [ "$zfs" = "zfs" ];  then
     if [ -d "$zfs_build_dir/.git" ]; then
         cd "$zfs_build_dir" || exit
         if ! (( quick_wsl_install )); then 
-            git reset --hard
-            git clean -fxd
+            sudo git reset --hard
+            sudo git clean -fxd
         fi
+        sudo chown -R "$(id -un):$(id -Gn | grep -o --color=never '^\w*\b')" .
         echo "checking out $zfs_version_tag ..."
 
         # git checkout "tags/$zfs_version_tag" -b "$kernel_alias" --progress

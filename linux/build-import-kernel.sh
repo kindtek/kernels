@@ -125,10 +125,12 @@ config_alias_no_timestamp=.config_${kernel_alias_no_timestamp}
 git_save_path=$cpu_arch/$cpu_vendor/$linux_kernel_version_mask
 nix_k_cache=/kache
 
+./clean.sh k
+./clean.sh r
+
 # check that the user supplied source exists if not try to pick the best .config file available
 # user choice is best if it exists
-# if [ "$config_source" != "" ] && [ -r "$config_source" ] && [ -s "$config_source" ]; then
-if [ "$config_source" != "" ] && [ -r "$config_source" ]; then
+if [ "$config_source" != "" ] && [ -r "$config_source" ] && [ -s "$config_source" ]; then
     echo "config: $config_source
     
     
@@ -164,11 +166,11 @@ if [ "$config_source" != "" ] && [ -r "$config_source" ]; then
     "
 # try alternates if user config doesn't work 
     # download reliable .config
-elif [ ! -r "$git_save_path/$config_alias_no_timestamp" ]; then
+elif [ ! -r "$git_save_path/$config_alias_no_timestamp" ] || [ "$config_source" != "" ]; then
         generic_config_source=https://raw.githubusercontent.com/microsoft/WSL2-Linux-Kernel/linux-msft-wsl-5.15.y/Microsoft/config-wsl
-    echo "
+#     echo "
 
-No saved .config files match this kernel version $linux_kernel_version_tag and $cpu_arch/$cpu_vendor"
+# No saved .config files match this kernel version $linux_kernel_version_tag and $cpu_arch/$cpu_vendor"
     if [ ! -r "config-wsl" ]; then
         wget $generic_config_source
     fi
@@ -191,7 +193,11 @@ Enter the url of a config file to use
 
     pro tip: to use a file on Github make sure to use a raw file url starting with https://raw.githubusercontent.com
 "
-[ "$win_user" != "" ] || read -r -p "($generic_config_source)
+default_config_source=$generic_config_source
+if [[ "$config_source" =~ https?://.* ]]; then
+    default_config_source="$config_source"
+fi
+[ "$win_user" != "" ] || [[ "$config_source" =~ https?://.* ]] || read -r -p "($default_config_source)
 " config_source
 echo "
 # checking if input is a url ..."
@@ -376,8 +382,6 @@ if [ "$build" != "" ]; then
     exit
 fi
 
-./clean.sh k
-./clean.sh r
 # sudo apt-get -y remove dkms
 # sudo apt-get -y remove --auto-remove dkms
 # sudo apt-get -y purge dkms
@@ -393,8 +397,10 @@ fi
 # sudo apt-get -y autoremove --purge
 # sudo apt-get -y install --install-suggests dkms
 # sudo apt-get -y install --install-suggests virtualbox;
-
+git config --global http.postBuffer 1048576000
+git config --global https.postBuffer 1048576000
 if [ -d "$linux_build_dir/.git" ]; then
+    # sudo chown -R "$(id -un):$(id -Gn | grep -o --color=never '^\w*\b')" $linux_build_dir
     cd "$linux_build_dir" || exit
     if ! (( quick_wsl_install )); then
         git reset --hard
@@ -413,6 +419,7 @@ if [ "$zfs" = "zfs" ];  then
 #     echo "zfs == True
 # LINENO: ${LINENO}"
     if [ -d "$zfs_build_dir/.git" ]; then
+        # sudo chown -R "$(id -un):$(id -Gn | grep -o --color=never '^\w*\b')" $zfs_build_dir
         cd "$zfs_build_dir" || exit
         if ! (( quick_wsl_install )); then 
             git reset --hard
@@ -443,7 +450,7 @@ CONFIG_SITE=$LFS/usr/share/config.site
 export LFS LC_ALL LFS_TGT PATH CONFIG_SITE
 echo "PATH: 
 $PATH"
-[ ! -e "/etc/bash.bashrc" ] || mv -v "/etc/bash.bashrc" "/etc/bash.bashrc.NOUSE"
+[ ! -e "/etc/bash.bashrc" ] || sudo mv -v "/etc/bash.bashrc" "/etc/bash.bashrc.NOUSE"
 
 # replace kernel source .config with the config generated from a custom config
 cp -fv "$config_source" $linux_build_dir/.config
@@ -454,14 +461,20 @@ cd $linux_build_dir || exit
     mkdir -v build
 if (( quick_wsl_install )); then
     # prompt bypass
+    echo "starting make oldconfig ..." && \
     yes "" | make oldconfig && \
+    echo "starting make prepare scripts ..." && \
     yes "" | make prepare scripts 
 else
+    echo "starting make oldconfig ..." && \
     make oldconfig && \
+    echo "starting make prepare scripts ..." && \
     make prepare scripts 
 fi
 
+echo "starting autoreconf ..." && \
 bash autoreconf --force --verbose -- install
+echo "starting configure ..." && \
 bash configure \
     --prefix="$LFS/tools" \
     --with-sysroot="$LFS" \
@@ -497,6 +510,7 @@ if [ "$zfs" = "zfs" ];  then
 # LINENO: ${LINENO}"
     sed -i 's/\[# ]*CONFIG_ZFS[ =].*/CONFIG_ZFS=y/g' .config
 fi
+echo "starting make ..."
 if (( quick_wsl_install )); then
     yes "" | make -j$(($(nproc) - 1))
     # yes "" | make deb-pkg
@@ -535,11 +549,11 @@ rm -rfv kache/wsl-kernel-install_*
 rm -rfv kache/*.tar.gz
 
 cd $linux_build_dir || exit
-cp -fv arch/x86/boot/bzImage "/boot/vmlinuz-$make_kernel_release"
+sudo cp -fv arch/x86/boot/bzImage "/boot/vmlinuz-$make_kernel_release"
 cp -fv arch/x86/boot/bzImage "../kache/boot/vmlinuz-$make_kernel_release"
-cp -fv System.map "/boot/System.map-$make_kernel_version"
+sudo cp -fv System.map "/boot/System.map-$make_kernel_version"
 cp -fv System.map "../kache/boot/System.map-$make_kernel_version"
-cp -fv .config "/boot/config-$make_kernel_version"
+sudo cp -fv .config "/boot/config-$make_kernel_version"
 cp -fv .config "../kache/boot/config-$make_kernel_version"
 cd .. || exit
 
@@ -572,7 +586,7 @@ s1:1:respawn:/sbin/sulogin
 
 # End /etc/inittab
 EOF
-mkdir -pv /etc/sysconfig
+sudo mkdir -pv /etc/sysconfig
 cat > /etc/sysconfig/clock << "EOF"
 # Begin /etc/sysconfig/clock
 
@@ -587,14 +601,14 @@ EOF
 
 cd $linux_build_dir || exit
 find usr/include -type f ! -name '*.h' -delete
-make headers_install
-make modules_install
+sudo make headers_install
+sudo make modules_install
 make headers_install INSTALL_HDR_PATH=../kache/usr
 make modules_install INSTALL_MOD_PATH=../kache/usr
-ln -sfv "/lib/modules/$make_kernel_release" "/lib/modules/${make_kernel_release%%-g$(git describe --first-parent --abbrev=12 --long --dirty --always)}"
+sudo ln -sfv "/lib/modules/$make_kernel_release" "/lib/modules/${make_kernel_release%%-g$(git describe --first-parent --abbrev=12 --long --dirty --always)}"
 cd .. || exit
 
-install -v -m755 -d /etc/modprobe.d
+sudo install -v -m755 -d /etc/modprobe.d
 cat > /etc/modprobe.d/usb.conf << "EOF"
 # Begin /etc/modprobe.d/usb.conf
 
@@ -800,8 +814,8 @@ fi
 
 # restore path and /etc/bash.bashrc
 PATH=$PATH_ORIG
-bash dkms autoinstall --modprobe-on-install --kernelsourcedir "$LFS"
-[ -e "/etc/bash.bashrc.NOUSE" ] && mv -v "/etc/bash.bashrc.NOUSE" "/etc/bash.bashrc"
+sudo bash dkms autoinstall --modprobe-on-install --kernelsourcedir "$LFS"
+[ -e "/etc/bash.bashrc.NOUSE" ] && sudo mv -v "/etc/bash.bashrc.NOUSE" "/etc/bash.bashrc"
 echo "
 
 KERNEL BUILD COMPLETE
@@ -857,3 +871,4 @@ kernel:
 ==================================================================
 
 " "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}"
+

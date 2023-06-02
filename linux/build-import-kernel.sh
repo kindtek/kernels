@@ -400,7 +400,7 @@ fi
 git config --global http.postBuffer 1048576000
 git config --global https.postBuffer 1048576000
 if [ -d "$linux_build_dir/.git" ]; then
-    sudo chown -R "$(id -un):$(id -Gn | grep -o --color=never '^\w*\b')" $linux_build_dir
+    # sudo chown -R "$(id -un):$(id -Gn | grep -o --color=never '^\w*\b')" $linux_build_dir
     cd "$linux_build_dir" || exit
     if ! (( quick_wsl_install )); then
         git reset --hard
@@ -419,7 +419,7 @@ if [ "$zfs" = "zfs" ];  then
 #     echo "zfs == True
 # LINENO: ${LINENO}"
     if [ -d "$zfs_build_dir/.git" ]; then
-        sudo chown -R "$(id -un):$(id -Gn | grep -o --color=never '^\w*\b')" $zfs_build_dir
+        # sudo chown -R "$(id -un):$(id -Gn | grep -o --color=never '^\w*\b')" $zfs_build_dir
         cd "$zfs_build_dir" || exit
         if ! (( quick_wsl_install )); then 
             git reset --hard

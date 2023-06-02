@@ -59,7 +59,7 @@ else
 fi
 
     if [ "${clean_target,,}" = "basic" ] || [ "${clean_target,,}" = "b" ]; then
-        sudo chown -R "$(id -un):$(id -Gn | grep -o --color=never '^\w*\b')" $basic_dir
+        # sudo chown -R "$(id -un):$(id -Gn | grep -o --color=never '^\w*\b')" $basic_dir
         cd $basic_dir || ( echo "change to directory $basic_dir failed" && exit )
         if [ -d ".git" ]; then
             git reset --hard
@@ -67,7 +67,7 @@ fi
         fi
     fi
     if [ "${clean_target,,}" = "stable" ] || [ "${clean_target,,}" = "s" ]; then
-        sudo chown -R "$(id -un):$(id -Gn | grep -o --color=never '^\w*\b')" $stable_dir
+        # sudo chown -R "$(id -un):$(id -Gn | grep -o --color=never '^\w*\b')" $stable_dir
         cd $stable_dir || ( echo "change to directory $stable_dir failed" && exit )
         if [ -d ".git" ]; then
             git reset --hard
@@ -77,7 +77,7 @@ fi
     fi
     if [ "${clean_target,,}" = "latest" ] || [ "${clean_target,,}" = "l" ] || \
        [ "${clean_target,,}" = "latest-rc" ]; then
-        sudo chown -R "$(id -un):$(id -Gn | grep -o --color=never '^\w*\b')" $latest_dir
+        # sudo chown -R "$(id -un):$(id -Gn | grep -o --color=never '^\w*\b')" $latest_dir
         cd $latest_dir || ( echo "change to directory $latest_dir failed" && exit )
         if [ -d ".git" ]; then
             git reset --hard
@@ -86,7 +86,7 @@ fi
         cd ..
     fi
     if [ "${clean_target,,}" = "zfs" ] || [ "${clean_target,,}" = "z" ]; then
-        sudo chown -R "$(id -un):$(id -Gn | grep -o --color=never '^\w*\b')" $zfs_dir
+        # sudo chown -R "$(id -un):$(id -Gn | grep -o --color=never '^\w*\b')" $zfs_dir
         cd $zfs_dir || ( echo "change to directory $zfs_dir failed" && exit )
         if [ -d ".git" ]; then
             git reset --hard
@@ -99,8 +99,8 @@ fi
         sudo rm -rfv kache/.*
     fi
     if [ "${clean_target,,}" = "reset" ] || [ "${clean_target,,}" = "r" ] ; then
-        sudo chown -R "$(id -un):$(id -Gn | grep -o --color=never '^\w*\b')" linux-* 2>&1
-        sudo chown -R "$(id -un):$(id -Gn | grep -o --color=never '^\w*\b')" zfs-* 2>&1
+        # sudo chown -R "$(id -un):$(id -Gn | grep -o --color=never '^\w*\b')" linux-* 2>&1
+        # sudo chown -R "$(id -un):$(id -Gn | grep -o --color=never '^\w*\b')" zfs-* 2>&1
         git reset --hard
         git clean -fxd
     fi

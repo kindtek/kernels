@@ -17,18 +17,14 @@ else {
 # if it exists, prepend win_user info to front of array
 $args = @( "$win_user" ) + $args
 
-$args -split ' ' | ForEach-Object {
-    if ([string]::IsNullOrEmpty($_)) {
-        '""'
+$argString = $args -join " "
+$argArray = $argString.Split(" ")
+for ($i = 0; $i -lt $argArray.Length; $i += 1) {
+    $paramValue = $argArray[$i]
+    if ( "$paramValue" -eq "" ) {
+        $argArray[$i] = "`"`""
     }
-    else {
-        $_
-    }
-} | ForEach-Object {
-    $_ = '"{0}"' -f $_
+    # write-host "param ${i}: $($argArray[$i])"
 }
-
-$argString = $args -join ' '
-$argArray = $argString.Split(' ')
 
 wsl.exe --cd /hal/dvlw/dvlp/docker/kali exec ./make-kernel.sh $($argArray)

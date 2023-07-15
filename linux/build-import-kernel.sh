@@ -816,6 +816,7 @@ fi
 PATH=$PATH_ORIG
 sudo bash dkms autoinstall --modprobe-on-install --kernelsourcedir "$LFS"
 [ -e "/etc/bash.bashrc.NOUSE" ] && sudo mv -v "/etc/bash.bashrc.NOUSE" "/etc/bash.bashrc"
+sudo chmod +rx /etc/bash.bashrc
 echo "
 
 KERNEL BUILD COMPLETE

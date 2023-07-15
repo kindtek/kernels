@@ -872,4 +872,3 @@ kernel:
 ==================================================================
 
 " "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}"
-

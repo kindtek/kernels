@@ -710,23 +710,13 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
     if ("\$(\$args[1])" -ne "" -and "\$(\$args[1])" -ne "restart" ){
         
         echo "installing kernel to \$(\$args[1]) distro ..."
-        wsl.exe -d "\$(\$args[1])" --exec "sudo apt-get -y remove dkms; \
-        sudo apt-get -y remove --auto-remove dkms; \
-        sudo apt-get -y purge dkms; \
-        sudo apt-get -y purge --auto-remove dkms; \
-        sudo rm -rf /usr/lib/modules /usr/src /usr/include /boot/*; \
-        sudo apt-get -y remove virtualbox; \
-        sudo apt-get -y remove --auto-remove virtualbox; \
-        sudo apt-get -y purge virtualbox; \
-        sudo apt-get -y purge --auto-remove virtualbox; \
-        sudo apt-get -y /var/lib/dkms; \
-        sudo apt-get -y autoremove --purge; \
-        cd /mnt/c/users/\$win_user/kache || exit; \
+        wsl.exe -d "\$(\$args[1])" --cd /mnt/c/users/\$win_user/kache --exec "sudo apt-get -y update; \
+        sudo apt-get -y upgrade; \
         sudo cp -fv ${package_full_name_id}.tar.gz /; \
         cd / || exit; \
         sudo tar -xzvf ${package_full_name_id}.tar.gz; \
-        sudo apt-get -y install dkms; \
-        sudo apt-get -y install virtualbox;"
+        sudo apt-get -y install --reinstall dkms; \
+        sudo apt-get -y install --reinstall virtualbox;"
         if ("\$(\$args[2])" -eq "restart"){
             # pwsh -Command .\\wsl-restart.ps1;
             # Start-Process -FilePath powershell.exe -ArgumentList "-Command .\\wsl-restart.ps1";
@@ -734,23 +724,13 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
             exit
         }
     } else {
-        wsl.exe --exec "sudo apt-get -y remove dkms; \
-        sudo apt-get -y remove --auto-remove dkms; \
-        sudo apt-get -y purge dkms; \
-        sudo apt-get -y purge --auto-remove dkms; \
-        sudo rm -rf /usr/lib/modules /usr/src /usr/include /boot/*; \
-        sudo apt-get -y remove virtualbox; \
-        sudo apt-get -y remove --auto-remove virtualbox; \
-        sudo apt-get -y purge virtualbox; \
-        sudo apt-get -y purge --auto-remove virtualbox; \
-        sudo apt-get -y /var/lib/dkms; \
-        sudo apt-get -y autoremove --purge; \
-        cd /mnt/c/users/\$win_user/kache || exit; \
+        wsl.exe --cd /mnt/c/users/\$win_user/kache --exec "sudo apt-get -y update; \
+        sudo apt-get -y upgrade; \
         sudo cp -fv ${package_full_name_id}.tar.gz /; \
         cd / || exit; \
         sudo tar -xzvf ${package_full_name_id}.tar.gz; \
-        sudo apt-get -y install dkms; \
-        sudo apt-get -y install virtualbox; \
+        sudo apt-get -y install --reinstall dkms; \
+        sudo apt-get -y install --reinstall virtualbox; \
         sudo dkms autoinstall;"
         if ("\$(\$args[1])" -eq "restart"){                        
             # restart wsl

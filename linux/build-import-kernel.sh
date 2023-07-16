@@ -716,7 +716,8 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
         cd / || exit; \
         sudo tar -xzvf ${package_full_name_id}.tar.gz; \
         sudo apt-get -y install --reinstall dkms; \
-        sudo apt-get -y install --reinstall virtualbox;"
+        sudo apt-get -y install --reinstall virtualbox; \
+        sudo dkms autoinstall;"
         if ("\$(\$args[2])" -eq "restart"){
             # pwsh -Command .\\wsl-restart.ps1;
             # Start-Process -FilePath powershell.exe -ArgumentList "-Command .\\wsl-restart.ps1";

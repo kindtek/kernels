@@ -79,9 +79,11 @@ the most recently built kernel is: $latest_kernel
 
     
 install kernel into WSL?"
-    read -r -p "
+    if [ "$timestamp_id" != "latest" ]; then
+        read -r -p "
 (install $latest_kernel)
 " install_latest
+    fi
     if [ "$install_latest" != "" ]; then
         echo "
         
@@ -103,9 +105,11 @@ exiting ..."
     fi
     selected_kernel_install_file=$latest_kernel_install_file
     selected_kernel=$latest_kernel 
-    read -r -p "
+    if [ "$timestamp_id" != "latest" ]; then
+        read -r -p "
 (install $latest_kernel)
 " install_latest
+    fi
     if [ "$install_latest" != "" ]; then
         echo "
 exiting ..."

@@ -699,7 +699,7 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
 
     # install wsl-restart script
     echo "installing wsl-restart script"
-    move wsl-restart.ps1 ..\\wsl-restart.ps1 -Force -verbose;
+    copy wsl-restart.ps1 ..\\wsl-restart.ps1 -Force -verbose;
 
     # copy wslconfig to home dir
     echo "installing new .wslconfig and kernel \$kernel_alias"
@@ -710,14 +710,13 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
     if ("\$(\$args[1])" -ne "" -and "\$(\$args[1])" -ne "restart" ){
         
         echo "installing kernel to \$(\$args[1]) distro ..."
-        wsl.exe -d "\$(\$args[1])" --cd /mnt/c/users/\$win_user/kache --exec "sudo apt-get -y update; \
-        sudo apt-get -y upgrade; \
-        sudo cp -fv ${package_full_name_id}.tar.gz /; \
-        cd / || exit; \
-        sudo tar -xzvf ${package_full_name_id}.tar.gz; \
-        sudo apt-get -y install --reinstall dkms; \
-        sudo apt-get -y install --reinstall virtualbox; \
-        sudo dkms autoinstall;"
+        wsl.exe -d "\$(\$args[1])" --cd /mnt/c/users/\$win_user/kache --exec sudo apt-get -y update; 
+        wsl.exe -d "\$(\$args[1])" --cd /mnt/c/users/\$win_user/kache --exec sudo apt-get -y upgrade;
+        wsl.exe -d "\$(\$args[1])" --cd /mnt/c/users/\$win_user/kache --exec sudo cp -fv ${package_full_name_id}.tar.gz; 
+        wsl.exe -d "\$(\$args[1])" --cd / --exec sudo tar -xzvf ${package_full_name_id}.tar.gz; 
+        wsl.exe -d "\$(\$args[1])" --cd / --exec sudo apt-get -y install --reinstall dkms;
+        wsl.exe -d "\$(\$args[1])" --cd / --exec sudo apt-get -y install --reinstall virtualbox;
+        wsl.exe -d "\$(\$args[1])" --cd / --exec sudo dkms autoinstall;
         if ("\$(\$args[2])" -eq "restart"){
             # pwsh -Command .\\wsl-restart.ps1;
             # Start-Process -FilePath powershell.exe -ArgumentList "-Command .\\wsl-restart.ps1";
@@ -725,19 +724,20 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
             exit
         }
     } else {
-        wsl.exe --cd /mnt/c/users/\$win_user/kache --exec "sudo apt-get -y update; \
-        sudo apt-get -y upgrade; \
-        sudo cp -fv ${package_full_name_id}.tar.gz /; \
-        cd / || exit; \
-        sudo tar -xzvf ${package_full_name_id}.tar.gz; \
-        sudo apt-get -y install --reinstall dkms; \
-        sudo apt-get -y install --reinstall virtualbox; \
-        sudo dkms autoinstall;"
+        wsl.exe --cd /mnt/c/users/\$win_user/kache --exec sudo apt-get -y update; 
+        wsl.exe --cd /mnt/c/users/\$win_user/kache --exec sudo apt-get -y upgrade;
+        wsl.exe --cd /mnt/c/users/\$win_user/kache --exec sudo cp -fv ${package_full_name_id}.tar.gz; 
+        wsl.exe --cd / --exec sudo tar -xzvf ${package_full_name_id}.tar.gz; 
+        wsl.exe --cd / --exec sudo apt-get -y install --reinstall dkms;
+        wsl.exe --cd / --exec sudo apt-get -y install --reinstall virtualbox;
+        wsl.exe --cd / --exec sudo dkms autoinstall;
         if ("\$(\$args[1])" -eq "restart"){                        
             # restart wsl
             # pwsh -Command .\\wsl-restart.ps1;
             # Start-Process -FilePath powershell.exe -ArgumentList "-Command .\\wsl-restart.ps1";
+            push-location \$env:USERPROFILE
             .\\wsl-restart.ps1;
+            pop-location
             exit
         } 
         exit

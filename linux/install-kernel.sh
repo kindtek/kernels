@@ -109,6 +109,8 @@ exiting ..."
         read -r -p "
 (install $latest_kernel)
 " install_latest
+    else
+        latest_kernel=""
     fi
     if [ "$install_latest" != "" ]; then
         echo "

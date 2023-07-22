@@ -9,14 +9,14 @@ kernel_file_suffix="W"
 linux_build_dir=linux-build
 
 if [ "${zfs,,}" = "zfs" ];  then
-# set -x
+set -x
     zfs_build_dir="zfs-build"
     zfs_repo=https://github.com/openzfs/zfs.git
     zfs_version_tag=$(git -c versionsort.suffix=- ls-remote --refs --sort=version:refname --tags $zfs_repo | tail --lines=1 | cut --delimiter='/' --fields=3)
     zfs_version=${zfs_version_tag#"zfs-"}
     linux_kernel_type_tag=$linux_kernel_type_tag-ZFS
     kernel_file_suffix+="Z"
-# set +x
+set +x
 fi
 if [ "$kernel_type" = "" ]; then
     kernel_type="stable"
@@ -95,6 +95,9 @@ else
 fi
 
 package_full_name_id=Linux-$linux_kernel_version-${linux_kernel_type_tag}_${timestamp_id}
+echo "kernel_file_suffix: $kernel_file_suffix"
+echo "package_full_name_id: $package_full_name_id"
+sleep 15
 
 if [ "$2" = "get-version" ]; then
     if [ "$zfs" = "zfs" ];  then

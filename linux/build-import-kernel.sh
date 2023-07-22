@@ -8,7 +8,7 @@ timestamp_id="${5:-${DOCKER_BUILD_TIMESTAMP:-$(date -d "today" +"%Y%m%d%H%M%S")}
 kernel_file_suffix="W"
 linux_build_dir=linux-build
 
-if [ "$zfs" = "zfs" ];  then
+if [ "${zfs,,}" = "zfs" ];  then
 # set -x
     zfs_build_dir="zfs-build"
     zfs_repo=https://github.com/openzfs/zfs.git

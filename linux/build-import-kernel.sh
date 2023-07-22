@@ -270,6 +270,7 @@ printf "
 ==================================================================
 
 " "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}"
+sleep 15
 orig_win_user=$win_user
 orig_pwd=$(pwd)
 [ ! -d "/mnt/c/users" ] || cd "/mnt/c/users" || exit
@@ -357,10 +358,9 @@ printf "
 ------------------------------------------------------------------
 
   Kernel:
-    $kernel_target_git
-
-  Config:
-    $config_target_git
+    version:    $kindtek_kernel_version
+    path:       $kernel_target_git
+    config:     $config_target_git
     
   Kernel/Config/Installation/.tar.gz files:
     $nix_k_cache
@@ -372,7 +372,7 @@ printf "
 
 " "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}" "${win_k_cache:-'
 '}"  | tr -d "'"
-
+sleep 15
 [ "$win_user" != "" ] || echo "
 build kernel or exit?
 " && \

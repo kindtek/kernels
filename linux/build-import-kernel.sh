@@ -717,6 +717,7 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
         wsl.exe -d "\$(\$args[1])" --cd /mnt/c/users/\$win_user/kache --exec sudo apt-get -y upgrade;
         wsl.exe -d "\$(\$args[1])" --cd /mnt/c/users/\$win_user/kache --exec sudo cp -fv ${package_full_name_id}.tar.gz; 
         wsl.exe -d "\$(\$args[1])" --cd / --exec sudo tar -xzvf ${package_full_name_id}.tar.gz; 
+        wsl.exe --cd / --exec sudo update-initramfs -u -k \${kernel_release}-dirty
         wsl.exe -d "\$(\$args[1])" --cd / --exec sudo apt-get -y install --reinstall dkms;
         wsl.exe -d "\$(\$args[1])" --cd / --exec sudo apt-get -y install --reinstall virtualbox;
         wsl.exe -d "\$(\$args[1])" --cd / --exec sudo dkms autoinstall;
@@ -730,7 +731,8 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
         wsl.exe --cd /mnt/c/users/\$win_user/kache --exec sudo apt-get -y update; 
         wsl.exe --cd /mnt/c/users/\$win_user/kache --exec sudo apt-get -y upgrade;
         wsl.exe --cd /mnt/c/users/\$win_user/kache --exec sudo cp -fv ${package_full_name_id}.tar.gz; 
-        wsl.exe --cd / --exec sudo tar -xzvf ${package_full_name_id}.tar.gz; 
+        wsl.exe --cd / --exec sudo tar -xzvf ${package_full_name_id}.tar.gz;
+        wsl.exe --cd / --exec sudo update-initramfs -u -k \${kernel_release}-dirty
         wsl.exe --cd / --exec sudo apt-get -y install --reinstall dkms;
         wsl.exe --cd / --exec sudo apt-get -y install --reinstall virtualbox;
         wsl.exe --cd / --exec sudo dkms autoinstall;

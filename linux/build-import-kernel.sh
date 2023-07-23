@@ -721,9 +721,9 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
         wsl.exe -d "\$(\$args[1])" --cd / --exec sudo apt-get -y install --reinstall virtualbox;
         wsl.exe -d "\$(\$args[1])" --cd / --exec sudo dkms autoinstall;
         if ("\$(\$args[2])" -eq "restart"){
-            # pwsh -Command .\\wsl-restart.ps1;
-            # Start-Process -FilePath powershell.exe -ArgumentList "-Command .\\wsl-restart.ps1";
+            push-location \$env:USERPROFILE
             .\\wsl-restart.ps1;
+            pop-location
             exit
         }
     } else {

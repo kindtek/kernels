@@ -25,10 +25,10 @@ if [ "$kernel_type" = "latest" ]; then
 # set -x
     # zfs not supported atm
     # zfs=False; linux_kernel_type_tag=;
-    if [ "$zfs" = "zfs" ]; then
-        zfs_version=2.1.12
-        zfs_version_tag=zfs-$zfs_version-staging
-    fi
+    # if [ "$zfs" = "zfs" ]; then
+    #     zfs_version=2.1.12
+    #     zfs_version_tag=zfs-$zfs_version-staging
+    # fi
     linux_build_dir=linux-build-torvalds
     linux_repo=https://github.com/torvalds/linux.git
     linux_kernel_version_tag=$(git ls-remote --refs --sort=version:refname --tags $linux_repo | cut --delimiter='/' --fields=3 | grep '^v[0-9a-zA-Z\.]*$' | tail --lines=1) 
@@ -78,8 +78,8 @@ else
 # set -x
     # (BASIC)
     # latest tag doesn't work properly with zfs so manually update for zfs version compatible with 5.5.3+
-    zfs_version=2.1.11
-    zfs_version_tag=zfs-$zfs_version
+    # zfs_version=2.1.11
+    # zfs_version_tag=zfs-$zfs_version
     kernel_file_suffix+="B"
     # config_file_suffix+="_basic"
     linux_build_dir=linux-build-msft

@@ -64,7 +64,7 @@ $procs_start = @(
     # powershell.exe -Command { Get-Process wsl* -ErrorAction SilentlyContinue | sort-object path -unique | ForEach-Object { $($_) } };
     powershell.exe -Command { Get-Process docker* -ErrorAction SilentlyContinue | sort-object path -unique | ForEach-Object { $($_) } };
 );
-Start-Process -FilePath powershell.exe -ArgumentList '-Command "&{
+Start-Process -FilePath powershell.exe -Wait -ErrorAction SilentlyContinue -ArgumentList '-Command "&{
     $procs_kill = @(
         powershell.exe -Command { Get-Process docker* -ErrorAction SilentlyContinue | sort-object path -unique | ForEach-Object { $($_) } };  
         powershell.exe -Command { Get-Process wsl* -ErrorAction SilentlyContinue | sort-object path -unique | ForEach-Object { $($_) } };
@@ -105,7 +105,7 @@ Start-Process -FilePath powershell.exe -ArgumentList '-Command "&{
     };  
     powershell.exe -Command \"& { Start-Service -Name `\"com.docker.service`\" -ErrorAction SilentlyContinue  -Verbose } \";
     powershell.exe -Command wsl.exe --exec echo \"docker and WSL were successfully restarted\"; 
-}"' -Wait -ErrorAction SilentlyContinue 
+}"' 
 
 
 wsl.exe --exec echo "waiting for docker and WSL to fully come back online ...";

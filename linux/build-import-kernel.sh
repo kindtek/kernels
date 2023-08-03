@@ -501,6 +501,7 @@ if [ "$zfs" = "zfs" ];  then
     --with-linux-obj=../$linux_build_dir && \
     bash copy-builtin ../$linux_build_dir && \
     yes "" | make install 
+    sleep 10
 fi
 
 cd ../$linux_build_dir || exit

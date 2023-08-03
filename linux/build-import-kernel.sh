@@ -63,7 +63,7 @@ elif [ "$kernel_type" = "stable" ]; then
     #     zfs_version=2.1.12
     #     zfs_version_tag=zfs-$zfs_version-staging
     # fi
-    zfs=False; linux_kernel_type_tag=;
+    # zfs=False; linux_kernel_type_tag=;
     linux_build_dir=linux-build-gregkh
     kernel_file_suffix+="S"
     # config_file_suffix+="_stable"

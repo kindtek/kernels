@@ -613,8 +613,8 @@ sudo make modules_install
 make headers_install INSTALL_HDR_PATH=../kache/usr
 make modules_install INSTALL_MOD_PATH=../kache/usr
 sudo ln -sfv "/lib/modules/$make_kernel_release" "/lib/modules/${make_kernel_release%%-g$(git describe --first-parent --abbrev=12 --long --dirty --always)}"
-sudo cp -fv "/lib/modules/$make_kernel_release" "../kache/lib/modules/$make_kernel_release"
 cd .. || exit
+sudo cp -fv "/lib/modules/$make_kernel_release" "kache/lib/modules/$make_kernel_release"
 
 sudo install -v -m755 -d /etc/modprobe.d
 cat > /etc/modprobe.d/usb.conf << "EOF"
@@ -722,7 +722,7 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
         wsl.exe -d "\$(\$args[1])" --cd /mnt/c/users/\$win_user/kache --user r00t --exec apt-get -y upgrade;
         wsl.exe -d "\$(\$args[1])" --cd / --user r00t --exec apt-get -y install dwarves;
         wsl.exe -d "\$(\$args[1])" --cd /mnt/c/users/\$win_user/kache --user r00t --exec cp -fv ${package_full_name_id}.tar.gz /; 
-        wsl.exe -d "\$(\$args[1])" --cd / --exec tar --overwrite -xzvf ${package_full_name_id}.tar.gz; 
+        wsl.exe -d "\$(\$args[1])" --cd / --user r00t --exec tar --overwrite -xzvf ${package_full_name_id}.tar.gz; 
         wsl.exe --cd / --user r00t -- update-initramfs -u -k \${kernel_release}
         wsl.exe --cd / --user r00t -- update-initramfs -u -k \${kernel_release}-dirty
         wsl.exe -d "\$(\$args[1])" --cd / --user r00t --exec apt-get -y install --reinstall dkms;

@@ -540,6 +540,7 @@ rm -rf kache/boot
 rm -rf kache/usr 
 mkdir -pv kache/boot 2>/dev/null
 mkdir -pv kache/usr 2>/dev/null
+mkdir -pv kache/lib/modules 2>/dev/null
 # remove config
 rm -rfv kache/.config_*
 # remove kernel
@@ -551,6 +552,8 @@ rm -rfv kache/Linux-*
 rm -rfv kache/wsl-kernel-install_*
 # remove tar.gz file
 rm -rfv kache/*.tar.gz
+# remove symlink and anything else in /lib/modules
+rm -rfv kache/lib/modules/*
 
 cd $linux_build_dir || exit
 sudo cp -fv arch/x86/boot/bzImage "/boot/vmlinuz-$make_kernel_release"
@@ -610,6 +613,7 @@ sudo make modules_install
 make headers_install INSTALL_HDR_PATH=../kache/usr
 make modules_install INSTALL_MOD_PATH=../kache/usr
 sudo ln -sfv "/lib/modules/$make_kernel_release" "/lib/modules/${make_kernel_release%%-g$(git describe --first-parent --abbrev=12 --long --dirty --always)}"
+sudo cp -fv "/lib/modules/$make_kernel_release" "../kache/lib/modules/$make_kernel_release"
 cd .. || exit
 
 sudo install -v -m755 -d /etc/modprobe.d

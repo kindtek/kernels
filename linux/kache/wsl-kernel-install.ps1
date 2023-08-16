@@ -31,4 +31,4 @@ $args -split ' ' | ForEach-Object {
 $argString = $args -join ' '
 $argArray = $argString.Split(' ')
 
-wsl.exe --cd /hal/dvlw/dvlp/kernels/linux exec ./install-kernel.sh $($argArray)
+wsl.exe --user r00t --cd /r00t/dvlw/dvlp/kernels/linux exec ./install-kernel.sh $($argArray)

@@ -56,7 +56,7 @@ win_k_cache="/mnt/c/users/$win_user/kache"
 mkdir -p "$win_k_cache"
 cd "$win_k_cache" || exit
 # if [ -f "wsl-kernel-install_${kernel_code}*_${3}*.ps1" ]; then
-if [ "${kernel_code}" = "latest" ]; then
+if [ "${kernel_code}" = "latest" ] && [ "${timestamp_id}" = "latest" ]; then
     selected_kernel_install_file="$(ls -tx1 wsl-kernel-install_*.ps1 | sed -nr "s/^wsl-kernel-install_(.*)_(.*)\.ps1$/wsl-kernel-install_\1_\2\.ps1/p" | head -n 1)"
     latest_kernel="$(ls -tx1 wsl-kernel-install_*.ps1 | sed -nr "s/^wsl-kernel-install_(.*)_(.*)\.ps1$/\1_\2/p" | head -n 1)"
     if [ "$latest_kernel" = "" ]; then

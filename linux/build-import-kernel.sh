@@ -686,12 +686,12 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
 
 #
 #   # delete
-#>> del ..\\.wslconfig -Force -verbose;
+#>> del \$env:USERPROFILE\\kache\\.wslconfig -Force -verbose;
 #
     
     echo "extracting ${package_full_name_id}.tar.gz ..."
     # extract
-    tar --overwrite -xzf "${package_full_name_id}.tar.gz"
+    tar -xzf "${package_full_name_id}.tar.gz"
 
     echo "appending tail.wslconfig to .wslconfig"
     # append tail.wslconfig to .wslconfig
@@ -703,7 +703,7 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
     # backup old wslconfig
     echo "backing up old .wslconfig"
     # move file out of the way   
-    move ..\\.wslconfig ..\\.wslconfig.old -Force -verbose;
+    move \$env:USERPROFILE\\.wslconfig \$env:USERPROFILE\\.wslconfig.old -Force -verbose;
 
     # install wsl-restart script
     echo "installing wsl-restart script"
@@ -711,7 +711,7 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
 
     # copy wslconfig to home dir
     echo "installing new .wslconfig and kernel \$kernel_alias"
-    copy .wslconfig ..\\.wslconfig -verbose;
+    copy \$env:USERPROFILE\\kache\\.wslconfig \$env:USERPROFILE\\.wslconfig -verbose;
     copy boot\\vmlinuz-\$kernel_release \$kernel_alias -verbose
 
     # restart wsl (and install kernel/modules)

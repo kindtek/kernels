@@ -754,7 +754,9 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
 
 EOF
 
-mkdir -pv "${win_k_cache}" 2>/dev/null
+if [ -w "/mnt/c/users/$win_user" ] && [ "$win_k_cache" != "" ]; then
+    mkdir -pv "${win_k_cache}" 2>/dev/null
+fi
 # rm -fv "$win_k_cache/wsl-kernel-install.ps1"
 # rm -rfv "$win_k_cache/wsl-kernel-install_${kernel_alias_no_timestamp}*"
 sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\kache\\\\\\\\${kernel_alias}/g" ../../../dvlp/mnt/HOME_WIN/head.wslconfig
@@ -773,7 +775,9 @@ else
     echo "unable to save kernel package to Linux home directory"
 fi
 # now win
-mkdir -pv "${win_k_cache}" 2>/dev/null
+if [ -w "/mnt/c/users/$win_user" ] && [ "$win_k_cache" != "" ]; then
+    mkdir -pv "${win_k_cache}" 2>/dev/null
+fi
 # if {win_k_cache} is writable and no timestamp was given in args
 if [ -w "${win_k_cache}" ] && [ "$5" = "" ]; then
     echo "copying kernel to WSL install location"

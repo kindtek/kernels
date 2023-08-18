@@ -127,6 +127,8 @@ config_alias=.config_${kernel_alias}
 config_alias_no_timestamp=.config_${kernel_alias_no_timestamp}
 git_save_path=$cpu_arch/$cpu_vendor/$linux_kernel_version_mask
 nix_k_cache=/kache
+mkdir -pv $nix_k_cache 2>/dev/null
+
 
 ./clean.sh k
 ./clean.sh r
@@ -538,6 +540,7 @@ cd .. || exit
 # reset kache
 rm -rf kache/boot 
 rm -rf kache/usr 
+mkdir -pv /kache 2>/dev/null
 mkdir -pv kache/boot 2>/dev/null
 mkdir -pv kache/usr 2>/dev/null
 mkdir -pv kache/lib/modules 2>/dev/null
@@ -754,7 +757,7 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
 
 EOF
 
-if [ -w "/mnt/c/users/$win_user" ] && [ "$win_k_cache" != "" ]; then
+if [ -d "/mnt/c/users/$win_user" ] && [ "$win_k_cache" != "" ]; then
     mkdir -pv "${win_k_cache}" 2>/dev/null
 fi
 # rm -fv "$win_k_cache/wsl-kernel-install.ps1"
@@ -775,7 +778,7 @@ else
     echo "unable to save kernel package to Linux home directory"
 fi
 # now win
-if [ -w "/mnt/c/users/$win_user" ] && [ "$win_k_cache" != "" ]; then
+if [ -d "/mnt/c/users/$win_user" ] && [ "$win_k_cache" != "" ]; then
     mkdir -pv "${win_k_cache}" 2>/dev/null
 fi
 # if {win_k_cache} is writable and no timestamp was given in args

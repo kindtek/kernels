@@ -702,9 +702,10 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
 
     echo "appending tail.wslconfig to .wslconfig"
     # append tail.wslconfig to .wslconfig
-    Add-Content "" -Path "tail.wslconfig" -NoNewLine
     if (Test-Path -Path tail.wslconfig -PathType Leaf) {
-        Get-Content "tail.wslconfig" | Add-Content -Path ".wslconfig"
+        Get-Content "\$env:USERPROFILE\\kache\\tail.wslconfig" | Out-File "\$env:USERPROFILE\\kache\\.wslconfig" -Append
+    } else {
+        Write-Host -NoNewline '' | Out-File "\$env:USERPROFILE\\kache\\.wslconfig"
     }
 
     # backup old wslconfig

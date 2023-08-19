@@ -3,7 +3,7 @@ win_user=${1}
 echo "win_user is: $1"
 kernel_code=${2}
 timestamp_id=${3}
-wsl_distro={4}
+wsl_distro=${4}
 orig_pwd=$(pwd)
 
 echo "
@@ -214,7 +214,10 @@ move .wslconfig.old .wslconfig.new
 move .wslconfig .wslconfig.old
 move .wslconfig.new .wslconfig" 2>/dev/null | tee "wsl-kernel-rollback.ps1"
     fi
-    if [ "$restart_wsl" = "" ]; then
+    if [ "${kernel_code}" = "latest" ] && [ "${timestamp_id}" = "latest" ]; then
+        echo "running: $selected_kernel_install_file $win_user"
+        pwsh -file "$selected_kernel_install_file" "$win_user" $wsl_distro  
+    elif [ "$restart_wsl" = "" ]; then
         echo "running: $selected_kernel_install_file $win_user restart"
         pwsh -file "$selected_kernel_install_file" "$win_user" $wsl_distro restart
     else

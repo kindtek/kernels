@@ -184,7 +184,9 @@ if [ ! -f "$selected_kernel_install_file" ] || [ "$latest_kernel" = "" ]; then
 exiting ..."
     exit
 fi
-if [ -f "$selected_kernel_install_file" ]; then
+if [ -f "$selected_kernel_install_file" ] ; then
+    if [ "${kernel_code}" != "latest" ] && [ "${timestamp_id}" != "latest" ]; then
+
     echo "
 
 
@@ -194,6 +196,9 @@ restart WSL when kernel installation is complete?"
     read -r -p "
 (install $selected_kernel and restart WSL)
 " restart_wsl
+else
+        restart_wsl='skip'
+    fi
     wsl_config=../.wslconfig 
     new_kernel=$(echo "$selected_kernel_install_file" | sed -nr "s/^\.?\/?wsl-kernel-install_(.*)_(.*)\.ps1$/\1_\2/p")
     old_kernel=$(sed -nr "s/^\s*\#*\s*kernel=(.*)\\\\\\\\([A-Za-z0-9_-]+)$/\2/p" "$wsl_config")
@@ -214,10 +219,7 @@ move .wslconfig.old .wslconfig.new
 move .wslconfig .wslconfig.old
 move .wslconfig.new .wslconfig" 2>/dev/null | tee "wsl-kernel-rollback.ps1"
     fi
-    if [ "${kernel_code}" = "latest" ] && [ "${timestamp_id}" = "latest" ]; then
-        echo "running: $selected_kernel_install_file $win_user"
-        pwsh -file "$selected_kernel_install_file" "$win_user" $wsl_distro  
-    elif [ "$restart_wsl" = "" ]; then
+    if [ "$restart_wsl" = "" ]; then
         echo "running: $selected_kernel_install_file $win_user restart"
         pwsh -file "$selected_kernel_install_file" "$win_user" $wsl_distro restart
     else

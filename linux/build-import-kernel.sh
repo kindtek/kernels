@@ -1,4 +1,7 @@
 #!/bin/bash
+if [ "$1" = "" ]; then
+    exit
+fi
 kernel_type="$1"
 config_source="$2"
 zfs="$3"
@@ -94,6 +97,7 @@ else
 # set +x
 fi
 
+# docker/cli output and exit
 package_full_name_id=Linux-$linux_kernel_version-${linux_kernel_type_tag}_${timestamp_id}
 # echo "kernel_file_suffix: $kernel_file_suffix"
 # echo "package_full_name_id: $package_full_name_id"

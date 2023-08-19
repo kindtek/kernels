@@ -279,7 +279,7 @@ printf "
 ==================================================================
 
 " "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}"
-sleep 10
+[ -d "/mnt/c/users" ] || sleep 10
 orig_win_user=$win_user
 orig_pwd=$(pwd)
 [ ! -d "/mnt/c/users" ] || cd "/mnt/c/users" || exit
@@ -381,7 +381,7 @@ printf "
 
 " "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}" "${win_k_cache:-'
 '}"  | tr -d "'"
-sleep 10
+[ -d "/mnt/c/users" ] || sleep 10
 [ "$win_user" != "" ] || echo "
 build kernel or exit?
 " && \

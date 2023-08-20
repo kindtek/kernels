@@ -2,9 +2,10 @@
 #         ./wsl-kernel-install latest
 #         ./wsl-kernel-install 6L1 
 #         ./wsl-kernel-install 6L 2023
+$distro_name = $args[2]
 
-$argString = $args -join " "
-$argArray = $argString.Split(" ")
+$arg_str = $args -join " "
+$arg_arr = $arg_str.Split(" ")
 $win_user = ""
 if (!$IsLinux ) {
     # get the user home dir info
@@ -28,7 +29,13 @@ $args -split ' ' | ForEach-Object {
     $_ = '"{0}"' -f $_
 }
 
-$argString = $args -join ' '
-$argArray = $argString.Split(' ')
+$arg_str = $args -join ' '
+$arg_arr = $arg_str.Split(' ')
 
-wsl.exe --user r00t --cd /r00t/dvlw/dvlp/kernels/linux exec ./install-kernel.sh $($argArray)
+if ([string]::isNullOrEmpty($distro_name)){
+    wsl.exe --user r00t --cd /r00t/dvlw/dvlp/kernels/linux exec ./install-kernel.sh $($arg_arr)
+} else {
+    wsl.exe --distribution $distro_name --user r00t--cd /r00t/dvlw/dvlp/kernels/linux exec ./install-kernel.sh $($arg_arr)
+
+}
+

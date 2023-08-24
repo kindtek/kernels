@@ -715,12 +715,12 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
 
     # install wsl-restart script
     echo "installing wsl-restart script"
-    copy wsl-restart.ps1 ..\\wsl-restart.ps1 -Force -verbose;
+    copy wsl-restart.ps1 \$env:USERPROFILE\\wsl-restart.ps1 -Force -verbose;
 
     # copy wslconfig to home dir
     echo "installing new .wslconfig and kernel \$kernel_alias"
     copy \$env:USERPROFILE\\kache\\.wslconfig \$env:USERPROFILE\\.wslconfig -verbose;
-    copy \$env:USERPROFILE\\kache\\boot\\vmlinuz-\$kernel_release \$env:USERPROFILE\\kache\\boot\\\$kernel_alias -verbose
+    copy \$env:USERPROFILE\\kache\\boot\\vmlinuz-\$kernel_release \$env:USERPROFILE\\kache\\\$kernel_alias -verbose
 
     # restart wsl (and install kernel/modules)
     if ("\$(\$args[1])" -ne "" -and "\$(\$args[1])" -ne "restart" ){

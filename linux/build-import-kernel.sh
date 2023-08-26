@@ -564,7 +564,7 @@ rm -rfv kache/lib/modules/*
 
 cd $linux_build_dir || exit
 sudo cp -fv "arch/$cpu_arch/boot/bzImage" "/boot/vmlinuz-$make_kernel_release"
-cp -fv "arch/$cpu_arch/boot/bzImage" "../kache/$kernel_alias"
+cp -fv "arch/$cpu_arch/boot/bzImage" "../kache/boot/vmlinuz-$make_kernel_release"
 sudo cp -fv System.map "/boot/System.map-$make_kernel_version"
 cp -fv System.map "../kache/boot/System.map-$make_kernel_version"
 sudo cp -fv .config "/boot/config-$make_kernel_version"
@@ -639,7 +639,9 @@ ps_wsl_install_kernel_id="wsl-kernel-install_${kernel_alias}.ps1"
 mkdir -pv "$git_save_path" 2>/dev/null
 # queue files to be saved to repo
 cp -fv --backup=numbered "${linux_build_dir}/.config" "${config_target_git}"
-cp -fv --backup=numbered "${linux_build_dir}/${kernel_source}" "${kernel_target_git}"
+cp -fv --backup=numbered "${linux_build_dir}/.config" "${config_target_git}"
+cp -fv --backup=numbered "${linux_build_dir}/${kernel_source}" "kache/${kernel_target_git}"
+cp -fv --backup=numbered "${linux_build_dir}/${kernel_source}" "kache/${kernel_target_git}"
 
 echo "ps_wsl_install_kernel_id: $ps_wsl_install_kernel_id"
 tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
@@ -726,11 +728,11 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
     if ("\$(\$args[1])" -ne "" -and "\$(\$args[1])" -ne "restart" ){
         
         echo "installing kernel to \$(\$args[1]) distro ..."
-        wsl -d "\$(\$args[1])" --cd /mnt/c/users/\$win_user/kache --user r00t --exec apt-get -y update; 
-        wsl -d "\$(\$args[1])" --cd /mnt/c/users/\$win_user/kache --user r00t --exec apt-get -y upgrade;
-        wsl -d "\$(\$args[1])" --cd / --user r00t --exec apt-get -y install dwarves;
-        wsl -d "\$(\$args[1])" --cd /mnt/c/users/\$win_user/kache --user r00t --exec cp -fv ${package_full_name_id}.tar.gz /; 
-        wsl -d "\$(\$args[1])" --cd / --user r00t --exec tar --overwrite -xzvf ${package_full_name_id}.tar.gz; 
+        wsl.exe -d "\$(\$args[1])" --cd /mnt/c/users/\$win_user/kache --user r00t --exec apt-get -y update; 
+        wsl.exe -d "\$(\$args[1])" --cd /mnt/c/users/\$win_user/kache --user r00t --exec apt-get -y upgrade;
+        wsl.exe -d "\$(\$args[1])" --cd / --user r00t --exec apt-get -y install dwarves;
+        wsl.exe -d "\$(\$args[1])" --cd /mnt/c/users/\$win_user/kache --user r00t --exec cp -fv ${package_full_name_id}.tar.gz /; 
+        wsl.exe -d "\$(\$args[1])" --cd / --user r00t --exec tar --overwrite -xzvf ${package_full_name_id}.tar.gz; 
         if ("\$(\$args[2])" -eq "restart"){
             push-location \$env:USERPROFILE;
             .\\wsl-restart.ps1;
@@ -738,11 +740,11 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
             exit
         }
     } else {
-        wsl --cd /mnt/c/users/\$win_user/kache --user r00t --exec apt-get -y update; 
-        wsl --cd /mnt/c/users/\$win_user/kache --user r00t --exec apt-get -y upgrade;
-        wsl --cd / --user r00t --exec apt-get -y install dwarves;
-        wsl --cd /mnt/c/users/\$win_user/kache --user r00t --exec cp -fv ${package_full_name_id}.tar.gz /; 
-        wsl --cd / --user r00t --exec tar --overwrite -xzvf ${package_full_name_id}.tar.gz;
+        wsl.exe --cd /mnt/c/users/\$win_user/kache --user r00t --exec apt-get -y update; 
+        wsl.exe --cd /mnt/c/users/\$win_user/kache --user r00t --exec apt-get -y upgrade;
+        wsl.exe --cd / --user r00t --exec apt-get -y install dwarves;
+        wsl.exe --cd /mnt/c/users/\$win_user/kache --user r00t --exec cp -fv ${package_full_name_id}.tar.gz /; 
+        wsl.exe --cd / --user r00t --exec tar --overwrite -xzvf ${package_full_name_id}.tar.gz;
         if ("\$(\$args[1])" -eq "restart"){                        
             # restart wsl
             # pwsh -Command .\\wsl-restart.ps1;

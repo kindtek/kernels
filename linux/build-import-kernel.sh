@@ -770,8 +770,8 @@ fi
 sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\kache\\\\\\\\${kernel_alias}/g" ../../../dvlp/mnt/HOME_WIN/head.wslconfig
 cp -fv --backup=numbered ../../../dvlp/mnt/HOME_WIN/head.wslconfig kache/.wslconfig
 echo "saving to compressed tarball ..."
-tar -czvf "${tarball_filename}" -C kache . | tail -n 5
-mv -fv "${tarball_filename}" "kache/${tarball_filename}" | tail -n 5
+tar -czvf "${tarball_filename}" -C kache .
+mv -fv "${tarball_filename}" "kache/${tarball_filename}"
 # cp "kache/$tarball_filename" kache/latest.tar.gz
 # work on *nix first
 mkdir -pv "$nix_k_cache" 2>/dev/null

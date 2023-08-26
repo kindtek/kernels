@@ -181,7 +181,7 @@ elif [ ! -r "$git_save_path/$config_alias_no_timestamp" ] || [ "$config_source" 
 
 # No saved .config files match this kernel version $linux_kernel_version_tag and $cpu_arch/$cpu_vendor"
     if [ ! -r "config-wsl" ]; then
-        wget $generic_config_source
+        wget -O "config-wsl" $generic_config_source
     fi
     if [ ! -r "config-wsl" ]; then
         echo "Oooops. Failed to download generic .config file.

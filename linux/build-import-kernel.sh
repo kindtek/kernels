@@ -703,6 +703,7 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
     # extract
     tar -xzvf "${kernel_alias}.tar.gz"
 
+
     echo "appending tail.wslconfig to .wslconfig"
     # append tail.wslconfig to .wslconfig
     if (Test-Path -Path tail.wslconfig -PathType Leaf) {

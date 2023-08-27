@@ -678,20 +678,27 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
 
     \$kernel_alias="${kernel_alias}"
     \$kernel_release="${make_kernel_release}"
-
-    cd "\$env:USERPROFILE/kache"
-
-    \$win_user=\$env:USERNAME
-
-    if ("\$(\$args[0])" -ne ""){
-        \$win_user = "\$(\$args[0])"
+    if ( \$env:USERPROFILE -eq ""){
+        \$win_user=\$(\$args[0])
+        \$wsl_distro=\$(\$args[1])
+        \$win_user_dir=/mnt/c/users/\$win_user
     } else {
-        echo "default user selected: \$win_user"
+        # username is optional when calling from windows
+        \$win_user=\$env:USERNAME
+        if (\$args[1] -eq "") {
+            \$wsl_distro=\$(\$args[0])
+        } else {
+            \$win_user=\$(\$args[0])
+            \$wsl_distro=\$(\$args[1])
+        }
+        \$win_user_dir=\$env:USERPROFILE 
     }
 
+    cd \$win_user_dir
+    
 #
 #   # delete
-#>> del \$env:USERPROFILE\\kache\\.wslconfig -Force -verbose;
+#>> del \$win_user_dir\\kache\\.wslconfig -Force -verbose;
 #
     
     echo "extracting ${package_full_name_id}.tar.gz ..."
@@ -701,56 +708,40 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
     echo "appending tail.wslconfig to .wslconfig"
     # append tail.wslconfig to .wslconfig
     if (Test-Path -Path tail.wslconfig -PathType Leaf) {
-        Get-Content "\$env:USERPROFILE\\kache\\tail.wslconfig" | Out-File "\$env:USERPROFILE\\kache\\.wslconfig" -Append
+        Get-Content "\$win_user_dir\\kache\\tail.wslconfig" | Out-File "\$win_user_dir\\kache\\.wslconfig" -Append
     } else {
-        Write-Host -NoNewline '' | Out-File "\$env:USERPROFILE\\kache\\.wslconfig"
+        Write-Host -NoNewline '' | Out-File "\$win_user_dir\\kache\\.wslconfig"
     }
 
     # backup old wslconfig
     echo "backing up old .wslconfig"
     # move file out of the way   
-    move \$env:USERPROFILE\\.wslconfig \$env:USERPROFILE\\.wslconfig.old -Force -verbose;
+    move \$win_user_dir\\.wslconfig \$win_user_dir\\.wslconfig.old -Force -verbose;
 
     # install wsl-restart script
     echo "installing wsl-restart script"
-    copy \$env:USERPROFILE\\kache\\wsl-restart.ps1 \$env:USERPROFILE\\wsl-restart.ps1 -Force -verbose;
+    copy \$win_user_dir\\kache\\wsl-restart.ps1 \$win_user_dir\\wsl-restart.ps1 -Force -verbose;
 
     # copy wslconfig to home dir
     echo "installing new .wslconfig and kernel \$kernel_alias"
-    copy \$env:USERPROFILE\\kache\\.wslconfig \$env:USERPROFILE\\.wslconfig -verbose;
-    copy \$env:USERPROFILE\\kache\\\$kernel_alias \$env:USERPROFILE\\kache\\\$kernel_alias -verbose
+    copy \$win_user_dir\\kache\\.wslconfig \$win_user_dir\\.wslconfig -verbose;
+    copy \$win_user_dir\\kache\\\$kernel_alias \$win_user_dir\\kache\\\$kernel_alias -verbose
 
     # restart wsl (and install kernel/modules)
-    if ("\$(\$args[1])" -ne "" -and "\$(\$args[1])" -ne "restart" ){
+    if ( \$wsl_distro -ne "" ){
         
         echo "installing kernel to \$(\$args[1]) distro ..."
-        wsl.exe -d "\$(\$args[1])" --user r00t --exec apt-get -y update; 
-        wsl.exe -d "\$(\$args[1])" --user r00t --exec apt-get -y upgrade;
-        wsl.exe -d "\$(\$args[1])" --user r00t --exec apt-get -y install dwarves;
-        wsl.exe -d "\$(\$args[1])" --cd /mnt/c/users/\$win_user/kache --user r00t --exec cp -fv ${package_full_name_id}.tar.gz /kache/${package_full_name_id}.tar.gz; 
-        # wsl.exe -d "\$(\$args[1])" --cd / --user r00t --exec tar -xzvf /kache/${package_full_name_id}.tar.gz; 
-        if ("\$(\$args[2])" -eq "restart"){
-            push-location \$env:USERPROFILE;
-            .\\wsl-restart.ps1;
-            pop-location;
-            exit
-        }
+        wsl.exe -d \$wsl_distro --user r00t --exec apt-get -y update; 
+        wsl.exe -d \$wsl_distro --user r00t --exec apt-get -y upgrade;
+        wsl.exe -d \$wsl_distro --user r00t --exec apt-get -y install dwarves;
+        wsl.exe -d \$wsl_distro --cd \$win_user_dir/kache --user r00t --exec cp -fv ${package_full_name_id}.tar.gz /kache/${package_full_name_id}.tar.gz; 
+        # wsl.exe -d "\$wsl_distro" --cd / --user r00t --exec tar -xzvf /kache/${package_full_name_id}.tar.gz; 
     } else {
         wsl.exe --user r00t --exec apt-get -y update; 
         wsl.exe --user r00t --exec apt-get -y upgrade;
         wsl.exe --user r00t --exec apt-get -y install dwarves;
-        wsl.exe --cd /mnt/c/users/\$win_user/kache --user r00t --exec cp -fv ${package_full_name_id}.tar.gz /kache/${package_full_name_id}.tar.gz; 
+        wsl.exe --cd \$win_user_dir/kache --user r00t --exec cp -fv ${package_full_name_id}.tar.gz /kache/${package_full_name_id}.tar.gz; 
         # wsl.exe --cd / --user r00t --exec tar -xzvf ${package_full_name_id}.tar.gz;
-        if ("\$(\$args[1])" -eq "restart"){                        
-            # restart wsl
-            # pwsh -Command .\\wsl-restart.ps1;
-            # Start-Process -FilePath powershell.exe -ArgumentList "-Command .\\wsl-restart.ps1";
-            push-location \$env:USERPROFILE;
-            .\\wsl-restart.ps1;
-            pop-location;
-            exit
-        } 
-        exit
     }
 
 

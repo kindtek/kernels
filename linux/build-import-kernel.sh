@@ -676,8 +676,6 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
 #####                                                                   #####
 #####   copy without '#>>' to replace (delete/move) .wslconfig          #####
 
-    \$kernel_alias="${kernel_alias}"
-    \$kernel_release="${make_kernel_release}"
     if ( \$env:USERPROFILE -eq ""){
         \$win_user=\$(\$args[0])
         \$wsl_distro=\$(\$args[1])
@@ -685,13 +683,13 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
     } else {
         # username is optional when calling from windows
         \$win_user=\$env:USERNAME
+        \$win_user_dir=\$env:USERPROFILE 
+
         if (\$args[1] -eq "") {
             \$wsl_distro=\$(\$args[0])
         } else {
-            \$win_user=\$(\$args[0])
             \$wsl_distro=\$(\$args[1])
         }
-        \$win_user_dir=\$env:USERPROFILE 
     }
 
     cd \$win_user_dir
@@ -701,9 +699,9 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
 #>> del \$win_user_dir\\kache\\.wslconfig -Force -verbose;
 #
     
-    echo "extracting ${package_full_name_id}.tar.gz ..."
+    echo "extracting ${kernel_alias}.tar.gz ..."
     # extract
-    tar -xzvf "${package_full_name_id}.tar.gz"
+    tar -xzvf "${kernel_alias}.tar.gz"
 
     echo "appending tail.wslconfig to .wslconfig"
     # append tail.wslconfig to .wslconfig
@@ -723,14 +721,14 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
     copy \$win_user_dir\\kache\\wsl-restart.ps1 \$win_user_dir\\wsl-restart.ps1 -Force -verbose;
 
     # copy wslconfig to home dir
-    echo "installing new .wslconfig and kernel \$kernel_alias"
+    echo "installing new .wslconfig and kernel ${kernel_alias}"
     copy \$win_user_dir\\kache\\.wslconfig \$win_user_dir\\.wslconfig -verbose;
-    copy \$win_user_dir\\kache\\\$kernel_alias \$win_user_dir\\kache\\\$kernel_alias -verbose
+    copy \$win_user_dir\\kache\\${kernel_alias} \$win_user_dir\\kache\\${kernel_alias} -verbose
 
     # restart wsl (and install kernel/modules)
     if ( \$wsl_distro -ne "" ){
         
-        echo "installing kernel to \$(\$args[1]) distro ..."
+        echo "installing kernel to \$wsl_distro distro ..."
         wsl.exe -d \$wsl_distro --user r00t --exec apt-get -y update; 
         wsl.exe -d \$wsl_distro --user r00t --exec apt-get -y upgrade;
         wsl.exe -d \$wsl_distro --user r00t --exec apt-get -y install dwarves;

@@ -717,22 +717,22 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
 
     # install wsl-restart script
     echo "installing wsl-restart script"
-    copy wsl-restart.ps1 \$env:USERPROFILE\\wsl-restart.ps1 -Force -verbose;
+    copy \$env:USERPROFILE\\kache\\wsl-restart.ps1 \$env:USERPROFILE\\wsl-restart.ps1 -Force -verbose;
 
     # copy wslconfig to home dir
     echo "installing new .wslconfig and kernel \$kernel_alias"
     copy \$env:USERPROFILE\\kache\\.wslconfig \$env:USERPROFILE\\.wslconfig -verbose;
-    copy \$env:USERPROFILE\\kache\\\$kernel_release \$env:USERPROFILE\\kache\\\$kernel_alias -verbose
+    copy \$env:USERPROFILE\\kache\\\$kernel_alias \$env:USERPROFILE\\kache\\\$kernel_alias -verbose
 
     # restart wsl (and install kernel/modules)
     if ("\$(\$args[1])" -ne "" -and "\$(\$args[1])" -ne "restart" ){
         
         echo "installing kernel to \$(\$args[1]) distro ..."
-        wsl.exe -d "\$(\$args[1])" --cd /mnt/c/users/\$win_user/kache --user r00t --exec apt-get -y update; 
-        wsl.exe -d "\$(\$args[1])" --cd /mnt/c/users/\$win_user/kache --user r00t --exec apt-get -y upgrade;
-        wsl.exe -d "\$(\$args[1])" --cd / --user r00t --exec apt-get -y install dwarves;
+        wsl.exe -d "\$(\$args[1])" --user r00t --exec apt-get -y update; 
+        wsl.exe -d "\$(\$args[1])" --user r00t --exec apt-get -y upgrade;
+        wsl.exe -d "\$(\$args[1])" --user r00t --exec apt-get -y install dwarves;
         wsl.exe -d "\$(\$args[1])" --cd /mnt/c/users/\$win_user/kache --user r00t --exec cp -fv ${package_full_name_id}.tar.gz /; 
-        wsl.exe -d "\$(\$args[1])" --cd / --user r00t --exec tar --overwrite -xzvf ${package_full_name_id}.tar.gz; 
+        # wsl.exe -d "\$(\$args[1])" --cd / --user r00t --exec tar --overwrite -xzvf ${package_full_name_id}.tar.gz; 
         if ("\$(\$args[2])" -eq "restart"){
             push-location \$env:USERPROFILE;
             .\\wsl-restart.ps1;
@@ -740,11 +740,11 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
             exit
         }
     } else {
-        wsl.exe --cd /mnt/c/users/\$win_user/kache --user r00t --exec apt-get -y update; 
-        wsl.exe --cd /mnt/c/users/\$win_user/kache --user r00t --exec apt-get -y upgrade;
-        wsl.exe --cd / --user r00t --exec apt-get -y install dwarves;
+        wsl.exe --user r00t --exec apt-get -y update; 
+        wsl.exe --user r00t --exec apt-get -y upgrade;
+        wsl.exe --user r00t --exec apt-get -y install dwarves;
         wsl.exe --cd /mnt/c/users/\$win_user/kache --user r00t --exec cp -fv ${package_full_name_id}.tar.gz /; 
-        wsl.exe --cd / --user r00t --exec tar --overwrite -xzvf ${package_full_name_id}.tar.gz;
+        # wsl.exe --cd / --user r00t --exec tar --overwrite -xzvf ${package_full_name_id}.tar.gz;
         if ("\$(\$args[1])" -eq "restart"){                        
             # restart wsl
             # pwsh -Command .\\wsl-restart.ps1;

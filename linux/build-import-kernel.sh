@@ -699,9 +699,9 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
 #>> del \$win_user_dir\\kache\\.wslconfig -Force -verbose;
 #
     
-    echo "extracting ${kernel_alias}.tar.gz ..."
+    echo "extracting ${package_full_name_id}.tar.gz ..."
     # extract
-    tar -xzvf "${kernel_alias}.tar.gz"
+    tar -xzvf "${package_full_name_id}.tar.gz"
 
 
     echo "appending tail.wslconfig to .wslconfig"

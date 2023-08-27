@@ -639,9 +639,9 @@ ps_wsl_install_kernel_id="wsl-kernel-install_${kernel_alias}.ps1"
 mkdir -pv "$git_save_path" 2>/dev/null
 # queue files to be saved to repo
 cp -fv --backup=numbered "${linux_build_dir}/.config" "${config_target_git}"
-cp -fv --backup=numbered "${linux_build_dir}/.config" "${config_target_git}"
-cp -fv --backup=numbered "${linux_build_dir}/${kernel_source}" "kache/${kernel_target_git}"
-cp -fv --backup=numbered "${linux_build_dir}/${kernel_source}" "kache/${kernel_target_git}"
+cp -fv "${linux_build_dir}/.config" "${config_target_git}"
+cp -fv --backup=numbered "${linux_build_dir}/${kernel_source}" "${kernel_target_git}"
+cp -fv "${linux_build_dir}/${kernel_source}" "kache/${kernel_alias}"
 
 echo "ps_wsl_install_kernel_id: $ps_wsl_install_kernel_id"
 tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF

@@ -679,11 +679,7 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
     \$kernel_alias="${kernel_alias}"
     \$kernel_release="${make_kernel_release}"
 
-    if (\$IsLinux -eq \$false) {
-
-        cd "\$env:USERPROFILE/kache"
-
-    }
+    cd "\$env:USERPROFILE/kache"
 
     \$win_user=\$env:USERNAME
 
@@ -700,7 +696,7 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
     
     echo "extracting ${package_full_name_id}.tar.gz ..."
     # extract
-    tar -xzf "${package_full_name_id}.tar.gz"
+    tar -xzvf "${package_full_name_id}.tar.gz"
 
     echo "appending tail.wslconfig to .wslconfig"
     # append tail.wslconfig to .wslconfig
@@ -731,8 +727,8 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
         wsl.exe -d "\$(\$args[1])" --user r00t --exec apt-get -y update; 
         wsl.exe -d "\$(\$args[1])" --user r00t --exec apt-get -y upgrade;
         wsl.exe -d "\$(\$args[1])" --user r00t --exec apt-get -y install dwarves;
-        wsl.exe -d "\$(\$args[1])" --cd /mnt/c/users/\$win_user/kache --user r00t --exec cp -fv ${package_full_name_id}.tar.gz /; 
-        # wsl.exe -d "\$(\$args[1])" --cd / --user r00t --exec tar --overwrite -xzvf ${package_full_name_id}.tar.gz; 
+        wsl.exe -d "\$(\$args[1])" --cd /mnt/c/users/\$win_user/kache --user r00t --exec cp -fv ${package_full_name_id}.tar.gz /kache/${package_full_name_id}.tar.gz; 
+        # wsl.exe -d "\$(\$args[1])" --cd / --user r00t --exec tar -xzvf /kache/${package_full_name_id}.tar.gz; 
         if ("\$(\$args[2])" -eq "restart"){
             push-location \$env:USERPROFILE;
             .\\wsl-restart.ps1;
@@ -743,8 +739,8 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
         wsl.exe --user r00t --exec apt-get -y update; 
         wsl.exe --user r00t --exec apt-get -y upgrade;
         wsl.exe --user r00t --exec apt-get -y install dwarves;
-        wsl.exe --cd /mnt/c/users/\$win_user/kache --user r00t --exec cp -fv ${package_full_name_id}.tar.gz /; 
-        # wsl.exe --cd / --user r00t --exec tar --overwrite -xzvf ${package_full_name_id}.tar.gz;
+        wsl.exe --cd /mnt/c/users/\$win_user/kache --user r00t --exec cp -fv ${package_full_name_id}.tar.gz /kache/${package_full_name_id}.tar.gz; 
+        # wsl.exe --cd / --user r00t --exec tar -xzvf ${package_full_name_id}.tar.gz;
         if ("\$(\$args[1])" -eq "restart"){                        
             # restart wsl
             # pwsh -Command .\\wsl-restart.ps1;

@@ -726,21 +726,16 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
     copy \$win_user_dir\\kache\\.wslconfig \$win_user_dir\\.wslconfig -verbose;
     copy \$win_user_dir\\kache\\${kernel_alias} \$win_user_dir\\kache\\${kernel_alias} -verbose
 
-    # restart wsl (and install kernel/modules)
+    # install kernel/modules
     if ( \$wsl_distro -ne "" ){
-        
         echo "installing kernel to \$wsl_distro distro ..."
-        wsl.exe -d \$wsl_distro --user r00t --exec apt-get -y update; 
-        wsl.exe -d \$wsl_distro --user r00t --exec apt-get -y upgrade;
-        wsl.exe -d \$wsl_distro --user r00t --exec apt-get -y install dwarves;
-        wsl.exe -d \$wsl_distro --cd \$win_user_dir/kache --user r00t --exec cp -fv ${package_full_name_id}.tar.gz /kache/${package_full_name_id}.tar.gz; 
-        # wsl.exe -d "\$wsl_distro" --cd / --user r00t --exec tar -xzvf /kache/${package_full_name_id}.tar.gz; 
+        wsl.exe -d \$wsl_distro --user r00t -- apt-get -y update; 
+        wsl.exe -d \$wsl_distro --user r00t -- apt-get -y upgrade;
+        wsl.exe -d \$wsl_distro --cd \$win_user_dir/kache --user r00t -- cp -fv ${package_full_name_id}.tar.gz /kache/${package_full_name_id}.tar.gz; 
     } else {
         wsl.exe --user r00t --exec apt-get -y update; 
         wsl.exe --user r00t --exec apt-get -y upgrade;
-        wsl.exe --user r00t --exec apt-get -y install dwarves;
-        wsl.exe --cd \$win_user_dir/kache --user r00t --exec cp -fv ${package_full_name_id}.tar.gz /kache/${package_full_name_id}.tar.gz; 
-        # wsl.exe --cd / --user r00t --exec tar -xzvf ${package_full_name_id}.tar.gz;
+        wsl.exe --cd \$win_user_dir/kache --user r00t -- cp -fv ${package_full_name_id}.tar.gz /kache/${package_full_name_id}.tar.gz; 
     }
 
 

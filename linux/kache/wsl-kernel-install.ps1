@@ -33,9 +33,8 @@ $arg_str = $args -join ' '
 $arg_arr = $arg_str.Split(' ')
 
 if ([string]::isNullOrEmpty($distro_name)){
-    wsl.exe --user r00t --cd /r00t/dvlw/dvlp/kernels/linux exec ./install-kernel.sh $($arg_arr)
+    wsl.exe cd `$HOME `&`& bash `$HOME/dvlw/dvlp/kernels/linux/install-kernel.sh $($arg_arr)
 } else {
-    wsl.exe --distribution $distro_name --user r00t--cd /r00t/dvlw/dvlp/kernels/linux exec ./install-kernel.sh $($arg_arr)
+    wsl.exe --distribution $distro_name cd `$HOME `&`& bash `$HOME/dvlw/dvlp/kernels/linux/install-kernel.sh $($arg_arr)
 
 }
-

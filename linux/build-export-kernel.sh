@@ -769,28 +769,28 @@ fi
 if [ -d "/mnt/c/users/$win_user" ] && [ "$win_k_cache" != "" ]; then
     mkdir -pv "${win_k_cache}" 2>/dev/null
 fi
-# if {win_k_cache} is writable and no timestamp was given in args
-if [ -w "${win_k_cache}" ] && [ "$5" = "" ]; then
-    echo "copying kernel to WSL install location"
-    cp -fv "kache/${ps_wsl_install_kernel_id}" "${win_k_cache}/${ps_wsl_install_kernel_id}"
-    if [ "${tarball_target_win}" != "" ]; then
-        echo "copying tarball to WSL kache"
-        # cp -fv --backup=numbered "$tarball_filename" "$tarball_target_win.bak"
-        cp -fv "kache/${tarball_filename}" "${tarball_target_win}"
-    else 
-        echo "win tarball empty: ${tarball_target_win}"
-    fi
-else 
-    echo "not saving to windows home directory"
-    if [ ! -w "${win_k_cache}" ]; then
-        echo "$win_k_cache not writeable"
-    elif [ "$5" != "" ]; then
-        echo "timestamp not given
-        \$5=$5"
-    else
-        echo "not sure why"
-    fi
-fi
+# # if {win_k_cache} is writable and no timestamp was given in args
+# if [ -w "${win_k_cache}" ] && [ "$5" = "" ]; then
+#     echo "copying kernel to WSL install location"
+#     cp -fv "kache/${ps_wsl_install_kernel_id}" "${win_k_cache}/${ps_wsl_install_kernel_id}"
+#     if [ "${tarball_target_win}" != "" ]; then
+#         echo "copying tarball to WSL kache"
+#         # cp -fv --backup=numbered "$tarball_filename" "$tarball_target_win.bak"
+#         # cp -fv "kache/${tarball_filename}" "${tarball_target_win}"
+#     else 
+#         echo "win tarball empty: ${tarball_target_win}"
+#     fi
+# else 
+#     echo "not saving to windows home directory"
+#     if [ ! -w "${win_k_cache}" ]; then
+#         echo "$win_k_cache not writeable"
+#     elif [ "$5" != "" ]; then
+#         echo "timestamp not given
+#         \$5=$5"
+#     else
+#         echo "not sure why"
+#     fi
+# fi
 
 # restore path and /etc/bash.bashrc
 PATH=$PATH_ORIG
@@ -804,8 +804,8 @@ KERNEL BUILD COMPLETE
 "
 
 
-[ "${win_k_cache}" = "" ] && printf "
-
+# [ "${win_k_cache}" = "" ] && printf "
+printf "
 
 
 ==================================================================
@@ -823,32 +823,34 @@ KERNEL BUILD COMPLETE
     
   Kernel/Config/Installation/.tar.gz files:
     ${nix_k_cache}
-    %s     
-
-==================================================================
-==================================================================
-==================================================================
-
-" "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}" "${win_k_cache:-'
-'}"  | tr -d "'" || printf "
-
-
-
-==================================================================
-========================   Linux Kernel   ========================
-======------------------%s%s------------------======
-------------------------------------------------------------------
-====-----------------    Install Locations    ----------------====
-------------------------------------------------------------------
-
-.wslconfig:
-    $wsl_config
-
-kernel:
-    $wsl_kernel     
 
 ==================================================================
 ==================================================================
 ==================================================================
 
 " "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}"
+
+
+#  "${win_k_cache:-'
+# '}"  | tr -d "'" || printf "
+
+
+
+# ==================================================================
+# ========================   Linux Kernel   ========================
+# ======------------------%s%s------------------======
+# ------------------------------------------------------------------
+# ====-----------------    Install Locations    ----------------====
+# ------------------------------------------------------------------
+
+# .wslconfig:
+#     $wsl_config
+
+# kernel:
+#     $wsl_kernel     
+
+# ==================================================================
+# ==================================================================
+# ==================================================================
+
+# " "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}"

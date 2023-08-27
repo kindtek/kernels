@@ -692,11 +692,11 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
         }
     }
 
-    cd \$win_user_dir
+    cd \$win_user_dir\\kache
     
 #
 #   # delete
-#>> del \$win_user_dir\\kache\\.wslconfig -Force -verbose;
+#>> del \$win_user_dir\\.wslconfig -Force -verbose;
 #
     
     echo "extracting ${package_full_name_id}.tar.gz ..."
@@ -722,9 +722,10 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
     copy \$win_user_dir\\kache\\wsl-restart.ps1 \$win_user_dir\\wsl-restart.ps1 -Force -verbose;
 
     # copy wslconfig to home dir
-    echo "installing new .wslconfig and kernel ${kernel_alias}"
+    echo "installing new .wslconfig, ${kernel_alias} kernel and ${ps_wsl_install_kernel_id}"
     copy \$win_user_dir\\kache\\.wslconfig \$win_user_dir\\.wslconfig -verbose;
     copy \$win_user_dir\\kache\\${kernel_alias} \$win_user_dir\\kache\\${kernel_alias} -verbose
+    copy \$win_user_dir\\kache\\${kernel_alias} \$win_user_dir\\kache\\${ps_wsl_install_kernel_id} -verbose
 
     # install kernel/modules
     if ( \$wsl_distro -ne "" ){

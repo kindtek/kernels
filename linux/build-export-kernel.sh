@@ -327,14 +327,14 @@ tarball_filename=$package_full_name_id.tar.gz
 tarball_target_nix=$nix_k_cache/$package_full_name_id.tar.gz
 win_user_home=/mnt/c/users/$win_user
 win_k_cache=$win_user_home/kache
-tarball_target_win=$win_k_cache/$package_full_name_id.tar.gz
-wsl_kernel=$win_k_cache/$kernel_alias
-wsl_config=$win_user_home/.wslconfig
+# tarball_target_win=$win_k_cache/$package_full_name_id.tar.gz
+# wsl_kernel=$win_k_cache/$kernel_alias
+# wsl_config=$win_user_home/.wslconfig
 kindtek_kernel_version="kindtek-kernel-$kernel_alias_no_timestamp"
 sed -i "s/[# ]*CONFIG_LOCALVERSION[ =].*/CONFIG_LOCALVERSION=\"\-${kindtek_kernel_version}\"/g" "$config_source"
 # if win timestamp was manually set or win_user not set then clear win install paths
 if [ "${5}" != "" ] || [ "$win_user" = "" ]; then
-    tarball_target_win=""
+    # tarball_target_win=""
     win_user_home=""
     win_k_cache=""
 fi
@@ -363,7 +363,6 @@ printf "
     version:    $kindtek_kernel_version
     path:       $kernel_target_git
     config:     $config_target_git
-    
   Kernel/Config/Installation/.tar.gz files:
     $nix_k_cache
     %s     

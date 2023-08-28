@@ -693,11 +693,12 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
     tar -xzvf "${package_full_name_id}.tar.gz"
 
 
-    echo "appending tail.wslconfig to .wslconfig"
     # append tail.wslconfig to .wslconfig
     if (Test-Path -Path tail.wslconfig -PathType Leaf) {
+        echo "appending tail.wslconfig to .wslconfig"
         Add-Content "\$win_user_dir\\kache\\tail.wslconfig" "\$win_user_dir\\kache\\.wslconfig" 
     } else {
+        echo "appending blank tail to .wslconfig"
         Write-Host -NoNewline '' | Out-File "\$win_user_dir\\kache\\.wslconfig"
     }
 
@@ -712,7 +713,7 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
 
     # copy wslconfig to home dir
     echo "installing new .wslconfig, ${kernel_alias} kernel and ${ps_wsl_install_kernel_id}"
-    copy \$win_user_dir\\kache\\.wslconfig \$win_user_dir\\.wslconfig --force verbose;
+    copy \$win_user_dir\\kache\\.wslconfig \$win_user_dir\\.wslconfig -force verbose;
     copy \$win_user_dir\\kache\\${kernel_alias} \$win_user_dir\\kache\\${kernel_alias} -force -verbose
     copy \$win_user_dir\\kache\\${kernel_alias} \$win_user_dir\\kache\\${ps_wsl_install_kernel_id} -force -verbose
 

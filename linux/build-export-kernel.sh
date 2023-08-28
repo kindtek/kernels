@@ -266,22 +266,14 @@ printf "
 ==================================================================
 ========================   Linux Kernel   ========================
 ======------------------%s%s------------------======
-------------------------------------------------------------------
 ====-------------------     Source Info    -------------------====
-------------------------------------------------------------------
-
   CPU Architecture: 
     $cpu_arch
-
   CPU Vendor:  
     $cpu_vendor
-
   Configuration File:
     $config_source
-
-
 ==================================================================
-
 " "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}"
 [ -d "/mnt/c/users" ] || sleep 10
 orig_win_user=$win_user
@@ -366,10 +358,7 @@ printf "
 ==================================================================
 ========================   Linux Kernel   ========================
 ======------------------%s%s------------------======
-------------------------------------------------------------------
 ====-------------------     Output Info    -------------------====
-------------------------------------------------------------------
-
   Kernel:
     version:    $kindtek_kernel_version
     path:       $kernel_target_git
@@ -378,9 +367,6 @@ printf "
   Kernel/Config/Installation/.tar.gz files:
     $nix_k_cache
     %s     
-
-==================================================================
-==================================================================
 ==================================================================
 
 " "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}" "${win_k_cache:-'
@@ -727,9 +713,9 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
 
     # copy wslconfig to home dir
     echo "installing new .wslconfig, ${kernel_alias} kernel and ${ps_wsl_install_kernel_id}"
-    copy \$win_user_dir\\kache\\.wslconfig \$win_user_dir\\.wslconfig -verbose;
-    copy \$win_user_dir\\kache\\${kernel_alias} \$win_user_dir\\kache\\${kernel_alias} -verbose
-    copy \$win_user_dir\\kache\\${kernel_alias} \$win_user_dir\\kache\\${ps_wsl_install_kernel_id} -verbose
+    copy \$win_user_dir\\kache\\.wslconfig \$win_user_dir\\.wslconfig --force verbose;
+    copy \$win_user_dir\\kache\\${kernel_alias} \$win_user_dir\\kache\\${kernel_alias} -force -verbose
+    copy \$win_user_dir\\kache\\${kernel_alias} \$win_user_dir\\kache\\${ps_wsl_install_kernel_id} -force -verbose
 
     # install kernel/modules
     if ( \$wsl_distro -ne "" ){

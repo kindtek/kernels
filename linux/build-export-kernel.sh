@@ -131,6 +131,10 @@ config_alias=.config_${kernel_alias}
 config_alias_no_timestamp=.config_${kernel_alias_no_timestamp}
 git_save_path=$cpu_arch/$cpu_vendor/$linux_kernel_version_mask
 nix_k_cache=/kache
+if [ "$2" = "get-alias" ]; then
+    echo -n "$kernel_alias"
+    exit
+fi
 mkdir -pv $nix_k_cache 2>/dev/null
 
 

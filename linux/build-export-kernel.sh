@@ -674,7 +674,7 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
         \$win_user=\$env:USERNAME
         \$win_user_dir=\$env:USERPROFILE 
 
-        if (\$args[1] -eq "") {
+        if ([string]::isnullorempty(\$args[1])) {
             \$wsl_distro=\$(\$args[0])
         } else {
             \$wsl_distro=\$(\$args[1])

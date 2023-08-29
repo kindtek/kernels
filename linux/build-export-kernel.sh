@@ -326,9 +326,9 @@ config_target_git=$git_save_path/$config_alias_no_timestamp
 tarball_filename=$package_full_name_id.tar.gz
 tarball_target_nix=$nix_k_cache/$package_full_name_id.tar.gz
 win_user_home=/mnt/c/users/$win_user
-win_k_cache=$win_user_home/kache
-# tarball_target_win=$win_k_cache/$package_full_name_id.tar.gz
-# wsl_kernel=$win_k_cache/$kernel_alias
+win_user_kache=$win_user_home/kache
+# tarball_target_win=$win_user_kache/$package_full_name_id.tar.gz
+# wsl_kernel=$win_user_kache/$kernel_alias
 # wsl_config=$win_user_home/.wslconfig
 kindtek_kernel_version="kindtek-kernel-$kernel_alias_no_timestamp"
 sed -i "s/[# ]*CONFIG_LOCALVERSION[ =].*/CONFIG_LOCALVERSION=\"\-${kindtek_kernel_version}\"/g" "$config_source"
@@ -336,7 +336,7 @@ sed -i "s/[# ]*CONFIG_LOCALVERSION[ =].*/CONFIG_LOCALVERSION=\"\-${kindtek_kerne
 if [ "${5}" != "" ] || [ "$win_user" = "" ]; then
     # tarball_target_win=""
     win_user_home=""
-    win_k_cache=""
+    win_user_kache=""
 fi
 
 if [ "$linux_kernel_version" = "" ]; then
@@ -368,7 +368,7 @@ printf "
     %s     
 ==================================================================
 
-" "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}" "${win_k_cache:-'
+" "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}" "${win_user_kache:-'
 '}"  | tr -d "'"
 [ -d "/mnt/c/users" ] || sleep 10
 [ "$win_user" != "" ] || echo "
@@ -715,20 +715,22 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
 
     # copy wslconfig to home dir
     echo "installing new .wslconfig, ${kernel_alias} kernel and ${ps_wsl_install_kernel_id}"
-    copy \$win_user_dir\\kache\\.wslconfig \$win_user_dir\\.wslconfig -force verbose;
+    copy \$win_user_dir\\kache\\.wslconfig \$win_user_dir\\.wslconfig -force -verbose;
     copy \$win_user_dir\\kache\\${kernel_alias} \$win_user_dir\\kache\\${kernel_alias} -force -verbose
     copy \$win_user_dir\\kache\\${kernel_alias} \$win_user_dir\\kache\\${ps_wsl_install_kernel_id} -force -verbose
 
     # install kernel/modules
-    if ( \$wsl_distro -ne "" ){
-        echo "installing kernel to \$wsl_distro distro ..."
+    if ( ([string]::isnullorempty(\$wsl_distro) ){
+        echo "installing kernel to default distro ..."
+        wsl.exe --user r00t --exec apt-get -y update; 
+        wsl.exe --user r00t --exec apt-get -y upgrade;
+        wsl.exe --cd \$win_user_dir/kache --user r00t -- cp -fv ${package_full_name_id}.tar.gz /kache/${package_full_name_id}.tar.gz;
+    } else {
+         echo "installing kernel to \$wsl_distro distro ..."
         wsl.exe -d \$wsl_distro --user r00t -- apt-get -y update; 
         wsl.exe -d \$wsl_distro --user r00t -- apt-get -y upgrade;
         wsl.exe -d \$wsl_distro --cd \$win_user_dir/kache --user r00t -- cp -fv ${package_full_name_id}.tar.gz /kache/${package_full_name_id}.tar.gz; 
-    } else {
-        wsl.exe --user r00t --exec apt-get -y update; 
-        wsl.exe --user r00t --exec apt-get -y upgrade;
-        wsl.exe --cd \$win_user_dir/kache --user r00t -- cp -fv ${package_full_name_id}.tar.gz /kache/${package_full_name_id}.tar.gz; 
+
     }
 
 
@@ -738,12 +740,12 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
 
 EOF
 
-if [ -d "/mnt/c/users/$win_user" ] && [ "$win_k_cache" != "" ]; then
-    mkdir -pv "${win_k_cache}" 2>/dev/null
+if [ -d "/mnt/c/users/$win_user" ] && [ "$win_user_kache" != "" ]; then
+    mkdir -pv "${win_user_kache}" 2>/dev/null
 fi
-# rm -fv "$win_k_cache/wsl-kernel-install.ps1"
-# rm -rfv "$win_k_cache/wsl-kernel-install_${kernel_alias_no_timestamp}*"
-sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\kache\\\\\\\\${kernel_alias}/g" ../../../dvlp/mnt/HOME_WIN/head.wslconfig
+# rm -fv "$win_user_kache/wsl-kernel-install.ps1"
+# rm -rfv "$win_user_kache/wsl-kernel-install_${kernel_alias_no_timestamp}*"
+sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\${win_user}\\\\\\\\kache\\\\\\\\${kernel_alias}/g" ../../../dvlp/mnt/HOME_WIN/head.wslconfig
 cp -fv --backup=numbered ../../../dvlp/mnt/HOME_WIN/head.wslconfig kache/.wslconfig
 chmod +x kache
 echo "saving to compressed tarball ..."
@@ -760,13 +762,13 @@ else
     echo "unable to save kernel package to Linux home directory"
 fi
 # now win
-if [ -d "/mnt/c/users/$win_user" ] && [ "$win_k_cache" != "" ]; then
-    mkdir -pv "${win_k_cache}" 2>/dev/null
+if [ -d "/mnt/c/users/$win_user" ] && [ "$win_user_kache" != "" ]; then
+    mkdir -pv "${win_user_kache}" 2>/dev/null
 fi
-# # if {win_k_cache} is writable and no timestamp was given in args
-# if [ -w "${win_k_cache}" ] && [ "$5" = "" ]; then
+# # if {win_user_kache} is writable and no timestamp was given in args
+# if [ -w "${win_user_kache}" ] && [ "$5" = "" ]; then
 #     echo "copying kernel to WSL install location"
-#     cp -fv "kache/${ps_wsl_install_kernel_id}" "${win_k_cache}/${ps_wsl_install_kernel_id}"
+#     cp -fv "kache/${ps_wsl_install_kernel_id}" "${win_user_kache}/${ps_wsl_install_kernel_id}"
 #     if [ "${tarball_target_win}" != "" ]; then
 #         echo "copying tarball to WSL kache"
 #         # cp -fv --backup=numbered "$tarball_filename" "$tarball_target_win.bak"
@@ -776,8 +778,8 @@ fi
 #     fi
 # else 
 #     echo "not saving to windows home directory"
-#     if [ ! -w "${win_k_cache}" ]; then
-#         echo "$win_k_cache not writeable"
+#     if [ ! -w "${win_user_kache}" ]; then
+#         echo "$win_user_kache not writeable"
 #     elif [ "$5" != "" ]; then
 #         echo "timestamp not given
 #         \$5=$5"
@@ -798,7 +800,7 @@ KERNEL BUILD COMPLETE
 "
 
 
-# [ "${win_k_cache}" = "" ] && printf "
+# [ "${win_user_kache}" = "" ] && printf "
 printf "
 
 
@@ -825,7 +827,7 @@ printf "
 " "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}"
 
 
-#  "${win_k_cache:-'
+#  "${win_user_kache:-'
 # '}"  | tr -d "'" || printf "
 
 

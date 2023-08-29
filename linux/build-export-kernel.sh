@@ -651,7 +651,7 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
 #                                                                       ##### 
 #
 # navigate to kache and execute option B script saved in this file
-#>> cd kache
+#>> cd \$env:USERPROFILE/kache
 #>> ./${ps_wsl_install_kernel_id}
 
 
@@ -666,18 +666,18 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
 #####   copy without '#>>' to replace (delete/move) .wslconfig          #####
 
     if ([string]::isnullorempty(\$env:USERPROFILE)){
-        \$win_user=\$(\$args[0])
-        \$wsl_distro=\$(\$args[1])
-        \$win_user_dir=/mnt/c/users/\$win_user
+        \$win_user="\$(\$args[0])"
+        \$wsl_distro="\$(\$args[1])"
+        \$win_user_dir="/mnt/c/users/\$win_user"
     } else {
         # username is optional when calling from windows
-        \$win_user=\$env:USERNAME
-        \$win_user_dir=\$env:USERPROFILE 
+        \$win_user="\$env:USERNAME"
+        \$win_user_dir="\$env:USERPROFILE" 
 
         if ([string]::isnullorempty(\$args[1])) {
-            \$wsl_distro=\$(\$args[0])
+            \$wsl_distro="\$(\$args[0])"
         } else {
-            \$wsl_distro=\$(\$args[1])
+            \$wsl_distro="\$(\$args[1])"
         }
     }
 

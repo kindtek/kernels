@@ -743,6 +743,7 @@ fi
 # rm -rfv "$win_k_cache/wsl-kernel-install_${kernel_alias_no_timestamp}*"
 sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\kache\\\\\\\\${kernel_alias}/g" ../../../dvlp/mnt/HOME_WIN/head.wslconfig
 cp -fv --backup=numbered ../../../dvlp/mnt/HOME_WIN/head.wslconfig kache/.wslconfig
+chmod +x kache
 echo "saving to compressed tarball ..."
 tar -czvf "${tarball_filename}" -C kache .
 mv -fv "${tarball_filename}" "kache/${tarball_filename}"

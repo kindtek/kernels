@@ -130,12 +130,12 @@ kernel_alias=${kernel_alias_no_timestamp}_${timestamp_id}
 config_alias=.config_${kernel_alias}
 config_alias_no_timestamp=.config_${kernel_alias_no_timestamp}
 git_save_path=$cpu_arch/$cpu_vendor/$linux_kernel_version_mask
-nix_k_cache=/kache
+nix_user_kache=/kache
 if [ "$2" = "get-alias" ]; then
     echo -n "$kernel_alias"
     exit
 fi
-mkdir -pv $nix_k_cache 2>/dev/null
+mkdir -pv $nix_user_kache 2>/dev/null
 
 
 ./clean.sh k
@@ -324,7 +324,7 @@ kernel_source=arch/$cpu_arch/boot/bzImage
 kernel_target_git=$git_save_path/$kernel_alias_no_timestamp
 config_target_git=$git_save_path/$config_alias_no_timestamp
 tarball_filename=$package_full_name_id.tar.gz
-tarball_target_nix=$nix_k_cache/$package_full_name_id.tar.gz
+tarball_target_nix=$nix_user_kache/$package_full_name_id.tar.gz
 win_user_home=/mnt/c/users/$win_user
 win_user_kache=$win_user_home/kache
 # tarball_target_win=$win_user_kache/$package_full_name_id.tar.gz
@@ -364,7 +364,7 @@ printf "
     path:       $kernel_target_git
     config:     $config_target_git
   Kernel/Config/Installation/.tar.gz files:
-    $nix_k_cache
+    $nix_user_kache
     %s     
 ==================================================================
 
@@ -753,9 +753,9 @@ tar -czvf "${tarball_filename}" -C kache .
 mv -fv "${tarball_filename}" "kache/${tarball_filename}"
 # cp "kache/$tarball_filename" kache/latest.tar.gz
 # work on *nix first
-mkdir -pv "$nix_k_cache" 2>/dev/null
+mkdir -pv "$nix_user_kache" 2>/dev/null
 
-if [ -w "$nix_k_cache" ]; then
+if [ -w "$nix_user_kache" ]; then
     # tar -czvf "kache/$tarball_filename" -C kache kache
     cp -fv "kache/${tarball_filename}" "${tarball_target_nix}" 
 else
@@ -818,7 +818,7 @@ printf "
     ${config_target_git}
     
   Kernel/Config/Installation/.tar.gz files:
-    ${nix_k_cache}
+    ${nix_user_kache}
 
 ==================================================================
 ==================================================================

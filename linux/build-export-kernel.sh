@@ -681,7 +681,10 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
         }
     }
 
-    echo 'win_user is \$win_user'
+    echo "
+    win_user is \$win_user
+    win_user_dir is \$win_user_dir
+    wsl_distro is \$wsl_distro"
 
     cd \$win_user_dir\\kache
     
@@ -724,13 +727,13 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
         echo "installing kernel to default distro ..."
         wsl.exe --user r00t --exec apt-get -y update; 
         wsl.exe --user r00t --exec apt-get -y upgrade;
-        wsl.exe -- sed -i "s/\\s*\\#*\\s*kernel=.*/kernel=C\\:\\\\\\\\\\\\\\\\users\\\\\\\\\\\\\\\\\$win_user\\\\\\\\\\\\\\\\kache\\\\\\\\\\\\\\\\${kernel_alias}/g" /mnt/c/users/\$win_user/.wslconfig
+        wsl.exe -- sed -i "s/\\s*\\#*\\s*kernel=.*/kernel=C\\:\\\\\\\\\\\\\\\\users\\\\\\\\\\\\\\\\\$win_user\\\\\\\\\\\\\\\\kache\\\\\\\\\\\\\\\${kernel_alias}/g" "/mnt/c/users/\$win_user/.wslconfig"
         wsl.exe --cd \$win_user_dir/kache --user r00t -- cp -fv ${package_full_name_id}.tar.gz /kache/${package_full_name_id}.tar.gz;
     } else {
          echo "installing kernel to \$wsl_distro distro ..."
         wsl.exe -d \$wsl_distro --user r00t -- apt-get -y update; 
         wsl.exe -d \$wsl_distro --user r00t -- apt-get -y upgrade;
-        wsl.exe -d \$wsl_distro -- sed -i "s/\\s*\\#*\\s*kernel=.*/kernel=C\\:\\\\\\\\\\\\\\\\users\\\\\\\\\\\\\\\\\$win_user\\\\\\\\\\\\\\\\kache\\\\\\\\\\\\\\\\${kernel_alias}/g" /mnt/c/users/\$win_user/.wslconfig
+        wsl.exe -d \$wsl_distro -- sed -i "s/\\s*\\#*\\s*kernel=.*/kernel=C\\:\\\\\\\\\\\\\\\\users\\\\\\\\\\\\\\\\\$win_user\\\\\\\\\\\\\\\\kache\\\\\\\\\\\\\\\${kernel_alias}/g" "/mnt/c/users/\$win_user/.wslconfig"
         wsl.exe -d \$wsl_distro --cd \$win_user_dir/kache --user r00t -- cp -fv ${package_full_name_id}.tar.gz /kache/${package_full_name_id}.tar.gz; 
 
     }
@@ -747,7 +750,8 @@ if [ -d "/mnt/c/users/$win_user" ] && [ "$win_user_kache" != "" ]; then
 fi
 # rm -fv "$win_user_kache/wsl-kernel-install.ps1"
 # rm -rfv "$win_user_kache/wsl-kernel-install_${kernel_alias_no_timestamp}*"
-sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\${win_user}\\\\\\\\kache\\\\\\\\${kernel_alias}/g" ../../../dvlp/mnt/HOME_WIN/head.wslconfig
+sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\kache\\\\\\\\6L1WZB_20230829/g" /mnt/c/users/$win_user/.wslconfig
+sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\kache\\\\\\\\${kernel_alias}/g" ../../../dvlp/mnt/HOME_WIN/head.wslconfig
 cp -fv --backup=numbered ../../../dvlp/mnt/HOME_WIN/head.wslconfig kache/.wslconfig
 chmod +x kache
 echo "saving to compressed tarball ..."

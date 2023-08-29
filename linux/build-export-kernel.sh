@@ -720,7 +720,7 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
     copy \$win_user_dir\\kache\\${kernel_alias} \$win_user_dir\\kache\\${ps_wsl_install_kernel_id} -force -verbose
 
     # install kernel/modules
-    if ( ([string]::isnullorempty(\$wsl_distro) ){
+    if ([string]::isnullorempty(\$wsl_distro)){
         echo "installing kernel to default distro ..."
         wsl.exe --user r00t --exec apt-get -y update; 
         wsl.exe --user r00t --exec apt-get -y upgrade;

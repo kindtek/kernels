@@ -681,6 +681,8 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
         }
     }
 
+    echo 'win_user is \$win_user'
+
     cd \$win_user_dir\\kache
     
 #

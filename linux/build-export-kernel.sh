@@ -72,8 +72,8 @@ elif [ "$kernel_type" = "stable" ]; then
     # config_file_suffix+="_stable"
     linux_repo=https://github.com/gregkh/linux.git
     # linux_version_query="git ls-remote --refs --sort=version:refname --tags $linux_repo "
-    # linux_kernel_version_tag=$(git ls-remote --refs --sort=version:refname --tags $linux_repo | cut --delimiter='/' --fields=3 | grep '^v[0-9a-zA-Z\.]*$' | tail --lines=1) 
-    linux_kernel_version_tag='v6.3.13'
+    linux_kernel_version_tag=$(git ls-remote --refs --sort=version:refname --tags $linux_repo | cut --delimiter='/' --fields=3 | grep '^v[0-9a-zA-Z\.]*$' | tail --lines=1) 
+    # linux_kernel_version_tag='v6.3.13'
     linux_kernel_type_tag="STABLE-WSL${linux_kernel_type_tag}"
     linux_kernel_version=${linux_kernel_version_tag#"v"}
 # set +x

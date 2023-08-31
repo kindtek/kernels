@@ -711,7 +711,13 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
     # backup old wslconfig
     echo "backing up old .wslconfig"
     # move file out of the way   
-    move \$win_user_dir\\.wslconfig \$win_user_dir\\.wslconfig.old -Force -verbose;
+   
+    if (Test-Path -Path "\$win_user_dir\\.wslconfig" -PathType Leaf) {
+         move \$win_user_dir\\.wslconfig \$win_user_dir\\.wslconfig.old -Force -verbose;
+    } else {
+        echo "no .wslconfig found - creating blank file"
+        Write-Host -NoNewline '' | Out-File "\$win_user_dir\\.wslconfig.old"
+    }
 
     # install wsl-restart script
     echo "installing wsl-restart script"
@@ -719,7 +725,12 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
 
     # copy wslconfig to home dir
     echo "installing new .wslconfig, ${kernel_alias} kernel and ${ps_wsl_install_kernel_id}"
-    copy \$win_user_dir\\kache\\.wslconfig \$win_user_dir\\.wslconfig -force -verbose;
+    if (Test-Path -Path "\$win_user_dir\\.wslconfig" -PathType Leaf) {
+        copy \$win_user_dir\\kache\\.wslconfig \$win_user_dir\\.wslconfig -force -verbose;
+    } else {
+        echo "no .wslconfig found - creating blank file"
+        Write-Host -NoNewline '' | Out-File "\$win_user_dir\\.wslconfig"
+    }
     copy \$win_user_dir\\kache\\${kernel_alias} \$win_user_dir\\kache\\${kernel_alias} -force -verbose
     copy \$win_user_dir\\kache\\${ps_wsl_install_kernel_id} \$win_user_dir\\kache\\${ps_wsl_install_kernel_id} -force -verbose
 

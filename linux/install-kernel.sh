@@ -231,6 +231,9 @@ move .wslconfig.new .wslconfig" 2>/dev/null | tee "wsl-kernel-rollback.ps1"
     # cp -fv .wslconfig $wsl_config
         
     if [ "$old_kernel" != "" ]; then
+    RED='\033[0;31m'
+    NC='\033[0m' # No Color
+    YEL='\033[1;33m'
         echo "
 
 
@@ -238,9 +241,13 @@ _______________________________________________________________________
         WSL ROLLBACK INSTRUCTIONS
 -----------------------------------------------------------------------
 
-from this directory copy/pasta:
+from a WINDOWS command prompt or wherever you see ${RED}DVL ${YEL}>${NC}
 
-    ./wsl-kernel-install_${old_kernel}
+    copypasta:
+
+
+    cd;cd kache;./wsl-kernel-install_${old_kernel}
+    
     "
     else 
         echo "
@@ -250,11 +257,13 @@ _______________________________________________________________________
         WSL ROLLBACK INSTRUCTIONS
 -------------------------------------------
 
-from this directory copy/pasta:
+from a WINDOWS command prompt or wherever you see ${RED}DVL ${YEL}>${NC}
 
-    move .wslconfig.old .wslconfig.new
-    move .wslconfig .wslconfig.old
-    move .wslconfig.new .wslconfig
+    copypasta:
+
+
+    cd;cd kache;move .wslconfig.old .wslconfig.new;move .wslconfig .wslconfig.old;move .wslconfig.new .wslconfig
+
 "    
     fi
     echo "
@@ -262,18 +271,24 @@ _______________________________________________________________________
         WSL KERNEL INSTALL INSTRUCTIONS
 -----------------------------------------------------------------------
 
-from this directory copy/pasta:
+from a WINDOWS command prompt or wherever you see ${RED}DVL ${YEL}>${NC}
 
-    ./wsl-kernel-install_${new_kernel:-err}
+    copypasta:
+
+
+    cd;cd kache;./wsl-kernel-install_${new_kernel:-err}
 
 
 _______________________________________________________________________
         WSL REBOOT INSTRUCTIONS
 -----------------------------------------------------------------------
 
-from this directory copy/pasta:
+from a WINDOWS command prompt or wherever you see ${RED}DVL ${YEL}>${NC}
 
-    ./wsl-restart
+    copypasta:
+
+
+    cd;cd kache;./wsl-restart
 
 
 

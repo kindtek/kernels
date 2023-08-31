@@ -733,21 +733,20 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
     }
     copy \$win_user_dir\\kache\\${kernel_alias} \$win_user_dir\\kache\\${kernel_alias} -force -verbose
     copy \$win_user_dir\\kache\\${ps_wsl_install_kernel_id} \$win_user_dir\\kache\\${ps_wsl_install_kernel_id} -force -verbose
+    Set-Alias -Name sed -Value 'C:\Program Files\Git\usr\bin\sed.exe'
+    sed -i "s/\\s*\\#*\\s*kernel=.*/kernel=C\\:\\\\\\\\\\\\\\\\users\\\\\\\\\\\\\\\\\$win_user\\\\\\\\\\\\\\\\kache\\\\\\\\\\\\\\\${kernel_alias}/g" "/mnt/c/users/\$win_user/.wslconfig"
 
     # install kernel/modules
     if ([string]::isnullorempty(\$wsl_distro)){
         echo "installing kernel to default distro ..."
         wsl.exe -- sudo apt-get -y update; 
-        wsl.exe -- sudo apt-get -y upgrade;
-        wsl.exe -- sed -i "s/\\s*\\#*\\s*kernel=.*/kernel=C\\:\\\\\\\\\\\\\\\\users\\\\\\\\\\\\\\\\\$win_user\\\\\\\\\\\\\\\\kache\\\\\\\\\\\\\\\${kernel_alias}/g" "/mnt/c/users/\$win_user/.wslconfig"
+        wsl.exe -- sudo apt-get -y upgrade;        
         wsl.exe --cd \$win_user_dir/kache -- cp -fv ${package_full_name_id}.tar.gz /kache/${package_full_name_id}.tar.gz;
     } else {
-         echo "installing kernel to \$wsl_distro distro ..."
+        echo "installing kernel to \$wsl_distro distro ..."
         wsl.exe -d \$wsl_distro -- sudo apt-get -y update; 
         wsl.exe -d \$wsl_distro -- sudo apt-get -y upgrade;
-        wsl.exe -d \$wsl_distro -- sed -i "s/\\s*\\#*\\s*kernel=.*/kernel=C\\:\\\\\\\\\\\\\\\\users\\\\\\\\\\\\\\\\\$win_user\\\\\\\\\\\\\\\\kache\\\\\\\\\\\\\\\${kernel_alias}/g" "/mnt/c/users/\$win_user/.wslconfig"
         wsl.exe -d \$wsl_distro --cd \$win_user_dir/kache -- cp -fv ${package_full_name_id}.tar.gz /kache/${package_full_name_id}.tar.gz; 
-
     }
 
 

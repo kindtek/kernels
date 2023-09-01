@@ -729,6 +729,7 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
 
     copy \$win_user_dir\\kache\\${kernel_alias} \$win_user_dir\\kache\\${kernel_alias} -force -verbose
     copy \$win_user_dir\\kache\\${ps_wsl_install_kernel_id} \$win_user_dir\\kache\\${ps_wsl_install_kernel_id} -force -verbose
+    start-sleep 3
     try {
         sed -i "s/\\s*\\#*\\s*kernel=.*/kernel=C:\\\\\\\\\\\\\\\\users\\\\\\\\\\\\\\\\\$win_user\\\\\\\\\\\\\\\\kache\\\\\\\\\\\\\\\\${kernel_alias}/g" "C:\\users\\\$win_user\\.wslconfig"
     } catch {

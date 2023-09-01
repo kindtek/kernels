@@ -730,7 +730,7 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
     copy \$win_user_dir\\kache\\${kernel_alias} \$win_user_dir\\kache\\${kernel_alias} -force -verbose
     copy \$win_user_dir\\kache\\${ps_wsl_install_kernel_id} \$win_user_dir\\kache\\${ps_wsl_install_kernel_id} -force -verbose
     Set-Alias -Name sed -Value 'C:\Program Files\Git\usr\bin\sed.exe'
-    sed -i "s/\\s*\\#*\\s*kernel=.*/kernel=C\\\\:\\\\\\\\users\\\\\\\\\$win_user\\\\\\\\kache\\\\\\\\\${kernel_alias}/g" "C:\\users\\\$win_user\\.wslconfig"
+    sed -i "s/\\s*\\#*\\s*kernel=.*/kernel=C\\\\\\\\:\\\\\\\\\\\\\\\\users\\\\\\\\\\\\\\\\\$win_user\\\\\\\\\\\\\\\\kache\\\\\\\\\\\\\\\\\${kernel_alias}/g" "C:\\users\\\$win_user\\.wslconfig"
 
     # install kernel/modules
     if ([string]::isnullorempty(\$wsl_distro)){

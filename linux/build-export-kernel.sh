@@ -725,24 +725,23 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
 
     # copy wslconfig to home dir
     echo "installing new .wslconfig, ${kernel_alias} kernel and ${ps_wsl_install_kernel_id}"
+    try {
+        sed -i "s/\\s*\\#*\\s*kernel=.*/kernel=C:\\\\\\\\\\\\\\\\users\\\\\\\\\\\\\\\\\$win_user\\\\\\\\\\\\\\\\kache\\\\\\\\\\\\\\\\${kernel_alias}/g" "C:\\users\\\$win_user\\kache\\.wslconfig"
+    } catch {
+        try {
+            Set-Alias -Name sed -Value 'C:\Program Files\Git\usr\bin\sed.exe'
+            sed -i "s/\\s*\\#*\\s*kernel=.*/kernel=C:\\\\\\\\\\\\\\\\users\\\\\\\\\\\\\\\\\$win_user\\\\\\\\\\\\\\\\kache\\\\\\\\\\\\\\\\${kernel_alias}/g" "C:\\users\\\$win_user\\kache\\.wslconfig"
+        } catch {
+            try {
+                Set-Alias -Name sed -Value '/usr/bin/sed'
+                sed -i "s/\\s*\\#*\\s*kernel=.*/kernel=C:\\\\\\\\\\\\\\\\users\\\\\\\\\\\\\\\\\$win_user\\\\\\\\\\\\\\\\kache\\\\\\\\\\\\\\\\${kernel_alias}/g" "C:\\users\\\$win_user\\kache\\.wslconfig"
+            } catch {}
+        }
+    }
     copy \$win_user_dir\\kache\\.wslconfig \$win_user_dir\\.wslconfig -force -verbose;
 
     copy \$win_user_dir\\kache\\${kernel_alias} \$win_user_dir\\kache\\${kernel_alias} -force -verbose
     copy \$win_user_dir\\kache\\${ps_wsl_install_kernel_id} \$win_user_dir\\kache\\${ps_wsl_install_kernel_id} -force -verbose
-    start-sleep 3
-    try {
-        sed -i "s/\\s*\\#*\\s*kernel=.*/kernel=C:\\\\\\\\\\\\\\\\users\\\\\\\\\\\\\\\\\$win_user\\\\\\\\\\\\\\\\kache\\\\\\\\\\\\\\\\${kernel_alias}/g" "C:\\users\\\$win_user\\.wslconfig"
-    } catch {
-        try {
-            Set-Alias -Name sed -Value 'C:\Program Files\Git\usr\bin\sed.exe'
-            sed -i "s/\\s*\\#*\\s*kernel=.*/kernel=C:\\\\\\\\\\\\\\\\users\\\\\\\\\\\\\\\\\$win_user\\\\\\\\\\\\\\\\kache\\\\\\\\\\\\\\\\${kernel_alias}/g" "C:\\users\\\$win_user\\.wslconfig"
-        } catch {
-            try {
-                Set-Alias -Name sed -Value '/usr/bin/sed'
-                sed -i "s/\\s*\\#*\\s*kernel=.*/kernel=C:\\\\\\\\\\\\\\\\users\\\\\\\\\\\\\\\\\$win_user\\\\\\\\\\\\\\\\kache\\\\\\\\\\\\\\\\${kernel_alias}/g" "C:\\users\\\$win_user\\.wslconfig"
-            } catch {}
-        }
-    }
 
     # install kernel/modules
     if ([string]::isnullorempty(\$wsl_distro)){

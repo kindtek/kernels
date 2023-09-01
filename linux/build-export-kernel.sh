@@ -727,15 +727,52 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
     echo "installing new .wslconfig, ${kernel_alias} kernel and ${ps_wsl_install_kernel_id}"
     try {
         sed -i "s/\\s*\\#*\\s*kernel=.*/kernel=C:\\\\\\\\\\\\\\\\users\\\\\\\\\\\\\\\\\$win_user\\\\\\\\\\\\\\\\kache\\\\\\\\\\\\\\\\${kernel_alias}/g" "C:\\users\\\$win_user\\kache\\.wslconfig"
+        if (\$?){
+            sed -i '' "s/\\s*\\#*\\s*kernel=.*/kernel=C:\\\\\\\\\\\\\\\\users\\\\\\\\\\\\\\\\\$win_user\\\\\\\\\\\\\\\\kache\\\\\\\\\\\\\\\\${kernel_alias}/g" "C:\\users\\\$win_user\\kache\\.wslconfig"
+            if (\$?){
+                throw
+            }
+        }
     } catch {
         try {
             Set-Alias -Name sed -Value 'C:\Program Files\Git\usr\bin\sed.exe'
             sed -i "s/\\s*\\#*\\s*kernel=.*/kernel=C:\\\\\\\\\\\\\\\\users\\\\\\\\\\\\\\\\\$win_user\\\\\\\\\\\\\\\\kache\\\\\\\\\\\\\\\\${kernel_alias}/g" "C:\\users\\\$win_user\\kache\\.wslconfig"
+            if (\$?){
+                sed -i '' "s/\\s*\\#*\\s*kernel=.*/kernel=C:\\\\\\\\\\\\\\\\users\\\\\\\\\\\\\\\\\$win_user\\\\\\\\\\\\\\\\kache\\\\\\\\\\\\\\\\${kernel_alias}/g" "C:\\users\\\$win_user\\kache\\.wslconfig"
+                if (\$?){
+                    throw
+                }
+            }
         } catch {
             try {
                 Set-Alias -Name sed -Value '/usr/bin/sed'
                 sed -i "s/\\s*\\#*\\s*kernel=.*/kernel=C:\\\\\\\\\\\\\\\\users\\\\\\\\\\\\\\\\\$win_user\\\\\\\\\\\\\\\\kache\\\\\\\\\\\\\\\\${kernel_alias}/g" "C:\\users\\\$win_user\\kache\\.wslconfig"
-            } catch {}
+                if (\$?){
+                    sed -i '' "s/\\s*\\#*\\s*kernel=.*/kernel=C:\\\\\\\\\\\\\\\\users\\\\\\\\\\\\\\\\\$win_user\\\\\\\\\\\\\\\\kache\\\\\\\\\\\\\\\\${kernel_alias}/g" "C:\\users\\\$win_user\\kache\\.wslconfig"
+                    if (\$?){
+                        throw
+                    }
+                }
+            } catch {
+                try {
+                    write-host "
+                    could not add update path to kernel in .wslconfig
+                    "
+                    write-host "
+                    please edit line in C:\\users\\\$win_user\\.wslconfig starting with 'kernel=' to match the following:
+                    
+                    kernel=C:\\\\users\\\\\$win_user\\\\kache\\\\${kernel_alias}
+                    "
+                    Start-Process notepad.exe -Wait C:\\users\\\$win_user\\.wslconfig
+                    if (\$?){
+                        throw
+                    }
+                } catch {
+                    Set-Alias -Name notepad.exe -value 'C:\\windows\\system32\\notepad.exe'
+                    Start-Process notepad.exe -Wait C:\\users\\\$win_user\\.wslconfig
+                }
+                
+            }
         }
     }
     copy \$win_user_dir\\kache\\.wslconfig \$win_user_dir\\.wslconfig -force -verbose;

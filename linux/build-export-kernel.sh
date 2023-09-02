@@ -5,7 +5,6 @@ fi
 kernel_type="$1"
 config_source="$2"
 zfs="$3"
-win_user="${4}"
 quick_wsl_install=${4:+1}
 timestamp_id="${5:-${DOCKER_BUILD_TIMESTAMP:-$(date -d "today" +"%Y%m%d%H%M%S")}}"
 kernel_file_suffix="W"
@@ -211,7 +210,7 @@ default_config_source=$generic_config_source
 if [[ "$config_source" =~ https?://.* ]]; then
     default_config_source="$config_source"
 fi
-[ "$win_user" != "" ] || [[ "$config_source" =~ https?://.* ]] || read -r -p "($default_config_source)
+[ "${5}" != "" ] || [[ "$config_source" =~ https?://.* ]] || read -r -p "($default_config_source)
 " config_source
 echo "
 # checking if input is a url ..."
@@ -276,69 +275,16 @@ printf "
     $config_source
 ==================================================================
 " "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}"
-[ -d "/mnt/c/users" ] || sleep 10
-orig_win_user=$win_user
-orig_pwd=$(pwd)
-[ ! -d "/mnt/c/users" ] || cd "/mnt/c/users" || exit
-while [ ! -d "$win_user" ]; do
-    if [ ! -d "/mnt/c/users" ]; then
-        if [ ! -d "/mnt/c/users/$win_user" ]; then
-            echo "skipping prompt for home directory"
-        fi
-        break;
-    fi
-    echo " 
+[ "${5}" != "" ] || sleep 10
 
-
-save kernel build to which Windows home directory?
-
-    choose from:
-    " 
-    ls -da /mnt/c/users/*/ | tail -n +4 | sed -r -e 's/^\/mnt\/c\/users\/([ A-Za-z0-9]*)*\/+$/\t\1/g'
-
-    read -r -p "
-
-(skip)  C:\\users\\" win_user
-    if [ "$win_user" = "" ]; then
-        win_user=$orig_win_user
-        break
-    fi
-    if [ ! -d "/mnt/c/users/$win_user" ]; then
-        echo "
-
-        
-        
-        
-
-
-
-
-
-
-
-C:\\users\\$win_user is not a home directory"
-    fi
-done
-cd "$orig_pwd" || exit
 
 kernel_source=arch/$cpu_arch/boot/bzImage
 kernel_target_git=$git_save_path/$kernel_alias_no_timestamp
 config_target_git=$git_save_path/$config_alias_no_timestamp
 tarball_filename=$package_full_name_id.tar.gz
 tarball_target_nix=$nix_user_kache/$package_full_name_id.tar.gz
-win_user_home=/mnt/c/users/$win_user
-win_user_kache=$win_user_home/kache
-# tarball_target_win=$win_user_kache/$package_full_name_id.tar.gz
-# wsl_kernel=$win_user_kache/$kernel_alias
-# wsl_config=$win_user_home/.wslconfig
 kindtek_kernel_version="kindtek-kernel-$kernel_alias_no_timestamp"
 sed -i "s/[# ]*CONFIG_LOCALVERSION[ =].*/CONFIG_LOCALVERSION=\"\-${kindtek_kernel_version}\"/g" "$config_source"
-# if win timestamp was manually set or win_user not set then clear win install paths
-if [ "${5}" != "" ] || [ "$win_user" = "" ]; then
-    # tarball_target_win=""
-    win_user_home=""
-    win_user_kache=""
-fi
 
 if [ "$linux_kernel_version" = "" ]; then
 echo "
@@ -366,13 +312,11 @@ printf "
     config:     $config_target_git
   Kernel/Config/Installation/.tar.gz files:
     $nix_user_kache
-    %s     
 ==================================================================
 
-" "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}" "${win_user_kache:-'
-'}"  | tr -d "'"
+" "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}" | tr -d "'"
 [ -d "/mnt/c/users" ] || sleep 10
-[ "$win_user" != "" ] || echo "
+[ "${5}" != "" ] || echo "
 build kernel or exit?
 " && \
 read -r -p "(build)
@@ -800,14 +744,6 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
 
 EOF
 
-if [ -d "/mnt/c/users/$win_user" ] && [ "$win_user_kache" != "" ]; then
-    mkdir -pv "${win_user_kache}" 2>/dev/null
-fi
-# rm -fv "$win_user_kache/wsl-kernel-install.ps1"
-# rm -rfv "$win_user_kache/wsl-kernel-install_${kernel_alias_no_timestamp}*"
-# sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\${win_user}\\\\\\\\kache\\\\\\\\${kernel_alias}/g" "/mnt/c/users/${win_user}/kache/.wslconfig"
-# sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\${win_user}\\\\\\\\kache\\\\\\\\${kernel_alias}/g" "../../../dvlp/mnt/HOME_WIN/head.wslconfig"
-# cp -fv --backup=numbered ../../../dvlp/mnt/HOME_WIN/head.wslconfig kache/.wslconfig
 chmod +x kache
 echo "saving to compressed tarball ..."
 tar -czvf "${tarball_filename}" -C kache .
@@ -822,32 +758,6 @@ if [ -w "$nix_user_kache" ]; then
 else
     echo "unable to save kernel package to Linux home directory"
 fi
-# now win
-if [ -d "/mnt/c/users/$win_user" ] && [ "$win_user_kache" != "" ]; then
-    mkdir -pv "${win_user_kache}" 2>/dev/null
-fi
-# # if {win_user_kache} is writable and no timestamp was given in args
-# if [ -w "${win_user_kache}" ] && [ "$5" = "" ]; then
-#     echo "copying kernel to WSL install location"
-#     cp -fv "kache/${ps_wsl_install_kernel_id}" "${win_user_kache}/${ps_wsl_install_kernel_id}"
-#     if [ "${tarball_target_win}" != "" ]; then
-#         echo "copying tarball to WSL kache"
-#         # cp -fv --backup=numbered "$tarball_filename" "$tarball_target_win.bak"
-#         # cp -fv "kache/${tarball_filename}" "${tarball_target_win}"
-#     else 
-#         echo "win tarball empty: ${tarball_target_win}"
-#     fi
-# else 
-#     echo "not saving to windows home directory"
-#     if [ ! -w "${win_user_kache}" ]; then
-#         echo "$win_user_kache not writeable"
-#     elif [ "$5" != "" ]; then
-#         echo "timestamp not given
-#         \$5=$5"
-#     else
-#         echo "not sure why"
-#     fi
-# fi
 
 # restore path and /etc/bash.bashrc
 PATH=$PATH_ORIG
@@ -861,7 +771,6 @@ KERNEL BUILD COMPLETE
 "
 
 
-# [ "${win_user_kache}" = "" ] && printf "
 printf "
 
 
@@ -887,27 +796,3 @@ printf "
 
 " "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}"
 
-
-#  "${win_user_kache:-'
-# '}"  | tr -d "'" || printf "
-
-
-
-# ==================================================================
-# ========================   Linux Kernel   ========================
-# ======------------------%s%s------------------======
-# ------------------------------------------------------------------
-# ====-----------------    Install Locations    ----------------====
-# ------------------------------------------------------------------
-
-# .wslconfig:
-#     $wsl_config
-
-# kernel:
-#     $wsl_kernel     
-
-# ==================================================================
-# ==================================================================
-# ==================================================================
-
-# " "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}"

@@ -805,9 +805,9 @@ if [ -d "/mnt/c/users/$win_user" ] && [ "$win_user_kache" != "" ]; then
 fi
 # rm -fv "$win_user_kache/wsl-kernel-install.ps1"
 # rm -rfv "$win_user_kache/wsl-kernel-install_${kernel_alias_no_timestamp}*"
-sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\kache\\\\\\\\6L1WZB_20230829/g" /mnt/c/users/$win_user/.wslconfig
-sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\$win_user\\\\\\\\kache\\\\\\\\${kernel_alias}/g" ../../../dvlp/mnt/HOME_WIN/head.wslconfig
-cp -fv --backup=numbered ../../../dvlp/mnt/HOME_WIN/head.wslconfig kache/.wslconfig
+# sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\${win_user}\\\\\\\\kache\\\\\\\\${kernel_alias}/g" "/mnt/c/users/${win_user}/kache/.wslconfig"
+# sed -i "s/\s*\#*\s*kernel=.*/kernel=C\:\\\\\\\\users\\\\\\\\${win_user}\\\\\\\\kache\\\\\\\\${kernel_alias}/g" "../../../dvlp/mnt/HOME_WIN/head.wslconfig"
+# cp -fv --backup=numbered ../../../dvlp/mnt/HOME_WIN/head.wslconfig kache/.wslconfig
 chmod +x kache
 echo "saving to compressed tarball ..."
 tar -czvf "${tarball_filename}" -C kache .

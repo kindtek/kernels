@@ -671,10 +671,10 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
     echo "installing new .wslconfig, ${kernel_alias} kernel and ${ps_wsl_install_kernel_id}"
     try {
         \$ErrorActionPreference = "Stop"
-        sed -i "s/\\s*\\#*\\s*kernel=.*/kernel=C:\\\\\\\\\\\\\\\\users\\\\\\\\\\\\\\\\\$win_user\\\\\\\\\\\\\\\\kache\\\\\\\\\\\\\\\\${kernel_alias}/g" "/mnt/c/users\$win_user/kache/.wslconfig"
+        sed -i "s/\\s*\\#*\\s*kernel=.*/kernel=C:\\\\\\\\\\\\\\\\users\\\\\\\\\\\\\\\\\$win_user\\\\\\\\\\\\\\\\kache\\\\\\\\\\\\\\\\${kernel_alias}/g" "/mnt/c/users/\$win_user/kache/.wslconfig"
     } catch {
         try {
-            sed -i '' "s/\\s*\\#*\\s*kernel=.*/kernel=C:\\\\\\\\\\\\\\\\users\\\\\\\\\\\\\\\\\$win_user\\\\\\\\\\\\\\\\kache\\\\\\\\\\\\\\\\${kernel_alias}/g" "/mnt/c/users\$win_user/kache/.wslconfig"
+            sed -i '' "s/\\s*\\#*\\s*kernel=.*/kernel=C:\\\\\\\\\\\\\\\\users\\\\\\\\\\\\\\\\\$win_user\\\\\\\\\\\\\\\\kache\\\\\\\\\\\\\\\\${kernel_alias}/g" "/mnt/c/users/\$win_user/kache/.wslconfig"
         } catch {
             try {
                 Set-Alias -Name sed -Value 'C:\Program Files\Git\usr\bin\sed.exe'

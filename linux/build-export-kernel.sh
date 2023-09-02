@@ -759,17 +759,17 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
                     could not add update path to kernel in .wslconfig
                     "
                     write-host "
-                    please edit line in C:\\users\\\$win_user\\.wslconfig starting with 'kernel=' to match the following:
+                    please edit line in C:\\users\\\$win_user\\kache\\.wslconfig starting with 'kernel=' to match the following:
                     
                     kernel=C:\\\\users\\\\\$win_user\\\\kache\\\\${kernel_alias}
                     "
-                    Start-Process notepad.exe -Wait C:\\users\\\$win_user\\.wslconfig
+                    Start-Process notepad.exe -Wait C:\\users\\\$win_user\\\kache\.wslconfig
                     if (!\$?){
                         throw
                     }
                 } catch {
                     Set-Alias -Name notepad.exe -value 'C:\\windows\\system32\\notepad.exe'
-                    Start-Process notepad.exe -Wait C:\\users\\\$win_user\\.wslconfig
+                    Start-Process notepad.exe -Wait C:\\users\\\$win_user\\kache\\.wslconfig
                 }
                 
             }

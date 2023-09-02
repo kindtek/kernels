@@ -678,10 +678,10 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
         } catch {
             try {
                 Set-Alias -Name sed -Value 'C:\Program Files\Git\usr\bin\sed.exe'
-                sed -i "s/\\s*\\#*\\s*kernel=.*/kernel=C:\\\\\\\\users\\\\\\\\\$win_user\\\\\\\\kache\\\\\\\\${kernel_alias}/g" "C:\\users\\\$win_user\\kache\\.wslconfig"
+                sed -i "s/\\s*\\#*\\s*kernel=.*/kernel=C:\\\\\\\\\\\\\\\\users\\\\\\\\\\\\\\\\\$win_user\\\\\\\\\\\\\\\\kache\\\\\\\\\\\\\\\\${kernel_alias}/g" "C:\\users\\\$win_user\\kache\\.wslconfig"
             } catch {
                 try {
-                    sed -i '' "s/\\s*\\#*\\s*kernel=.*/kernel=C:\\\\\\\\users\\\\\\\\\$win_user\\\\\\\\kache\\\\\\\\${kernel_alias}/g" "C:\\users\\\$win_user\\kache\\.wslconfig"
+                    sed -i '' "s/\\s*\\#*\\s*kernel=.*/kernel=C:\\\\\\\\\\\\\\\\users\\\\\\\\\\\\\\\\\$win_user\\\\\\\\\\\\\\\\kache\\\\\\\\\\\\\\\\${kernel_alias}/g" "C:\\users\\\$win_user\\kache\\.wslconfig"
                 } catch {
                     try {
                         write-host "

@@ -315,7 +315,7 @@ printf "
 ==================================================================
 
 " "----  $linux_kernel_version  " "${padding:${#linux_kernel_version}}" | tr -d "'"
-[ -d "/mnt/c/users" ] || sleep 10
+[ "${5}" = "" ] || sleep 10
 [ "${5}" != "" ] || echo "
 build kernel or exit?
 " && \

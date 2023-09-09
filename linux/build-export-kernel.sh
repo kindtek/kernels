@@ -652,7 +652,7 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
     # append tail.wslconfig to .wslconfig
     if (Test-Path -Path tail.wslconfig -PathType Leaf) {
         echo "appending tail.wslconfig to .wslconfig"
-        Add-Content "\$win_user_dir\\kache\\tail.wslconfig" "\$win_user_dir\\kache\\.wslconfig" 
+        Get-Content "\$win_user_dir\\kache\\.wslconfig", "\$win_user_dir\\kache\\tail.wslconfig" | "\$win_user_dir\\kache\\.wslconfig"
     } else {
         echo "appending blank tail to .wslconfig"
         Write-Host -NoNewline '' | Out-File "\$win_user_dir\\kache\\.wslconfig"

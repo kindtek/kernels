@@ -720,13 +720,13 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
         wsl.exe -- sudo apt-get -y update; 
         wsl.exe -- sudo apt-get -y upgrade;        
         wsl.exe --cd \$win_user_dir/kache -- cp -fv ${package_full_name_id}.tar.gz /kache/${package_full_name_id}.tar.gz;
-        wsl.exe --cd / -- sudo tar --overwrite -xzvf "/kache/${package_full_name_id}.tar.gz"
+        wsl.exe --cd / -- sudo tar --no-overwrite-dir -xzvf "/kache/${package_full_name_id}.tar.gz"
     } else {
         echo "installing kernel to \$wsl_distro distro ..."
         wsl.exe -d \$wsl_distro -- sudo apt-get -y update; 
         wsl.exe -d \$wsl_distro -- sudo apt-get -y upgrade;
         wsl.exe -d \$wsl_distro --cd \$win_user_dir/kache -- cp -fv ${package_full_name_id}.tar.gz /kache/${package_full_name_id}.tar.gz; 
-        wsl.exe -d \$wsl_distro --cd / -- sudo tar --overwrite -xzvf "/kache/${package_full_name_id}.tar.gz"
+        wsl.exe -d \$wsl_distro --cd / -- sudo tar --no-overwrite-dir -xzvf "/kache/${package_full_name_id}.tar.gz"
     }
 
 

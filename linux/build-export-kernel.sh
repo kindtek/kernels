@@ -649,16 +649,6 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
     # extract
     tar -xzvf "${package_full_name_id}.tar.gz"
 
-
-    # append tail.wslconfig to .wslconfig
-    if (Test-Path -Path tail.wslconfig -PathType Leaf) {
-        echo "appending tail.wslconfig to .wslconfig"
-        Get-Content "\$win_user_dir\\kache\\.wslconfig", "\$win_user_dir\\kache\\tail.wslconfig" | "\$win_user_dir\\kache\\.wslconfig"
-    } else {
-        echo "appending blank tail to .wslconfig"
-        Write-Host -NoNewline '' | Out-File "\$win_user_dir\\kache\\.wslconfig"
-    }
-
     # backup old wslconfig
     echo "backing up old .wslconfig"
     # move file out of the way   
@@ -668,6 +658,15 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
     } else {
         echo "no .wslconfig found - creating blank file"
         Write-Host -NoNewline '' | Out-File "\$win_user_dir\\.wslconfig.old"
+    } 
+
+    # append tail.wslconfig to .wslconfig
+    if (Test-Path -Path tail.wslconfig -PathType Leaf) {
+        echo "appending tail.wslconfig to .wslconfig"
+        Get-Content "\$win_user_dir\\kache\\.wslconfig", "\$win_user_dir\\kache\\tail.wslconfig" | Set-Content "\$win_user_dir\\kache\\.wslconfig"
+    } else {
+        echo "appending blank tail to .wslconfig"
+        Write-Host -NoNewline '' | Out-File "\$win_user_dir\\kache\\.wslconfig"
     }
 
     # install wsl-restart script

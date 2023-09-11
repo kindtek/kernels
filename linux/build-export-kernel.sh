@@ -389,6 +389,7 @@ set +h
 umask 022
 LFS="$(pwd)/$linux_build_dir"
 export LFS
+echo "export LFS='$LFS'" | sudo tee /etc/environment
 echo "LFS:
 $LFS"
 LC_ALL=POSIX

@@ -653,7 +653,6 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
     # backup old wslconfig
     echo "backing up old .wslconfig"
     # move file out of the way   
-   
     if (Test-Path -Path "\$win_user_dir\\.wslconfig" -PathType Leaf) {
          move \$win_user_dir\\.wslconfig \$win_user_dir\\.wslconfig.old -Force -verbose;
     } else {
@@ -712,28 +711,25 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
     }
     copy \$win_user_dir\\kache\\.wslconfig \$win_user_dir\\.wslconfig -force -verbose;
 
-    copy \$win_user_dir\\kache\\${kernel_alias} \$win_user_dir\\kache\\${kernel_alias} -force -verbose
-    copy \$win_user_dir\\kache\\${ps_wsl_install_kernel_id} \$win_user_dir\\kache\\${ps_wsl_install_kernel_id} -force -verbose
-
     # install kernel/modules
     if ([string]::isnullorempty(\$wsl_distro)){
         echo "installing kernel to default distro ..."
-        wsl.exe -- sudo apt-get -y update; 
-        wsl.exe -- sudo apt-get -y upgrade;        
-        wsl.exe --cd \$win_user_dir/kache -- cp -fv ${package_full_name_id}.tar.gz /kache/${package_full_name_id}.tar.gz;
+        wsl.exe -- sudo apt-get -yqq update; 
+        wsl.exe -- sudo apt-get -yqq upgrade;        
+        wsl.exe --cd \$win_user_dir/kache -- [ ! -f "/kache/${package_full_name_id}.tar.gz" ] \`&\`& cp -fv ${package_full_name_id}.tar.gz /kache/${package_full_name_id}.tar.gz;
         echo "preparing kernel modules"
         start-sleep 3
-        wsl.exe --user r00t -- sudo tar --keep-old-files -xzvfC "/kache/${package_full_name_id}.tar.gz /"
-        wsl.exe --user r00t -- sudo bash dkms autoinstall --modprobe-on-install --kernelsourcedir "\`\$LFS"
+        wsl.exe --user r00t --cd /kache -- sudo tar --keep-old-files -xzvf "${package_full_name_id}.tar.gz -C /"
+        wsl.exe --user r00t -- sudo [ -d "\`\$LFS" ] \`&\`& sudo bash dkms autoinstall --modprobe-on-install --kernelsourcedir "\`\$LFS"
     } else {
         echo "installing kernel to \$wsl_distro distro ..."
-        wsl.exe -d \$wsl_distro -- sudo apt-get -y update; 
-        wsl.exe -d \$wsl_distro -- sudo apt-get -y upgrade;
-        wsl.exe -d \$wsl_distro --cd \$win_user_dir/kache -- cp -fv ${package_full_name_id}.tar.gz /kache/${package_full_name_id}.tar.gz; 
+        wsl.exe -d \$wsl_distro -- sudo apt-get -yqq update; 
+        wsl.exe -d \$wsl_distro -- sudo apt-get -yqq upgrade;
+        wsl.exe -d \$wsl_distro --cd \$win_user_dir/kache -- [ ! -f "/kache/${package_full_name_id}.tar.gz" ] \`&\`& cp -fv ${package_full_name_id}.tar.gz /kache/${package_full_name_id}.tar.gz; 
         echo "preparing kernel modules"
         start-sleep 3
-        wsl.exe -d \$wsl_distro --user r00t -- sudo tar --keep-old-files -xzvfC "/kache/${package_full_name_id}.tar.gz /"
-        wsl.exe -d \$wsl_distro --user r00t -- sudo bash dkms autoinstall --modprobe-on-install --kernelsourcedir "\`\$LFS"
+        wsl.exe -d \$wsl_distro --user r00t --cd /kache -- [ -f "${package_full_name_id}.tar.gz" ] \`&\`& sudo tar --keep-old-files -xzvf "${package_full_name_id}.tar.gz -C /"
+        wsl.exe -d \$wsl_distro --user r00t -- sudo [ -d "\`\$LFS" ] \`&\`& sudo bash dkms autoinstall --modprobe-on-install --kernelsourcedir "\`\$LFS"
 
     }
 

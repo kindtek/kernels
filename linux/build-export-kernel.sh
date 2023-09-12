@@ -186,7 +186,7 @@ if [ "$config_source" != "" ] && [ -r "$config_source" ] && [ -s "$config_source
 # try alternates if user config doesn't work 
     # download reliable .config
 elif [ ! -r "$git_save_path/$config_alias_no_timestamp" ] || [ "$config_source" != "" ]; then
-        generic_config_source=https://raw.githubusercontent.com/kindtek/kernels/497ad943dff2766c3ed8e087f2d8cec980fcbde9/linux/x86/generic/6_1/.config_6L1WZB
+        generic_config_source=https://raw.githubusercontent.com/kindtek/kernels/dvlp/linux/x86/generic/6_412/.config_6L412WZS
 #     echo "
 
 # No saved .config files match this kernel version $linux_kernel_version_tag and $cpu_arch/$cpu_vendor"

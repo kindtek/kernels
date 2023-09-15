@@ -6,7 +6,7 @@ kernel_type="$1"
 config_source="$2"
 zfs="$3"
 quick_wsl_install=${4:+1}
-timestamp_id="${5:-${DOCKER_BUILD_TIMESTAMP:-$(date -d "today" +"%Y%m%d%H%M%S")}}"
+timestamp_id="${4:-${DOCKER_BUILD_TIMESTAMP:-$(date -d "today" +"%Y%m%d%H%M%S")}}"
 kernel_file_suffix="W"
 linux_build_dir=linux-build
 

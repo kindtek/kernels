@@ -12,29 +12,36 @@ try {
 }
 catch {
     write-host "
+
+
+
+
+
 unable to gain access required to completely restart WSL
-manual WSL restart may be required
-.. or restart your computer
+
+this usually means that the script is being executed from within WSL
+
+an attempt will be made to restart WSL without admin privileges but it may fail
 
 
-to manually restart WSL only:
+if restarting WSL fails you can manually restart WSL in 1 or 2 steps:
 
-1)  open a windows shell *WITH* ADMIN privileges
+
+0)  if this window closes open a windows powershell terminal *WITH* ADMIN privileges
         
         shortcut: 
-            - [WIN + X] then [a]    (opens admin window)
-            - [<-] then [ENTER]     (confirm elevated access privileges)
+            - [WIN + X] then [a]    (opens a User Access Control menu)
+            - [<-] then [ENTER]     (confirms elevated access and opens admin windows powershell terminal)
 
-
-2)  copypasta this:
+1)  in this or another admin windows powershell terminal enter:
     
-    .\wsl-restart
+    ./wsl-restart
 
 
 
 "
-    $confirm_reboot = read-host -Prompt "
-(try to reboot WSL anyways)
+    $confirm_reboot = read-host "
+(try to reboot WSL automatically)
 " 
     if ( "$confirm_reboot" -ne "" ) {
         exit

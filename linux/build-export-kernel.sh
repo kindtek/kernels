@@ -716,19 +716,19 @@ tee "kache/${ps_wsl_install_kernel_id}" >/dev/null <<EOF
         echo "installing kernel to default distro ..."
         wsl.exe -- sudo apt-get -yqq update; 
         wsl.exe -- sudo apt-get -yqq upgrade;        
-        wsl.exe --cd \$win_user_dir/kache -- [ ! -f "/kache/${package_full_name_id}.tar.gz" ] \`&\`& cp -fv ${package_full_name_id}.tar.gz /kache/${package_full_name_id}.tar.gz;
+        wsl.exe -- [ ! -f "/kache/${package_full_name_id}.tar.gz" ] \`&\`& cp -fv \$win_user/kache/${package_full_name_id}.tar.gz /kache/${package_full_name_id}.tar.gz;
         echo "preparing kernel modules"
         start-sleep 3
-        wsl.exe --user r00t --cd /kache -- sudo tar --keep-old-files -xzvf "${package_full_name_id}.tar.gz -C /"
+        wsl.exe --user r00t -- [ -f "/kache/${package_full_name_id}.tar.gz" ] \`&\`& sudo tar --keep-old-files -xzvf "/kache/${package_full_name_id}.tar.gz" -C /
         wsl.exe --user r00t -- sudo [ -d "\`\$LFS" ] \`&\`& sudo bash dkms autoinstall --modprobe-on-install --kernelsourcedir "\`\$LFS"
     } else {
         echo "installing kernel to \$wsl_distro distro ..."
         wsl.exe -d \$wsl_distro -- sudo apt-get -yqq update; 
         wsl.exe -d \$wsl_distro -- sudo apt-get -yqq upgrade;
-        wsl.exe -d \$wsl_distro --cd \$win_user_dir/kache -- [ ! -f "/kache/${package_full_name_id}.tar.gz" ] \`&\`& cp -fv ${package_full_name_id}.tar.gz /kache/${package_full_name_id}.tar.gz; 
+        wsl.exe -d \$wsl_distro -- [ ! -f "/kache/${package_full_name_id}.tar.gz" ] \`&\`& cp -fv \$win_user/kache/${package_full_name_id}.tar.gz /kache/${package_full_name_id}.tar.gz; 
         echo "preparing kernel modules"
         start-sleep 3
-        wsl.exe -d \$wsl_distro --user r00t --cd /kache -- [ -f "${package_full_name_id}.tar.gz" ] \`&\`& sudo tar --keep-old-files -xzvf "${package_full_name_id}.tar.gz -C /"
+        wsl.exe -d \$wsl_distro --user r00t -- [ -f "/kache/${package_full_name_id}.tar.gz" ] \`&\`& sudo tar --keep-old-files -xzvf "/kache/${package_full_name_id}.tar.gz" -C /
         wsl.exe -d \$wsl_distro --user r00t -- sudo [ -d "\`\$LFS" ] \`&\`& sudo bash dkms autoinstall --modprobe-on-install --kernelsourcedir "\`\$LFS"
 
     }
